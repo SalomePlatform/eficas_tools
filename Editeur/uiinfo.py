@@ -18,8 +18,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce module sert à construire les structures de données porteuses 
-   des informations liées aux groupes de commandes
+   Ce module sert a construire les structures de donnees porteuses 
+   des informations liees aux groupes de commandes
 """
 import types
 
@@ -27,19 +27,19 @@ class UIINFO:
    """
        Pour le moment la classe UIINFO ne sait traiter que des infos
        portant sur la definition des groupes de commandes
-       Les autres informations sont ignorées
+       Les autres informations sont ignorees
    """
    def __init__(self,parent,groupes=None,**args):
       """
          Initialiseur de la classe UIINFO.
-         Initialise a partir du dictionnaire UIinfo passé à
+         Initialise a partir du dictionnaire UIinfo passe a
          un objet ENTITE les attributs de la classe
       """
-      # L'attribut parent stocke le lien vers l'objet ENTITE relié à UIINFO
+      # L'attribut parent stocke le lien vers l'objet ENTITE relie a UIINFO
       self.parent=parent
       self.groupes=groupes
       if groupes == None:
-         # L'entite n'a pas de groupe associé. On lui associe le groupe "DEFAUT"
+         # L'entite n'a pas de groupe associe. On lui associe le groupe "DEFAUT"
          self.groupes=("DEFAUT",)
       if type(self.groupes) != types.TupleType:
          self.groupes=(self.groupes,)
@@ -47,7 +47,7 @@ class UIINFO:
 def traite_commande(commande,niveau):
     """
         Cette fonction cree l'attribut UI de l'objet commande
-        à partir des informations contenues dans UIinfo
+        a partir des informations contenues dans UIinfo
     """
     uiinfo=commande.UIinfo or {}
     UI=UIINFO(commande,**uiinfo)
@@ -71,7 +71,7 @@ def traite_niveau(niveau):
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
        niveau.liste_groupes=niveau.dict_groupes.keys()
-       # On ordonne les listes alphabétiquement
+       # On ordonne les listes alphabetiquement
        niveau.liste_groupes.sort()
        for v in niveau.dict_groupes.values():v.sort()
        #print niveau.liste_groupes
@@ -83,8 +83,8 @@ def traite_niveau(niveau):
 def traite_UIinfo(cata):
    """
       Cette fonction parcourt la liste des commandes d'un catalogue (cata)
-      construit les objets UIINFO à partir de l'attribut UIinfo de la commande
-      et construit la liste complète de tous les groupes présents
+      construit les objets UIINFO a partir de l'attribut UIinfo de la commande
+      et construit la liste complete de tous les groupes presents
    """
    #dict_groupes["CACHE"]=[]
    #XXX Ne doit pas marcher avec les niveaux
@@ -98,13 +98,13 @@ def traite_UIinfo(cata):
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
        cata.JdC.liste_groupes=cata.JdC.dict_groupes.keys()
-       # On ordonne les listes alphabétiquement
+       # On ordonne les listes alphabetiquement
        cata.JdC.liste_groupes.sort()
        for v in cata.JdC.dict_groupes.values():v.sort()
        #print cata.JdC.liste_groupes
        #print cata.JdC.dict_groupes
    else:
-       # Le catalogue de commandes contient des définitions de niveau
+       # Le catalogue de commandes contient des definitions de niveau
        for niv in cata.JdC.l_niveaux:
           traite_niveau(niv)
 

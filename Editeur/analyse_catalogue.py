@@ -99,7 +99,7 @@ class ENTITE:
                         mc = SIMP_CATA(nom_mc,self)
                         self.children.append(mc)
                 else :
-                        print tr("Erreur dans la creation du mot-cle : %s", nom_mc)
+                        print (tr("Erreur dans la creation du mot-cle : %s", nom_mc))
 
         def construit_liste_dico(self):
                 l=[]
@@ -115,7 +115,7 @@ class ENTITE:
                         self.ordre_mc = l
                         self.entites = d
                 except:
-                        print "erreur : ", self.nom,  self.__class__
+                        print (("erreur : ", self.nom,  self.__class__))
                 
 class COMMANDE_CATA(ENTITE) :
         def __init__(self,nom,args,parent):
@@ -187,7 +187,7 @@ class CATALOGUE_CATA:
                         self.texte_complet=f.read()
                         f.close()
                 except :
-                        print tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier))
+                        print (tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier)))
                         self.cr.fatal(tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier)))
 
         def constr_list_txt_cmd(self,text):
@@ -205,7 +205,7 @@ class CATALOGUE_CATA:
                 if len(liste) < 2 :
                         liste = re.split(u'MACRO *\(u',text,1)
                 if len(liste) < 2 :
-                        print tr("le texte a analyser n'est pas celui d'une commande ou d'un operateur : "), text
+                        print ((tr("le texte a analyser n'est pas celui d'une commande ou d'un operateur : "), text))
                         self.cr.fatal(tr("le texte a analyser n'est pas celui d'une commande ou \
                                          d'un operateur : %s", text))
                         return
@@ -213,10 +213,10 @@ class CATALOGUE_CATA:
                 fin = liste[1]
                 nom_cmd = cherche_nom(debut)
                 if nom_cmd == 'erreur !':
-                        print tr("Erreur dans la recherche  du nom de la commande : "), debut
+                        print (tr("Erreur dans la recherche  du nom de la commande : "), debut)
                 args_cmd,toto = cherche_args(u'(u'+fin)
                 if args_cmd == 'erreur !':
-                        print tr("Erreur dans la recherche des  args de la commande :") , debut
+                        print (tr("Erreur dans la recherche des  args de la commande :") , debut)
                 cmd=COMMANDE_CATA(nom_cmd,args_cmd,self)
                 self.liste_commandes.append(cmd)
 
@@ -226,8 +226,8 @@ class CATALOGUE_CATA:
                         liste = re.split(nom_cmd+' *\(u',text,1)
                         if len(liste) == 2 : break
                 if len(liste) < 2 :
-                        print tr("le texte a analyser n'est pas celui d'une commande connue : \
-                                        %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text})
+                        print (tr("le texte a analyser n'est pas celui d'une commande connue : \
+                                        %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text}))
                         self.cr.fatal(tr("le texte a analyser n'est pas celui d'une commande connue : \
                                          %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text}))
                         return
@@ -235,11 +235,11 @@ class CATALOGUE_CATA:
                 fin = liste[1]
                 nom_cmd = cherche_nom(debut)
                 if nom_cmd == 'erreur !':
-                        print tr("Erreur dans la recherche du  nom de la commande : "), debut
+                        print ( tr("Erreur dans la recherche du  nom de la commande : "), debut)
                 args_cmd,toto = cherche_args(u'(u'+fin)
                 if args_cmd == 'erreur !':
-                        print tr("Erreur dans la recherche des args de la commande : "), debut
-                        print tr(fin)
+                        print ( tr("Erreur dans la recherche des args de la commande : "), debut)
+                        print (tr(fin))
                 cmd=COMMANDE_CATA(nom_cmd,args_cmd,self)
                 self.liste_commandes.append(cmd)
                 

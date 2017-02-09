@@ -301,7 +301,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         elif pos == 'after':
             index = index +1
         else:
-            print tr("%d n'est pas un index valide pour append_brother", pos)
+            print (tr("%d n'est pas un index valide pour append_brother", pos))
             return
         return self.parent.addobject(name,index)
 

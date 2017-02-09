@@ -42,7 +42,7 @@ def traite_entite(entite,liste_simp_reel):
        Cette fonction ajoute a l'objet entite un attribut de nom ordre_mc
        qui est une liste contenant le nom des sous entites dans l'ordre 
        de leur apparition dans le catalogue.
-       L'ordre d'apparition dans le catalogue est donné par l'attribut _no
+       L'ordre d'apparition dans le catalogue est donne par l'attribut _no
        de l'entite
        La fonction active le meme type de traitement pour les sous entites
        de entite
@@ -92,10 +92,10 @@ def analyse_niveau(cata_ordonne_dico,niveau,liste_simp_reel):
 def analyse_catalogue(cata):
    """
       Cette fonction analyse le catalogue cata pour construire avec l'aide
-      de traite_entite la structure de données ordre_mc qui donne l'ordre
-      d'apparition des mots clés dans le catalogue
+      de traite_entite la structure de donnees ordre_mc qui donne l'ordre
+      d'apparition des mots cles dans le catalogue
       Elle retourne un dictionnaire qui contient toutes les commandes
-      du catalogue indexées par leur nom
+      du catalogue indexees par leur nom
    """
    cata_ordonne_dico={}
    liste_simp_reel=[]
@@ -117,11 +117,11 @@ if __name__ == "__main__" :
    #dico=analyse_catalogue(cata_saturne)
 
    def print_entite(entite,dec='  '):
-       print dec,entite.nom,entite.__class__.__name__
+       print (dec,entite.nom,entite.__class__.__name__)
        for mocle in entite.ordre_mc:
           print_entite(entite.entites[mocle],dec=dec+'  ')
 
    for k,v in dico.items():
       print_entite(v,dec='')
 
-   print dico.keys()
+   print (dico.keys())

@@ -215,20 +215,18 @@ def print_pours(d_pours,dec=''):
     # Les fichiers includes d'abord
     for k,v in d_pours.items():
        if k in (u"pours","comm"):continue
-       print tr("%(v_1)s include %(v_2)s : %(v_3)s", {'v_1': str(dec), 'v_2': str(k), 'v_3': str(v)})
+       print ( tr("%(v_1)s include %(v_2)s : %(v_3)s", {'v_1': str(dec), 'v_2': str(k), 'v_3': str(v)}))
 
     if d_pours.has_key(u"pours"):
        # Description de la poursuite
-       print tr("%(v_1)s fichier poursuite: %(v_2)s", {'v_1': dec, 'v_2': d_pours["pours"]["comm"]})
+       print (tr("%(v_1)s fichier poursuite: %(v_2)s", {'v_1': dec, 'v_2': d_pours["pours"]["comm"]}))
        print_pours(d_pours["pours"],dec=dec+"++")
 
 def print_d_env():
-    #print d_env
     if d_env.studies is None:return
     for study in d_env.studies:
-       print tr("nom etude : %s", study["comm"])
+       print (tr("nom etude : %s", study["comm"]))
        print_pours(study,dec="++")
-       print
 
 def create_parser():
     # creation du parser des options de la ligne de commande
@@ -293,7 +291,7 @@ def parse(args):
             options.comm.append(file)
             options.studies.append({"comm":file})
          elif len(args) == 1 and options.locale:
-            print tr("Localisation specifiee pour l'application.")
+            print (tr("Localisation specifiee pour l'application."))
          else:
             parser.error(tr("Nombre incorrect d'arguments"))
 

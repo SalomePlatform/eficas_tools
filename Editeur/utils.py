@@ -47,13 +47,13 @@ def get_rep_user(dir):
   rep_user_eficas= os.path.join(os.environ['HOME'],dir)
   if os.path.exists(rep_user_eficas):
     if os.path.isfile(rep_user_eficas) :
-      print tr("Un fichier de nom %s existe deja : impossible de creer un repertoire de meme nom", rep_user_eficas)
+      print (tr("Un fichier de nom %s existe deja : impossible de creer un repertoire de meme nom", rep_user_eficas))
       rep_user_eficas=None
   else :
     try:
       os.mkdir(rep_user_eficas)
     except:
-      print tr("Creation du repertoire %s impossible\n Verifiez vos droits d'acces", rep_user_eficas)
+      print (tr("Creation du repertoire %s impossible\n Verifiez vos droits d'acces", rep_user_eficas))
   return rep_user_eficas
 
 def read_file(file):
@@ -127,7 +127,7 @@ def init_rep_cata_dev(fic_cata,rep_goal):
     os.chdir(cur_dir)
   except:
     traceback.print_exc()
-    print tr("Impossible de transferer les fichiers requis dans : %s", str(rep_goal))
+    print ( tr("Impossible de transferer les fichiers requis dans : %s", str(rep_goal)))
 
 def get_entete_cata(fic_cata):
   """ Retrouve l'entete du catalogue """

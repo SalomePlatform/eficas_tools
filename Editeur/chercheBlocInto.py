@@ -40,7 +40,7 @@ class ChercheInto:
 
         def construitListeInto(self,e):
             if isinstance(e,Accas.A_BLOC.BLOC) :
-               print e.condition
+               print (e.condition)
             for nomFils, fils in e.entites.items():
                 self.construitListeInto(fils)
 
