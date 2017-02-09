@@ -44,7 +44,6 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
        #print "Feuille", monSimpDef,nom,objSimp
-       #print self
        QWidget.__init__(self,None)
        self.node=node
        self.node.fenetre=self
@@ -83,14 +82,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def setNom(self):
        self.debutToolTip=""
-       #print "kkkkkkkkkkkkkkkkkk"
-       #print self.objSimp.nom
        nomTraduit=tr(self.objSimp.nom)
-       #print nomTraduit
-       #if len(nomTraduit) >= nomMax :
-       #  nom=nomTraduit[0:nomMax]+'...'
-       #  self.label.setText(nomTraduit)
-       #  self.debutToolTip=nomTraduit+"\n"
        longueur=QFontMetrics(self.label.font()).width(nomTraduit)
        if longueur >= nomMax :
          nouveauNom=self.formate(nomTraduit)

@@ -989,7 +989,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           #except :
           #   pass
       except Exception as e:
-          print traceback.print_exc()
+          print (traceback.print_exc())
 
     #-------------------#
     def runZCRACKS(self):
@@ -1010,7 +1010,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           textePython=(commande + self.fichierZcracksInput)
           self._viewTextExecute( textePython,"run_zcracks",".sh")
       except Exception as e:
-          print traceback.print_exc()
+          print (traceback.print_exc())
 
     #-------------------#
     def runCARMELCND(self):
@@ -1041,7 +1041,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           commande="runSession pilotyacsCS.py"
           os.system(commande)
       except Exception as e:
-          print traceback.print_exc()
+          print (traceback.print_exc())
 
     #-----------------------------------------------------#
     def determineNomFichier(self,path,extension):

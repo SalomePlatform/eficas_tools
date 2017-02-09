@@ -83,7 +83,7 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
 
 def lance_eficas_ssIhm_cherche_Groupes(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    print monEditeur.cherche_Groupes()
+    print (monEditeur.cherche_Groupes())
 
 def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)

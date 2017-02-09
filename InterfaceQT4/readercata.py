@@ -143,7 +143,7 @@ class READERCATA:
 
       if self.fic_cata == None :
           if self.appliEficas.salome == 0 :
-             print "Pas de catalogue pour code %s, version %s" %(self.code,self.version_code)
+             print ("Pas de catalogue pour code %s, version %s" %(self.code,self.version_code))
              sys.exit(1)
           else :
              self.appliEficas.close()
@@ -348,9 +348,6 @@ class READERCATA:
          
         
    def traite_entite(self,e):
-       #print "_______________"
-       #print e
-       #print e.nom
        boolIn=0
        for (nomFils, fils) in e.entites.items() :
           self.dicoMC[nomFils]=fils
