@@ -24,6 +24,8 @@ import A_PROC_ETAPE
 class PROC(N_PROC.PROC,I_ENTITE.ENTITE):
    class_instance=A_PROC_ETAPE.PROC_ETAPE
    def __init__(self,*tup,**args):
+      #print tup
+      #print args
       I_ENTITE.ENTITE.__init__(self)
       N_PROC.PROC.__init__(self,*tup,**args)
 
