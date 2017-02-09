@@ -78,7 +78,7 @@ class ViewText(Ui_dView,QDialog):
            f.write(str(self.view.toPlainText()))
            f.close()
            return 1
-        except IOError, why:
+        except IOError as why:
            QMessageBox.critical(self, tr("Sauvegarder le fichier"),
                  tr('Le fichier')+str(fn) + tr('n a pas pu etre sauvegarde : ') + str(why))
            return

@@ -449,19 +449,19 @@ class Appli(Ui_Eficas,QMainWindow):
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
-           print "il faut gerer les erreurs"
+           print ("il faut gerer les erreurs")
 
     def ChercheGrpMaille(self):
         # Normalement la variable self.salome permet de savoir si on est ou non dans Salome
         try:
-            Msg,listeGroup=self.ChercheGrpMailleInSalome() # recherche dans Salomé
-            #Msg = None; listeGroup = None # recherche manuelle, i.e., sans Salomé si ligne précédente commentée
+            Msg,listeGroup=self.ChercheGrpMailleInSalome() # recherche dans Salome
+            #Msg = None; listeGroup = None # recherche manuelle, i.e., sans Salome si ligne precedente commentee
         except:
             raise ValueError('Salome non ouvert')
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
-           print "il faut gerer les erreurs"
+           print "(il faut gerer les erreurs")
 
 
     def ChercheGrp(self):
@@ -849,7 +849,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def fileNew(self):
         try:
             self.viewmanager.newEditor()
-        except EficasException, exc:
+        except EficasException as exc:
             msg = unicode(exc)
             if msg != "": QMessageBox.warning(self, tr(u"Erreur"), msg)
 
@@ -870,7 +870,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def fileOpen(self):
         try:
             self.viewmanager.handleOpen()
-        except EficasException, exc:
+        except EficasException as exc:
             msg = unicode(exc)
             if msg != "":
                 QMessageBox.warning(self, tr(u"Erreur"), msg)

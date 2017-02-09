@@ -32,9 +32,6 @@ from Extensions.i18n import tr
 
 class MonChoixCata(Ui_DChoixCata,QDialog):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
   """
   def __init__(self, QWparent, listeCata, title = None):
       QDialog.__init__(self, QWparent)

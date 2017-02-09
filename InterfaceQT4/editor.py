@@ -83,7 +83,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            self.salome =  self.appliEficas.salome
         else :
            self.salome=0
-           print "dans JDC pas d appli ????????"
+           print ("dans JDC pas d appli ????????")
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code   = self.appliEficas.CONFIGURATION.code
@@ -183,12 +183,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
             if jdc==None :
-              # try :
-              if 1:
+               try :
                    self.jdc = self.readFile(self.fichier)
-               #except :
-              else :
-                   print "mauvaise lecture"
+               except :
+                   print ("mauvaise lecture")
             else :
                self.jdc=jdc
             if self.jdc is not None and units is not None:
@@ -245,8 +243,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
       import subprocess
       p = subprocess.Popen(['python',WrapperFilePath])
       (out,err)=p.communicate()        
-      print out
-      print err
+      print (out)
+      print (err)
 
     #-------------------#  Pour execution avec output et error dans le bash
     def runPSEN_N1(self):
@@ -273,7 +271,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          ###
          
       
-      print 'in runPSEN_N1', dico
+      #print ('in runPSEN_N1', dico)
       from Run import run 
       run(dico)
       #res,txt_exception=run(dico)
@@ -295,8 +293,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
          for k in dico['CONTINGENCY_PROCESSING'].keys():
-             print k
-
+             #print (k)
              if k[0:19] == 'Component_List_For_' or k[0:21] =='Contingency_List_For_' :
                 newK=k.replace('___',' ')
                 l="'"+str(newK)+"'"
@@ -894,12 +891,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
             f.write(txt)
             f.close()
             return 1
-        except IOError, why:
+        except IOError as why:
             if (self.appliEficas.ssIhm == False):
                 QMessageBox.critical(self, tr('Sauvegarde du Fichier'),
                 tr('Le fichier')+str(fn) + tr('n a pas pu etre sauvegarde : ') + str(why))
             else :
-                print why
+                print (why)
             return 0
 
     #-----------------------------------------------------------#
@@ -913,7 +910,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          try :
             jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
             if pourRun : jdc_formate=self.generator.textePourRun
-         except ValueError,e:
+         except ValueError as e:
             QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
          if not self.generator.cr.estvide():
             self.affiche_infos(tr("Erreur a la generation"),Qt.red)
@@ -991,7 +988,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           #   os.system(commande)
           #except :
           #   pass
-      except Exception, e:
+      except Exception as e:
           print traceback.print_exc()
 
     #-------------------#
@@ -1012,7 +1009,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           commande="more "
           textePython=(commande + self.fichierZcracksInput)
           self._viewTextExecute( textePython,"run_zcracks",".sh")
-      except Exception, e:
+      except Exception as e:
           print traceback.print_exc()
 
     #-------------------#
@@ -1036,10 +1033,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
       f.close()
       commande="xterm -e sh "+nomFichier +"\n"
       os.system(commande)
-      #try :
-      #    self._viewTextExecute( textePython,"carmel_run",".sh")
-      #except Exception, e:
-      #    print traceback.print_exc()
 
     #-------------------#
     def runCarmelCS(self):
@@ -1047,7 +1040,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       try :
           commande="runSession pilotyacsCS.py"
           os.system(commande)
-      except Exception, e:
+      except Exception as e:
           print traceback.print_exc()
 
     #-----------------------------------------------------#
@@ -1158,36 +1151,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------#
     def saveRunPSEN(self):
     #-----------------#
-        print "saveRunPSEN"
+        #print ("saveRunPSEN")
         self.saveFile()
-        return
-        if not(self.jdc.isvalid()):
-           QMessageBox.critical( self, tr( "Sauvegarde de l'input impossible "),
-                                tr("Un JdC valide est necessaire pour creer un .input")
-                                 )
-           return
-
-        #print generator.plugins.has_key(self.format)
-        if generator.plugins.has_key(self.format):
-             # Le generateur existe on l'utilise
-             self.generator=generator.plugins[self.format]()
-             try :
-                self.generator.gener(self.jdc)
-                self.generator.writeDefault('')
-             except ValueError,e:
-                QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
-             if not self.generator.cr.estvide():
-                self.affiche_infos(tr("Erreur a la generation"),Qt.red)
-                QMessageBox.critical( self, tr("Erreur a la generation"),tr("EFICAS ne sait pas convertir ce JDC"))
-                return ""
-        else:
-             # Il n'existe pas c'est une erreur
-             self.affiche_infos(tr("Format %s non reconnu" , self.format),Qt.red)
-             QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
-             return ""
-        #print "HELLO"
-        
-
 
 
     #-----------------------------------------#
@@ -1243,7 +1208,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         self.fichier = os.path.splitext(fn)[0]+extension
 
-        print self.fichier
         if hasattr(self.generator, "writeLeger"):
             self.generator.writeLeger(self.fichier,self.jdc,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
 
@@ -1426,7 +1390,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         ouChercher=etape
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
-        if ouChercher ==None : print 'SOUCI'; return
+        if ouChercher ==None : print ('SOUCI'); return
         monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= ouChercher.addentite(MCFils)
         monMC.definition.into=valeurs
@@ -1607,7 +1571,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       self.fichierMED=QSfichier
       from acquiertGroupes import getGroupes
       erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
-      if erreur != "" : print "a traiter"
+      if erreur != "" : print ("a traiter")
       texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichierMED +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
       texteSources=""
       texteCond=""
@@ -1636,7 +1600,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       self.fichierMED=str(QSfichier)
       from acquiertGroupes import getGroupes
       erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichierMED)
-      if erreur != "" : print "a traiter"
+      if erreur != "" : print ("a traiter")
 
     #-----------------------------
     def BoutonSalomePressed(self):

@@ -90,7 +90,7 @@ class READERCATA:
           elif isinstance(catalogue, types.TupleType):
               all_cata_list.append(CatalogDescription.create_from_tuple(catalogue))
           else:
-              print "Catalog description cannot be interpreted: ", catalogue
+              print ("Catalog description cannot be interpreted: ", catalogue)
 
       # This filter is only useful for codes that have subcodes (like MAP).
       # Otherwise, the "code" attribute of the catalog description can (should) be None.
@@ -204,7 +204,7 @@ class READERCATA:
              a=self.appliEficas.CONFIGURATION.dRepMat[self.version_code]
           except :
              if self.code == "ASTER" :
-                print "Probleme avec le repertoire materiau"
+                print ("Probleme avec le repertoire materiau")
              a='.'
       self.appliEficas.CONFIGURATION.rep_mat=a
 
@@ -242,7 +242,7 @@ class READERCATA:
       try :
           o=__import__(nom_cata)
           return o
-      except Exception,e:
+      except Exception as e:
           traceback.print_exc()
           return 0
 
@@ -305,7 +305,7 @@ class READERCATA:
         self.fic_doc=getattr(self.appliEficas.CONFIGURATION,fic_doc )
         f=open(self.fic_doc)
       except:
-        print "Pas de fichier associe contenant des clefs documentaires"
+        print ("Pas de fichier associe contenant des clefs documentaires")
         return
 
       dict_clef_docu={}

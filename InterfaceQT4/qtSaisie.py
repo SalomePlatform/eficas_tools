@@ -33,7 +33,7 @@ else :
 
 class SaisieValeur:
   """
-  Classe contenant les méthodes communes aux  panels
+  Classe contenant les methodes communes aux  panels
   permettant de choisir des valeurs 
   """
   def __init__(self):
@@ -122,7 +122,7 @@ class SaisieSDCO :
 
   def LESDCOReturnPressed(self):
         """
-           Lit le nom donné par l'utilisateur au concept de type CO qui doit être
+           Lit le nom donne par l'utilisateur au concept de type CO qui doit être
            la valeur du MCS courant et stocke cette valeur
         """
         self.editor.init_modif()

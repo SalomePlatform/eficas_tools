@@ -197,7 +197,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    def setZoneInfo(self):
       # info=str(self.nom)+'  '
       # if self.monSimpDef.get_fr() != None and self.monSimpDef.get_fr() != "": info+=self.monSimpDef.get_sug() +" "
-      # if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "": info+="Valeur suggérée : "self.monSimpDef.get_sug()
+      # if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "": info+="Valeur suggeree : "self.monSimpDef.get_sug()
       pass
 
    def reaffiche(self):

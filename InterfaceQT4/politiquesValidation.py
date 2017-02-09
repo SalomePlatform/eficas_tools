@@ -50,7 +50,7 @@ class Validation  :
                  commentaire=" "
 
          if not validite and commentaire is None:
-                  commentaire = "impossible d'évaluer : %s " %`valeurentree`
+                  commentaire = "impossible d'evaluer : %s " %`valeurentree`
          return valeur, validite, commentaire
 
 # ----------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ class Validation  :
                         valeurTexte=self.parent.appliEficas.dict_reels[clefobj][valeur]
                   else :
                      if string.find(str(valeur),'.') == -1 and string.find(str(valeur),'e') == -1 and string.find(str(valeur),'E'):
-                     # aucun '.' n'a été trouvé dans valeur --> on en rajoute un a la fin
+                     # aucun '.' n'a ete trouve dans valeur --> on en rajoute un a la fin
                         if (self.is_param(valeur)):
                            return valeur
                         else:
@@ -180,7 +180,7 @@ class PolitiquePlusieurs(Validation):
 
   def AjoutValeurs(self,listevaleur,index,listecourante):
          listeRetour=[]
-         commentaire="Nouvelle valeur acceptée"
+         commentaire="Nouvelle valeur acceptee"
          commentaire2=""
          valide=1
          if listevaleur==None: return

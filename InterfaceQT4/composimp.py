@@ -99,8 +99,8 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                from monWidgetSimpTuple3 import MonWidgetSimpTuple3
                widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               print "Pas de Tuple de longueur > 3"
-               print "Prevenir la maintenance "
+               print ("Pas de Tuple de longueur > 3")
+               print ("Prevenir la maintenance ")
 
           elif self.item.wait_complex():
             from monWidgetSimpComplexe import MonWidgetSimpComplexe
@@ -162,13 +162,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                from monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
                widget=MonWidgetPlusieursTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               print "Pas de Tuple de longueur > 3"
-               print "Prevenir la maintenance "
+               print ("Pas de Tuple de longueur > 3")
+               print ("Prevenir la maintenance ")
           elif self.item.has_into():
             if self.item.is_list_SansOrdreNiDoublon():
-               #print (self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  )
-               #print ( not(self.editor.afficheListesPliees)  )
-               #print (self.editor.afficheListesPliees)  
                
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
                   from monWidgetPlusieursInto import MonWidgetPlusieursInto

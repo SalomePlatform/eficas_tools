@@ -135,7 +135,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
         monTexte=nomString+"="+valString
         try :
           exec monTexte in contexte
-        except (ValueError,TypeError, NameError,RuntimeError,ZeroDivisionError),  exc:
+        except (ValueError,TypeError, NameError,RuntimeError,ZeroDivisionError) as  exc:
           self.LECommentaire.setText(tr("Valeur incorrecte: ")+unicode (exc))
           return False
         except :

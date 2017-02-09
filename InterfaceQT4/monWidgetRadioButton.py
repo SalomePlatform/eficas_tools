@@ -66,7 +66,7 @@ class MonWidgetRadioButtonCommun (Feuille):
       i=1
       j=len(self.maListeDeValeur)
       if j > self.maxI : 
-         print "poumbadaboum"
+         print ("poumbadaboum")
          return
       while i < j+1 :
          nomBouton="radioButton_"+str(i)

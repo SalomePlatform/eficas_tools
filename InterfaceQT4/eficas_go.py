@@ -87,7 +87,7 @@ def lance_eficas_ssIhm_cherche_Groupes(code=None,fichier=None,ssCode=None,versio
 
 def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    print monEditeur.jdc.cr
+    print (monEditeur.jdc.cr)
 
 def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False):
     #print 'lance_eficas_ssIhm_reecrit', fichier

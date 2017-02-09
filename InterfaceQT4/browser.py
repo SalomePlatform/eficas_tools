@@ -391,7 +391,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             self.treeParent.build_children()
             self.treeParent.children[pos].select()
             self.treeParent.children[pos].affichePanneau()
-        except Exception,e:
+        except Exception as e:
             traceback.print_exc()
             QMessageBox.critical( self.editor, "TOO BAD",str(e))
         
@@ -406,7 +406,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             self.treeParent.build_children()
             self.treeParent.children[pos].select()
             self.treeParent.children[pos].affichePanneau()
-        except Exception,e:
+        except Exception as e:
             QMessageBox.critical( self.editor, "Erreur !",str(e))
         
     def addComment( self, after=True ):
@@ -532,7 +532,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
         self.tree.inhibeExpand=True
         obj=self.item.additem(name,index) # emet le signal 'add'
-        print name
         if obj is None:obj=0
         if obj == 0:return 0
         try :
@@ -542,9 +541,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         except :
            child=self.children[index]
         self.tree.inhibeExpand=False
-        #print " fin append child"
-        print child
-        print child.item.nom
+        #print (" fin append child")
         return child
 
     def deplace(self):
@@ -931,7 +928,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def ouvreLesNoeudsDsLArbre(self):
         return
-        print "ds ouvreLesNoeudsDsLArbre  ", self.item.nom
         self.inhibeExpand = True 
         for i in range(self.childCount()):
             self.child(i).inhibeExpand=True
