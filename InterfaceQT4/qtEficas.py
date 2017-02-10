@@ -461,7 +461,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if Msg == None :
            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
-           print "(il faut gerer les erreurs")
+           print ("il faut gerer les erreurs")
 
 
     def ChercheGrp(self):

@@ -268,13 +268,14 @@ class ContientIcones:
       elif hasattr(mctype[0], "filters"):
           filters = mctype[0].filters
       else:
-          filters = None
+          filters = ""
       if len(mctype) > 2 and mctype[2] == "Sauvegarde":
           fichier = QFileDialog.getSaveFileName(self.appliEficas,
                               tr('Sauvegarder Fichier'),
                               self.appliEficas.CONFIGURATION.savedir,
                               filters)
       else:
+          print filters
           fichier = QFileDialog.getOpenFileName(self.appliEficas,
                               tr('Ouvrir Fichier'),
                               self.appliEficas.CONFIGURATION.savedir,
