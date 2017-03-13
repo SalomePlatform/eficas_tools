@@ -18,24 +18,27 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,re,sys
-import traceback
-from  determine import monEnvQT5
-if monEnvQT5 :
-  from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu, QPushButton
-  from PyQt5.QtGui import QIcon
-  from PyQt5.QtCore import  QFileInfo,  Qt, QSize, QVariant
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import object
+except : pass
 
-else:
-  from PyQt4.QtGui  import *
-  from PyQt4.QtCore import *
+import types,os,re,sys
+import traceback
+import six
+
+from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu, QPushButton
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import  QFileInfo,  Qt, QSize, QVariant
 
 
 from Extensions.i18n import tr
 listeSuffixe=('bmp','png','jpg' ,'txt','med')
 
 
-class FacultatifOuOptionnel:
+class FacultatifOuOptionnel(object):
 
   def setReglesEtAide(self):
       listeRegles=()
@@ -48,22 +51,20 @@ class FacultatifOuOptionnel:
         else :
            icon3=QIcon(self.repIcon+"/lettreRblanc30.png")
            self.RBRegle.setIcon(icon3)
-           if monEnvQT5 :self.RBRegle.clicked.connect(self.viewRegles)
-           else : self.connect( self.RBRegle,SIGNAL("clicked()"),self.viewRegles)
+           self.RBRegle.clicked.connect(self.viewRegles)
 
       cle_doc=None
       if not hasattr(self,"RBInfo"):return
       icon=QIcon(self.repIcon+"/point-interrogation30.png")
       self.RBInfo.setIcon(icon)
 
-      from monWidgetCommande import MonWidgetCommande
+      from .monWidgetCommande import MonWidgetCommande
       if isinstance(self,MonWidgetCommande) and self.editor.code =="MAP":
          self.cle_doc = self.chercheDocMAP()
       else :
          self.cle_doc = self.node.item.get_docu()
       if self.cle_doc == None  : self.RBInfo.close()
-      elif monEnvQT5 : self.RBInfo.clicked.connect (self.viewDoc)
-      else : self.connect (self.RBInfo,SIGNAL("clicked()"),self.viewDoc)
+      else : self.RBInfo.clicked.connect (self.viewDoc)
 
 
   def chercheDocMAP(self):
@@ -71,7 +72,7 @@ class FacultatifOuOptionnel:
         clef=self.editor.CONFIGURATION.adresse+"/"
       except :
         return None
-      for k in self.editor.readercata.cata[0].JdC.dict_groupes.keys():
+      for k in self.editor.readercata.cata[0].JdC.dict_groupes:
           if self.obj.nom in self.editor.readercata.cata[0].JdC.dict_groupes[k]:
              clef+=k
              break
@@ -100,8 +101,7 @@ class FacultatifOuOptionnel:
          return
       icon=QIcon(self.repIcon+"/deleteRond.png")
       self.RBPoubelle.setIcon(icon)
-      if monEnvQT5 : self.RBPoubelle.clicked.connect(self.aDetruire)
-      else : self.connect(self.RBPoubelle,SIGNAL("clicked()"),self.aDetruire)
+      self.RBPoubelle.clicked.connect(self.aDetruire)
 
   def setIconesSalome(self):
        if not (hasattr(self,"RBSalome")): return
@@ -115,8 +115,7 @@ class FacultatifOuOptionnel:
        if enable_salome_selection:
           icon=QIcon(self.repIcon+"/flecheSalome.png")
           self.RBSalome.setIcon(icon)
-          if monEnvQT5 : self.RBSalome.pressed.connect(self.BSalomePressed)
-          else : self.connect(self.RBSalome,SIGNAL("pressed()"),self.BSalomePressed)
+          self.RBSalome.pressed.connect(self.BSalomePressed)
 
 #PNPN --> Telemac A revoir surement
 # cela ou le catalogue grpma ou salomeEntry
@@ -125,8 +124,7 @@ class FacultatifOuOptionnel:
           else : 
              icon1=QIcon(self.repIcon+"/eye.png")
              self.RBSalomeVue.setIcon(icon1)
-             if monEnvQT5 : self.RBSalomeVue.clicked.connect(self.BView2DPressed)
-             else : self.connect(self.RBSalomeVue,SIGNAL("clicked()"),self.BView2DPressed)
+             self.RBSalomeVue.clicked.connect(self.BView2DPressed)
        else:
           self.RBSalome.close()
           self.RBSalomeVue.close()
@@ -138,14 +136,11 @@ class FacultatifOuOptionnel:
        mctype = mc.type[0]
        if mctype == "Repertoire":
           self.BRepertoire=self.BFichier
-          if monEnvQT5 : self.BRepertoire.clicked.connect(self.BRepertoirePressed)
-          else : self.connect(self.BRepertoire,SIGNAL("clicked()"),self.BRepertoirePressed)
+          self.BRepertoire.clicked.connect(self.BRepertoirePressed)
           self.BVisuFichier.close()
        else :
-          if monEnvQT5 : self.BFichier.clicked.connect(self.BFichierPressed)
-          else : self.connect(self.BFichier,SIGNAL("clicked()"),self.BFichierPressed)
-          if monEnvQT5 : self.BVisuFichier.clicked.connect(self.BFichierVisu)
-          else : self.connect(self.BVisuFichier,SIGNAL("clicked()"),self.BFichierVisu)
+          self.BFichier.clicked.connect(self.BFichierPressed)
+          self.BVisuFichier.clicked.connect(self.BFichierVisu)
 
 
 
@@ -172,9 +167,9 @@ class FacultatifOuOptionnel:
 
   def setRun(self):
       if hasattr(self.editor.appliEficas, 'mesScripts') :
-         if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+         if self.editor.code in  self.editor.appliEficas.mesScripts :
             self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
-            if self.obj.nom in self.dict_commandes_mesScripts.keys() :
+            if self.obj.nom in self.dict_commandes_mesScripts :
                self.ajoutScript()
                icon=QIcon(self.repIcon+"/roue.png")
                if hasattr(self,"RBRun"):self.RBRun.setIcon(icon)
@@ -214,7 +209,7 @@ class FacultatifOuOptionnel:
         if not hasattr(self,'CBScripts') : return # Cas des Widgets Plies
         self.dictCommandes={}
         listeCommandes=self.dict_commandes_mesScripts[self.obj.nom]
-        if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
+        if type(listeCommandes) != tuple: listeCommandes=(listeCommandes,)
         i=0
         for commande in listeCommandes :
           conditionSalome=commande[3]
@@ -222,12 +217,7 @@ class FacultatifOuOptionnel:
           self.CBScripts.addItem(commande[1])
           self.dictCommandes[commande[1]]=i
           i=i+1
-        if monEnvQT5:
-           #self.CBScripts.currentIndexChanged.connect(self.choixSaisi)
-           self.CBScripts.activated.connect(self.choixSaisi)
-        else :
-           #self.connect(self.CBScripts,SIGNAL("currentIndexChanged(int)"),self.choixSaisi)
-           self.connect(self.CBScripts,SIGNAL("activated(int)"),self.choixSaisi)
+        self.CBScripts.activated.connect(self.choixSaisi)
 
   def choixSaisi(self):
       fction=str(self.CBScripts.currentText())
@@ -235,12 +225,12 @@ class FacultatifOuOptionnel:
       self.node.AppelleFonction(numero,nodeTraite=self.node)
       #self.reaffiche()
 
-class ContientIcones:
+class ContientIcones(object):
 
   def BFichierVisu(self):
        fichier=self.lineEditVal.text()
        if fichier == None or str(fichier)=="" : return
-       from monViewTexte import ViewText
+       from .monViewTexte import ViewText
        try :
          if sys.platform[0:5]=="linux" :
            cmd="xdg-open "+ str(fichier)
@@ -275,15 +265,15 @@ class ContientIcones:
                               self.appliEficas.CONFIGURATION.savedir,
                               filters)
       else:
-          print filters
+          print(filters)
           fichier = QFileDialog.getOpenFileName(self.appliEficas,
                               tr('Ouvrir Fichier'),
                               self.appliEficas.CONFIGURATION.savedir,
                               filters)
 
-      if monEnvQT5 : fichier=fichier[0]
+      fichier=fichier[0]
       if not(fichier == ""):
-         ulfile = os.path.abspath(unicode(fichier))
+         ulfile = os.path.abspath(six.text_type(fichier))
          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
          self.editor.affiche_commentaire(tr("Fichier selectionne"))
@@ -297,8 +287,7 @@ class ContientIcones:
                  self.BSelectInFile.setObjectName("BSelectInFile")
                  self.gridLayout.addWidget(self.BSelectInFile,1,1,1,1)
                  self.BSelectInFile.setText(tr("Selection"))
-                 if monEnvQT5 : self.BSelectInFile.clicked.connect(self.BSelectInFilePressed)
-                 else : self.connect(self.BSelectInFile,SIGNAL("clicked()"),self.BSelectInFilePressed)
+                 self.BSelectInFile.clicked.connect(self.BSelectInFilePressed)
                except :
                 pass
              else :
@@ -312,9 +301,8 @@ class ContientIcones:
             directory = self.appliEficas.CONFIGURATION.savedir,
             options = QFileDialog.ShowDirsOnly)
 
-      #if monEnvQT5 : directory=directory[0]
       if not (directory == "") :
-         absdir = os.path.abspath(unicode(directory))
+         absdir = os.path.abspath(six.text_type(directory))
          self.appliEficas.CONFIGURATION.savedir = os.path.dirname(absdir)
          self.lineEditVal.setText(directory)
          self.LEValeurPressed()
@@ -343,7 +331,7 @@ class ContientIcones:
 
         mc = self.node.item.get_definition()
 
-        if  (isinstance(mc.type,types.TupleType) and len(mc.type) > 1 and "(*.med)" in mc.type[1] ):
+        if  (isinstance(mc.type,tuple) and len(mc.type) > 1 and "(*.med)" in mc.type[1] ):
            selection, commentaire = self.appliEficas.selectMeshFile(editor=self.editor)
            #print selection, commentaire
            if commentaire != "" : 
@@ -356,7 +344,7 @@ class ContientIcones:
                   return
 
         from Accas import SalomeEntry
-        if isinstance(kwType, types.ClassType) and issubclass(kwType, SalomeEntry):
+        if isinstance(kwType, type) and issubclass(kwType, SalomeEntry):
            selection, commentaire = self.appliEficas.selectEntryFromSalome(kwType,editor=self.editor)
 
         if commentaire !="" :

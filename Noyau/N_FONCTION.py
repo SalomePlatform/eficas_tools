@@ -21,11 +21,17 @@
 # de la division réelle pour les entiers, et non la division entière
 # 1/2=0.5 (et non 0). Comportement par défaut dans Python 3.0.
 from __future__ import division
+from __future__ import absolute_import
+try :
+   from builtins import zip
+   from builtins import str
+except :
+   pass
 from math import sin, cos, tan, asin, acos, atan2, atan, sinh, cosh, tanh
 from math import pi, exp, log, log10, sqrt
 
-from N_ASSD import ASSD
-from N_info import message, SUPERV
+from .N_ASSD import ASSD
+from six.moves import zip
 
 
 class FONCTION(ASSD):
@@ -42,8 +48,6 @@ class formule(ASSD):
         ctxt.update(getattr(self.parent, 'const_context', {}))
         ctxt.update(getattr(self.parent, 'macro_const_context', {}))
         self.parent_context = self.filter_context(ctxt)
-        # message.debug(SUPERV, "add parent_context %s %s", self.nom,
-        # self.parent_context)
 
     def __call__(self, *val):
         """Evaluation de la formule"""
@@ -56,9 +60,9 @@ class formule(ASSD):
         try:
             # globals() pour math.*
             res = eval(self.code, context, globals())
-        except Exception, exc:
-            message.error(SUPERV, "ERREUR LORS DE L'ÉVALUATION DE LA FORMULE '%s' "
-                          ":\n>> %s", self.nom, str(exc))
+        except Exception as exc:
+            mes = "ERREUR LORS DE L EVALUATION DE LA FORMULE %s" %self.nom
+            print (mes)
             raise
         return res
 
@@ -70,9 +74,9 @@ class formule(ASSD):
         self.expression = texte
         try:
             self.code = compile(texte, texte, 'eval')
-        except SyntaxError, exc:
-            message.error(SUPERV, "ERREUR LORS DE LA CREATION DE LA FORMULE '%s' "
-                          ":\n>> %s", self.nom, str(exc))
+        except SyntaxError as exc:
+            mes = "ERREUR LORS DE LA CREATION  DE LA FORMULE %s" %self.nom
+            print (mes)
             raise
 
     def __setstate__(self, state):

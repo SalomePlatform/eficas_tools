@@ -17,12 +17,13 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import I_ETAPE
+from __future__ import absolute_import
+from . import I_ETAPE
 
 
-# import rajoutés suite à l'ajout de Build_sd --> à résorber
+# import rajoutes suite a l'ajout de Build_sd --> a resorber
 import sys
-import traceback,types,string
+import traceback,types
 import Noyau
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
@@ -50,7 +51,7 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
    def delete_concept(self,sd):
       """
           Fonction : Mettre a jour les mots cles de l etape 
-          suite à la disparition du concept sd
+          suite a la disparition du concept sd
           Seuls les mots cles simples MCSIMP font un traitement autre
           que de transmettre aux fils
 
@@ -66,7 +67,7 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
           suite au remplacement du concept old_sd
 
           Inputs :
-             - old_sd=concept remplacé
+             - old_sd=concept remplace
              - sd=nouveau concept
       """
       for child in self.mc_liste :
@@ -83,8 +84,8 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
       except AsException  :
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme
-         # Si on poursuit, on a le choix entre deux possibilités :
-         # 1. on annule la sd associée à self
+         # Si on poursuit, on a le choix entre deux possibilites :
+         # 1. on annule la sd associee a self
          # 2. on la conserve mais il faut la retourner
          # En plus il faut rendre coherents sdnom et sd.nom
          self.sd=None

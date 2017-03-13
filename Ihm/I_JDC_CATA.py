@@ -17,6 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Noyau import N_JDC_CATA
 
 class JDC_CATA:
@@ -31,11 +32,11 @@ class JDC_CATA:
     return
 
 
-#ATTENTION SURCHARGE: cette methode doit etre synchronisée avec celle du Noyau
+#ATTENTION SURCHARGE: cette methode doit etre synchronisee avec celle du Noyau
   def enregistre(self,commande):
     """ 
-        Cette méthode surcharge la méthode de la classe du Noyau
-        Marche avec Noyau mais si un autre package l'a déjà surchargée ???
+        Cette methode surcharge la methode de la classe du Noyau
+        Marche avec Noyau 
     """
     N_JDC_CATA.JDC_CATA.enregistre(self,commande)
     self.l_noms_entites.append(commande.nom)

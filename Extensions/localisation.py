@@ -18,47 +18,47 @@
 
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtCore import QTranslator
-else :
-   from PyQt4.QtCore import QTranslator
 
-qt_translator = QTranslator()
+from PyQt5.QtCore import QTranslator
+
+code_translator = QTranslator()
 eficas_translator = QTranslator()
 
-def localise(application, locale=None,file=None ):
+def localise(application, locale=None,file=None,translatorFichier=None ):
     """
     """
-    if monEnvQT5 :
-       from PyQt5.QtCore import QLibraryInfo
-       from PyQt5.QtCore import QLocale
-       from PyQt5.QtWidgets import QApplication
-       monPath=os.path.join(os.path.dirname(__file__),'..','UiQT5')
-    else :
-       from PyQt4.QtCore import QLibraryInfo
-       from PyQt4.QtCore import QLocale
-       from PyQt4.QtGui import QApplication
-       monPath=os.path.join(os.path.dirname(__file__),'..','UiQT4')
+    from PyQt5.QtCore import QLibraryInfo
+    from PyQt5.QtCore import QLocale
+    from PyQt5.QtWidgets import QApplication
+    monPath=os.path.join(os.path.dirname(__file__),'..','UiQT5')
 
     sys_locale = QLocale.system().name()
 
     if locale is None: locale="fr"
     
-    global eficas_translator
     if locale=="ang" : locale="en"
 
     if file != None :
        print ('chargement de ', file,monPath)
        print (eficas_translator.load(file,monPath))
        print (QApplication.installTranslator(eficas_translator))
-       return
-     
-    if eficas_translator.load("eficas_" + locale, monPath):
-        QApplication.installTranslator(eficas_translator)
+    elif eficas_translator.load("eficas_" + locale, monPath):
+       QApplication.installTranslator(eficas_translator)
     else:
-        print ("Unable to load Eficas translator!")
+       print ("Unable to load Eficas translator!")
+     
+    global code_translator
+    if translatorFichier != None :
+       if (code_translator.load(translatorFichier)):
+           print (translatorFichier, ' loaded')
+       elif (code_translator.load(translatorFichier+'_'+locale)):
+           print(translatorFichier+'_'+locale+ ' loaded')
+       else : 
+           print ("Unable to load Code translator!" + translatorFichier)
+       print (QApplication.installTranslator(code_translator))
        
 
 if __name__ == "__main__":

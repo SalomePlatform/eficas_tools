@@ -34,14 +34,21 @@
 """
 
 # Modules Python
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+except :
+   pass
 import re
-import string
 import linecache
 from functools import partial
 
 # Modules EFICAS
-import N_utils
-from strfunc import get_encoding
+from . import N_utils
+from .strfunc import get_encoding
+import six
+from six.moves import range
 
 regex1 = '=?\s*%s\s*\('
 # commentaire standard precede d'un nombre quelconque de blancs (pas
@@ -70,7 +77,7 @@ def _GetNomConceptResultat(ope, level=2):
     lineno = f.f_lineno     # XXX Too bad if -O is used
     # lineno = f_lineno(f)  # Ne marche pas toujours
     co = f.f_code
-    filename = unicode(co.co_filename, get_encoding())
+    filename = six.text_type(co.co_filename, get_encoding())
     name = co.co_name
     # pattern pour identifier le debut de la commande
     pattern_oper = re.compile(regex1 % ope)
@@ -87,7 +94,7 @@ def _GetNomConceptResultat(ope, level=2):
             list.reverse()
             # On suppose que le concept resultat a bien ete
             # isole en tete de la ligne de source
-            m = evalnom(string.strip(l[0]), f.f_locals)
+            m = evalnom(l[0].strip(), f.f_locals)
             # print "NOMS ",m
             if m != []:
                 return m[-1]

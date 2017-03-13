@@ -17,4 +17,5 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Ihm.I_VALIDATOR import *

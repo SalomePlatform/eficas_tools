@@ -20,12 +20,9 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
 from desChoixCata import Ui_DChoixCata
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QDialog
-else:
-   from PyQt4.QtGui import *
+from PyQt5.QtWidgets import QDialog
 
 from Extensions.i18n import tr
 # Import des panels

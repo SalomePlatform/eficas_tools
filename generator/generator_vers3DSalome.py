@@ -23,8 +23,15 @@
     PN
 
 """
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import division
+try :
+  from builtins import range
+except :
+  pass
 import traceback
-import types,string,re
+import types,re
 import math
 
 from Noyau import N_CR
@@ -32,8 +39,9 @@ from Noyau.N_utils import repr_float
 import Accas
 import Extensions
 from Extensions.parametre import ITEM_PARAMETRE
-from Formatage import Formatage
-from generator_python import PythonGenerator
+from .Formatage import Formatage
+from .generator_python import PythonGenerator
+from six.moves import range
 #from Editeur.widgets import showerror
 
 def entryPoint():
@@ -160,7 +168,7 @@ class vers3DSalomeGenerator(PythonGenerator):
          self.list_commandes.append((self.commande,self.dict_attributs)) 
       else :
          #showerror("Elements ne portant pas sur un Groupe de Maille","Salome ne sait pas montrer ce type d' element")
-         print ("Elements ne portant pas sur un Groupe de Maille","Salome ne sait pas montrer ce type d' element")
+         print(("Elements ne portant pas sur un Groupe de Maille","Salome ne sait pas montrer ce type d' element"))
          pass
 
    def generMCList(self,obj):
@@ -188,7 +196,7 @@ class vers3DSalomeGenerator(PythonGenerator):
 
    def CARA(self,obj) :
        self.clefs=obj.val
-       if type(self.clefs) == types.StringType :
+       if type(self.clefs) == bytes :
           self.clefs=(obj.val,)
 
    def VALE(self,obj) :
@@ -200,16 +208,16 @@ class vers3DSalomeGenerator(PythonGenerator):
        for k in range(len(atraiter)) :
            clef=self.clefs[k]
            val =atraiter[k] 
-           if isinstance(val, (types.TupleType, types.ListType)) and len(val) == 1:
+           if isinstance(val, (tuple, list)) and len(val) == 1:
                val = val[0]
            if isinstance (val, Extensions.parametre.PARAMETRE):
               val=val.valeur
-	      print ( val.__class)
+              print(( val.__class))
               context={}
               if type(val) == type("aaa") :
                  for p in self.jdc.params:
                      context[p.nom]=eval(p.val,self.jdc.const_context, context)
-                     print (context[p.nom])
+                     print((context[p.nom]))
                  res=eval(val,self.jdc.const_context, context)
                  val=res
            self.dict_attributs[clef]=val

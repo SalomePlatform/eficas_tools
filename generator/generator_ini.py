@@ -20,11 +20,15 @@
 """
     Ce module contient le plugin generateur de fichier
     au format ini pour EFICAS.
-
-
 """
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import object
+except : pass
+
 import traceback
-import types,string
+import types
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
@@ -34,32 +38,32 @@ from Accas import MCSIMP,MCFACT,MCList
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
-       Ces informations sont retournées dans un dictionnaire
+       Retourne les informations necessaires pour le chargeur de plugins
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'ini',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : IniGenerator,
           }
 
 
-class IniGenerator:
+class IniGenerator(object):
    """
        Ce generateur parcourt un objet de type MCFACT et produit
        un fichier au format ini 
-       L'acquisition et le parcours sont réalisés par le méthode
+       L'acquisition et le parcours sont realises par le methode
        generator.gener(objet_mcfact)
-       L'écriture du fichier au format ini par appel de la méthode
+       L'ecriture du fichier au format ini par appel de la methode
        generator.writefile(nom_fichier)
 
-       Ses caractéristiques principales sont exposées dans des attributs 
+       Ses caracteristiques principales sont exposees dans des attributs 
        de classe :
-         - extensions : qui donne une liste d'extensions de fichier préconisées
+         - extensions : qui donne une liste d'extensions de fichier preconisees
 
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisees
    extensions=('.ini','.conf')
 
    def __init__(self,cr=None):
@@ -69,7 +73,7 @@ class IniGenerator:
       else:
          self.cr=N_CR.CR(debut='CR generateur format ini',
                          fin='fin CR format ini')
-      # Le texte au format ini est stocké dans l'attribut text
+      # Le texte au format ini est stocke dans l'attribut text
       self.text=''
 
    def writefile(self,filename):
@@ -79,9 +83,9 @@ class IniGenerator:
 
    def gener(self,obj,config=None):
       """
-         Tous les mots-clés simples du niveau haut sont mis dans la section DEFAUT
-         Tous les mots-clés facteurs sont convertis en sections
-         Un mot-clé facteur ne peut contenir que des mots-clés simples. Sinon => erreur
+         Tous les mots-cles simples du niveau haut sont mis dans la section DEFAUT
+         Tous les mots-cles facteurs sont convertis en sections
+         Un mot-cle facteur ne peut contenir que des mots-cles simples. Sinon => erreur
       """
       liste_mcfact=[]
       sect_defaut=''
@@ -102,34 +106,34 @@ class IniGenerator:
         elif isinstance(mocle,MCSIMP):
           sect_defaut=sect_defaut+self.generMCSIMP(mocle)
         else:
-          self.cr.fatal(tr("Entite inconnue ou interdite :%s",`mocle`))
+          self.cr.fatal(tr("Entite inconnue ou interdite :%s",repr(mocle)))
 
       self.text=''
       if sect_defaut != '':
          self.text="[DEFAULT]\n"+sect_defaut
-      self.text=self.text + string.join(liste_mcfact,'\n')
+      self.text=self.text + ''.join(liste_mcfact,'\n')
       return self.text
 
    def generMCFACT(self,obj):
       """
-         Cette méthode convertit un mot-clé facteur ne contenant que des mots-clés
-         simples en une chaine de caractères
+         Cette methode convertit un mot-cle facteur ne contenant que des mots-cles
+         simples en une chaine de caracteres
       """
       sect_text='[%s]\n' % obj.nom
       for mocle in obj.mc_liste:
          if isinstance(mocle,MCSIMP):
             sect_text=sect_text+self.generMCSIMP(mocle)
          else:
-            self.cr.fatal(tr("Entite inconnue ou interdite :%s. Elle est ignoree",`mocle`))
+            self.cr.fatal(tr("Entite inconnue ou interdite :%s. Elle est ignoree",repr(mocle)))
       return sect_text
 
    def generMCSIMP(self,obj):
       """
-         Cette méthode convertit un mot-clé simple en une chaine de caractères
+         Cette methode convertit un mot-cle simple en une chaine de caracteres
          au format ini
       """
       s=''
-      if type(obj.valeur) == types.TupleType :
+      if type(obj.valeur) == tuple :
          self.cr.fatal(tr("Les tuples ne sont pas supportes pour le format ini :%s ", obj.nom))
          s="%s = %s\n" % (obj.nom,"ERREUR")
       else :

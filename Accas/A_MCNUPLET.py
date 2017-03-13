@@ -17,6 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Extensions import mcnuplet
 from Ihm import I_MCCOMPO
 

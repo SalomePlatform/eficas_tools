@@ -23,13 +23,12 @@
     qui permet de spécifier les caractéristiques d'un JDC
 """
 
+from __future__ import absolute_import
 import types
-import string
 import traceback
 
-import N_ENTITE
-import N_JDC
-from strfunc import ufmt
+from . import N_ENTITE
+from . import N_JDC
 
 
 class JDC_CATA(N_ENTITE.ENTITE):
@@ -54,7 +53,7 @@ class JDC_CATA(N_ENTITE.ENTITE):
         """
         self.code = code
         self.execmodul = execmodul
-        if type(regles) == types.TupleType:
+        if type(regles) == tuple:
             self.regles = regles
         else:
             self.regles = (regles,)

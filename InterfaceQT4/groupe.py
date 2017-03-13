@@ -19,17 +19,14 @@
 # Modules Python
 # Modules Eficas
 
-from determine import monEnvQT5
-if monEnvQT5:
-   from PyQt5.QtWidgets import QWidget
-   from PyQt5.QtCore import Qt
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
-from Extensions.i18n import tr
+from __future__ import absolute_import
+from __future__ import print_function
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
-from gereIcones import FacultatifOuOptionnel
+
+from .gereIcones import FacultatifOuOptionnel
 import Accas 
 
     
@@ -62,12 +59,9 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       self.afficheMots()
       self.listeMCAAjouter=[]
       self.dictMCVenantDesBlocs={}
-      if hasattr(self,'RBDeplie') and not monEnvQT5 : self.connect(self.RBDeplie,SIGNAL("clicked()"), self.Deplie)
-      if hasattr(self,'RBPlie')  and not monEnvQT5: self.connect(self.RBPlie,SIGNAL("clicked()"), self.Plie)
-      if hasattr(self,'RBDeplie')  and monEnvQT5: self.RBDeplie.clicked.connect(self.Deplie)
-      if hasattr(self,'RBPlie')  and monEnvQT5: self.RBPlie.clicked.connect( self.Plie)
+      if hasattr(self,'RBDeplie')  : self.RBDeplie.clicked.connect(self.Deplie)
+      if hasattr(self,'RBPlie')    : self.RBPlie.clicked.connect( self.Plie)
       self.setAcceptDrops(True)
-      #self.donneFocus()
      
   def donneFocus(self):
       for fenetre in self.listeFocus:
@@ -117,14 +111,14 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       liste=self.liste_mc
       for MC in self.liste_mc : self.dictMCVenantDesBlocs[MC]=self
       while i < self.commandesLayout.count():
-          from monWidgetBloc import MonWidgetBloc
+          from .monWidgetBloc import MonWidgetBloc
           widget=self.commandesLayout.itemAt(i).widget()
           i=i+1
           if not(isinstance(widget,MonWidgetBloc)) : continue
           widget.calculOptionnel()
           listeW=widget.ajouteMCOptionnelDesBlocs() 
-          for MC in widget.dictMCVenantDesBlocs.keys():
-              if MC in self.dictMCVenantDesBlocs.keys(): print "Pb Sur les MC" 
+          for MC in widget.dictMCVenantDesBlocs:
+              if MC in self.dictMCVenantDesBlocs: print ("Pb Sur les MC" )
               else : self.dictMCVenantDesBlocs[MC]=widget.dictMCVenantDesBlocs[MC]
           liste=liste+listeW
       return liste
@@ -159,7 +153,7 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       listeNom=texteListeNom.split("+")[1:]
       firstNode=None
       for nom in listeNom:
-        if nom not in self.dictMCVenantDesBlocs.keys():
+        if nom not in self.dictMCVenantDesBlocs:
            #print "bizarre, bizarre"
            self.editor.init_modif()
            nouveau=self.node.append_child(nom)

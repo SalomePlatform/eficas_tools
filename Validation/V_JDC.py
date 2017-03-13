@@ -21,18 +21,18 @@
 
 
 """
-   Ce module contient la classe mixin JDC qui porte les méthodes
-   nécessaires pour réaliser la validation d'un objet de type JDC
-   dérivé de OBJECT.
+   Ce module contient la classe mixin JDC qui porte les methodes
+   necessaires pour realiser la validation d'un objet de type JDC
+   derive de OBJECT.
 
    Une classe mixin porte principalement des traitements et est
-   utilisée par héritage multiple pour composer les traitements.
+   utilisee par heritage multiple pour composer les traitements.
 """
+from __future__ import absolute_import
 # Modules EFICAS
-import V_MCCOMPO
+from . import V_MCCOMPO
 from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
-from Noyau.strfunc import ufmt
 
 
 class JDC(V_MCCOMPO.MCCOMPO):
@@ -58,10 +58,10 @@ class JDC(V_MCCOMPO.MCCOMPO):
 
     def isvalid(self, cr='non'):
         """
-          Méthode booléenne qui retourne 0 si le JDC est invalide, 1 sinon
+          Methode booleenne qui retourne 0 si le JDC est invalide, 1 sinon
         """
-        # FR : on prend en compte l'état du JDC ('unchanged','modified','undetermined')
-        # afin d'accélérer le test de validité du JDC
+        # FR : on prend en compte l'etat du JDC ('unchanged','modified','undetermined')
+        # afin d'accelerer le test de validite du JDC
         if self.state == 'unchanged':
             return self.valid
         else:
@@ -85,7 +85,7 @@ class JDC(V_MCCOMPO.MCCOMPO):
 
     def verif_regles(self):
         """
-        Effectue la vérification de validité des règles du jeu de commandes
+        Effectue la verification de validite des regles du jeu de commandes
         """
         noms_etapes = [etape.nom for etape in self.etapes]
         texte_global = ''

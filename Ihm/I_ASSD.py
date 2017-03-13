@@ -20,6 +20,7 @@
 
 #from I_VALIDATOR import ValidException
 
+from __future__ import absolute_import
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 from Noyau.N_VALIDATOR import ValError

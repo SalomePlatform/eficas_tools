@@ -18,15 +18,15 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os
 
 # Modules Eficas
-from determine import monEnvQT5
-if monEnvQT5 :
-  from PyQt5.QtWidgets import QWidget
-else :
-  from PyQt4.QtGui import *
-  from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QWidget
 from Extensions.i18n import tr
 
 from desWidgetInformation  import Ui_WidgetInformative 

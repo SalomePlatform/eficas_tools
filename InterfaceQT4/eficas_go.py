@@ -20,17 +20,20 @@
 #
 
 # Modules Python
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except : pass
+
+from PyQt5.QtWidgets import QApplication
+
 import sys,os
 repIni=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),".."))
-from  determine import monEnvQT5
-if monEnvQT5 : 
-    ihmQTDir=os.path.join(repIni,"UiQT5")
-    from PyQt5.QtWidgets import QApplication
-else         : 
-    ihmQTDir=os.path.join(repIni,"UiQT4")
-    from PyQt4.QtGui import QApplication
+ihmQTDir=os.path.join(repIni,"UiQT5")
 editeurDir=os.path.join(repIni,"Editeur")
 ihmDir=os.path.join(repIni,"InterfaceQT4")
+
 if ihmDir not in sys.path : sys.path.append(ihmDir)
 if ihmQTDir not in sys.path : sys.path.append(ihmQTDir)
 if editeurDir not in sys.path :sys.path.append(editeurDir)
@@ -46,7 +49,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     if options.code!= None : code=options.code
     if options.ssCode!= None : ssCode=options.ssCode
 
-    from qtEficas import Appli
+    from .qtEficas import Appli
     app = QApplication(sys.argv)
     Eficas=Appli(code=code,ssCode=ssCode,multi=multi,langue=langue)
     Eficas.show()
@@ -66,28 +69,28 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
     if fichier==None : fichier=options.comm[0]
     if code == None : code=options.code
 
-    from qtEficas import Appli
+    from .qtEficas import Appli
     Eficas=Appli(code=code,ssCode=ssCode,ssIhm=True)
 
-    from ssIhm  import QWParentSSIhm
+    from .ssIhm  import QWParentSSIhm
     parent=QWParentSSIhm(code,Eficas,version)
 
-    import readercata
+    from . import readercata
     if not hasattr ( Eficas, 'readercata'):
            monreadercata  = readercata.READERCATA( parent, Eficas )
            Eficas.readercata=monreadercata
 
-    from editor import JDCEditor
+    from .editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
     return monEditeur
 
 def lance_eficas_ssIhm_cherche_Groupes(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    print (monEditeur.cherche_Groupes())
+    print((monEditeur.cherche_Groupes()))
 
 def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    print (monEditeur.jdc.cr)
+    print((monEditeur.jdc.cr))
 
 def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False):
     #print 'lance_eficas_ssIhm_reecrit', fichier
@@ -104,7 +107,7 @@ def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,o
        fileCr=os.path.join(ou,f2)
     monEditeur.saveFileAs(fileName=fileName)
     if cr:
-       f = open(fileCr, 'wb')
+       f = open(fileCr, 'w')
        f.write(str(monEditeur.jdc.report()))
        f.close()
 
@@ -116,19 +119,19 @@ def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION
     from Editeur  import session
     options=session.parse(sys.argv)
 
-    from qtEficas import Appli
+    from .qtEficas import Appli
     app = QApplication(sys.argv)
     Eficas=Appli(code=code,ssCode=None)
 
-    from ssIhm  import QWParentSSIhm
+    from .ssIhm  import QWParentSSIhm
     parent=QWParentSSIhm(code,Eficas,version)
 
-    import readercata
+    from . import readercata
     if not hasattr ( Eficas, 'readercata'):
            monreadercata  = readercata.READERCATA( parent, Eficas )
            Eficas.readercata=monreadercata
 
-    from editor import JDCEditor
+    from .editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
     texte=loadJDC(fichier)
     parameters=getJdcParameters(texte,macro)

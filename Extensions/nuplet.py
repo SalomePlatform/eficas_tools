@@ -18,16 +18,21 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce module contient la classe de définition pour les nuplets NUPL
+    Ce module contient la classe de definition pour les nuplets NUPL
 """
 # Modules Python
+from __future__ import absolute_import
+try : 
+   from builtins import str
+except : pass
+
 import types
 
 # Modules Eficas
 from Noyau import N_ENTITE,N_MCLIST,N_CR
 from Ihm import I_ENTITE
 from Extensions.i18n import tr
-import mcnuplet
+from . import mcnuplet
 
 class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
    """
@@ -48,6 +53,8 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       self.defaut=defaut
       self.min=min
       self.max=max
+      if self.max =='**' : self.max=float('inf')
+      if self.min =='**' : self.min=float('-inf')
       self.entites=elements
       self.regles=()
       # on force le statut des sous entites a obligatoire
@@ -57,22 +64,22 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
 
    def verif_cata(self):
       """
-          Cette methode sert à valider les attributs de l'objet de définition
+          Cette methode sert a valider les attributs de l'objet de definition
           de la classe NUPL
       """
-      if type(self.min) != types.IntType :
-        if self.min != '**':
+      if type(self.min) != int :
+        if self.min != '**' and self.min != float('-inf'):
           self.cr.fatal(tr("L'attribut 'min' doit etre un entier : ")+str(self.min))
-      if type(self.max) != types.IntType :
-        if self.max != '**' :
+      if type(self.max) != int :
+        if self.max != '**'  and self.max != float('inf'):
           self.cr.fatal(tr("L'attribut 'max' doit etre un entier : ")+str(self.max))
       if self.min > self.max :
          self.cr.fatal(tr("Nombres d'occurrence min et max invalides :") +str(self.min)+","+str(self.max))
-      if type(self.fr) != types.StringType :
+      if type(self.fr) != bytes :
         self.cr.fatal(tr("L'attribut 'fr' doit etre une chaine de caracteres"))
       if self.statut not in ['o','f','c','d']:
         self.cr.fatal(tr("L'attribut 'statut' doit valoir 'o','f','c' ou 'd'"))
-      if type(self.docu) != types.StringType :
+      if type(self.docu) != bytes :
         self.cr.fatal(tr("L'attribut 'docu' doit etre une chaine de caracteres"))
       self.verif_cata_regles()
 
@@ -81,7 +88,7 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
          Construit la structure de donnees pour un NUPLET a partir de sa definition (self)
          de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
       """
-      if (type(val) == types.TupleType or type(val) == types.ListType) and type(val[0]) == types.TupleType:
+      if (type(val) == tuple or type(val) == list) and type(val[0]) == tuple:
         # On est en presence d une liste de nuplets
         l=self.list_instance()
         l.init(nom=nom,parent=parent)
@@ -95,7 +102,7 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
 
    def report(self):
       """ 
-           Méthode qui crée le rapport de vérification du catalogue du nuplet 
+           Methode qui cree le rapport de verification du catalogue du nuplet 
       """
       self.cr = self.CR()
       self.verif_cata()
@@ -109,7 +116,7 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
    def affecter_parente(self):
       """
           Cette methode a pour fonction de donner un nom et un pere aux
-          sous entités qui n'ont aucun moyen pour atteindre leur parent 
+          sous entites qui n'ont aucun moyen pour atteindre leur parent 
           directement
           Il s'agit principalement des mots cles
       """

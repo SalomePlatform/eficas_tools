@@ -23,10 +23,17 @@
     Il s'appuie sur la classe READERCATA
 """
 # Modules Python
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import object
+except : pass
+
 import time
 import os,sys,py_compile
 import traceback
-import cPickle
+import six.moves.cPickle
 import re
 import types
 
@@ -38,19 +45,15 @@ import analyse_catalogue
 import analyse_catalogue_initial
 import autre_analyse_cata
 import uiinfo
-from monChoixCata import MonChoixCata
+from .monChoixCata import MonChoixCata
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
-else :
-   from PyQt4.QtGui  import *
+from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 
 
 
-class READERCATA:
+class READERCATA(object):
 
    def __init__(self,QWParent, appliEficas):
       self.QWParent=QWParent
@@ -67,7 +70,7 @@ class READERCATA:
       self.cataitem=None
       self.cree_dico_inverse()
       if self.code=="TELEMAC": self.cree_dico_CasToCata()
-      #for k in self.dicoInverse.keys():
+      #for k in self.dicoInverse:
       #   genea= self.dicoInverse[k]
       #   for t in genea :
       #       print t[0]
@@ -87,10 +90,10 @@ class READERCATA:
       for catalogue in self.appliEficas.CONFIGURATION.catalogues:
           if isinstance(catalogue, CatalogDescription):
               all_cata_list.append(catalogue)
-          elif isinstance(catalogue, types.TupleType):
+          elif isinstance(catalogue, tuple):
               all_cata_list.append(CatalogDescription.create_from_tuple(catalogue))
           else:
-              print ("Catalog description cannot be interpreted: ", catalogue)
+              print(("Catalog description cannot be interpreted: ", catalogue))
 
       # This filter is only useful for codes that have subcodes (like MAP).
       # Otherwise, the "code" attribute of the catalog description can (should) be None.
@@ -143,7 +146,7 @@ class READERCATA:
 
       if self.fic_cata == None :
           if self.appliEficas.salome == 0 :
-             print ("Pas de catalogue pour code %s, version %s" %(self.code,self.version_code))
+             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.version_code)))
              sys.exit(1)
           else :
              self.appliEficas.close()
@@ -155,7 +158,7 @@ class READERCATA:
       self.cata = self.import_cata(self.fic_cata)
       if not self.cata :          
           QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
-	  self.appliEficas.close()
+          self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)
       #
@@ -218,9 +221,9 @@ class READERCATA:
       self.appliEficas.listeAEnlever.append(rep_cata)
 
       
-      if sys.modules.has_key(nom_cata):
+      if nom_cata in list(sys.modules.keys()) :
         del sys.modules[nom_cata]
-      for k in sys.modules.keys():
+      for k in sys.modules:
         if k[0:len(nom_cata)+1] == nom_cata+'.':
           del sys.modules[k]
 
@@ -315,7 +318,7 @@ class READERCATA:
           docu=l[deb:-1]
           dict_clef_docu[clef]=docu
       for oper in self.cata.JdC.commandes:
-           if dict_clef_docu.has_key(oper.nom):
+           if oper.nom in dict_clef_docu :
               oper.docu=dict_clef_docu[oper.nom]
 
    def cree_dico_inverse(self):
@@ -327,7 +330,7 @@ class READERCATA:
 
         #self.dicoFrancaisAnglais={}
         #self.dicoAnglaisFrancais={}
-        #for k in self.dicoInverse.keys():
+        #for k in self.dicoInverse:
         #    listefr=[]
         #    for nom, obj in self.dicoInverse[k] :
         #        listefr.append((tr(nom),obj))
@@ -349,7 +352,7 @@ class READERCATA:
         
    def traite_entite(self,e):
        boolIn=0
-       for (nomFils, fils) in e.entites.items() :
+       for (nomFils, fils) in list(e.entites.items()) :
           self.dicoMC[nomFils]=fils
           self.traite_entite(fils)
           boolIn=1
@@ -369,8 +372,8 @@ class READERCATA:
        #if niveau != 0 :
        #    if isinstance(e,A_BLOC.BLOC): print decale, e.condition 
        #    else :                           print decale, e. nom  
-       for (nom, fils) in e.entites.items() :
-           if  fils.entites.items() != [] : self.cree_rubrique(fils,dico,niveau+1)
+       for (nom, fils) in list(e.entites.items()) :
+           if  list(fils.entites.items()) != [] : self.cree_rubrique(fils,dico,niveau+1)
            #else : print (niveau+1)*"   ", nom
 
         

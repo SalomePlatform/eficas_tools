@@ -19,17 +19,13 @@
 # Modules Python
 # Modules Eficas
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QCheckBox, QWidget
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from __future__ import absolute_import
+from PyQt5.QtWidgets import QCheckBox, QWidget
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 from desWidgetOptionnel import Ui_WidgetOptionnel
-from monGroupeOptionnel import MonGroupeOptionnel
+from .monGroupeOptionnel import MonGroupeOptionnel
 
     
 # Import des panels
@@ -44,7 +40,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   def afficheOptionnel(self,liste,MC):
      #print "dans Optionnel ____ affiche", liste 
      self.vireLesAutres(MC)
-     if self.dicoMCWidgetOptionnel.has_key(MC.node.item.nom) :
+     if MC.node.item.nom in self.dicoMCWidgetOptionnel :
         self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
      groupe = MonGroupeOptionnel(liste,self,MC)
@@ -56,7 +52,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
       #print "je passe dans vireLesAutres"
       genea =MC.obj.get_genealogie()
       #print genea
-      for k in self.dicoMCWidgetOptionnel.keys():
+      for k in list(self.dicoMCWidgetOptionnel.keys()):
           if k not in genea :  
              self.dicoMCWidgetOptionnel[k].close()
              del self.dicoMCWidgetOptionnel[k]
@@ -65,7 +61,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
       
   def afficheOptionnelVide(self):
       self.GeneaLabel.setText("")
-      for k in self.dicoMCWidgetOptionnel.keys():
+      for k in list(self.dicoMCWidgetOptionnel.keys()):
             self.dicoMCWidgetOptionnel[k].close()
             del self.dicoMCWidgetOptionnel[k]
 

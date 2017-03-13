@@ -17,7 +17,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import types,string
+from __future__ import absolute_import
+import types
 
 class Fichier:
 
@@ -29,7 +30,7 @@ class Fichier:
    def __convert__(self,valeur):
     # Attention ne verifie pas grand chose
     # cela vaut-il la peine de refaire ce que Qt fait tres bien 
-    if type(valeur) != types.StringType :
+    if type(valeur) != bytes :
       return None
     return valeur
 

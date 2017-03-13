@@ -20,22 +20,27 @@
 # ======================================================================
 
 
-class PRESENT_PRESENT:
+from __future__ import absolute_import
+try : 
+   from builtins import object
+except : pass
+
+class PRESENT_PRESENT(object):
 
     """
-       La règle vérifie que si le premier mot-clé de self.mcs est present
+       La regle verifie que si le premier mot-cle de self.mcs est present
            parmi les elements de args les autres doivent l'etre aussi
 
-       Ces arguments sont transmis à la règle pour validation sous la forme
-       d'une liste de noms de mots-clés ou d'un dictionnaire dont
-       les clés sont des noms de mots-clés.
+       Ces arguments sont transmis a la regle pour validation sous la forme
+       d'une liste de noms de mots-cles ou d'un dictionnaire dont
+       les cles sont des noms de mots-cles.
     """
 
     def verif(self, args):
         """
-            La methode verif effectue la verification specifique à la règle.
-            args peut etre un dictionnaire ou une liste. Les éléments de args
-            sont soit les éléments de la liste soit les clés du dictionnaire.
+            La methode verif effectue la verification specifique a la regle.
+            args peut etre un dictionnaire ou une liste. Les elements de args
+            sont soit les elements de la liste soit les cles du dictionnaire.
         """
         #  on verifie que si le premier de la liste est present,
         #    les autres le sont aussi
@@ -43,11 +48,11 @@ class PRESENT_PRESENT:
         text = ''
         test = 1
         args = self.liste_to_dico(args)
-        if args.has_key(mc0):
+        if mc0 in args :
             for mc in self.mcs[1:len(self.mcs)]:
-                if not args.has_key(mc):
-                    text = text + u"- Le mot clé " + `mc0`+ \
-                        u" étant présent, il faut que : " + \
-                        mc + u" soit présent" + '\n'
+                if not mc in args :
+                    text = text + "- Le mot cle " + repr(mc0)+ \
+                        " etant present, il faut que : " + \
+                        mc + " soit present" + '\n'
                     test = 0
         return text, test

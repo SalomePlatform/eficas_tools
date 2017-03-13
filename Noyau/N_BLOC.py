@@ -23,16 +23,16 @@
     qui permet de spécifier les caractéristiques des blocs de mots clés
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import types
-import string
 import sys
 import traceback
 
-import N_ENTITE
-import N_MCBLOC
-from N_Exception import AsException
-from N_types import force_list
-from strfunc import ufmt
+from . import N_ENTITE
+from . import N_MCBLOC
+from .N_Exception import AsException
+from .N_types import force_list
 
 
 class BLOC(N_ENTITE.ENTITE):
@@ -70,7 +70,7 @@ class BLOC(N_ENTITE.ENTITE):
         self.fr = fr
         self.ang = ang
         self.docu = docu
-        if type(regles) == types.TupleType:
+        if type(regles) == tuple:
             self.regles = regles
         else:
             self.regles = (regles,)
@@ -124,7 +124,7 @@ class BLOC(N_ENTITE.ENTITE):
                 if CONTEXT.debug:
                     l = traceback.format_exception(
                         sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
-                    print "WARNING : Erreur a l'evaluation de la condition " + string.join(l)
+                    print(("WARNING : Erreur a l'evaluation de la condition " + ''.join(l)))
                 return 0
             except SyntaxError:
                 # le texte de la condition n'est pas du Python correct -->
@@ -133,13 +133,13 @@ class BLOC(N_ENTITE.ENTITE):
                     sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
                 raise AsException(
                     "Catalogue entite : ", self.nom, ", de pere : ", self.pere.nom,
-                    '\n', "Erreur dans la condition : ", self.condition, string.join(l))
+                    '\n', "Erreur dans la condition : ", self.condition, ''.join(l))
             except:
                 l = traceback.format_exception(
                     sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
                 raise AsException(
                     "Catalogue entite : ", self.nom, ", de pere : ", self.pere.nom,
-                    '\n', "Erreur dans la condition : ", self.condition, string.join(l))
+                    '\n', "Erreur dans la condition : ", self.condition, ''.join(l))
         else:
             return 0
 

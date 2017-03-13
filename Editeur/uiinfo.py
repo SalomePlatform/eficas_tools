@@ -21,6 +21,7 @@
    Ce module sert a construire les structures de donnees porteuses 
    des informations liees aux groupes de commandes
 """
+from __future__ import absolute_import
 import types
 
 class UIINFO:
@@ -41,7 +42,7 @@ class UIINFO:
       if groupes == None:
          # L'entite n'a pas de groupe associe. On lui associe le groupe "DEFAUT"
          self.groupes=("DEFAUT",)
-      if type(self.groupes) != types.TupleType:
+      if type(self.groupes) != tuple:
          self.groupes=(self.groupes,)
 
 def traite_commande(commande,niveau):
@@ -59,7 +60,7 @@ def traite_commande(commande,niveau):
     #else:
         # On ajoute la commande dans tous les groupes specifies
     for grp in UI.groupes:
-        if not niveau.dict_groupes.has_key(grp): niveau.dict_groupes[grp]=[]
+        if not grp in niveau.dict_groupes: niveau.dict_groupes[grp]=[]
         niveau.dict_groupes[grp].append(commande.nom)
 
 def traite_niveau(niveau):
@@ -70,7 +71,7 @@ def traite_niveau(niveau):
            traite_commande(oper,niveau)
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
-       niveau.liste_groupes=niveau.dict_groupes.keys()
+       niveau.liste_groupes=list(niveau.dict_groupes.keys())
        # On ordonne les listes alphabetiquement
        niveau.liste_groupes.sort()
        for v in niveau.dict_groupes.values():v.sort()
@@ -97,7 +98,7 @@ def traite_UIinfo(cata):
            traite_commande(commande,cata.JdC)
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
-       cata.JdC.liste_groupes=cata.JdC.dict_groupes.keys()
+       cata.JdC.liste_groupes=list(cata.JdC.dict_groupes.keys())
        # On ordonne les listes alphabetiquement
        cata.JdC.liste_groupes.sort()
        for v in cata.JdC.dict_groupes.values():v.sort()
@@ -107,7 +108,6 @@ def traite_UIinfo(cata):
        # Le catalogue de commandes contient des definitions de niveau
        for niv in cata.JdC.l_niveaux:
           traite_niveau(niv)
-
 
 
 

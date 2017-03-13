@@ -22,8 +22,13 @@
     aplat pour EFICAS.
 
 """
+try :
+   from builtins import str
+   from builtins import object
+except : pass
+
 import traceback
-import types,string,re
+import types,re
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
@@ -36,35 +41,35 @@ from Accas import COMMENTAIRE,PARAMETRE, PARAMETRE_EVAL,COMMANDE_COMM
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'aplat',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : AplatGenerator,
           }
 
 
-class AplatGenerator:
+class AplatGenerator(object):
    """
        Ce generateur parcourt un objet de type JDC et produit
        un fichier au format aplat 
 
-       L'acquisition et le parcours sont réalisés par la méthode
+       L'acquisition et le parcours sont realises par la methode
        generator.gener(objet_jdc,format)
 
-       L'écriture du fichier au format ini par appel de la méthode
+       L'ecriture du fichier au format ini par appel de la methode
        generator.writefile(nom_fichier)
 
-       Ses caractéristiques principales sont exposées dans des attributs 
+       Ses caracteristiques principales sont exposees dans des attributs 
        de classe :
-         - extensions : qui donne une liste d'extensions de fichier préconisées
+         - extensions : qui donne une liste d'extensions de fichier preconisees
 
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisees
    extensions=('.*',)
 
    def __init__(self,cr=None):
@@ -75,9 +80,9 @@ class AplatGenerator:
          self.cr=N_CR.CR(debut='CR generateur format aplat pour eficas',
                          fin='fin CR format aplat pour eficas')
       self.init=''
-      # Le séparateur utiisé
+      # Le separateur utiise
       self.sep='//'
-      # Le texte au format aplat est stocké dans l'attribut text
+      # Le texte au format aplat est stocke dans l'attribut text
       self.text=''
 
    def writefile(self,filename):
@@ -87,7 +92,7 @@ class AplatGenerator:
 
    def gener(self,obj,format='brut',config=None,appli=None):
       """
-          Retourne une représentation du JDC obj sous une forme qui est paramétrée par format.
+          Retourne une representation du JDC obj sous une forme qui est parametree par format.
           Si format vaut 'brut', 'standard' ou 'beautifie', retourne le texte issu de generator
       """
       liste= self.generator(obj)
@@ -104,10 +109,10 @@ class AplatGenerator:
    def generator(self,obj):
       """
          Cette methode joue un role d'aiguillage en fonction du type de obj
-         On pourrait utiliser les méthodes accept et visitxxx à la 
-         place (dépend des gouts !!!)
+         On pourrait utiliser les methodes accept et visitxxx a la 
+         place (depend des gouts !!!)
       """
-      # ATTENTION a l'ordre des tests : il peut avoir de l'importance (héritage)
+      # ATTENTION a l'ordre des tests : il peut avoir de l'importance (heritage)
       if isinstance(obj,PROC_ETAPE):
          return self.generPROC_ETAPE(obj)
       elif isinstance(obj,MACRO_ETAPE):
@@ -130,7 +135,7 @@ class AplatGenerator:
          return self.generETAPE_NIVEAU(obj)
       elif isinstance(obj,COMMENTAIRE):
          return self.generCOMMENTAIRE(obj)
-      # Attention doit etre placé avant PARAMETRE (raison : héritage)
+      # Attention doit etre place avant PARAMETRE (raison : heritage)
       elif isinstance(obj,PARAMETRE_EVAL):
          return self.generPARAMETRE_EVAL(obj)
       elif isinstance(obj,PARAMETRE):
@@ -149,8 +154,8 @@ class AplatGenerator:
 
    def generJDC(self,obj):
       """
-         Cette méthode convertit un objet JDC en une chaine de
-         caractères à la syntaxe aplat
+         Cette methode convertit un objet JDC en une chaine de
+         caracteres a la syntaxe aplat
       """
       text=''
       if obj.definition.l_niveaux == ():
@@ -165,10 +170,10 @@ class AplatGenerator:
 
    def generCOMMANDE_COMM(self,obj):
       """
-         Cette méthode convertit un COMMANDE_COMM
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode convertit un COMMANDE_COMM
+         en une chaine de caracteres a la syntaxe aplat 
       """
-      l_lignes = string.split(obj.valeur,'\n')
+      l_lignes = obj.valeur.split('\n')
       txt=''
       for ligne in l_lignes:
           txt = txt + '##'+ligne+'\n'
@@ -176,17 +181,17 @@ class AplatGenerator:
 
    def generEVAL(self,obj):
       """
-         Cette méthode convertit un EVAL
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode convertit un EVAL
+         en une chaine de caracteres a la syntaxe aplat 
       """
       return 'EVAL("""'+ obj.valeur +'""")'
 
    def generCOMMENTAIRE(self,obj):
       """
-         Cette méthode convertit un COMMENTAIRE
-         en une chaine de caractères à la syntaxe aplat  
+         Cette methode convertit un COMMENTAIRE
+         en une chaine de caracteres a la syntaxe aplat  
       """
-      l_lignes = string.split(obj.valeur,'\n')
+      l_lignes = obj.valeur.split('\n')
       txt=''
       for ligne in l_lignes:
         txt = txt + '#'+ligne+'\n'
@@ -194,8 +199,8 @@ class AplatGenerator:
 
    def generPARAMETRE_EVAL(self,obj):
       """
-         Cette méthode convertit un PARAMETRE_EVAL
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode convertit un PARAMETRE_EVAL
+         en une chaine de caracteres a la syntaxe aplat 
       """
       if obj.valeur == None:
          return obj.nom + ' = None ;\n'
@@ -204,10 +209,10 @@ class AplatGenerator:
 
    def generPARAMETRE(self,obj):
       """
-         Cette méthode convertit un PARAMETRE
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode convertit un PARAMETRE
+         en une chaine de caracteres a la syntaxe aplat 
       """
-      if type(obj.valeur) == types.StringType:
+      if type(obj.valeur) == bytes:
         # PN pour corriger le bug a='3+4' au lieu de a= 3+4
         #return obj.nom + " = '" + obj.valeur + "';\n"
         return obj.nom + " = " + obj.valeur + ";\n"
@@ -216,8 +221,8 @@ class AplatGenerator:
 
    def generETAPE_NIVEAU(self,obj):
       """
-         Cette méthode convertit une étape niveau
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode convertit une etape niveau
+         en une chaine de caracteres a la syntaxe aplat 
       """
       text=''
       if obj.etapes_niveaux == []:
@@ -230,8 +235,8 @@ class AplatGenerator:
 
    def gener_etape(self,obj):
       """
-         Cette méthode est utilisé pour convertir les objets etape
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode est utilise pour convertir les objets etape
+         en une chaine de caracteres a la syntaxe aplat 
       """
       text=''
       for v in obj.mc_liste:
@@ -243,8 +248,8 @@ class AplatGenerator:
 
    def generETAPE(self,obj):
       """
-         Cette méthode convertit une étape
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode convertit une etape
+         en une chaine de caracteres a la syntaxe aplat 
       """
       try:
         sdname= self.generator(obj.sd)
@@ -255,8 +260,8 @@ class AplatGenerator:
 
    def generMACRO_ETAPE(self,obj):
       """
-         Cette méthode convertit une macro-étape
-         en une chaine de caractères à la syntaxe aplat 
+         Cette methode convertit une macro-etape
+         en une chaine de caracteres a la syntaxe aplat 
       """
       try:
         if obj.sd == None:
@@ -275,14 +280,14 @@ class AplatGenerator:
 
    def generASSD(self,obj):
       """
-          Convertit un objet dérivé d'ASSD en une chaine de caractères à la
+          Convertit un objet derive d'ASSD en une chaine de caracteres a la
           syntaxe aplat 
       """
       return obj.get_name()
 
    def generMCList(self,obj):
       """
-          Convertit un objet MCList en une chaine de caractères à la
+          Convertit un objet MCList en une chaine de caracteres a la
           syntaxe aplat
       """
       i=0
@@ -291,36 +296,36 @@ class AplatGenerator:
       old_init=self.init
       for data in obj.data :
         i=i+1
-        self.init = init + self.sep + "occurrence n°"+`i`
+        self.init = init + self.sep + "occurrence n"+repr(i)
         text = text + self.generator(data)
       self.init=old_init
       return text
 
    def generMCSIMP(self,obj) :
       """
-          Convertit un objet MCSIMP en une chaine de caractères à la
+          Convertit un objet MCSIMP en une chaine de caracteres a la
           syntaxe aplat 
       """
-      if type(obj.valeur) in (types.TupleType,types.ListType) :
-         # On est en présence d'une liste de valeur
+      if type(obj.valeur) in (tuple,list) :
+         # On est en presence d'une liste de valeur
          rep = '('
          for val in obj.valeur:
            if type(val) == types.InstanceType :
              rep = rep + self.generator(val) +','
            else:
-             rep = rep + `val`+','
+             rep = rep + repr(val)+','
          rep = rep + ')'
       elif type(obj.valeur) == types.InstanceType :
-         # On est en présence d'une valeur unique de type instance
+         # On est en presence d'une valeur unique de type instance
          rep = self.generator(obj.valeur)
       else :
-         # On est en présence d'une valeur unique
-         rep = `obj.valeur`
+         # On est en presence d'une valeur unique
+         rep = repr(obj.valeur)
       return self.init + self.sep + obj.nom + ' :' + rep + '\n'
 
    def generMCCOMPO(self,obj):
       """
-          Convertit un objet MCCOMPO en une chaine de caractères à la
+          Convertit un objet MCCOMPO en une chaine de caracteres a la
           syntaxe aplat
       """
       text = ''

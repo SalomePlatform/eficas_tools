@@ -21,16 +21,16 @@
 
 
 """
-   Ce module contient la classe mixin MCBLOC qui porte les méthodes
-   nécessaires pour réaliser la validation d'un objet de type MCBLOC
-   dérivé de OBJECT.
+   Ce module contient la classe mixin MCBLOC qui porte les methodes
+   necessaires pour realiser la validation d'un objet de type MCBLOC
+   derive de OBJECT.
 
    Une classe mixin porte principalement des traitements et est
-   utilisée par héritage multiple pour composer les traitements.
+   utilisee par heritage multiple pour composer les traitements.
 """
+from __future__ import absolute_import
 # Modules EFICAS
-import V_MCCOMPO
-from Noyau.strfunc import ufmt
+from . import V_MCCOMPO
 
 
 class MCBLOC(V_MCCOMPO.MCCOMPO):
@@ -38,19 +38,19 @@ class MCBLOC(V_MCCOMPO.MCCOMPO):
     """
        Cette classe a un attribut de classe :
 
-       - txt_nat qui sert pour les comptes-rendus liés à cette classe
+       - txt_nat qui sert pour les comptes-rendus lies a cette classe
     """
 
     txt_nat = u"Bloc :"
 
     def isvalid(self, sd='oui', cr='non'):
         """
-           Methode pour verifier la validité du MCBLOC. Cette méthode
-           peut etre appelée selon plusieurs modes en fonction de la valeur
+           Methode pour verifier la validite du MCBLOC. Cette methode
+           peut etre appelee selon plusieurs modes en fonction de la valeur
            de sd et de cr.
 
-           Si cr vaut oui elle crée en plus un compte-rendu
-           sd est présent pour compatibilité de l'interface mais ne sert pas
+           Si cr vaut oui elle cree en plus un compte-rendu
+           sd est present pour compatibilite de l'interface mais ne sert pas
         """
         if self.state == 'unchanged':
             return self.valid
@@ -64,13 +64,12 @@ class MCBLOC(V_MCCOMPO.MCCOMPO):
                 if not child.isvalid():
                     valid = 0
                     break
-            # Après avoir vérifié la validité de tous les sous-objets, on vérifie
-            # la validité des règles
+            # Apres avoir verifie la validite de tous les sous-objets, on verifie
+            # la validite des regles
             text_erreurs, test_regles = self.verif_regles()
             if not test_regles:
                 if cr == 'oui':
-                    self.cr.fatal(
-                        _(u"Règle(s) non respectée(s) : %s"), text_erreurs)
+                    self.cr.fatal( "Regle(s) non respectee(s) : %s" % text_erreurs)
                 valid = 0
             self.valid = valid
             self.state = 'unchanged'

@@ -18,16 +18,19 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
-if monEnvQT5:
-    from PyQt5.QtCore import  Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+except : pass
+
+import types,os
+from six.moves import range
+from PyQt5.QtCore import  Qt
 
 
 # Modules Eficas
-from qtSaisie      import SaisieValeur
+from .qtSaisie      import SaisieValeur
 from monPlusieursBasePanel import MonPlusieursBasePanel
 
 from Extensions.i18n import tr
@@ -35,7 +38,7 @@ from Extensions.i18n import tr
 # Import des panels
 
 class MonFonctionPanel(MonPlusieursBasePanel):
-#  Classe definissant le panel associe© aux mots-cles qui demandent
+#  Classe definissant le panel associee aux mots-cles qui demandent
 #  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
 #  discretes
   def __init__(self,node, parent = None,name = None,fl = 0):
@@ -86,7 +89,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
                   self.LBValeurs.addItem(str_valeur)
         else : 
 	      for valeur in self.DecoupeListeValeurs(listeValeurs):
-                   if type(valeur) == types.TupleType:
+                   if type(valeur) == tuple:
                        TupleEnTexte="("
                        for val in valeur :
                            TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "
@@ -149,7 +152,7 @@ class MonFonctionPanel(MonPlusieursBasePanel):
            else : 
               listeATraiter=self.DecoupeListeValeurs(listeRetour)
            for valeur in  listeATraiter :
-               if type(valeur) == types.TupleType:
+               if type(valeur) == tuple:
                   TupleEnTexte="("
                   for val in valeur :
                       TupleEnTexte = TupleEnTexte + str(self.politique.GetValeurTexte(val)) +", "

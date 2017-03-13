@@ -20,7 +20,8 @@
 """
 """
 
-import I_REGLE
+from __future__ import absolute_import
+from . import I_REGLE
 
 class UN_PARMI(I_REGLE.REGLE):
 
@@ -32,7 +33,7 @@ class UN_PARMI(I_REGLE.REGLE):
            break
      if not regle_active : return liste_a_purger
 
-     # Si un des mots clés est présent, on les enlève tous
+     # Si un des mots cles est present, on les enleve tous
      # sauf celui ci
      for mc in self.mcs:
         if mc in liste_a_purger and mc not in liste_mc_presents:

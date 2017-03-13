@@ -20,5 +20,7 @@
 # This empty class is replaced by the class eficas.SalomeEntry
 # (defined in Salome EFICAS module) when Eficas is launched in Salome context.
 # It handles the objects that can be selected from Salome object browser.
+#from builtins import object
+#class SalomeEntry(object):
 class SalomeEntry:
   pass

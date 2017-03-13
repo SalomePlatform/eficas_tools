@@ -18,18 +18,19 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,re
+from __future__ import absolute_import
+try :
+   from builtins import object
+except : pass
+
+import types,os,re
+from six.moves import range
 pattern_name       = re.compile(r'^[^\d\W]\w*\Z')
 
 # Modules Eficas
 
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QDialog
-   from PyQt5.QtCore import Qt
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QDialog, QMessageBox
+from PyQt5.QtCore import Qt
 from Extensions.i18n import tr
 from desWidgetCreeParam import Ui_desWidgetCreeParam
 
@@ -42,8 +43,7 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
        self.editor.affiche_infos("")
        QDialog.__init__(self,editor)
        self.setupUi(self)
-       if monEnvQT5 : self.connecterSignaux()
-       else         : self.connecterSignauxQT4()
+       self.connecterSignaux()
        self.dejaExistant=0
        self.listeTousParam=self.editor.jdc.params
        self.dictListe={}
@@ -56,6 +56,16 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
   def connecterSignaux(self) :
         self.lineEditVal.returnPressed.connect(self.lineEditValReturnPressed)
         self.lineEditNom.returnPressed.connect(self.lineEditNomReturnPressed)
+        self.LBParam.itemDoubleClicked.connect(self.paramClicked)
+
+  def paramClicked(self,item):
+        if self.editor.nodeEnCours == None : 
+            QMessageBox.warning( self, tr("Pas de Mot-Clef"),tr("Attention! selectionnez un mot-clef"))
+            return
+        param= self.dictListe[item.text()]
+        self.editor.nodeEnCours.lineEditVal.setText(param)
+        self.editor.nodeEnCours.LEValeurPressed()
+       
 
   def CreeParametre(self):
         nom=str(self.lineEditNom.text())
@@ -72,8 +82,8 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         param.item.set_valeur(self.val)
         param.update_node_texte()
         param.update_node_valid()
-        self.LBParam.addItem((repr(param.item)))
-        param.select()
+        self.LBParam.addItem((repr(param.item.object)))
+        self.dictListe[repr(param.item.object)] = param.item.object.nom
         self.lineEditVal.setText("")
         self.lineEditNom.setText("")
         self.lineEditNom.setFocus(True)
@@ -85,7 +95,7 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         valString=str(self.lineEditVal.text())
         self.val=""
         contexte={}
-        exec "from math import *" in contexte
+        exec("from math import *", contexte)
         jdc=self.editor.jdc
         if jdc == None : 
           self.editor.affiche_infos(tr(u"La Creation de parametre n est possible que dans un jeu de donnees"),Qt.red)
@@ -94,12 +104,12 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         for p in jdc.params :
            try:
               tp=p.nom+'='+str(repr(p.valeur))
-              exec tp  in contexte
+              exec(tp, contexte)
            except :
               pass
         monTexte="monParam="+valString
         try :
-          exec monTexte in contexte
+          exec(monTexte, contexte)
           self.val=valString
         except :
           try :
@@ -131,8 +141,10 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         self.LBParam.clear()
         for param in self.listeTousParam :
             self.LBParam.addItem((repr(param)))
-            self.dictListe[repr(param)] = param
-
+            self.dictListe[repr(param)] = param.nom
+         
+         
+  
   def valideParam(self):
         if self.LBParam.selectedItems()== None : return
         lParam=[]

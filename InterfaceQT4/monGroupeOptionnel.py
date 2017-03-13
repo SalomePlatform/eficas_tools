@@ -19,13 +19,9 @@
 # Modules Python
 # Modules Eficas
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QCheckBox, QWidget, QLabel
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from __future__ import absolute_import
+from PyQt5.QtWidgets import QCheckBox, QWidget, QLabel
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 from desGroupeOptionnel import Ui_groupeOptionnel
@@ -44,7 +40,7 @@ class monButtonCustom(QCheckBox):
 
    def mouseDoubleClickEvent(self, event):
       #print "dans mouseDoubleClickEvent", self
-      if self not in self.monOptionnel.dicoCb.keys() : 
+      if self not in self.monOptionnel.dicoCb: 
          event.accept()
          return
       listeCheckedMC="+"+self.monOptionnel.dicoCb[self]
@@ -99,6 +95,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
 
   def afficheTitre(self):
      labeltext,fonte,couleur = self.parentMC.node.item.GetLabelText()
+     print (labeltext)
      l=tr(labeltext)
      li=[]
      while len(l) > 25:
@@ -107,7 +104,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      li.append(l)
      texte=""
      for l in li : texte+=l+"\n"
-     texte=texte[0:-2]
+     texte=texte[0:-1]
      self.MCLabel.setText(texte)
 
   def affiche(self,liste):
@@ -116,10 +113,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      liste.reverse()
      for mot in liste :
          cb = monButtonCustom(mot,self)
-         if monEnvQT5:
-           cb.clicked.connect(cb.ajoutAideMC)
-         else :
-           self.connect(cb,SIGNAL("clicked()"), cb.ajoutAideMC)
+         cb.clicked.connect(cb.ajoutAideMC)
          self.MCOptionnelLayout.insertWidget(0,cb)
          self.dicoCb[cb]=mot
      self.scrollAreaCommandesOptionnelles.horizontalScrollBar().setSliderPosition(0)

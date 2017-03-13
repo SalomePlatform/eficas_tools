@@ -22,16 +22,17 @@
     qui permet de spécifier les caractéristiques des mots clés facteurs
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import types
 
-import N_ENTITE
-import N_MCFACT
-import N_MCLIST
-from N__F import _F
-from N_types import is_sequence
-from strfunc import ufmt
+from . import N_ENTITE
+from . import N_MCFACT
+from . import N_MCLIST
+from .N__F import _F
+from .N_types import is_sequence
 
-import N_OBJECT
+from . import N_OBJECT
 
 
 class FACT(N_ENTITE.ENTITE):
@@ -72,7 +73,7 @@ class FACT(N_ENTITE.ENTITE):
         self.fr = fr
         self.ang=ang
         self.docu = docu
-        if type(regles) == types.TupleType:
+        if type(regles) == tuple:
             self.regles = regles
         else:
             self.regles = (regles,)
@@ -80,6 +81,8 @@ class FACT(N_ENTITE.ENTITE):
         self.defaut = defaut
         self.min = min
         self.max = max
+        if self.max == "**" : self.max=float('inf')
+        if self.min == "**" : self.min=float('-inf')
         self.entites = args
         self.position = None
         self.affecter_parente()
@@ -106,14 +109,14 @@ class FACT(N_ENTITE.ENTITE):
         if val is None:
             if self.defaut == None:
                 val = {}
-            elif type(self.defaut) == types.TupleType:
+            elif type(self.defaut) == tuple:
                 val = self.defaut
                     # Est ce utile ? Le défaut pourrait etre uniquement un dict
-            elif type(self.defaut) == types.DictType or isinstance(self.defaut, _F):
+            elif type(self.defaut) == dict or isinstance(self.defaut, _F):
                 val = self.defaut
             else:
                 # On ne devrait jamais passer par la
-                print "On ne devrait jamais passer par la"
+                print ("On ne devrait jamais passer par la")
                 return None
         elif is_sequence(val) and len(val) == 0 and self.statut == 'o':
                 # On est dans le cas où le mcfact est présent mais est une liste/tuple
@@ -124,9 +127,9 @@ class FACT(N_ENTITE.ENTITE):
         # On cree toujours une liste de mcfact
         l = self.list_instance()
         l.init(nom=nom, parent=parent)
-        if type(val) in (types.TupleType, types.ListType, self.list_instance):
+        if type(val) in (tuple, list, self.list_instance):
             for v in val:
-                if type(v) == types.DictType or isinstance(v, _F):
+                if type(v) == dict or isinstance(v, _F):
                     objet = self.class_instance(
                         nom=nom, definition=self, val=v, parent=parent)
                     l.append(objet)
@@ -134,7 +137,7 @@ class FACT(N_ENTITE.ENTITE):
                     l.append(v)
                 else:
                     l.append(N_OBJECT.ErrorObj(self, v, parent, nom))
-        elif type(val) == types.DictType or isinstance(val, _F):
+        elif type(val) == dict or isinstance(val, _F):
             objet = self.class_instance(
                 nom=nom, definition=self, val=val, parent=parent)
             l.append(objet)

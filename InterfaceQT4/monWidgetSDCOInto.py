@@ -18,22 +18,22 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os
 
 # Modules Eficas
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QLineEdit
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtCore import Qt
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetSDCOInto     import Ui_WidgetSDCOInto 
-from qtSaisie              import SaisieSDCO
-from politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieSDCO
+from .politiquesValidation  import PolitiqueUnique
 
 
 
@@ -48,12 +48,8 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
         self.AAficher=self.LESDCO
         self.initLBSDCO()
        
-        if monEnvQT5 :
-          self.LESDCO.returnPressed.connect(self.LESDCOReturnPressed)
-          self.LBSDCO.itemDoubleClicked.connect(self.LBSDCODoubleClicked )
-        else :
-          self.connect(self.LESDCO, SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
-          self.connect(self.LBSDCO, SIGNAL("itemDoubleClicked(QListWidgetItem*)" ), self.LBSDCODoubleClicked )
+        self.LESDCO.returnPressed.connect(self.LESDCOReturnPressed)
+        self.LBSDCO.itemDoubleClicked.connect(self.LBSDCODoubleClicked )
 
   def LESDCOReturnPressed(self) :
         self.LBSDCO.clearSelection()

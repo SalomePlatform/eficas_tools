@@ -20,8 +20,10 @@
 """
 """
 # Modules Python
+from __future__ import absolute_import
+from __future__ import print_function
 import sys,re
-import string,types
+import types
 from copy import copy
 
 from Extensions.i18n import tr
@@ -39,8 +41,8 @@ import Validation
 # fin import a resorber
 
 # Modules EFICAS
-import I_MCCOMPO
-import CONNECTOR
+from . import I_MCCOMPO
+from . import CONNECTOR
 from Extensions import commande_comm
 
 class ETAPE(I_MCCOMPO.MCCOMPO):
@@ -51,13 +53,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def get_sdname(self):
       #print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
       if CONTEXT.debug : 
-          print ("SDNAME ",  self.reuse,  self.sd,  self.sd.get_name())
+          print(("SDNAME ",  self.reuse,  self.sd,  self.sd.get_name()))
       sdname=''
       if self.reuse != None:
         sdname= self.reuse.get_name()
       else:
         if self.sd:sdname=self.sd.get_name()
-      if string.find(sdname,'sansnom') != -1 or string.find(sdname,'SD_') != -1:
+      if sdname.find('sansnom') != -1 or sdname.find('SD_') != -1:
         # dans le cas ou la SD est 'sansnom' ou 'SD_' on retourne la chaine vide
         return ''
       return sdname
@@ -177,7 +179,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       else :
           #Un concept produit preexiste
           old_nom=self.sd.nom
-          if string.find(old_nom,'sansnom') :
+          if old_nom.find('sansnom') :
             # Dans le cas ou old_nom == sansnom, isvalid retourne 0 alors que ...
             # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'etape est valide
             # on peut donc le nommer sans test prealable
@@ -254,7 +256,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       #print "control_sdprods",d.keys(),self.sd and self.sd.nom,self.nom
       if self.sd:
-        if d.has_key(self.sd.nom):
+        if self.sd.nom in d :
            # Le concept est deja defini
            if self.reuse and self.reuse is d[self.sd.nom]:
               # Le concept est reutilise : situation normale
@@ -352,7 +354,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if type(self.definition.sd_prod) == types.FunctionType:
         d=self.cree_dict_valeurs(self.mc_liste)
         try:
-          classe_sd_prod = apply(self.definition.sd_prod,(),d)
+          classe_sd_prod = self.definition.sd_prod(*(), **d)
         except:
           return []
       else:
@@ -408,7 +410,6 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       texte_commande = g.gener(self,format='beautifie')
       # Il faut enlever la premiere ligne vide de texte_commande que
       # rajoute le generator
-      #rebut,texte_commande = string.split(texte_commande,'\n',1)
       # on construit l'objet COMMANDE_COMM repesentatif de self mais non
       # enregistre dans le jdc (pas ajoute dans jdc.etapes)
       parent=self.parent
@@ -438,7 +439,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       try:
          sd=Noyau.N_ETAPE.ETAPE.Build_sd(self,nom)
-      except AsException,e :
+      except AsException as e :
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme
          # Si on poursuit, on a le choix entre deux possibilites :

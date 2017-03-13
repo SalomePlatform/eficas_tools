@@ -20,22 +20,27 @@
 # ======================================================================
 
 
-class ENSEMBLE:
+from __future__ import absolute_import
+try : 
+   from builtins import object
+except : pass
+
+class ENSEMBLE(object):
 
     """
-       La règle vérifie que si un mot-clé de self.mcs est present
+       La regle verifie que si un mot-cle de self.mcs est present
            parmi les elements de args tous les autres doivent etre presents.
 
-       Ces arguments sont transmis à la règle pour validation sous la forme
-       d'une liste de noms de mots-clés ou d'un dictionnaire dont
-       les clés sont des noms de mots-clés.
+       Ces arguments sont transmis a la regle pour validation sous la forme
+       d'une liste de noms de mots-cles ou d'un dictionnaire dont
+       les cles sont des noms de mots-cles.
     """
 
     def verif(self, args):
         """
-            La methode verif effectue la verification specifique à la règle.
-            args peut etre un dictionnaire ou une liste. Les éléments de args
-            sont soit les éléments de la liste soit les clés du dictionnaire.
+            La methode verif effectue la verification specifique a la regle.
+            args peut etre un dictionnaire ou une liste. Les elements de args
+            sont soit les elements de la liste soit les cles du dictionnaire.
         """
         #  on compte le nombre de mots cles presents, il doit etre egal a la liste
         #  figurant dans la regle
@@ -44,14 +49,14 @@ class ENSEMBLE:
         args = self.liste_to_dico(args)
         pivot = None
         for mc in self.mcs:
-            if args.has_key(mc):
+            if mc in args:
                 pivot = mc
                 break
         if pivot:
             for mc in self.mcs:
                 if mc != pivot:
-                    if not args.has_key(mc):
-                        text = text + "- " + pivot + u" étant présent, " + \
-                            mc + u" doit être présent" + '\n'
+                    if not mc in args :
+                        text = text + "- " + pivot + " etant present, " + \
+                            mc + " doit etre present" + '\n'
                         test = 0
         return text, test

@@ -20,21 +20,23 @@
 """
 """
 # Modules Python
+from __future__ import absolute_import
+from __future__ import print_function
 import types,traceback,sys,os
-import string,linecache
+import linecache
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
 
 # Modules Eficas
-import I_OBJECT
+from . import I_OBJECT
 import Noyau
 from Noyau.N_ASSD import ASSD
 #from Noyau.N_LASSD import LASSD
 from Noyau.N_ETAPE import ETAPE
 from Noyau.N_Exception import AsException
 from Extensions import commentaire,parametre,parametre_eval
-import CONNECTOR
+from . import CONNECTOR
 import Validation
 
 class LASSD:
@@ -195,7 +197,7 @@ class JDC(I_OBJECT.OBJECT):
              return 1
           elif type_ok == 'TXM' and v.__class__.__name__ == 'chaine' : 
              return 1
-          elif type(type_ok) != types.ClassType and not isinstance(type_ok,type): 
+          elif type(type_ok) != type and not isinstance(type_ok,type): 
              continue
           elif v.__class__ == type_ok or issubclass(v.__class__,type_ok):
              return 1
@@ -219,7 +221,7 @@ class JDC(I_OBJECT.OBJECT):
           if isinstance(child,commentaire.COMMENTAIRE):
             ind = ind+1
         objet = commentaire.COMMENTAIRE('',parent=self)
-        objet.nom = "_comm_"+`ind`
+        objet.nom = "_comm_"+repr(ind)
         if pos == None : pos = 0
         self.etapes.insert(pos,objet)
         self.reset_context()
@@ -561,7 +563,7 @@ class JDC(I_OBJECT.OBJECT):
           et du contexte gobal
       """
       if param in self.params : self.params.remove(param)
-      if self.g_context.has_key(param.nom) : del self.g_context[param.nom]
+      if param.nom in self.g_context : del self.g_context[param.nom]
 
    def get_parametres_fonctions_avant_etape(self,etape):
       """
@@ -579,12 +581,12 @@ class JDC(I_OBJECT.OBJECT):
       for param in self.params:
         nom = param.nom
         if not nom : continue
-        if d.has_key(nom): l_constantes.append(nom)
+        if nom in d: l_constantes.append(nom)
       # construction de l_fonctions
       for form in self.fonctions:
         nom = form.nom
         if not nom : continue
-        if d.has_key(nom): l_fonctions.append(form.get_formule())
+        if nom in d: l_fonctions.append(form.get_formule())
 
       # on ajoute les concepts produits par DEFI_VALEUR
       # XXX On pourrait peut etre faire plutot le test sur le type
@@ -697,8 +699,8 @@ class JDC(I_OBJECT.OBJECT):
       #print "del_sdprod",self.g_context
       #print "del_sdprod",self.sds_dict
       #if sd in self.sds : self.sds.remove(sd)
-      if self.g_context.has_key(sd.nom) : del self.g_context[sd.nom]
-      if self.sds_dict.has_key(sd.nom) : del self.sds_dict[sd.nom]
+      if sd.nom in self.g_context : del self.g_context[sd.nom]
+      if sd.nom in self.sds_dict : del self.sds_dict[sd.nom]
 
    def del_param(self,param):
       """
@@ -706,7 +708,7 @@ class JDC(I_OBJECT.OBJECT):
           et du contexte gobal
       """
       if param in self.params : self.params.remove(param)
-      if self.g_context.has_key(param.nom) : del self.g_context[param.nom]
+      if param.nom in self.g_context : del self.g_context[param.nom]
 
    def del_fonction(self,fonction):
       """
@@ -714,7 +716,7 @@ class JDC(I_OBJECT.OBJECT):
           et du contexte gobal
       """
       if fonction in self.fonctions : self.fonctions.remove(fonction)
-      if self.g_context.has_key(fonction.nom) : del self.g_context[fonction.nom]
+      if fonction.nom in self.g_context: del self.g_context[fonction.nom]
 
    def append_sdprod(self,sd):
       """
@@ -790,9 +792,9 @@ class JDC(I_OBJECT.OBJECT):
         child.update_concept(sd)
 
    def dump_state(self):
-      print ("JDC.state: ",self.state)
+      print(("JDC.state: ",self.state))
       for etape in self.etapes :
-         print (etape.nom+".state: ",etape.state)
+         print((etape.nom+".state: ",etape.state))
       
    def change_unit(self,unit,etape,old_unit):
       #print "change_unit",unit,etape,old_unit
@@ -891,7 +893,7 @@ class JDC(I_OBJECT.OBJECT):
       # Cette etape est indiquee par l'attribut _etape_context qui a ete
       # positionne prealablement par un appel a set_etape_context
 
-      if CONTEXT.debug : print ("JDC.NommerSdprod ",sd,sdnom)
+      if CONTEXT.debug : print(("JDC.NommerSdprod ",sd,sdnom))
 
       if self._etape_context:
          o=self.get_contexte_avant(self._etape_context).get(sdnom,None)
@@ -949,9 +951,9 @@ class JDC(I_OBJECT.OBJECT):
          text=fproc.read()
          fproc.close()
       #if file == None : return None,None
-      text=string.replace(text,'\r\n','\n')
+      text=text.replace('\r\n','\n')
       if file:
-         linecache.cache[file]=0,0,string.split(text,'\n'),file
+         linecache.cache[file]=0,0,text.split('\n'),file
       return file,text
 
    def isvalid(self,cr='non'):

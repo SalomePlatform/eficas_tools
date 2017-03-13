@@ -55,6 +55,12 @@ comm=ppp
 La session utilisera le catalogue V7.3 en mode debug.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+  from builtins import str
+except :
+  pass
 try:
    import optparse
    from optparse import OptionValueError
@@ -63,7 +69,7 @@ except:
    from Tools.optparse import OptionValueError
 
 import os,traceback
-import ConfigParser
+import six.moves.configparser
 import re
 
 from Extensions.i18n import tr
@@ -137,7 +143,7 @@ def check_jdc(config,jdc,parser,fich):
         parser : objet analyseur de la ligne de commande
         fich : nom du fichier .ini en cours d'analyse
         config : objet de la classe ConfigParser permettant de parser le fichier fich
-        jdc : nom de la section du fichier fich à analyser
+        jdc : nom de la section du fichier fich a analyser
     """
     d_study={}
 
@@ -192,7 +198,7 @@ def check_fich(option, opt_str, fich, parser):
     if not hasattr(parser.values,"studies"):
        parser.values.studies=[]
        parser.values.comm=[]
-    config = ConfigParser.ConfigParser()
+    config = six.moves.configparser.ConfigParser()
     config.read([fich])
     if not config.has_option(u"jdc","jdc"):
        raise OptionValueError(tr(" jdc %s manque option jdc dans section jdc", str(fich)))
@@ -213,19 +219,19 @@ def check_fich(option, opt_str, fich, parser):
 
 def print_pours(d_pours,dec=''):
     # Les fichiers includes d'abord
-    for k,v in d_pours.items():
+    for k,v in list(d_pours.items()):
        if k in (u"pours","comm"):continue
-       print ( tr("%(v_1)s include %(v_2)s : %(v_3)s", {'v_1': str(dec), 'v_2': str(k), 'v_3': str(v)}))
+       print(( tr("%(v_1)s include %(v_2)s : %(v_3)s", {'v_1': str(dec), 'v_2': str(k), 'v_3': str(v)})))
 
-    if d_pours.has_key(u"pours"):
+    if "pours" in d_pours:
        # Description de la poursuite
-       print (tr("%(v_1)s fichier poursuite: %(v_2)s", {'v_1': dec, 'v_2': d_pours["pours"]["comm"]}))
+       print((tr("%(v_1)s fichier poursuite: %(v_2)s", {'v_1': dec, 'v_2': d_pours["pours"]["comm"]})))
        print_pours(d_pours["pours"],dec=dec+"++")
 
 def print_d_env():
     if d_env.studies is None:return
     for study in d_env.studies:
-       print (tr("nom etude : %s", study["comm"]))
+       print((tr("nom etude : %s", study["comm"])))
        print_pours(study,dec="++")
 
 def create_parser():
@@ -291,7 +297,7 @@ def parse(args):
             options.comm.append(file)
             options.studies.append({"comm":file})
          elif len(args) == 1 and options.locale:
-            print (tr("Localisation specifiee pour l'application."))
+            print((tr("Localisation specifiee pour l'application.")))
          else:
             parser.error(tr("Nombre incorrect d'arguments"))
 
@@ -317,14 +323,14 @@ def get_unit(d_study,appli):
 
 def get_dunit(d_unit,appli):
     d={}
-    if d_unit.has_key(u"pours"):
+    if 'pours' in d_unit:
        # on a une poursuite
        comm=d_unit["pours"]["comm"]
        g=get_dunit(d_unit["pours"],appli)
        text=appli.get_source(comm)
        d[None]=comm,text,g
 
-    for k,v in d_unit.items():
+    for k,v in list(d_unit.items()):
        if k in (u"pours","comm"): continue
        text=appli.get_source(v)
        d[k]=v,text,d

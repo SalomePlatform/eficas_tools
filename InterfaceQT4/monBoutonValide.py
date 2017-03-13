@@ -19,13 +19,14 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
 import re
-from determine import monEnvQT5
-if monEnvQT5:
-   from PyQt5.QtWidgets import QToolButton, QToolTip
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+import six
+
+import os
+
+
+from PyQt5.QtWidgets import QToolButton, QToolTip
 from Extensions.i18n import tr
 
 class MonBoutonValide(QToolButton) :
@@ -38,7 +39,7 @@ class MonBoutonValide(QToolButton) :
 
      def mouseDoubleClickEvent(self, event):
         #print "dans mouseDoubleClickEvent"
-        strRapport=unicode(self.parent.node.item.object.report())
+        strRapport=six.text_type(self.parent.node.item.object.report())
         self.parent.editor._viewText(strRapport, "JDC_RAPPORT")
 
      def mousePressEvent(self, event):
@@ -48,7 +49,7 @@ class MonBoutonValide(QToolButton) :
           QToolTip.showText(event.globalPos(),myToolTip )
        else :
           t=""
-          texte=unicode(self.parent.node.item.object.report())
+          texte=six.text_type(self.parent.node.item.object.report())
           deb=1
           for l in texte.split('\n')[2:-2]:
               if re.match('^[\t !]*$',l) : continue

@@ -21,7 +21,12 @@
    Module de conversion des valeurs saisies par l'utilisateur après vérification.
 """
 
-from N_types import is_int, is_float, is_sequence
+from __future__ import absolute_import
+try:
+   from builtins import object
+except : pass
+
+from .N_types import is_int, is_float, is_sequence
 
 
 def has_int_value(real):
@@ -30,7 +35,7 @@ def has_int_value(real):
     return abs(int(real) - real) < 1.e-12
 
 
-class Conversion:
+class Conversion(object):
 
     """Conversion de type.
     """
@@ -58,7 +63,7 @@ class Conversion:
             return tuple(result)
 
     def function(self, o):
-        raise NotImplementedError, 'cette classe doit être dérivée'
+        raise NotImplementedError('cette classe doit être dérivée')
 
 
 class TypeConversion(Conversion):

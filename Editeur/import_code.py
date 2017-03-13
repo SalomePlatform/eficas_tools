@@ -18,9 +18,10 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce module réalise toutes les mises à jour du chemin pour 
+    Ce module realise toutes les mises a jour du chemin pour 
     les imports de modules Python
 """
+from __future__ import absolute_import
 import sys
 import os
 
@@ -30,7 +31,7 @@ prefs_Code=__import__(name)
 INSTALLDIR=prefs_Code.INSTALLDIR
 
 # Ce chemin permet d'importer les modules Noyau et Validation
-# représentant le code utilisé (si fourni)
+# representant le code utilise (si fourni)
 # Ensuite on utilise les packages de l'intallation
 if hasattr(prefs_Code,'CODE_PATH'):
    if prefs_Code.CODE_PATH:

@@ -19,38 +19,39 @@
 #
 # ======================================================================
 
-from Noyau.strfunc import convert, ufmt
 
 
-class A_CLASSER:
+from __future__ import print_function
+from __future__ import absolute_import
+try :
+  from builtins import str
+  from builtins import object
+except : 
+  pass
+
+class A_CLASSER(object):
 
     """
-       La règle A_CLASSER vérifie que ...
+       La regle A_CLASSER verifie que ...
 
     """
 
     def __init__(self, *args):
         if len(args) > 2:
-            print convert(
-                ufmt(_(u"Erreur à la création de la règle A_CLASSER(%s)"),
-                     args))
+            print ("Erreur a la creation de la regle A_CLASSER(%s)" % str(args))
             return
         self.args = args
-        if type(args[0]) == tuple:
-            self.args0 = args[0]
-        elif type(args[0]) == str:
-            self.args0 = (args[0],)
+        if type(args[0]) == tuple: self.args0 = args[0]
+        elif type(args[0]) == str: self.args0 = (args[0],)
         else:
-            print convert(ufmt(_(u"Le premier argument de : %s doit etre un "
-                                 u"tuple ou une chaine"), args))
+            print ( "Le premier argument de : %s doit etre un tuple ou une chaine" % str(args))
         if type(args[1]) == tuple:
             self.args1 = args[1]
         elif type(args[1]) == str:
             self.args1 = (args[1],)
         else:
-            print convert(ufmt(_(u"Le deuxième argument de :%s doit etre un "
-                                 u"tuple ou une chaine"), args))
-        # création de la liste des mcs
+            print ("Le deuxieme argument de : %s doit etre un tuple ou une chaine" % str(args))
+        # creation de la liste des mcs
         liste = []
         liste.extend(self.args0)
         liste.extend(self.args1)
@@ -58,8 +59,8 @@ class A_CLASSER:
         self.init_couples_permis()
 
     def init_couples_permis(self):
-        """ Crée la liste des couples permis parmi les self.args, càd pour chaque élément
-            de self.args0 crée tous les couples possibles avec un élément de self.args1"""
+        """ Cree la liste des couples permis parmi les self.args, cad pour chaque element
+            de self.args0 cree tous les couples possibles avec un element de self.args1"""
         liste = []
         for arg0 in self.args0:
             for arg1 in self.args1:
@@ -68,10 +69,10 @@ class A_CLASSER:
 
     def verif(self, args):
         """
-            args peut etre un dictionnaire ou une liste. Les éléments de args
-            sont soit les éléments de la liste soit les clés du dictionnaire.
+            args peut etre un dictionnaire ou une liste. Les elements de args
+            sont soit les elements de la liste soit les cles du dictionnaire.
         """
-        # création de la liste des couples présents dans le fichier de
+        # creation de la liste des couples presents dans le fichier de
         # commandes
         l_couples = []
         couple = []
@@ -85,14 +86,12 @@ class A_CLASSER:
                     couple = [nom, ]
         if len(couple) > 0:
             l_couples.append(tuple(couple))
-        # l_couples peut etre vide si l'on n'a pas réussi à trouver au moins un
-        # élément de self.mcs
+        # l_couples peut etre vide si l'on n'a pas reussi a trouver au moins un
+        # element de self.mcs
         if len(l_couples) == 0:
-            message = ufmt(_(u"- Il faut qu'au moins un objet de la liste : %r"
-                             u" soit suivi d'au moins un objet de la liste : %r"),
-                           self.args0, self.args1)
+            message = "- Il faut qu'au moins un objet de la liste : %s  soit suivi d'au moins un objet de la liste %s : " % (self.args0,self.args1)
             return message, 0
-        # A ce stade, on a trouvé des couples : il faut vérifier qu'ils sont
+        # A ce stade, on a trouve des couples : il faut verifier qu'ils sont
         # tous licites
         num = 0
         for couple in l_couples:
@@ -100,22 +99,16 @@ class A_CLASSER:
             if len(couple) == 1:
                 # on a un 'faux' couple
                 if couple[0] not in self.args1:
-                    text = text + ufmt(
-                        _(u"- L'objet : %s doit être suivi d'un objet de la liste : %r\n"),
-                        couple[0], self.args1)
+                    text = text + "- L'objet : %s doit etre suivi d'un objet de la liste : %r\n" %(couple[0], self.args1)
                     test = 0
                 else:
                     if num > 1:
                         # ce n'est pas le seul couple --> licite
                         break
                     else:
-                        text = text + ufmt(
-                            _(u"- L'objet : %s doit être précédé d'un objet de la liste : %r\n"),
-                            couple[0], self.args0)
+                        text = text + "- L'objet : %s doit etre precede d'un objet de la liste : %r\n" %(couple[0], self.args0)
                         test = 0
             elif couple not in self.liste_couples:
-                text = text + ufmt(
-                    _(u"- L'objet : %s ne peut être suivi de : %s\n"),
-                    couple[0], couple[1])
+                text = text + "- L'objet : %s ne peut etre suivi de : %s\n" %(couple[0], couple[1])
                 test = 0
         return text, test

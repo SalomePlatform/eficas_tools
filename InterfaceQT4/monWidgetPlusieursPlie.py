@@ -18,21 +18,20 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,sys
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
 
-# Modules Eficas
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets  import   QFrame
-    from PyQt5.QtCore import QTimer, QSize, Qt
-    from PyQt5.QtGui  import QIcon
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+import types,os,sys
+
+from PyQt5.QtWidgets  import   QFrame
+from PyQt5.QtCore import QTimer, QSize, Qt
+from PyQt5.QtGui  import QIcon
 
 from Extensions.i18n import tr
 
-from feuille                import Feuille
+from .feuille                import Feuille
 from desWidgetPlusieursPlie import Ui_WidgetPlusieursPlie 
 
 
@@ -45,10 +44,7 @@ class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
         
-        if monEnvQT5 :
-           self.BVisuListe.clicked.connect(self.selectWidgetDeplie)
-        else :
-           self.connect(self.BVisuListe,SIGNAL("clicked()"), self.selectWidgetDeplie)
+        self.BVisuListe.clicked.connect(self.selectWidgetDeplie)
 
 
   def setValeurs(self):

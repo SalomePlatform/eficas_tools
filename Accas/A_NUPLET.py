@@ -17,9 +17,10 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Extensions import nuplet
-import A_MCLIST
-import A_MCNUPLET
+from . import A_MCLIST
+from . import A_MCNUPLET
 
 class NUPL(nuplet.NUPL):
    class_instance=A_MCNUPLET.MCNUPLET

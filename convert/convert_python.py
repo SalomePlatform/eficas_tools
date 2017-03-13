@@ -47,9 +47,15 @@
     Ce convertisseur supporte le format de sortie exec
 
 """
-import sys,string,traceback
+from __future__ import absolute_import
+try :
+  from builtins import str
+  from builtins import object
+except :
+  pass
+import sys,traceback
 
-import parseur_python
+from .parseur_python import PARSEUR_PYTHON
 from Noyau import N_CR
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
@@ -67,7 +73,7 @@ def entryPoint():
           }
 
 
-class PythonParser:
+class PythonParser(object):
    """
        Ce convertisseur lit un fichier au format python avec la 
        methode readfile : convertisseur.readfile(nom_fichier)
@@ -108,13 +114,14 @@ class PythonParser:
    def convert(self,outformat,appli=None):
       if outformat == 'exec':
          try:
-            return parseur_python.PARSEUR_PYTHON(self.text).get_texte(appli)
+            #return parseur_python.PARSEUR_PYTHON(self.text).get_texte(appli)
+            return PARSEUR_PYTHON(self.text).get_texte(appli)
          except EficasException:
             # Erreur lors de la conversion
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],
                                          sys.exc_info()[2])
             self.cr.exception(tr("Impossible de convertir le fichier Python qui doit contenir des erreurs.\n\
-                                  On retourne le fichier non converti. Prevenir la maintenance.\n\n %s", string.join(l)))
+                                  On retourne le fichier non converti. Prevenir la maintenance.\n\n %s", ''.join(l)))
             # On retourne neanmoins le source initial non converti (au cas ou)
             return self.text
       elif outformat == 'execnoparseur':

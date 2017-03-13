@@ -18,46 +18,47 @@
 # ======================================================================
 
 """
-   Ce module contient la classe mixin PROC_ETAPE qui porte les méthodes
-   nécessaires pour réaliser la validation d'un objet de type PROC_ETAPE
-   dérivé de OBJECT.
+   Ce module contient la classe mixin PROC_ETAPE qui porte les methodes
+   necessaires pour realiser la validation d'un objet de type PROC_ETAPE
+   derive de OBJECT.
 
    Une classe mixin porte principalement des traitements et est
-   utilisée par héritage multiple pour composer les traitements.
+   utilisee par heritage multiple pour composer les traitements.
 """
+from __future__ import print_function
+from __future__ import absolute_import
 # Modules EFICAS
-import V_ETAPE
+from . import V_ETAPE
 from Noyau.N_Exception import AsException
 from Noyau.N_utils import AsType
-from Noyau.strfunc import ufmt
 from Extensions.i18n import tr
 
 
 class PROC_ETAPE(V_ETAPE.ETAPE):
 
     """
-       On réutilise les méthodes report,verif_regles
-       de ETAPE par héritage.
+       On reutilise les methodes report,verif_regles
+       de ETAPE par heritage.
     """
 
     def isvalid(self, sd='oui', cr='non'):
         """
-           Methode pour verifier la validité de l'objet PROC_ETAPE. Cette méthode
-           peut etre appelée selon plusieurs modes en fonction de la valeur
-           de sd et de cr (sd n'est pas utilisé).
+           Methode pour verifier la validite de l'objet PROC_ETAPE. Cette methode
+           peut etre appelee selon plusieurs modes en fonction de la valeur
+           de sd et de cr (sd n'est pas utilise).
 
-           Si cr vaut oui elle crée en plus un compte-rendu.
+           Si cr vaut oui elle cree en plus un compte-rendu.
 
-           Cette méthode a plusieurs fonctions :
+           Cette methode a plusieurs fonctions :
 
-            - retourner un indicateur de validité 0=non, 1=oui
+            - retourner un indicateur de validite 0=non, 1=oui
 
             - produire un compte-rendu : self.cr
 
-            - propager l'éventuel changement d'état au parent
+            - propager l'eventuel changement d'etat au parent
         """
         if CONTEXT.debug:
-            print "ETAPE.isvalid ", self.nom
+            print(("ETAPE.isvalid ", self.nom))
         if self.state == 'unchanged':
             return self.valid
         else:
@@ -66,8 +67,7 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
             if self.reste_val != {}:
                 if cr == 'oui':
                     self.cr.fatal(
-                        #_(tr(u"Mots clefs inconnus : %s")), ','.join(self.reste_val.keys()))
-                        _(tr(u"unknown keywords : %s")), ','.join(self.reste_val.keys()))
+                        tr("unknown keywords : %s") % ','.join(list(self.reste_val.keys())))
                 valid = 0
             self.set_valid(valid)
             return self.valid

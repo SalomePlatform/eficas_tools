@@ -16,11 +16,20 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import re, string
+from __future__ import absolute_import
+
+
+import re
 from Extensions.i18n import tr
 
                                                                                         
-from convert_python import PythonParser
+from .convert_python import PythonParser
+import six
+from six.moves import range
+try:
+  basestring
+except NameError:
+  basestring = str
 
 pattern_comment_slash   = re.compile(r"^\s*/")
 pattern_eta   = re.compile(r".*&ETA.*")
@@ -63,8 +72,6 @@ except :
 
 from Extensions import localisation
 
-from determine import monEnvQT5
-
 
 
 def entryPoint():
@@ -72,7 +79,7 @@ def entryPoint():
    Return a dictionary containing the description needed to load the plugin
    """
    return {
-          'name' : 'TELEMAC3',
+          'name' : 'TELEMAC',
           'factory' : TELEMACParser
           }
 
@@ -94,13 +101,13 @@ class TELEMACParser(PythonParser):
 
       if appli.langue=='fr' :
           from enumDicoTelemac       import DicoEnumCasFrToEnumCasEn
-          for k in DicoEnumCasFrToEnumCasEn.keys() :
+          for k in DicoEnumCasFrToEnumCasEn :
               TelemacdicoEn[k]=DicoEnumCasFrToEnumCasEn[k]
 
       text=""
       self.dictSimp={}
 
-      l_lignes_texte_all = string.split(self.text,'\n')
+      l_lignes_texte_all = self.text.split('\n')
       l_lignes_texte = []
       for l  in l_lignes_texte_all :
         if not(pattern_comment_slash.match(l)): l_lignes_texte.append(l)
@@ -191,17 +198,17 @@ class TELEMACParser(PythonParser):
               finLigne=m.group('reste')
               self.dictSimp[simpCas]=valeur
       
-      if 'TITLE' not in self.dictSimp.keys() :
+      if 'TITLE' not in self.dictSimp :
           import os
           #self.dictSimp['TITLE']=os.path.basename(self.filename)
       
       dicoParMC={}
-      for simp in self.dictSimp.keys():
-          if simp in TELEMACParser.__dict__.keys() : apply(TELEMACParser.__dict__[simp],(self,))
+      for simp in self.dictSimp:
+          if simp in TELEMACParser.__dict__ : TELEMACParser.__dict__[simp],(self,)
 
-      for simp in self.dictSimp.keys():
+      for simp in self.dictSimp:
           if simp in ListeSupprimeCasToEficas: continue
-          if simp not in self.dicoInverse.keys() : 
+          if simp not in self.dicoInverse : 
              #print ( "************")
              print  ("pb avec dans dicoInverse", simp,'------')
              #print  ("************")
@@ -217,19 +224,19 @@ class TELEMACParser(PythonParser):
           while i < len(listeGeneaReverse[0:-1]) : 
             mot=listeGeneaReverse[i]
             i=i+1
-            if mot not in dicoTravail.keys(): dicoTravail[mot]={}
+            if mot not in dicoTravail: dicoTravail[mot]={}
             dicoTravail=dicoTravail[mot]
           dicoTravail[simp]=self.dictSimp[simp]
         
       self.textePy=""
-      listeMC=self.tri(dicoParMC.keys())
+      listeMC=self.tri(list(dicoParMC.keys()))
       for k in listeMC :
           self.textePy += str(k )+ "("
           self.traiteMC(dicoParMC[k])
           self.textePy += ");\n"
            
               
-      appli.listeTelemac=self.dictSimp.keys()  
+      appli.listeTelemac=self.dictSimp  
       return self.textePy
 
 
@@ -249,9 +256,9 @@ class TELEMACParser(PythonParser):
 
    def traiteMC(self,dico) :
        from Accas import A_BLOC, A_FACT, A_SIMP
-       for k in dico.keys() :
+       for k in dico :
            valeur= dico[k]
-           if k not in self.dicoMC.keys() : kA=self.dicoFrancaisAnglais[k] 
+           if k not in self.dicoMC : kA=self.dicoFrancaisAnglais[k] 
            else : kA=k
            obj=self.dicoMC[kA]
            if isinstance(obj,A_FACT.FACT):   self.convertFACT(obj,kA,valeur)
@@ -261,8 +268,8 @@ class TELEMACParser(PythonParser):
 
 
    def convertFACT(self,obj,nom,valeur):
-       if nom in TELEMACParser.__dict__.keys() : 
-          apply(TELEMACParser.__dict__[nom],(self,))
+       if nom in TELEMACParser.__dict__ : 
+          TELEMACParser.__dict__[nom],(self,)
           return
        self.textePy +=  nom + "=_F( "
        self.traiteMC(valeur)
@@ -303,7 +310,7 @@ class TELEMACParser(PythonParser):
           try    : valeur=eval(valeur,{})
           except : pass
 
-          if nom in TelemacdicoEn.keys(): 
+          if nom in TelemacdicoEn: 
              try    : 
                valeur=TelemacdicoEn[nom][valeur]
                self.textePy += nom + "= '" + str(valeur) +"',"
@@ -362,7 +369,7 @@ class TELEMACParser(PythonParser):
           # Attention : on attend une liste mais on a une seule valeur!
              try :    oldValeur=eval(oldValeur,{})
              except : pass
-             if nom in TelemacdicoEn.keys() :  
+             if nom in TelemacdicoEn :  
                 v=TelemacdicoEn[nom][oldValeur]
                 self.textePy += nom + "= ('" + str(v) +"',),"
              else :  
@@ -375,7 +382,7 @@ class TELEMACParser(PythonParser):
           for v in valeur :
             try :    v=eval(v,{})
             except : pass
-            if nom in TelemacdicoEn.keys():
+            if nom in TelemacdicoEn:
                try    : v=TelemacdicoEn[nom][v]
                except : pass
             newVal.append(v)
@@ -402,17 +409,17 @@ class TELEMACParser(PythonParser):
 
    def LIQUID_BOUNDARIES(self):
        texte_Boundaries="LIQUID_BOUNDARIES=( "
-       if 'PRESCRIBED_ELEVATIONS' in self.dictSimp.keys(): 
+       if 'PRESCRIBED_ELEVATIONS' in self.dictSimp: 
               valeursPE=self.dictSimp["PRESCRIBED_ELEVATIONS"]
               if not type(valeursPE)==list : valeursPE = (valeursPE,)
               longueur=len(self.dictSimp["PRESCRIBED_ELEVATIONS"])
        else : valeursPE=None
-       if 'PRESCRIBED_FLOWRATES' in self.dictSimp.keys(): 
+       if 'PRESCRIBED_FLOWRATES' in self.dictSimp: 
               valeursPF=self.dictSimp["PRESCRIBED_FLOWRATES"]
               if not type(valeursPF)==list : valeursPF = (valeursPF,)
               longueur=len(self.dictSimp["PRESCRIBED_FLOWRATES"])
        else : valeursPF=None
-       if 'PRESCRIBED_VELOCITIES' in self.dictSimp.keys(): 
+       if 'PRESCRIBED_VELOCITIES' in self.dictSimp: 
               valeursPV=self.dictSimp["PRESCRIBED_VELOCITIES"]
               if not type(valeursPV)==list : valeursPV = (valeursPV,)
               longueur=len(self.dictSimp["PRESCRIBED_VELOCITIES"])

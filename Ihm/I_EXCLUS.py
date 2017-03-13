@@ -20,7 +20,8 @@
 """
 """
 
-import I_REGLE
+from __future__ import absolute_import
+from . import I_REGLE
 
 class EXCLUS(I_REGLE.REGLE):
   def purge_liste(self,liste_a_purger,liste_mc_presents):

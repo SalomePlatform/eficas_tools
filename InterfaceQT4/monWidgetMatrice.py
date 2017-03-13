@@ -18,21 +18,24 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,sys
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import range
+except : pass
+
+import types,os,sys
 
 # Modules Eficas
 from Extensions.i18n import tr
-from feuille         import Feuille
+from .feuille         import Feuille
 
 
 from desWidgetMatrice  import Ui_desWidgetMatrice 
 
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtCore import QSize
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from six.moves import range
+from PyQt5.QtCore import QSize
 
 
 class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
@@ -46,8 +49,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
         self.nbCols=0
         self.nomVariables={}
         self.creeColonnes()
-        if monEnvQT5 : self.connecterSignaux()
-        else : self.connecterSignauxQT4()
+        self.connecterSignaux()
         if self.node.item.get_valeur()== None:  self.initialSsValeur()
         else :
            try    : self.initialValeur()
@@ -104,7 +106,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
             monItem.setText("")
             return
       self.editor.affiche_infos("")
-      if self.monType.structure != None: apply (MonWidgetMatrice.__dict__[self.monType.structure],(self,))
+      if self.monType.structure != None: MonWidgetMatrice.__dict__[self.monType.structure](*(self,))
       self.acceptVal()
 
 
@@ -112,7 +114,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
       monItem=self.TBMatrice.currentItem()
       texte=monItem.text()
       if monItem.row() != monItem.column():
-         print monItem.row(), monItem.column()
+         print(monItem.row(), monItem.column())
          monItemSym=self.TBMatrice.item(monItem.column(), monItem.row())
          monItemSym.setText(texte)
 
@@ -120,7 +122,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
       if self.monType.methodeCalculTaille != None :
 	 #try:
          if 1 :
-           apply (MonWidgetMatrice.__dict__[self.monType.methodeCalculTaille],(self,))
+           MonWidgetMatrice.__dict__[self.monType.methodeCalculTaille](*(self,))
          else :
          #except :
            QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la methode ") + monType.methodeCalculTaille )

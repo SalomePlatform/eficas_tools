@@ -19,13 +19,19 @@
 #
 """Ce module contient le plugin generateur de fichier au format  Code_Carmel3D pour EFICAS.
 """
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except : pass
+
 import pickle
 texte_debut="#include <Zcracks_base.z7p> \n int main() \n{ \n   init_var();\n"
 texte_debut+='   format="med";\n'
 import traceback
-import types,string,re,os
+import types,re,os
 from Extensions.i18n import tr
-from generator_python import PythonGenerator
+from .generator_python import PythonGenerator
 #ListeConcatene=('ridge_names','topo_names','geom_names','elset_names','faset_names','liset_names','nset_names','center','normal','dir')
 ListeConcatene=('ridge_names','topo_names','geom_names','elset_names','faset_names','liset_names','nset_names')
 ListeConcatene2=('center','normal','dir')
@@ -80,7 +86,7 @@ class ZCrackGenerator(PythonGenerator):
    def writeDefault(self,fn) :
         fileZcrack = fn[:fn.rfind(".")] + '.z7p'
         f = open( str(fileZcrack), 'wb')
-        print (self.textePourRun)
+        print((self.textePourRun))
       
         self.ajoutRun()
         self.textePourRunAvecDouble=self.textePourRun.replace("'",'"')

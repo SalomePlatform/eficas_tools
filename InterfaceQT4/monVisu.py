@@ -20,22 +20,15 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
 from desVisu import Ui_DVisu
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QDialog
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QDialog
 
 
 # Import des panels
 
 class DVisu(Ui_DVisu ,QtGui.QDialog):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
   """
   def __init__(self,parent = None , name = None,fl = 0):
       QtGui.QDialog.__init__(self,parent)

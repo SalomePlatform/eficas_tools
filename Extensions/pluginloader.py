@@ -18,15 +18,20 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce module contient le chargeur dynamique de plugins (emprunté à HappyDoc)
+    Ce module contient le chargeur dynamique de plugins (emprunte a HappyDoc)
 """
 
+from __future__ import absolute_import
 import glob,os,sys,traceback
-import UserDict
+try:
+   from UserDict import UserDict
+except ImportError:
+   from collections import UserDict
 
-class PluginLoader(UserDict.UserDict):
+
+class PluginLoader(UserDict):
    def __init__(self,module):
-      UserDict.UserDict.__init__(self)
+      UserDict.__init__(self)
       self.plugin_dir=module.__path__[0]
       self.plugin_set_name=module.__name__
       _module_list = glob.glob( os.path.join( self.plugin_dir,

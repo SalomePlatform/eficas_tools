@@ -16,35 +16,41 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
+try :
+   from builtins import range
+   from builtins import object
+except : pass
 import os
 import re
+from six.moves import range
 
 sous_menus={
 #	    "OPENTURNS_STUDY" : {0:{"Essai":"Std.comm"}},
 #            "OPENTURNS_WRAPPER" : {0:{"Essai":"wrapper_exemple.comm"}},
            }
 
-class listePatrons :
+class listePatrons(object) :
 
     def __init__(self,code = "ASTER"):
        repIni=os.path.dirname(os.path.abspath(__file__))
        self.rep_patrons=repIni+"/Patrons/"+code
        self.sous_menu={}
-       if code in sous_menus.keys()  :
+       if code in sous_menus  :
           self.sous_menu=sous_menus[code]
        self.code=code
        self.liste={}
        self.traite_liste()
 
     def traite_liste(self):
-        if not (self.code in sous_menus.keys()) : return
+        if not (self.code in sous_menus) : return
         if not (os.path.exists(self.rep_patrons)) : return
         for file in os.listdir(self.rep_patrons):
             for i in range(len(self.sous_menu)):
-                clef=self.sous_menu[i].keys()[0]
+                clef=list(self.sous_menu[i].keys())[0]
                 chaine=self.sous_menu[i][clef]
                 if re.search(chaine,file) :
-                   if clef in self.liste.keys():
+                   if clef in self.liste:
                       self.liste[clef].append(file)
                    else :
                       self.liste[clef]=[file]

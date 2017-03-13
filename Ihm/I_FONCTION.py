@@ -17,8 +17,9 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import string
-from I_ASSD import ASSD
+from __future__ import absolute_import
+from __future__ import print_function
+from .I_ASSD import ASSD
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
@@ -62,10 +63,9 @@ class formule(FONCTION) :
       try :
        res=eval(self.expression,self.jdc.const_context, context)
       except :
-####### A TRAVAILLER DEPUIS ICI !!
-       print (tr(75 * '!'))
-       print ('! ' + tr(string.ljust("Erreur evaluation formule %s", 72), self.nom) + '!')
-       print (tr(75 * '!'))
+       print (75 * '!')
+       print ('! ' + "Erreur evaluation formule %s" % self.nom + 20*'!')
+       print (75 * '!')
        raise EficasException
       return res
 

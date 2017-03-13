@@ -17,10 +17,15 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 
-from N_utils import import_object
+from __future__ import absolute_import
+try :
+   from builtins import object
+except :
+   pass
+from .N_utils import import_object
 
 
-class OPS:
+class OPS(object):
 
     """Wrapper to ops functions.
     This allows to import them only when they are needed."""

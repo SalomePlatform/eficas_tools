@@ -19,19 +19,21 @@
 #
 """
 """
+from __future__ import absolute_import
+from __future__ import print_function
 import string,types,sys
 from copy import copy
 import traceback
 
+import Validation
 from Extensions.i18n import tr
-from Noyau.N_MCLIST import MCList
 from Noyau.N_MCSIMP import MCSIMP
 from Noyau.N_MCFACT import MCFACT
 from Noyau.N_MCBLOC import MCBLOC
-import I_OBJECT
-import Validation
+from Noyau.N_MCLIST import MCList
+from . import I_OBJECT
 
-import CONNECTOR
+from . import CONNECTOR
 
 class MCCOMPO(I_OBJECT.OBJECT):
   def getlabeltext(self):
@@ -62,7 +64,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         dico=objet_cata.entites
         l=[]
         specifique=0
-        for obj in dico.keys() :
+        for obj in list(dico.keys()) :
             if not(hasattr(dico[obj],'cache')) or dico[obj].cache==0 :
                l.append(obj)
             else :
@@ -112,7 +114,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
             pass
         else :
           #XXX CCAR : les MCNUPLET ne sont pas traites
-          if CONTEXT.debug : print '   ',k,' est un objet de type inconnu :',type(objet)
+          if CONTEXT.debug : print('   ',k,' est un objet de type inconnu :',type(objet))
       else :
         # l'objet est absent : on enleve de la liste les blocs
         if self.definition.entites[k].statut=='c' :
@@ -173,7 +175,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
       d_mc[mc.nom]=mc
     # on construit la liste des objets ordonnes
     for nom_mc in liste_noms_mc_ordonnee:
-      if d_mc.has_key(nom_mc):
+      if nom_mc in d_mc:
         liste.append(d_mc.get(nom_mc))
     # on la retourne
     return liste
@@ -207,7 +209,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
           l'objet MCCOMPOSE
       """
       self.init_modif()
-      if type(name)==types.StringType :
+      if type(name)==bytes :
         # on est en mode creation d'un motcle 
         if self.ispermis(name) == 0 : return 0
         objet=self.definition.entites[name](val=None,nom=name,parent=self)
@@ -265,9 +267,9 @@ class MCCOMPO(I_OBJECT.OBJECT):
         est bien permis, cad peut bien etre un fils de self, 
         Retourne 0 sinon 
     """
-    if type(fils) == types.StringType :
+    if type(fils) == bytes :
       # on veut juste savoir si self peut avoir un fils de nom 'fils'
-      if self.definition.entites.has_key(fils):
+      if fils in self.definition.entites:
         return 1
       else :
         return 0
@@ -278,7 +280,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
       # la verification du nom de suffit pas (plusieurs commandes
       # ont le meme mot-cle facteur AFFE ... et c'est l'utilisateur
       # qui choisit le pere d'ou un risque d'erreur)
-      if not self.definition.entites.has_key(fils.nom):
+      if not fils.nom in self.definition.entites:
         return 0
       else:
         if fils.parent.nom != self.nom : return 0
@@ -420,7 +422,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
      try :
          motcle.update_mc_global()
      except :
-	pass
+         pass
 
   def init_modif_up(self):
     Validation.V_MCCOMPO.MCCOMPO.init_modif_up(self)

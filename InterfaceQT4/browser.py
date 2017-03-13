@@ -18,23 +18,26 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import string,re
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import range
+except : pass
+import re
 import types,sys,os
 import traceback
-import typeNode
+from . import typeNode
 #import pdb
 
-from determine import monEnvQT5
-if monEnvQT5 :
-  from PyQt5.QtWidgets import QTreeWidget , QTreeWidgetItem,QApplication
-  from PyQt5.QtGui import QIcon
-  from PyQt5.QtCore  import Qt
-else :
-  from PyQt4.QtGui  import *
-  from PyQt4.QtCore  import *
+import six
+from six.moves import range
+from PyQt5.QtWidgets import QTreeWidget , QTreeWidgetItem, QApplication, QMessageBox
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore  import Qt
 from Extensions.i18n import tr
-from gereRegles import GereRegles
-from monChoixCommande import MonChoixCommande
+from .gereRegles import GereRegles
+from .monChoixCommande import MonChoixCommande
 
 class JDCTree( QTreeWidget,GereRegles ):
     def __init__( self, jdc_item, QWParent):        
@@ -62,14 +65,9 @@ class JDCTree( QTreeWidget,GereRegles ):
  
         self.itemCourrant=None
 
-        if monEnvQT5 :
-           self.itemClicked.connect(self.handleOnItem)
-           self.itemCollapsed.connect(self.handleCollapsedItem)
-           self.itemExpanded.connect(self.handleExpandedItem)
-        else :
-           self.connect(self, SIGNAL("itemClicked ( QTreeWidgetItem * ,int) "), self.handleOnItem)
-           self.connect(self, SIGNAL("itemCollapsed ( QTreeWidgetItem *) "), self.handleCollapsedItem)
-           self.connect(self, SIGNAL("itemExpanded ( QTreeWidgetItem *) "), self.handleExpandedItem)
+        self.itemClicked.connect(self.handleOnItem)
+        self.itemCollapsed.connect(self.handleCollapsedItem)
+        self.itemExpanded.connect(self.handleExpandedItem)
 
         #PNPNPN verifier dans quel cas on se trouve : affiche l arbre ou la commande
         self.node_selected=self.racine
@@ -78,12 +76,12 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.inhibeExpand=False
         #print "self.editor.afficheCommandesPliees", self.editor.afficheCommandesPliees
         if self.racine.children !=[] :  
-           self.editor.initSplitterSizes(3)
+           #self.editor.initSplitterSizes(3)
            if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
            else : self.racine.children[0].deplieToutEtReaffiche()
            self.racine.children[0].fenetre.donnePremier()
         else : 
-          self.editor.initSplitterSizes(2)
+          #self.editor.initSplitterSizes(2)
           self.racine.affichePanneau()
           #print self.editor.splitter.sizes()
         #PNPNPN
@@ -180,7 +178,7 @@ class JDCTree( QTreeWidget,GereRegles ):
 
         try :
            fr = item.item.get_fr()
-           if self.editor: self.editor.affiche_commentaire(unicode(fr))
+           if self.editor: self.editor.affiche_commentaire(six.text_type(fr))
         except:
             pass
         item.select()
@@ -220,13 +218,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         value = tr(str( item.GetText() ) )
  
 
-        if monEnvQT5:
-           if self.editor.enteteQTree=='complet':mesColonnes=(name,value)
-           else : mesColonnes=(name,)
-        else :
-           mesColonnes=QStringList()
-           if self.editor.enteteQTree=='complet': mesColonnes <<  name << value
-           else : mesColonnes <<  name
+        if self.editor.enteteQTree=='complet':mesColonnes=(name,value)
+        else : mesColonnes=(name,)
 
         if self.treeParent.plie==True :
             self.plie        = True
@@ -259,14 +252,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         else :
            QTreeWidgetItem.__init__(self,self.treeParent,mesColonnes)
 
-        if monEnvQT5 :
-           self.setToolTip(0,self.item.get_fr())
-           self.setToolTip(1,self.item.get_fr())
-           repIcon=self.appliEficas.repIcon
-        else :
-           self.setToolTip(0,QString(self.item.get_fr()))
-           self.setToolTip(1,QString(self.item.get_fr()))
-           repIcon=QString(self.appliEficas.repIcon)
+        self.setToolTip(0,self.item.get_fr())
+        self.setToolTip(1,self.item.get_fr())
+        repIcon=self.appliEficas.repIcon
 
         monIcone = QIcon(repIcon+"/" +self.item.GetIconName() + ".png")
         self.setIcon(0,monIcone)
@@ -337,7 +325,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         # on resoudera a ce moment la
         # pour l instant pas de poussiere sous le tapis
         if  not(self.item.isactif()) : 
-            from monWidgetInactif import MonWidgetInactif
+            from .monWidgetInactif import MonWidgetInactif
             self.fenetre = MonWidgetInactif(self,self.editor)
         else:
            itemParent=self
@@ -346,7 +334,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
               itemParent.affichePanneau()
               return
            self.fenetre=self.getPanel()
-           self.editor.restoreSplitterSizes()
+           #self.editor.restoreSplitterSizes()
          
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
@@ -360,7 +348,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             self.editor.fenetreCentraleAffichee.deleteLater()
 
         self.editor.widgetCentraleLayout.addWidget(self.fenetre)
-        #print "j ajoute ", self.fenetre, self.fenetre.node.item.nom
+        #print ("j ajoute ", self.fenetre, self.fenetre.node.item.nom)
         self.editor.fenetreCentraleAffichee=self.fenetre
         self.tree.node_selected= self
 
@@ -381,7 +369,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """
         Cette methode a pour but de commentariser la commande pointee par self
         """
-        # On traite par une exception le cas ou l'utilisateur final cherche a désactiver
+        # On traite par une exception le cas ou l'utilisateur final cherche a desactiver
         # (commentariser) un commentaire.
         try :
             pos=self.treeParent.children.index(self)
@@ -466,7 +454,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
           if   pos == 'before': index = index
           elif pos == 'after': index = index +1
           else:
-              print unicode(pos), tr("  n'est pas un index valide pour append_brother")
+              print(six.text_type(pos), tr("  n'est pas un index valide pour append_brother"))
               return 0
           return self.treeParent.append_child(name,pos=index,plier=plier)
 
@@ -514,7 +502,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             index = 0
         elif pos == 'last':
             index = len(self.children)
-        elif type(pos) == types.IntType :
+        elif type(pos) == int :
             # position fixee
             index = pos
         elif type(pos) == types.InstanceType:
@@ -603,7 +591,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if noeud.treeParent.children.index(noeud) < index : index=noeud.treeParent.children.index(noeud)
         if index < 0 : index =0
 
-        # Cas ou on détruit dans une ETape
+        # Cas ou on detruit dans une ETape
         if index == 9999 : 
               parentPosition=self.treeParent
               while not(isinstance(parentPosition, compojdc.Node)):
@@ -664,8 +652,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """Cette methode remet a jour la validite du noeud (icone)
            Elle appelle isvalid
         """
-        if monEnvQT5 : repIcon=self.appliEficas.repIcon
-        else : repIcon=QString(self.appliEficas.repIcon)
+        repIcon=self.appliEficas.repIcon
         monIcone = QIcon(repIcon+"/" +self.item.GetIconName() + ".png")
         self.setIcon(0,monIcone)
 
@@ -679,16 +666,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
     
     
     def update_node_label_in_blue(self):
-        if hasattr(self.appliEficas,'noeudColore'):
-           if monEnvQT5 :
-             self.appliEficas.noeudColore.setForeground(0,Qt.black)
-           else :
-             self.appliEficas.noeudColore.setTextColor( 0,Qt.black)
-             self.appliEficas.noeudColore.update_node_label()
-        if monEnvQT5 :
-             self.setForeground(0,Qt.blue)
-        else :
-           self.setTextColor( 0,Qt.blue )
+        if hasattr(self.appliEficas,'noeudColore'): self.appliEficas.noeudColore.setForeground(0,Qt.black)
+        self.setForeground(0,Qt.blue)
         labeltext,fonte,couleur = self.item.GetLabelText()
         self.setText(0, labeltext)        
         self.appliEficas.noeudColore=self
@@ -760,8 +739,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def doPaste(self,node_selected,pos='after'):
         """
-            Déclenche la copie de l'objet item avec pour cible
-            l'objet passé en argument : node_selected
+            Declenche la copie de l'objet item avec pour cible
+            l'objet passe en argument : node_selected
         """
         #print 'je passe dans doPaste'
         objet_a_copier = self.item.get_copie_objet()
@@ -770,7 +749,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def doPasteCommande(self,objet_a_copier,pos='after'):
         """
-          Réalise la copie de l'objet passé en argument qui est nécessairement
+          Realise la copie de l'objet passe en argument qui est necessairement
           une commande
         """
         child=None
@@ -783,7 +762,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def doPastePremier(self,objet_a_copier):
         """
-           Réalise la copie de l'objet passé en argument (objet_a_copier)
+           Realise la copie de l'objet passe en argument (objet_a_copier)
         """
         objet = objet_a_copier.item.get_copie_objet()
         child = self.append_child(objet,pos='first')
@@ -829,7 +808,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
     def setPlie(self):
         #print "je mets inhibeExpand a true dans setPlie"
         #print "je suis dans plieTout", self.item.get_nom()
-        import compojdc
+        from . import compojdc
         if self.fenetre == self.editor.fenetreCentraleAffichee  and isinstance(self.treeParent,compojdc.Node): 
            return
         self.tree.inhibeExpand=True

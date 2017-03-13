@@ -20,18 +20,17 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 from desSelectVal import Ui_DSelVal
 from Extensions.i18n import tr
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QDialog, QFileDialog
-    from PyQt5.QtCore import QTimer, Qt
-    from PyQt5.QtGui import QPalette
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import QPalette
+from PyQt5.QtWidgets import QDialog, QFileDialog
+from PyQt5.QtCore import QTimer, Qt
+from PyQt5.QtGui import QPalette
 
 class DSelVal(Ui_DSelVal,QDialog):
    def __init__(self,parent ,modal ) :
@@ -54,8 +53,7 @@ class MonSelectVal(DSelVal):
         self.file=str(file)
         self.readVal()
         self.initVal()
-        if monEnvQT5: self.connecterSignaux()
-        else : self.connecterSignauxQT4()
+        self.connecterSignaux()
 
   def connecterSignaux(self) :
         self.Bespace.clicked.connect(self.SelectEsp)
@@ -86,7 +84,7 @@ class MonSelectVal(DSelVal):
 
   def readVal(self):
         if self.file == "" : return
-        f = open(self.file, "rb")
+        f = open(self.file, "r")
         self.texte = f.read()
         f.close()
 
@@ -115,10 +113,9 @@ class MonSelectVal(DSelVal):
         self.Traitement()
 
   def Traitement(self):
-        import string
         if self.textTraite == "" : return
         if self.textTraite[-1]=="\n" : self.textTraite=self.textTraite[0:-1]
-        self.textTraite=string.replace(self.textTraite,"\n",self.separateur)
+        self.textTraite=self.textTraite.replace("\n",self.separateur)
         liste1=self.textTraite.split(self.separateur)
         liste=[]
         for val in liste1 :

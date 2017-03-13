@@ -26,7 +26,15 @@
 """
 
 # import de modules Python
-import string,types
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import range
+   from builtins import object
+except : pass
+
+import types
 from math import *
 import traceback
 
@@ -34,9 +42,10 @@ import traceback
 from Noyau.N_CR import CR
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
-from param2 import *
+from .param2 import *
 from Ihm import CONNECTOR
 from Extensions.i18n import tr
+from six.moves import range
 
 class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   """
@@ -54,7 +63,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     # La classe PARAMETRE n'a pas de definition : on utilise self pour
     # completude
     self.definition=self
-    # parent ne peut être qu'un objet de type JDC
+    # parent ne peut etre qu'un objet de type JDC
     self.jdc = self.parent = CONTEXT.get_current_step()
     self.niveau=self.parent.niveau
     self.actif=1
@@ -68,17 +77,17 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
 
   def interprete_valeur(self,val):
     """
-    Essaie d'interpreter val (chaîne de caracteres)comme :
+    Essaie d'interpreter val (chaine de caracteres)comme :
     - un entier
     - un reel
-    - une chaîne de caracteres
+    - une chaine de caracteres
     - une liste d'items d'un type qui precede
     Retourne la valeur interpretee
     """
     #if not val : return None
     valeur = None
 
-    if type(val) == types.ListType:
+    if type(val) == list:
     # Un premier traitement a ete fait lors de la saisie
     # permet de tester les parametres qui sont des listes
        l_new_val = []
@@ -90,7 +99,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
                return None
        return l_new_val
 
-    if type(val) == types.StringType:
+    if type(val) == bytes:
        # on tente l'evaluation dans un contexte fourni par le parent s'il existe
        if self.parent:
           valeur=self.parent.eval_in_context(val,self)
@@ -103,7 +112,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     #PN je n ose pas modifier je rajoute
     # refus des listes heterogenes : ne dvrait pas etre la
     if valeur != None :
-        if type(valeur) == types.TupleType:
+        if type(valeur) == tuple:
             l_new_val = []
             typ = None
             for v in valeur :
@@ -114,7 +123,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
                         # la liste est heterogene --> on refuse d'interpreter
                         #  self comme une liste
                         # on retourne la string initiale
-                        print ('liste heterogene ',val)
+                        print(('liste heterogene ',val))
                         return val
                 l_new_val.append(v)
             return tuple(l_new_val)
@@ -212,7 +221,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   def supprime(self):
     """
     Methode qui supprime toutes les boucles de references afin que 
-    l'objet puisse être correctement detruit par le garbage collector
+    l'objet puisse etre correctement detruit par le garbage collector
     """
     self.parent = None
     self.jdc = None
@@ -275,7 +284,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
         Donne un echo de self sous la forme nom = valeur
     """
-    if type(self.valeur) == types.StringType:
+    if type(self.valeur) == bytes:
          if self.valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr
             return self.nom+' = '+ repr(self.valeur)
@@ -285,7 +294,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
          else:
             return self.nom+' = '+ repr(self.valeur)
     else:
-       if type(self.valeur) == types.ListType :
+       if type(self.valeur) == list :
           aRetourner=self.nom+' = ['
           for l in self.valeur :
             aRetourner=aRetourner+str(l) +","
@@ -363,7 +372,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   def __adapt__(self,validator):
       return validator.adapt(self.eval())
 
-class COMBI_PARAMETRE :
+class COMBI_PARAMETRE(object) :
   def __init__(self,chainevaleur,valeur):
       self.chainevaleur=chainevaleur
       self.valeur=valeur
@@ -375,7 +384,7 @@ class COMBI_PARAMETRE :
       if self.valeur and self.chainevaleur:
          return 1
 
-class ITEM_PARAMETRE :
+class ITEM_PARAMETRE(object) :
   def __init__(self,param_pere,item=None):
       self.param_pere = param_pere
       self.item = item

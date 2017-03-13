@@ -21,6 +21,7 @@
     Ce module contient la classe ETAPE_NIVEAU qui sert a 
     concretiser les niveaux au sein d'un JDC
 """
+from __future__ import absolute_import
 import traceback
 
 from Noyau import N_OBJECT
@@ -47,12 +48,12 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
 
   def register(self,etape):
     """ 
-          Enregistre la commande étape :
+          Enregistre la commande etape :
           - si editmode = 0 : on est en mode relecture d'un fichier de commandes
-          auquel cas on ajoute etape à la fin de la liste self.etapes
-          - si editmode = 1 : on est en mode ajout d'étape depuis eficas auquel cas
-          cette méthode ne fait rien, c'est addentité qui enregistre etape
-          à la bonne place dans self.etapes 
+          auquel cas on ajoute etape a la fin de la liste self.etapes
+          - si editmode = 1 : on est en mode ajout d'etape depuis eficas auquel cas
+          cette methode ne fait rien, c'est addentite qui enregistre etape
+          a la bonne place dans self.etapes 
     """
     if self.editmode : return
     self.etapes.append(etape)
@@ -72,7 +73,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
     if self.definition.actif == 1 :
       return 1
     else :
-      # self.actif est une condition à évaluer dans un certain contexte ...
+      # self.actif est une condition a evaluer dans un certain contexte ...
       d = self.cree_dict_valeurs()
       try:
         t=eval(self.definition.actif,d)
@@ -83,8 +84,8 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
 
   def cree_dict_valeurs(self):
     """
-    Retourne le dictionnaire des frères aînés de self composé des couples :
-    {nom_frère isvalid()}
+    Retourne le dictionnaire des freres aines de self compose des couples :
+    {nom_frere isvalid()}
     """
     d={}
     for niveau in self.parent.etapes_niveaux:
@@ -93,7 +94,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
     return d
 
   def isvalid(self):
-    """ Méthode booléenne qui retourne 0 si le niveau est invalide, 1 sinon """
+    """ Methode booleenne qui retourne 0 si le niveau est invalide, 1 sinon """
     if self.etapes_niveaux == []:
       if len(self.etapes) == 0:
         return self.definition.valide_vide
@@ -124,7 +125,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
 
   def suppentite(self,etape) :
     """ Classe ETAPE_NIVEAU
-        Supprime une étape 
+        Supprime une etape 
     """
     self.jdc.suppentite(etape)
 

@@ -19,26 +19,31 @@
 
 
 """
-    Ce module contient la classe MACRO_ETAPE qui sert à vérifier et à exécuter
+    Ce module contient la classe MACRO_ETAPE qui sert a verifier et a executer
     une commande
 """
 
 # Modules Python
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import range
+except : pass
 import types
 import sys
-import string
 import traceback
 from warnings import warn
 
 # Modules EFICAS
-import N_MCCOMPO
-import N_ETAPE
-from N_Exception import AsException
-import N_utils
-from N_utils import AsType
-from N_CO import CO
-from N_ASSD import ASSD
-from N_info import message, SUPERV
+from . import N_MCCOMPO
+from . import N_ETAPE
+from .N_Exception import AsException
+from . import N_utils
+from .N_utils import AsType
+from .N_CO import CO
+from .N_ASSD import ASSD
+from six.moves import range
 
 
 class MACRO_ETAPE(N_ETAPE.ETAPE):
@@ -52,13 +57,13 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
     def __init__(self, oper=None, reuse=None, args={}):
         """
         Attributs :
-           - definition : objet portant les attributs de définition d'une étape
-             de type macro-commande. Il est initialisé par
+           - definition : objet portant les attributs de definition d'une etape
+             de type macro-commande. Il est initialise par
              l'argument oper.
-           - reuse : indique le concept d'entrée réutilisé. Il se trouvera donc
-             en sortie si les conditions d'exécution de l'opérateur
+           - reuse : indique le concept d'entree reutilise. Il se trouvera donc
+             en sortie si les conditions d'execution de l'operateur
              l'autorise
-           - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé
+           - valeur : arguments d'entree de type mot-cle=valeur. Initialise
              avec l'argument args.
         """
         N_ETAPE.ETAPE.__init__(self, oper, reuse, args, niveau=5)
@@ -69,19 +74,19 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         self.index_etape_courante = 0
         self.etapes = []
         self.index_etapes = {}
-        #  Dans le cas d'une macro écrite en Python, l'attribut Outputs est un
+        #  Dans le cas d'une macro ecrite en Python, l'attribut Outputs est un
         #  dictionnaire qui contient les concepts produits de sortie
-        #  (nom : ASSD) déclarés dans la fonction sd_prod
+        #  (nom : ASSD) declares dans la fonction sd_prod
         self.Outputs = {}
         self.sdprods = []
         self.UserError = "UserError"
-        # permet de stocker le nom du dernier concept nommé dans la macro
+        # permet de stocker le nom du dernier concept nomme dans la macro
         self.last = None
 
     def make_register(self):
         """
-        Initialise les attributs jdc, id, niveau et réalise les enregistrements
-        nécessaires
+        Initialise les attributs jdc, id, niveau et realise les enregistrements
+        necessaires
         """
         N_ETAPE.ETAPE.make_register(self)
         if self.parent:
@@ -91,27 +96,26 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
 
     def Build_sd(self, nom):
         """
-           Construit le concept produit de l'opérateur. Deux cas
-           peuvent se présenter :
+           Construit le concept produit de l'operateur. Deux cas
+           peuvent se presenter :
 
-             - le parent n'est pas défini. Dans ce cas, l'étape prend en charge
-               la création et le nommage du concept.
+             - le parent n'est pas defini. Dans ce cas, l'etape prend en charge
+               la creation et le nommage du concept.
 
-             - le parent est défini. Dans ce cas, l'étape demande au parent la
-               création et le nommage du concept.
+             - le parent est defini. Dans ce cas, l'etape demande au parent la
+               creation et le nommage du concept.
 
         """
-        # message.debug(SUPERV, "%s", self.nom)
         self.sdnom = nom
         try:
             # On positionne la macro self en tant que current_step pour que les
-            # étapes créées lors de l'appel à sd_prod et à op_init aient la macro
+            # etapes creees lors de l'appel a sd_prod et a op_init aient la macro
             #  comme parent
             self.set_current_step()
             if self.parent:
                 sd = self.parent.create_sdprod(self, nom)
                 if type(self.definition.op_init) == types.FunctionType:
-                    apply(self.definition.op_init, (
+                    self.definition.op_init(*(
                         self, self.parent.g_context))
             else:
                 sd = self.get_sd_prod()
@@ -120,11 +124,12 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
                     # d un concept
                     sd.set_name(nom)
             self.reset_current_step()
-        except AsException, e:
+        except AsException as e:
             self.reset_current_step()
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1], e)
-        except (EOFError, self.UserError):
+        #except (EOFError, self.UserError):
+        except (EOFError):
             # Le retablissement du step courant n'est pas strictement
             # necessaire. On le fait pour des raisons de coherence
             self.reset_current_step()
@@ -135,14 +140,14 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
                 sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1] + '\n',
-                              string.join(l))
+                              ''.join(l))
 
         self.Execute()
         return sd
 
     def get_sd_prod(self):
         """
-          Retourne le concept résultat d'une macro étape
+          Retourne le concept resultat d'une macro etape
           La difference avec une etape ou une proc-etape tient a ce que
           le concept produit peut exister ou pas
 
@@ -151,11 +156,11 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
           Deux cas :
            - cas 1 : sd_prod  n'est pas une fonction
                    il s'agit d'une sous classe de ASSD
-                   on construit le sd à partir de cette classe
+                   on construit le sd a partir de cette classe
                    et on le retourne
            - cas 2 : sd_prod est une fonction
-                   on l'évalue avec les mots-clés de l'étape (mc_liste)
-                   on construit le sd à partir de la classe obtenue
+                   on l'evalue avec les mots-cles de l'etape (mc_liste)
+                   on construit le sd a partir de la classe obtenue
                    et on le retourne
         """
         sd_prod = self.definition.sd_prod
@@ -165,20 +170,21 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
             d = self.cree_dict_valeurs(self.mc_liste)
             try:
                 # la sd_prod d'une macro a l'objet macro_etape lui meme en premier argument
-                # Comme sd_prod peut invoquer la méthode type_sdprod qui ajoute
-                # les concepts produits dans self.sdprods, il faut le mettre à
-                # zéro avant de l'appeler
+                # Comme sd_prod peut invoquer la methode type_sdprod qui ajoute
+                # les concepts produits dans self.sdprods, il faut le mettre a
+                # zero avant de l'appeler
                 self.sdprods = []
-                sd_prod = apply(sd_prod, (self,), d)
-            except (EOFError, self.UserError):
+                sd_prod = sd_prod(*(self,), **d)
+            #except (EOFError, self.UserError):
+            except (EOFError):
                 raise
-            except Exception, exc:
+            except Exception as exc:
                 if CONTEXT.debug:
                     traceback.print_exc()
                 raise AsException("impossible d affecter un type au resultat:",
                                   str(exc))
 
-        # on teste maintenant si la SD est réutilisée ou s'il faut la créer
+        # on teste maintenant si la SD est reutilisee ou s'il faut la creer
         if self.definition.reentrant != 'n' and self.reuse:
             # Le concept produit est specifie reutilise (reuse=xxx). C'est une erreur mais non fatale.
             # Elle sera traitee ulterieurement.
@@ -191,14 +197,14 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
                 self.typret = sd_prod
                 # Si la commande est obligatoirement reentrante et reuse n'a pas ete specifie, c'est une erreur.
                 # On ne fait rien ici. L'erreur sera traitee par la suite.
-        # précaution
+        # precaution
         if self.sd is not None and not isinstance(self.sd, ASSD):
             raise AsException("""
-Impossible de typer le résultat !
+Impossible de typer le resultat !
 Causes possibles :
    Utilisateur : Soit la valeur fournie derrière "reuse" est incorrecte,
-                 soit il y a une "," à la fin d'une commande précédente.
-   Développeur : La fonction "sd_prod" retourne un type invalide.""")
+                 soit il y a une "," a la fin d'une commande precedente.
+   Developpeur : La fonction "sd_prod" retourne un type invalide.""")
         return self.sd
 
     def get_type_produit(self, force=0):
@@ -210,26 +216,26 @@ Causes possibles :
 
     def get_type_produit_brut(self, force=0):
         """
-             Retourne le type du concept résultat de l'étape et eventuellement type
-             les concepts produits "à droite" du signe égal (en entrée)
+             Retourne le type du concept resultat de l'etape et eventuellement type
+             les concepts produits "a droite" du signe egal (en entree)
 
              Deux cas :
                - cas 1 : sd_prod de oper n'est pas une fonction
                       il s'agit d'une sous classe de ASSD
                       on retourne le nom de la classe
                - cas 2 : il s'agit d'une fonction
-                      on l'évalue avec les mots-clés de l'étape (mc_liste)
-                      et on retourne son résultat
+                      on l'evalue avec les mots-cles de l'etape (mc_liste)
+                      et on retourne son resultat
         """
         if not force and hasattr(self, 'typret'):
             return self.typret
 
         if type(self.definition.sd_prod) == types.FunctionType:
             d = self.cree_dict_valeurs(self.mc_liste)
-            # Comme sd_prod peut invoquer la méthode type_sdprod qui ajoute
-            # les concepts produits dans self.sdprods, il faut le mettre à zéro
+            # Comme sd_prod peut invoquer la methode type_sdprod qui ajoute
+            # les concepts produits dans self.sdprods, il faut le mettre a zero
             self.sdprods = []
-            sd_prod = apply(self.definition.sd_prod, (self,), d)
+            sd_prod = self.definition.sd_prod(*(self,), **d)
         else:
             sd_prod = self.definition.sd_prod
         return sd_prod
@@ -241,24 +247,20 @@ Causes possibles :
             On tient compte des commandes qui modifient le contexte
             comme DETRUIRE ou les macros
         """
-        # L'étape courante pour laquelle le contexte a été calculé est
-        # mémorisée dans self.index_etape_courante
-        # message.debug(SUPERV, "g_context : %s", [k for k, v in self.g_context.items() if isinstance(v, ASSD)])
-        # message.debug(SUPERV, "current_context : %s", [k for k, v in
+        # L'etape courante pour laquelle le contexte a ete calcule est
+        # memorisee dans self.index_etape_courante
         # self.current_context.items() if isinstance(v, ASSD)])
         d = self.current_context = self.g_context.copy()
         if etape is None:
             return d
         # retirer les sd produites par 'etape'
         sd_names = [sd.nom for sd in etape.get_created_sd()]
-        # message.debug(SUPERV, "etape: %s, reuse : %s, sdprods de %s : %s",
-                      # self.nom, etape.reuse, etape.nom, sd_names)
         for nom in sd_names:
             try:
                 del d[nom]
             except KeyError:
                 pass
-                # Exemple avec INCLUDE_MATERIAU appelé dans une macro.
+                # Exemple avec INCLUDE_MATERIAU appele dans une macro.
                 # Les fonctions restent uniquement dans le contexte de INCLUDE_MATERIAU,
                 # elles ne sont donc pas dans le contexte de la macro appelante.
                 # from warnings import warn
@@ -268,8 +270,8 @@ Causes possibles :
 
     def supprime(self):
         """
-           Méthode qui supprime toutes les références arrières afin que
-           l'objet puisse etre correctement détruit par le garbage collector
+           Methode qui supprime toutes les references arrières afin que
+           l'objet puisse etre correctement detruit par le garbage collector
         """
         N_MCCOMPO.MCCOMPO.supprime(self)
         self.jdc = None
@@ -282,18 +284,16 @@ Causes possibles :
             etape.supprime()
 
     def clean(self, netapes):
-        """Nettoie les `netapes` dernières étapes de la liste des étapes."""
+        """Nettoie les `netapes` dernières etapes de la liste des etapes."""
         if self.jdc.hist_etape:
             return
-        for i in xrange(netapes):
+        for i in range(netapes):
             e = self.etapes.pop()
             jdc = e.jdc
             parent = e.parent
             e.supprime()
             e.parent = parent
             e.jdc = jdc
-            # message.debug(SUPERV, "MACRO.clean - etape = %s - refcount(e) = %d",
-                          # e.nom, sys.getrefcount(e))
             del self.index_etapes[e]
 
     def type_sdprod(self, co, t):
@@ -301,10 +301,10 @@ Causes possibles :
              Cette methode a pour fonction de typer le concept co avec le type t
              dans les conditions suivantes :
               1. co est un concept produit de self
-              2. co est un concept libre : on le type et on l attribue à self
+              2. co est un concept libre : on le type et on l attribue a self
 
              Elle enregistre egalement les concepts produits (on fait l hypothese
-             que la liste sdprods a été correctement initialisee, vide probablement)
+             que la liste sdprods a ete correctement initialisee, vide probablement)
         """
         if not hasattr(co, 'etape'):
             # Le concept vaut None probablement. On ignore l'appel
@@ -340,23 +340,21 @@ Il ne devrait y avoir qu'un seul mot cle porteur du concept CO (%s)""" % co)
 Impossible de changer le type du concept (%s). Le mot cle associe ne supporte pas CO mais seulement (%s)""" % (co, mcs.definition.type))
             co.etape = self
             # affectation du bon type du concept
-            # message.debug(SUPERV, "MACRO.type_sdprod : changement de type de
-            # %s --> %s", co, t)
             co.change_type(t)
             self.sdprods.append(co)
 
         elif co.etape == self:
             # Cas 2 : le concept est produit par la macro (self)
             # On est deja passe par type_sdprod (Cas 1 ou 3).
-            # XXX Peut-il être créer par une autre macro ?
-            #    On vérifie juste que c'est un vrai CO non déjà typé
+            # XXX Peut-il etre creer par une autre macro ?
+            #    On verifie juste que c'est un vrai CO non deja type
             # if co.etape == co._etape:
             if co.is_typco() == 1:
-                # Le concept a été créé par la macro (self)
+                # Le concept a ete cree par la macro (self)
                 # On peut changer son type
                 co.change_type(t)
             else:
-                # Le concept a été créé par une macro parente
+                # Le concept a ete cree par une macro parente
                 # Le type du concept doit etre coherent avec le type demande
                 # (seulement derive)
                 if not isinstance(co, t):
@@ -371,8 +369,8 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             # et on change le type du concept comme demande
             # Au prealable, on verifie que le concept existant (co) est une instance
             # possible du type demande (t)
-            # Cette règle est normalement cohérente avec les règles de
-            # vérification des mots-clés
+            # Cette règle est normalement coherente avec les règles de
+            # verification des mots-cles
             if not isinstance(co, t):
                 raise AsException("""
 Impossible de changer le type du concept produit (%s) en (%s).
@@ -391,7 +389,7 @@ Impossible de changer le type du concept (%s). Le mot cle associe ne supporte pa
             self.sdprods.append(co)
 
         elif self.issubstep(co.etape):
-            # Cas 4 : Le concept est propriété d'une sous etape de la macro (self).
+            # Cas 4 : Le concept est propriete d'une sous etape de la macro (self).
             # On est deja passe par type_sdprod (Cas 3 ou 1).
             # Il suffit de le mettre dans la liste des concepts produits (self.sdprods)
             # Le type du concept et t doivent etre derives.
@@ -403,7 +401,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             self.sdprods.append(co)
 
         else:
-            # Cas 5 : le concept est produit par une autre étape
+            # Cas 5 : le concept est produit par une autre etape
             # On ne fait rien
             return
 
@@ -434,7 +432,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
     def reg_sd(self, sd):
         """
              Methode appelee dans l __init__ d un ASSD a sa creation pour
-             s enregistrer (reserve aux ASSD créés au sein d'une MACRO)
+             s enregistrer (reserve aux ASSD crees au sein d'une MACRO)
         """
         return self.jdc.o_register(sd)
 
@@ -443,37 +441,37 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             Cette methode doit fabriquer le concept produit retourne
             par l'etape etape et le nommer.
 
-            Elle est appelée à l'initiative de l'etape
+            Elle est appelee a l'initiative de l'etape
             pendant le processus de construction de cette etape : methode __call__
             de la classe CMD (OPER ou MACRO)
-            Ce travail est réalisé par le contexte supérieur (etape.parent)
-            car dans certains cas, le concept ne doit pas etre fabriqué mais
-            l'etape doit simplement utiliser un concept préexistant.
-                    - Cas 1 : etape.reuse != None : le concept est réutilisé
-                    - Cas 2 : l'étape appartient à une macro qui a déclaré un concept
+            Ce travail est realise par le contexte superieur (etape.parent)
+            car dans certains cas, le concept ne doit pas etre fabrique mais
+            l'etape doit simplement utiliser un concept preexistant.
+                    - Cas 1 : etape.reuse != None : le concept est reutilise
+                    - Cas 2 : l'etape appartient a une macro qui a declare un concept
                       de sortie qui doit etre produit par cette etape.
         """
-        if self.Outputs.has_key(nomsd):
-            # Il s'agit d'un concept de sortie de la macro. Il ne faut pas le créer
+        if nomsd in self.Outputs:
+            # Il s'agit d'un concept de sortie de la macro. Il ne faut pas le creer
             # Il faut quand meme appeler la fonction sd_prod si elle existe.
             # get_type_produit le fait et donne le type attendu par la commande
-            # pour verification ultérieure.
+            # pour verification ulterieure.
             sdprod = etape.get_type_produit_brut()
             sd = self.Outputs[nomsd]
             # On verifie que le type du concept existant sd.__class__ est un sur type de celui attendu
-            # Cette règle est normalement cohérente avec les règles de
-            # vérification des mots-clés
+            # Cette règle est normalement coherente avec les règles de
+            # verification des mots-cles
             if not issubclass(sdprod, sd.__class__):
                 raise AsException(
                     "Le type du concept produit %s devrait etre une sur classe de %s" % (sd.__class__, sdprod))
             # La propriete du concept est transferee a l'etape avec le type
-            # attendu par l'étape
+            # attendu par l'etape
             etape.sd = sd
             sd.etape = etape
             if self.reuse == sd and etape.reuse != sd \
-                    and getattr(sd, "executed", 0) == 1:  # n'a pas été pas détruit
-                raise AsException("Le concept '%s' est réentrant dans la macro-commande %s. "
-                                  "Il devrait donc l'être dans %s (produit sous le nom '%s')."
+                    and getattr(sd, "executed", 0) == 1:  # n'a pas ete pas detruit
+                raise AsException("Le concept '%s' est reentrant dans la macro-commande %s. "
+                                  "Il devrait donc l'etre dans %s (produit sous le nom '%s')."
                                   % (sd.nom, self.nom, etape.nom, nomsd))
             # On donne au concept le type produit par la sous commande.
             # Le principe est le suivant : apres avoir verifie que le type deduit par la sous commande
@@ -481,8 +479,8 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             # on affecte au concept ce type car il peut etre plus precis
             # (derive, en general)
             sd.__class__ = sdprod
-            # On force également le nom stocké dans l'attribut sdnom : on lui donne le nom
-            # du concept associé à nomsd
+            # On force egalement le nom stocke dans l'attribut sdnom : on lui donne le nom
+            # du concept associe a nomsd
             etape.sdnom = sd.nom
             # pour l'ajouter au contexte de la macro
             self.g_context[sd.nom] = sd
@@ -510,10 +508,10 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
 
     def NommerSdprod(self, sd, sdnom, restrict='non'):
         """
-          Cette méthode est appelée par les etapes internes de la macro.
+          Cette methode est appelee par les etapes internes de la macro.
           La macro appelle le JDC pour valider le nommage.
-          On considère que l'espace de nom est unique et géré par le JDC.
-          Si le nom est déjà utilisé, l'appel lève une exception.
+          On considère que l'espace de nom est unique et gere par le JDC.
+          Si le nom est deja utilise, l'appel lève une exception.
           Si restrict=='non', on insère le concept dans le contexte du parent de la macro.
           Si restrict=='oui', on insère le concept uniquement dans le contexte de la macro.
         """
@@ -522,22 +520,20 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         # create_sdprod. La seule chose a verifier apres conversion eventuelle du nom
         # est de verifier que le nom n'est pas deja attribue. Ceci est fait en delegant
         # au JDC par l'intermediaire du parent.
-        # message.debug(SUPERV, "macro results = %s, (sdnom: %r, restrict: %r)",
-                          # self.Outputs.keys(), sdnom, restrict)
-        if self.Outputs.has_key(sdnom):
+        if sdnom in self.Outputs :
                 # Il s'agit d'un concept de sortie de la macro produit par une
                 # sous commande
             sdnom = self.Outputs[sdnom].nom
         elif len(sdnom) > 0:
             if sdnom[0] in ('_', '.') and sdnom[1:].isdigit():
-                # il est déjà de la forme _9000012 ou .9000017
+                # il est deja de la forme _9000012 ou .9000017
                 pass
             elif sdnom[0] == '_':
                 # Si le nom du concept commence par le caractère '_', on lui attribue
                 # un identificateur JEVEUX construit par gcncon.
-                # nom commençant par __ : il s'agit de concepts qui seront détruits
+                # nom commençant par __ : il s'agit de concepts qui seront detruits
                 # nom commençant par _ : il s'agit de concepts intermediaires
-                # qui seront gardés
+                # qui seront gardes
                 if len(sdnom) > 1 and sdnom[1] == '_':
                     sdnom = self.gcncon('.')
                 else:
@@ -548,10 +544,10 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
                 pass
             else:
                 # On est dans le cas d'un nom de concept global
-                # XXX à voir, création de CO() dans CALC_ESSAI (sdls139a)
+                # XXX a voir, creation de CO() dans CALC_ESSAI (sdls139a)
                 if not sd.is_typco():
                     raise AsException(
-                        "Résultat non déclaré par la macro %s : %s" % (self.nom, sdnom))
+                        "Resultat non declare par la macro %s : %s" % (self.nom, sdnom))
         self.last = sdnom
         if restrict == 'non':
             # On demande le nommage au parent mais sans ajout du concept dans le contexte du parent
@@ -560,26 +556,24 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             # On ajoute dans le contexte de la macro les concepts nommes
             # Ceci est indispensable pour les CO (macro) dans un INCLUDE
             self.g_context[sdnom] = sd
-            # message.debug(SUPERV, "g_context[%s] = %s", sdnom, sd)
         else:
             # La demande de nommage vient probablement d'une macro qui a mis
             # le concept dans son contexte. On ne traite plus que le nommage (restrict="oui")
-            # message.debug(SUPERV, "restrict=oui  co[%s] = %s", sdnom, sd)
             self.parent.NommerSdprod(sd, sdnom, restrict='oui')
 
     def delete_concept_after_etape(self, etape, sd):
         """
-            Met à jour les étapes de la MACRO  qui sont après etape suite à
+            Met a jour les etapes de la MACRO  qui sont après etape suite a
             la disparition du concept sd
         """
-        # Cette methode est définie dans le noyau mais ne sert que pendant la phase de creation
-        # des etapes et des concepts. Il n'y a aucun traitement particulier à réaliser
-        # Dans d'autres conditions, il faudrait surcharger cette méthode.
+        # Cette methode est definie dans le noyau mais ne sert que pendant la phase de creation
+        # des etapes et des concepts. Il n'y a aucun traitement particulier a realiser
+        # Dans d'autres conditions, il faudrait surcharger cette methode.
         return
 
     def get_created_sd(self):
-        """Retourne la liste des sd réellement produites par l'étape.
-        Si reuse est présent, `self.sd` a été créée avant, donc n'est pas dans
+        """Retourne la liste des sd reellement produites par l'etape.
+        Si reuse est present, `self.sd` a ete creee avant, donc n'est pas dans
         cette liste."""
         sdprods = self.sdprods[:]
         if not self.reuse and self.sd:
@@ -588,7 +582,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
 
     def get_last_concept(self):
         """Retourne le dernier concept produit dans la macro.
-        Peut-être utile pour accéder au contenu 'fortran' dans une
+        Peut-etre utile pour acceder au contenu 'fortran' dans une
         clause 'except'."""
         return self.g_context.get(self.last, None)
 
@@ -601,12 +595,12 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
 
     def update_context(self, d):
         """
-           Met à jour le contexte contenu dans le dictionnaire d
+           Met a jour le contexte contenu dans le dictionnaire d
            Une MACRO_ETAPE peut ajouter plusieurs concepts dans le contexte
            Une fonction enregistree dans op_init peut egalement modifier le contexte
         """
         if type(self.definition.op_init) == types.FunctionType:
-            apply(self.definition.op_init, (self, d))
+            self.definition.op_init(*(self, d))
         if self.sd != None:
             d[self.sd.nom] = self.sd
         for co in self.sdprods:
@@ -644,8 +638,8 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         d = self.g_context = self.macro_const_context
         globs = self.get_global_contexte()
         d.update(globs)
-        exec code in globs, d
-        # pour ne pas conserver des références sur tout
+        exec(code, globs, d)
+        # pour ne pas conserver des references sur tout
         self.macro_const_context = {}
 
     def get_global_contexte(self):
@@ -657,19 +651,19 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         # Le contexte global est forme par concatenation du contexte
         # du parent de self et de celui de l'etape elle meme (self)
         # Pour les concepts, cela ne doit rien changer. Mais pour les constantes,
-        # les valeurs de get_contexte_avant sont moins récentes que dans
-        # get_global_contexte. On prend donc la précaution de ne pas écraser
-        # ce qui y est déjà.
+        # les valeurs de get_contexte_avant sont moins recentes que dans
+        # get_global_contexte. On prend donc la precaution de ne pas ecraser
+        # ce qui y est deja.
         d = self.parent.get_global_contexte()
         d.update(self.g_context)
-        d.update([(k, v) for k, v in self.parent.get_contexte_avant(self).items()
+        d.update([(k, v) for k, v in list(self.parent.get_contexte_avant(self).items())
                   if d.get(k) is None])
         return d
 
     def get_contexte_courant(self, etape_fille_du_jdc=None):
         """
-           Retourne le contexte tel qu'il est au moment de l'exécution de
-           l'étape courante.
+           Retourne le contexte tel qu'il est au moment de l'execution de
+           l'etape courante.
         """
         ctx = {}
         # update car par ricochet on modifierait jdc.current_context
@@ -680,8 +674,8 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
 
     def get_concept(self, nomsd):
         """
-            Méthode pour recuperer un concept à partir de son nom
-            dans le contexte du jdc connu avant l'exécution de la macro courante.
+            Methode pour recuperer un concept a partir de son nom
+            dans le contexte du jdc connu avant l'execution de la macro courante.
         """
         # chercher dans self.get_contexte_avant, puis si non trouve
         # self.parent.get_concept est peut-etre plus performant
@@ -692,13 +686,13 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
 
     def get_concept_by_type(self, nomsd, typesd, etape=None):
         """
-            Méthode pour récuperer un concept à partir de son nom et de son type.
+            Methode pour recuperer un concept a partir de son nom et de son type.
             Il aura comme père 'etape' (ou la macro courante si etape est absente).
         """
         return self.parent.get_concept_by_type(nomsd, typesd, etape=etape or self)
 
     def copy(self):
-        """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
+        """ Methode qui retourne une copie de self non enregistree auprès du JDC
             et sans sd
             On surcharge la methode de ETAPE pour exprimer que les concepts crees
             par la MACRO d'origine ne sont pas crees par la copie mais eventuellement
@@ -709,8 +703,8 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         return etape
 
     def copy_intern(self, etape):
-        """ Cette méthode effectue la recopie des etapes internes d'une macro
-            passée en argument (etape)
+        """ Cette methode effectue la recopie des etapes internes d'une macro
+            passee en argument (etape)
         """
         self.etapes = []
         self.index_etapes = {}
@@ -744,8 +738,8 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
           Cette methode sert a reinitialiser la parente de l'objet
         """
         N_ETAPE.ETAPE.reparent(self, parent)
-        # on ne change pas la parenté des concepts. On s'assure uniquement que
-        # le jdc en référence est le bon
+        # on ne change pas la parente des concepts. On s'assure uniquement que
+        # le jdc en reference est le bon
         for concept in self.sdprods:
             concept.jdc = self.jdc
         for e in self.etapes:
@@ -753,13 +747,13 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
 
     def update_const_context(self, d):
         """
-           Met à jour le contexte des constantes pour l'évaluation de
+           Met a jour le contexte des constantes pour l'evaluation de
            formules dans la macro.
         """
-        # Dans le jdc, const_context est mis à jour par exec_compile
-        # Dans la macro, on n'a pas le code à compiler pour récupèrer les
-        # constantes locales à la macro. On demande donc explicitement de
-        # définir les constantes "locales".
+        # Dans le jdc, const_context est mis a jour par exec_compile
+        # Dans la macro, on n'a pas le code a compiler pour recupèrer les
+        # constantes locales a la macro. On demande donc explicitement de
+        # definir les constantes "locales".
         self.macro_const_context.update(d)
 
     def sd_accessible(self):
@@ -768,5 +762,5 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         sauf pour INCLUDE.
         """
         if CONTEXT.debug:
-            print ' `- MACRO sd_accessible :', self.nom
+            print((' `- MACRO sd_accessible :', self.nom))
         return self.parent.sd_accessible() or not self.is_include()

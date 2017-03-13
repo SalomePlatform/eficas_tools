@@ -17,7 +17,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import A_JDC
+from __future__ import absolute_import
+from . import A_JDC
 from Noyau import N_JDC_CATA
 from Ihm import I_JDC_CATA
 

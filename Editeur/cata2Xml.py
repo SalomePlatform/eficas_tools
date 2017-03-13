@@ -19,6 +19,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+  from builtins import str
+  from builtins import object
+except :
+  pass
 import sys,os
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'../InterfaceQT4'))
@@ -40,7 +47,7 @@ def prettify(elem):
     return reparsed.toprettyxml(indent="  ")
 
                 
-class CatalogueXML:
+class CatalogueXML(object):
         def __init__(self,cata,cataName):
                 self.fichier="/tmp/XML/"+cataName+".xml"
                 self.cata=cata
@@ -61,7 +68,7 @@ class CatalogueXML:
                    f.write(prettify(self.first))
                    f.close()
                 except :
-                   print ("Impossible d'ecrire le fichier : "+ str(self.fichier))
+                   print(("Impossible d'ecrire le fichier : "+ str(self.fichier)))
 
         def constr_list_txt_cmd(self):
                 mesCommandes=self.cata.JdC.commandes

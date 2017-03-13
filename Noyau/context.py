@@ -19,40 +19,38 @@
 #
 # ======================================================================
 
+from __future__ import absolute_import
 _root = None
 _cata = None
 debug = 0
-from Noyau.N_info import message, SUPERV
 
-# Le "current step" est l'étape courante.
-# Une macro se déclare étape courante dans sa méthode Build avant de construire
-# ses étapes filles ou dans BuildExec avant de les exécuter.
-# Les étapes simples le font aussi : dans Execute et BuildExec.
-# (Build ne fait rien pour une étape)
+# Le "current step" est l'etape courante.
+# Une macro se declare etape courante dans sa methode Build avant de construire
+# ses etapes filles ou dans BuildExec avant de les executer.
+# Les etapes simples le font aussi : dans Execute et BuildExec.
+# (Build ne fait rien pour une etape)
 
 
 def set_current_step(step):
     """
-       Fonction qui permet de changer la valeur de l'étape courante
+       Fonction qui permet de changer la valeur de l'etape courante
     """
     global _root
     if _root:
         raise Exception("Impossible d'affecter _root. Il devrait valoir None")
     _root = step
-    # message.debug(SUPERV, "current_step = %s", step and step.nom,
-    # stack_id=-1)
 
 
 def get_current_step():
     """
-       Fonction qui permet d'obtenir la valeur de l'étape courante
+       Fonction qui permet d'obtenir la valeur de l'etape courante
     """
     return _root
 
 
 def unset_current_step():
     """
-       Fonction qui permet de remettre à None l'étape courante
+       Fonction qui permet de remettre a None l'etape courante
     """
     global _root
     _root = None
@@ -77,7 +75,7 @@ def get_current_cata():
 
 def unset_current_cata():
     """
-       Fonction qui permet de remettre à None le catalogue courant
+       Fonction qui permet de remettre a None le catalogue courant
     """
     global _cata
     _cata = None

@@ -18,15 +18,21 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except : pass
+
+import types,os
 
 from copy import copy,deepcopy
 import traceback
-import typeNode
+from . import typeNode
 
 # Modules Eficas
 from Editeur import Objecttreeitem
-import browser
+from . import browser
 from Noyau.N_CR   import justify_text
 from Accas        import SalomeEntry
     
@@ -43,7 +49,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
         # label informatif 
         if monObjet.isInformation():
-          from monWidgetInfo import MonWidgetInfo
+          from .monWidgetInfo import MonWidgetInfo
           widget=MonWidgetInfo(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           self.widget=widget
           return widget
@@ -54,7 +60,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
       # a gerer comme dans composimp
       # Gestion des matrices
         if self.item.wait_matrice ():
-	  from monWidgetMatrice import MonWidgetMatrice
+          from .monWidgetMatrice import MonWidgetMatrice
           widget=MonWidgetMatrice(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           self.widget=widget
           return widget
@@ -67,76 +73,75 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         # A verifier
           if maDefinition.into != [] and maDefinition.into != None:
             if len(maDefinition.into) < 4 :
-              from monWidgetRadioButton import MonWidgetRadioButton
+              from .monWidgetRadioButton import MonWidgetRadioButton
               widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(maDefinition.into) < 7 :
-              from monWidget4a6RadioButton import MonWidget4a6RadioButton
+              from .monWidget4a6RadioButton import MonWidget4a6RadioButton
               widget=MonWidget4a6RadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-              from monWidgetCB import MonWidgetCB
+              from .monWidgetCB import MonWidgetCB
               widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_bool() :
-            from monWidgetSimpBool import MonWidgetSimpBool
+            from .monWidgetSimpBool import MonWidgetSimpBool
             widget=MonWidgetSimpBool(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_fichier():
-            from monWidgetSimpFichier import MonWidgetSimpFichier
+            from .monWidgetSimpFichier import MonWidgetSimpFichier
             widget=MonWidgetSimpFichier(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           # PNPNPN - a faire
           elif self.item.wait_date():
-            from monWidgetDate import MonWidgetDate
+            from .monWidgetDate import MonWidgetDate
             widget=MonWidgetDate(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_heure():
-            from monWidgetHeure import MonWidgetHeure
+            from .monWidgetHeure import MonWidgetHeure
             widget=MonWidgetHeure(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_tuple() :
             if self.item.object.definition.type[0].ntuple == 2:
-               from monWidgetSimpTuple2 import MonWidgetSimpTuple2
+               from .monWidgetSimpTuple2 import MonWidgetSimpTuple2
                widget=MonWidgetSimpTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif self.item.object.definition.type[0].ntuple == 3 :
-               from monWidgetSimpTuple3 import MonWidgetSimpTuple3
+               from .monWidgetSimpTuple3 import MonWidgetSimpTuple3
                widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                print ("Pas de Tuple de longueur > 3")
                print ("Prevenir la maintenance ")
 
           elif self.item.wait_complex():
-            from monWidgetSimpComplexe import MonWidgetSimpComplexe
+            from .monWidgetSimpComplexe import MonWidgetSimpComplexe
             widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_co():
             if len(self.item.get_sd_avant_du_bon_type()) == 0 :
-               from monWidgetUniqueSDCO import MonWidgetUniqueSDCO
+               from .monWidgetUniqueSDCO import MonWidgetUniqueSDCO
                widget=MonWidgetUniqueSDCO(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :      
-               from monWidgetSDCOInto import MonWidgetSDCOInto
+               from .monWidgetSDCOInto import MonWidgetSDCOInto
                widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd():
             if len(self.item.get_sd_avant_du_bon_type()) == 0 :
-               from monWidgetVide import MonWidgetVide
+               from .monWidgetVide import MonWidgetVide
                widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             if len(self.item.get_sd_avant_du_bon_type()) < 4 :
-              from monWidgetRadioButton import MonWidgetRadioButtonSD
+              from .monWidgetRadioButton import MonWidgetRadioButtonSD
               widget=MonWidgetRadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(self.item.get_sd_avant_du_bon_type()) < 7 :
-              from monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
+              from .monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
               widget=MonWidget4a6RadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-              from monWidgetCB import MonWidgetCBSD
+              from .monWidgetCB import MonWidgetCBSD
               widget=MonWidgetCBSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           
           elif  self.item.wait_Salome() and self.editor.salome:
-          # Pas fait
-            from monWidgetSimpSalome import MonWidgetSimpSalome
+            from .monWidgetSimpSalome import MonWidgetSimpSalome
             widget=MonWidgetSimpSalome(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.wait_TXM():
-            from monWidgetSimpTxt import MonWidgetSimpTxt
+            from .monWidgetSimpTxt import MonWidgetSimpTxt
             widget=MonWidgetSimpTxt(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            from monWidgetSimpBase import MonWidgetSimpBase
+            from .monWidgetSimpBase import MonWidgetSimpBase
             widget=MonWidgetSimpBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
         # Gestion des listes
@@ -149,17 +154,17 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                 #widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                 # pass
                #else :
-               from monWidgetPlusieursInto import MonWidgetPlusieursInto
+               from .monWidgetPlusieursInto import MonWidgetPlusieursInto
                widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd() :
-               from monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
+               from .monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
                widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_tuple() :
             if self.item.object.definition.type[0].ntuple == 2:
-               from monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
+               from .monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
                widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif self.item.object.definition.type[0].ntuple == 3 :
-               from monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
+               from .monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
                widget=MonWidgetPlusieursTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                print ("Pas de Tuple de longueur > 3")
@@ -168,26 +173,26 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             if self.item.is_list_SansOrdreNiDoublon():
                
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                  from monWidgetPlusieursInto import MonWidgetPlusieursInto
+                  from .monWidgetPlusieursInto import MonWidgetPlusieursInto
                   widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
 # tres vite pour le tag mais devra etre gere dans configuration
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                  from monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
+                  from .monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
                   widget=MonWidgetPlusieursIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
             #print 8
             if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
-               from monWidgetPlusieursBase import MonWidgetPlusieursBase
+               from .monWidgetPlusieursBase import MonWidgetPlusieursBase
                widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               from monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+               from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
         self.widget=widget
@@ -295,16 +300,16 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       try :
         if "R" in self.object.definition.type:
            clef=self.object.GetNomConcept()
-           if self.appli.dict_reels.has_key(clef):
-              if type(valeurs) == types.TupleType:
+           if clef in self.appli.dict_reels:
+              if type(valeurs) == tuple:
                  valeurs_reelles=[]
                  for val in valeurs :
-                    if self.appli.dict_reels[clef].has_key(val) : 
+                    if val in self.appli.dict_reels[clef]:
                        valeurs_reelles.append(self.appli.dict_reels[clef][val])
                     else :
                        valeurs_reelles.append(val)
               else :
-                 if self.appli.dict_reels[clef].has_key(valeurs):
+                 if valeurs in self.appli.dict_reels[clef]:
                     valeurs_reelles=self.appli.dict_reels[clef][valeurs]
               valeurs=valeurs_reelles
       except :
@@ -321,7 +326,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
       #On ne garde que les items valides
       listevalideitem=[]
-      if type(valeurspossibles) in (types.ListType,types.TupleType) :
+      if type(valeurspossibles) in (list,tuple) :
          pass
       else :
          valeurspossibles=(valeurspossibles,)
@@ -586,10 +591,13 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return boo
 
   def wait_Salome(self):
-      type = self.object.definition.type[0]
-      if 'grma' in repr(type) : return True
-      if 'grno' in repr(type) : return True
-      if (isinstance(type, types.ClassType) and issubclass(type, SalomeEntry)) : return True
+      monType = self.object.definition.type[0]
+      if 'grma' in repr(monType) : return True
+      if 'grno' in repr(monType) : return True
+      try :
+         if issubclass(monType, SalomeEntry) : return True
+      except :
+         pass
       return False
    
   def GetType(self):
@@ -609,15 +617,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   # traite_reel
 
   def eval_valeur(self,valeur):
-      """ Lance l'interprétation de 'valeur' (chaine de caractéres) comme valeur de self :
-             - retourne l'objet associé si on a pu interpréter (entier, réel, ASSD,...)
-             - retourne 'valeur' (chaine de caractéres) sinon
+      """ Lance l'interpretation de 'valeur' (chaine de caracteres) comme valeur de self :
+             - retourne l'objet associe si on a pu interpreter (entier, reel, ASSD,...)
+             - retourne 'valeur' (chaine de caracteres) sinon
       """
       newvaleur=self.eval_val(valeur)
       return newvaleur,1
 
   def eval_valeur_BAK(self,valeur):
-      """ Lance l'interprétation de 'valeur' (chaine de caractéres) comme valeur
+      """ Lance l'interpretation de 'valeur' (chaine de caractéres) comme valeur
       de l'objet pointé par self :
         - retourne l'objet associé si on a pu interpréter (entier, réel, ASSD,...)
         - retourne 'valeur' (chaine de caractéres) sinon
@@ -625,7 +633,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
         - retourne invalide si 1 des objets du tuple l est
       """
       validite=1
-      if type(valeur) in (types.ListType,types.TupleType) :
+      if type(valeur) in (list,tuple) :
          valeurretour=[]
          for item in valeur :
              newvaleur,validiteitem=self.eval_valeur_item(item)
@@ -661,7 +669,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       #print "eval_valeur_item",valeurretour,validite
 
       if validite == 0:
-         if type(valeur) == types.StringType and self.object.wait_TXM():
+         if type(valeur) == bytes and self.object.wait_TXM():
             essai_valeur="'" + valeur + "'"
             valeurretour,validite= self.object.eval_valeur(essai_valeur)
 
@@ -680,7 +688,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
             #validite=0
       # on est dans le cas ou on a évalué et ou on n'aurait pas du
       if self.object.wait_TXM() :
-          if type(valeurretour) != types.StringType:
+          if type(valeurretour) != bytes:
              valeurretour=str(valeur)
              validite=1
       return valeurretour,validite
@@ -715,7 +723,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       ou de détecter si on fait référence a un concept produit par DEFI_VALEUR
       ou un EVAL ...
       """
-      valeur = string.strip(valeur)
+      valeur = valeur.strip()
       liste_reels = self.get_sd_avant_du_bon_type()
       if valeur in liste_reels:
           return valeur
@@ -723,12 +731,12 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           if valeur[0:4] == 'EVAL' :
               # on a trouvé un EVAL --> on retourne directement la valeur
               return valeur
-      if string.find(valeur,'.') == -1 :
+      if valeur.find('.') == -1 :
           # aucun '.' n'a été trouvé dans valeur --> on en rajoute un a la fin
           if (self.is_param(valeur)):
               return valeur
           else:
-              if string.find(valeur,'e') != -1:
+              if valeur.find('e') != -1:
                  # Notation scientifique ?
                  try :
                     r=eval(valeur)

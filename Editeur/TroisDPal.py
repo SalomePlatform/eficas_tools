@@ -21,10 +21,16 @@
    Ce module contient la classe 3Dpilote qui va creer les ordres 
    de pilotage de l idl PAL pour un element de structure
 """
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import object
+except :
+   pass
 import generator
 from Extensions.i18n import tr
 
-class TroisDPilote:
+class TroisDPilote(object):
 
    def __init__(self,node,appli):
       self.node=node
@@ -34,7 +40,7 @@ class TroisDPilote:
       """ 
       """
       format="vers3DSalome"
-      if generator.plugins.has_key(format):
+      if format in generator.plugins :
          # Le generateur existe on l'utilise
          g=generator.plugins[format]()
          g.init_jdc(self.node.get_jdc())

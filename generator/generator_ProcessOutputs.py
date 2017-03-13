@@ -20,11 +20,11 @@
 """Ce module contient le plugin generateur de fichier au format  Code_Carmel3D pour EFICAS.
 """
 
-import types,string,re,os
+from __future__ import absolute_import
+import types,re,os
 from Extensions.i18n import tr
-from generator_python import PythonGenerator
-from generator_modification import ModificationGenerator
-from numpy import zeros
+from .generator_python import PythonGenerator
+from .generator_modification import ModificationGenerator
 
 def entryPoint():
    """

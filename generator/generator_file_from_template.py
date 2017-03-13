@@ -17,10 +17,16 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
 import os
+
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
-from generator_python import PythonGenerator
+from .generator_python import PythonGenerator
+import six
 
 def entryPoint():
     """
@@ -58,7 +64,7 @@ class FileFromTemplateGenerator(PythonGenerator):
         if not os.path.isfile(templateFileName):
             raise EficasException(tr("Fichier patron %s n'existe pas.",
                                     str( templateFileName)))
-        f = file(templateFileName, "r")
+        f = open(templateFileName, "r")
         template = f.read()  
         f.close()
         self.output_text = self.replace_keywords(template)
@@ -79,7 +85,7 @@ class FileFromTemplateGenerator(PythonGenerator):
 
     def replace_keywords(self, template_string):
         result = template_string
-        for item in self.kw_dict.iteritems():
+        for item in six.iteritems(self.kw_dict):
             replace_str = "%" + item[0] + "%"
             result = result.replace(replace_str, str(item[1]))
         return result

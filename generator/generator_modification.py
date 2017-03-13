@@ -21,13 +21,19 @@
     Ce module sert pour charger les parametres de configuration d'EFICAS
 """
 # Modules Python
-import os, sys, string, types, re
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import object
+except : pass
+
+import os, sys,  types, re
 from Extensions.i18n import tr
 
-class ModificationGenerator:
+class ModificationGenerator(object):
     def generTexteModif(self,obj):
       texteModification=""
-      for t in  obj.editor.dicoNouveauxMC.keys() :
+      for t in  list(obj.editor.dicoNouveauxMC.keys()) :
           # 'ajoutDefinitionMC',etape,listeAvant,nomDuMC,typ,args
           fonction,Etape,Genea,nomSIMP,typeSIMP,arguments = obj.editor.dicoNouveauxMC[t]
           texteModification += "MODIFICATION_CATALOGUE(Fonction  = '" + str(fonction)+ "',\n"

@@ -25,24 +25,23 @@
     de toutes les classes de definition d'EFICAS.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import object
+except :
+   pass
 import re
-import N_CR
-import N_OPS
-import N_VALIDATOR
-from strfunc import ufmt
+from . import N_CR
+from . import N_OPS
+from . import N_VALIDATOR
 
-from determine import monEnvQT5
-if monEnvQT5:
-    stringTypes = (str, unicode)
-else :
-  try:
-    from PyQt4 import QtCore
-    stringTypes = (str, unicode, QtCore.QString)
-  except ImportError:
-    stringTypes = (str, unicode)
+import six
+stringTypes = (str, six.text_type)
 
 
-class ENTITE:
+class ENTITE(object):
 
     """
        Classe de base pour tous les objets de definition : mots cles et commandes
@@ -77,7 +76,7 @@ class ENTITE:
             directement
             Il s'agit principalement des mots cles
         """
-        for k, v in self.entites.items():
+        for k, v in list(self.entites.items()):
             v.pere = self
             v.nom = k
 
@@ -102,17 +101,16 @@ class ENTITE:
         """
         self.cr = self.CR()
         self.verif_cata()
-        for k, v in self.entites.items():
+        for k, v in list(self.entites.items()):
             try:
                 cr = v.report()
                 cr.debut = u"Début " + v.__class__.__name__ + ' : ' + k
                 cr.fin = u"Fin " + v.__class__.__name__ + ' : ' + k
                 self.cr.add(cr)
             except:
-                self.cr.fatal(
-                    _(u"Impossible d'obtenir le rapport de %s %s"), k, `v`)
-                print "Impossible d'obtenir le rapport de %s %s" % (k, `v`)
-                print "père =", self
+                self.cr.fatal("Impossible d'obtenir le rapport de %s %s" % (k, repr(v)))
+                print(("Impossible d'obtenir le rapport de %s %s" % (k, repr(v))))
+                print(("père =", self))
         return self.cr
 
     def verif_cata_regles(self):
@@ -124,7 +122,7 @@ class ENTITE:
         for regle in self.regles:
             l = []
             for mc in regle.mcs:
-                if not self.entites.has_key(mc):
+                if not mc in  self.entites :
                     l.append(mc)
             if l != []:
                 txt = str(regle)
@@ -135,7 +133,7 @@ class ENTITE:
         """Verifie la definition d'un objet composite (commande, fact, bloc)."""
         args = self.entites.copy()
         mcs = set()
-        for nom, val in args.items():
+        for nom, val in list(args.items()):
             if val.label == 'SIMP':
                 mcs.add(nom)
                 # XXX
@@ -152,7 +150,7 @@ class ENTITE:
             del args[nom]
         # seuls les blocs peuvent entrer en conflit avec les mcs du plus haut
         # niveau
-        for nom, val in args.items():
+        for nom, val in list(args.items()):
             if val.label == 'BLOC':
                 mcbloc = val.check_definition(parent)
                 # XXX
@@ -227,11 +225,11 @@ class ENTITE:
     def check_min_max(self):
         """Vérifie les attributs min/max."""
         if type(self.min) != int:
-            if self.min != '**':
+            if self.min != '**'and self.min != float('-inf'):
                 self.cr.fatal(
                     _(u"L'attribut 'min' doit être un entier : %r"), self.min)
         if type(self.max) != int:
-            if self.max != '**':
+            if self.max != '**' and self.max != float('inf'):
                 self.cr.fatal(
                     _(u"L'attribut 'max' doit être un entier : %r"), self.max)
         if self.min > self.max:

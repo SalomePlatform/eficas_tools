@@ -18,12 +18,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
 import types
 import traceback
 
-import compofact
-import browser
-import typeNode
+from . import compofact
+from . import browser
+from . import typeNode
 from Extensions.i18n import tr
 
 from Editeur     import Objecttreeitem
@@ -48,13 +49,13 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         else : self.niveau=1
         if not (monObjet.isMCList()) :
            if  hasattr(self,'plie') and self.plie==True : 
-               from monWidgetFactPlie import MonWidgetFactPlie
+               from .monWidgetFactPlie import MonWidgetFactPlie
                widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
            else:
-               from monWidgetFact import MonWidgetFact
+               from .monWidgetFact import MonWidgetFact
                widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         else :
-           from monWidgetBloc import MonWidgetBloc
+           from .monWidgetBloc import MonWidgetBloc
            widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         return widget
 
@@ -83,18 +84,18 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
     #    else:
     #      QMessageBox.information( self, "Copie impossible",
-    #               "Vous ne pouvez coller le mot-clé facteur copié à ce niveau de l'arborescence !")          
-    #      self.editor.affiche_infos("Copie refusée")
+    #               "Vous ne pouvez coller le mot-cle facteur copie a ce niveau de l'arborescence !")          
+    #      self.editor.affiche_infos("Copie refusee")
 
     #    return child
 
 class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
     """ La classe MCListTreeItem joue le role d'un adaptateur pour les objets
         du noyau Accas instances de la classe MCLIST.
-        Elle adapte ces objets pour leur permettre d'etre intégrés en tant que
+        Elle adapte ces objets pour leur permettre d'etre integres en tant que
         noeuds dans un arbre graphique (voir treewidget.py et ObjectTreeItem.py).
-        Cette classe délègue les appels de méthode et les accès
-        aux attributs à l'objet du noyau soit manuellement soit 
+        Cette classe delegue les appels de methode et les acces
+        aux attributs a l'objet du noyau soit manuellement soit 
         automatiquement (voir classe Delegate et attribut object).
     """
     itemNode=Node
@@ -112,7 +113,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def panel(self,jdcdisplay,pane,node):
         """ Retourne une instance de l'objet panneau associe a l'item (self)
-            Si la liste ne contient qu'un mot clé facteur, on utilise le panneau
+            Si la liste ne contient qu'un mot cle facteur, on utilise le panneau
             FACTPanel.
             Si la liste est plus longue on utilise le panneau MCLISTPanel.
         """
@@ -173,7 +174,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
             return "ast-yel-los"
 
     def get_docu(self):
-        """ Retourne la clef de doc de l'objet pointé par self """
+        """ Retourne la clef de doc de l'objet pointe par self """
         return self.object.get_docu()    
 
     def iscopiable(self):
@@ -184,13 +185,13 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def isMCFact(self):
         """
-        Retourne 1 si l'objet pointé par self est un MCFact, 0 sinon
+        Retourne 1 si l'objet pointe par self est un MCFact, 0 sinon
         """
         return len(self._object) <= 1
 
     def isMCList(self):
         """
-        Retourne 1 si l'objet pointé par self est une MCList, 0 sinon
+        Retourne 1 si l'objet pointe par self est une MCList, 0 sinon
         """
         return len(self._object) > 1
         

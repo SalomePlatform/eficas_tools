@@ -17,12 +17,12 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QAction, QMenu, QMessageBox
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from __future__ import absolute_import
+try :
+   from builtins import object
+except : pass
+
+from PyQt5.QtWidgets import QAction, QMenu, QMessageBox
 
 from Extensions.i18n import tr
 import types
@@ -30,17 +30,14 @@ import types
 
 
 #---------------------------#
-class PopUpMenuRacine :
+class PopUpMenuRacine(object) :
 #---------------------------#
 
 
     def createPopUpMenu(self):
         #print "createPopUpMenu"
         self.ParamApres = QAction(tr('Parametre'),self.tree)
-        if monEnvQT5 :
-          self.ParamApres.triggered.connect(self.addParametersApres)
-        else :
-          self.tree.connect(self.ParamApres,SIGNAL("triggered()"),self.addParametersApres)
+        self.ParamApres.triggered.connect(self.addParametersApres)
         self.ParamApres.setStatusTip(tr("Insere un parametre"))
         self.menu = QMenu(self.tree)
         self.menu.addAction(self.ParamApres)
@@ -52,14 +49,13 @@ class PopUpMenuRacine :
         item.addParameters(True)
 
 #---------------------------#
-class PopUpMenuNodeMinimal :
+class PopUpMenuNodeMinimal(object) :
 #---------------------------#
 
     def createPopUpMenu(self):
         #print "createPopUpMenu"
         #self.appliEficas.salome=True
-        if monEnvQT5 : self.createActions()
-        else :         self.createActionsQT4()
+        self.createActions()
         self.menu = QMenu(self.tree)
         #self.menu.setStyleSheet("background:rgb(235,235,235); QMenu::item:selected { background-color: red; }")
         #ne fonctionne pas --> la ligne de commentaire devient rouge
@@ -67,20 +63,20 @@ class PopUpMenuNodeMinimal :
         #items du menu
         self.menu.addAction(self.Supprime)
         if hasattr(self.appliEficas, 'mesScripts'):
-            if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+            if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
-               if self.tree.currentItem().item.get_nom() in self.dict_commandes_mesScripts.keys() : 
+               if self.tree.currentItem().item.get_nom() in self.dict_commandes_mesScripts : 
                    self.ajoutScript()
     
     def ajoutScript(self):
 
     # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
         if hasattr(self.appliEficas, 'mesScripts'):
-            if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+            if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
             else : return
         listeCommandes=self.dict_commandes_mesScripts[self.tree.currentItem().item.get_nom()]
-        if type(listeCommandes) != types.TupleType: listeCommandes=(listeCommandes,)
+        if type(listeCommandes) != tuple: listeCommandes=(listeCommandes,)
         numero=0
         for commande in listeCommandes :
            conditionSalome=commande[3]
@@ -89,36 +85,11 @@ class PopUpMenuNodeMinimal :
            tip=commande[5]
            self.action=QAction(label,self.tree)
            self.action.setStatusTip(tip)
-           if monEnvQT5 :
-              if numero==4: 
-                 self.action.triggered.connect(self.AppelleFonction4)
-              if numero==3: 
-                 self.action.triggered.connect(self.AppelleFonction3)
-                 numero=4
-              if numero==2: 
-                 self.action.triggered.connect(self.AppelleFonction2)
-                 numero=3
-              if numero==1: 
-                 self.action.triggered.connect(self.AppelleFonction1)
-                 numero=2
-              if numero==0: 
-                 self.action.triggered.connect(self.AppelleFonction0)
-                 numero=1
-           else:
-              if numero==4: 
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction4)
-              if numero==3: 
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction3)
-                 numero=4
-              if numero==2: 
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction2)
-                 numero=3
-              if numero==1: 
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction1)
-                 numero=2
-              if numero==0: 
-                 self.tree.connect(self.action,SIGNAL("triggered()"),self.AppelleFonction0)
-                 numero=1
+           if numero==4: self.action.triggered.connect(self.AppelleFonction4)
+           if numero==3: self.action.triggered.connect(self.AppelleFonction3); numero=4
+           if numero==2: self.action.triggered.connect(self.AppelleFonction2); numero=3
+           if numero==1: self.action.triggered.connect(self.AppelleFonction1); numero=2
+           if numero==0: self.action.triggered.connect(self.AppelleFonction0); numero=1
            self.menu.addAction(self.action)
 
 
@@ -142,7 +113,7 @@ class PopUpMenuNodeMinimal :
         if nodeTraite==None : nodeTraite=self.tree.currentItem()
         nomCmd=nodeTraite.item.get_nom()
         if hasattr(self.appliEficas, 'mesScripts'):
-            if self.editor.code in  self.editor.appliEficas.mesScripts.keys() :
+            if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
             else : return
         listeCommandes=self.dict_commandes_mesScripts[nomCmd]
@@ -152,7 +123,7 @@ class PopUpMenuNodeMinimal :
                  QMessageBox.warning( None, 
                              tr("item invalide"),
                              tr("l item doit etre valide"),)
-		 return
+                 return
         fonction=commande[0]
         listenomparam=commande[2]
         listeparam=[]
@@ -167,7 +138,7 @@ class PopUpMenuNodeMinimal :
                  QMessageBox.warning( None, 
                              tr("echec de la fonction"),
                              tr(commentaire),)
-		 return
+                 return
         except :
            pass
         

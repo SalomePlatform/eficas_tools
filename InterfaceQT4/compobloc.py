@@ -19,11 +19,12 @@
 #
 
 
+from __future__ import absolute_import
 from Editeur     import Objecttreeitem
 
-import compofact
-import browser
-import typeNode
+from . import compofact
+from . import browser
+from . import typeNode
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
@@ -40,7 +41,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         maCommande=commande
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
-        from monWidgetBloc import MonWidgetBloc
+        from .monWidgetBloc import MonWidgetBloc
         widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
 
 

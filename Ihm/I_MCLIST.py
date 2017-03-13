@@ -17,16 +17,17 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 import types,traceback
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 from copy import copy
-import CONNECTOR
+from . import CONNECTOR
 
 class MCList:
   def isMCList(self):
     """ 
-       Retourne 1 si self est une MCList (liste de mots-clés), 0 sinon (défaut) 
+       Retourne 1 si self est une MCList (liste de mots-cles), 0 sinon (defaut) 
     """
     return 1
 
@@ -38,11 +39,11 @@ class MCList:
 
   def ajout_possible(self):
     """ 
-        Méthode booléenne qui retourne 1 si on peut encore ajouter une occurrence
-        de l'élément que contient self, 0 sinon 
+        Methode booleenne qui retourne 1 si on peut encore ajouter une occurrence
+        de l'element que contient self, 0 sinon 
     """
     max = self.data[0].definition.max
-    if max == '**':
+    if max == '**' or max == float('inf'):
       return 1
     else:
       if len(self) < max :
@@ -52,8 +53,8 @@ class MCList:
 
   def isrepetable(self):
     """
-       Indique si l'objet est répétable.
-       Retourne 1 si le mot-clé facteur self peut être répété
+       Indique si l'objet est repetable.
+       Retourne 1 si le mot-cle facteur self peut etre repete
        Retourne 0 dans le cas contraire
     """
     if self.data[0].definition.max > 1:
@@ -64,7 +65,7 @@ class MCList:
 
   def isoblig(self):
      """
-     Une MCList n'est jamais obligatoire (même si le MCFACT qu'elle représente l'est
+     Une MCList n'est jamais obligatoire (meme si le MCFACT qu'elle represente l'est
      """
      return self.data[0].definition.statut=='o'
   
@@ -89,8 +90,8 @@ class MCList:
         Ajoute le mot cle facteur obj a la MCLIST a la position pos
         Retourne None si l'ajout est impossible
       """
-      if type(obj)==types.StringType :
-         # on est en mode création d'un motcle
+      if type(obj)==bytes :
+         # on est en mode creation d'un motcle
                   raise EficasException(tr("traitement non-prevu"))
 
       if not self.ajout_possible():
@@ -140,7 +141,7 @@ class MCList:
   def replace_concept(self,old_sd,sd):
     """
         Inputs :
-           - old_sd=concept remplacé
+           - old_sd=concept remplace
            - sd=nouveau concept
         Fonction : Mettre a jour les fils de l objet suite au remplacement 
         du concept old_sd
@@ -153,7 +154,7 @@ class MCList:
 
   def get_liste_mc_inconnus(self):
      """
-     Retourne la liste des mots-clés inconnus dans self
+     Retourne la liste des mots-cles inconnus dans self
      """
      l_mc = []
      for mcfact in self.data :
@@ -167,10 +168,10 @@ class MCList:
 
   def verif_condition_regles(self,liste_presents):
     """
-        Retourne la liste des mots-clés à rajouter pour satisfaire les règles
-        en fonction de la liste des mots-clés présents
+        Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+        en fonction de la liste des mots-cles presents
     """
-    # Sans objet pour une liste de mots clés facteurs
+    # Sans objet pour une liste de mots cles facteurs
     return []
 
   def deep_update_condition_bloc(self):
@@ -192,17 +193,17 @@ class MCList:
   def verif_condition_bloc(self):
     """ 
         Evalue les conditions de tous les blocs fils possibles 
-        (en fonction du catalogue donc de la définition) de self et 
+        (en fonction du catalogue donc de la definition) de self et 
         retourne deux listes :
-           - la première contient les noms des blocs à rajouter
-           - la seconde contient les noms des blocs à supprimer
+           - la premiere contient les noms des blocs a rajouter
+           - la seconde contient les noms des blocs a supprimer
     """
-    # Sans objet pour une liste de mots clés facteurs (a voir !!!)
+    # Sans objet pour une liste de mots cles facteurs (a voir !!!)
     return [],[]
 
   def init_modif(self):
     """
-       Met l'état de l'objet à modified et propage au parent
+       Met l'etat de l'objet a modified et propage au parent
        qui vaut None s'il n'existe pas
     """
     self.state = 'modified'
@@ -211,8 +212,8 @@ class MCList:
 
   def fin_modif(self):
     """
-      Méthode appelée après qu'une modification a été faite afin de déclencher
-      d'éventuels traitements post-modification
+      Methode appelee apres qu'une modification a ete faite afin de declencher
+      d'eventuels traitements post-modification
     """
     #print "fin_modif",self
     CONNECTOR.Emit(self,"valid")
@@ -228,7 +229,7 @@ class MCList:
   def get_genealogie(self):
      """
          Retourne la liste des noms des ascendants.
-         Un objet MCList n'est pas enregistré dans la genealogie.
+         Un objet MCList n'est pas enregistre dans la genealogie.
          XXX Meme si le MCFACT fils ne l'est pas lui non plus ????
      """
      if self.parent: 
@@ -238,8 +239,8 @@ class MCList:
 
   def get_liste_mc_ordonnee_brute(self,liste,dico):
      """
-         Retourne la liste ordonnée (suivant le catalogue) BRUTE des mots-clés
-         d'une entité composée dont le chemin complet est donné sous forme
+         Retourne la liste ordonnee (suivant le catalogue) BRUTE des mots-cles
+         d'une entite composee dont le chemin complet est donne sous forme
          d'une liste du type :ETAPE + MCFACT ou MCBLOC + ...
      """
      for arg in liste:
@@ -249,8 +250,8 @@ class MCList:
 
   def verif_existence_sd(self):
      """
-        Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-        avant étape, sinon enlève la référence à ces concepts
+        Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
+        avant etape, sinon enleve la reference a ces concepts
      """
      for motcle in self.data :
          motcle.verif_existence_sd()
@@ -261,19 +262,19 @@ class MCList:
          en tenant compte de la langue
      """
      try :
-        return self.data[0].get_fr()
+        return self.data[0].get_fr().decode('latin-1')
      except:
         return ''
 
   def normalize(self):
      """
-        Retourne l'objet normalisé. Une liste est déjà normalisée
+        Retourne l'objet normalise. Une liste est deja normalisee
      """
      return self
 
   def update_mc_global(self):
      """
-        Met a jour les mots cles globaux enregistrés dans l'étape parente
+        Met a jour les mots cles globaux enregistres dans l'etape parente
         et dans le jdc parent.
         Une liste ne peut pas etre globale. Elle se contente de passer
         la requete a ses fils.

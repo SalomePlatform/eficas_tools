@@ -24,7 +24,8 @@
     de type ENTITE
 """
 
-import N_MCCOMPO
+from __future__ import absolute_import
+from . import N_MCCOMPO
 
 
 class MCFACT(N_MCCOMPO.MCCOMPO):

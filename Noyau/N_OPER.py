@@ -23,14 +23,13 @@
     qui permet de spécifier les caractéristiques d'un opérateur
 """
 
+from __future__ import absolute_import
 import types
-import string
 import traceback
 
-import N_ENTITE
-import N_ETAPE
-import nommage
-from strfunc import ufmt
+from . import N_ENTITE
+from . import N_ETAPE
+from . import nommage
 
 
 class OPER(N_ENTITE.ENTITE):
@@ -101,7 +100,7 @@ class OPER(N_ENTITE.ENTITE):
         self.ang = ang
         self.repetable = repetable
         self.docu = docu
-        if type(regles) == types.TupleType:
+        if type(regles) == tuple:
             self.regles = regles
         else:
             self.regles = (regles,)

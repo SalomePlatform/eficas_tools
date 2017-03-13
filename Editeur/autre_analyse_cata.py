@@ -21,6 +21,8 @@
    Ce module sert a retrouver l'ordre des mots cles d'un catalogue de
    commandes
 """
+from __future__ import absolute_import
+from __future__ import print_function
 if __name__ == "__main__" :
    import sys
    sys.path[:0]=[".."]
@@ -48,7 +50,7 @@ def traite_entite(entite,liste_simp_reel):
        de entite
    """
    l=[]
-   for k,v in entite.entites.items():
+   for k,v in list(entite.entites.items()):
       if isinstance(v,NUPL):
          traite_entiteNUPL(v)
       else:
@@ -121,7 +123,7 @@ if __name__ == "__main__" :
        for mocle in entite.ordre_mc:
           print_entite(entite.entites[mocle],dec=dec+'  ')
 
-   for k,v in dico.items():
+   for k,v in list(dico.items()):
       print_entite(v,dec='')
 
-   print (dico.keys())
+   print (dico)

@@ -22,12 +22,17 @@
     liste de chaines de caractères dans une syntaxe représentative d'un
     jeu de commandes en un texte présentable
 """
-import types,string,re
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import object
+except : pass
+import types,re
 from Extensions.i18n import tr
 filePattern="'[^\(\)]([^\(\)]*\([^\(\)]*\))*[^\(\)]*'"
 filePattern2='"[^\(\)]([^\(\)]*\([^\(\)]*\))*[^\(\)]*"'
 
-class Formatage :
+class Formatage (object):
   """ 
      Cette classe contient toutes les méthodes nécessaires au formatage
      de la chaine de caracteres issue d'un generator en un fichier
@@ -69,7 +74,8 @@ class Formatage :
     for etape in self.l_jdc:
       self.count = self.count+1
       self.texte_etape = ''
-      if type(etape)==types.ListType:
+      #if type(etape)==types.ListType:
+      if type(etape)==list:
         # L'etape est sous la forme d'une liste dont le premier element est une chaine
         self.indent=[]
         self.indent.append(len(etape[0]))
@@ -135,7 +141,8 @@ class Formatage :
         self.indent_courant = self.indent[length]
         # on écrit ses fils
         self.formate_etape(element[1:])
-      elif type(element) == types.StringType:
+      #elif type(element) == types.StringType:
+      elif type(element) == bytes:
 
         # il s'agit d'un mot-clé simple ou de ')' ou ');' ou '),' ou ');\n'
 
@@ -163,7 +170,7 @@ class Formatage :
           self.indent_courant=self.indent[length-2]
       else :
           self.indent_courant=self.indent[0]
-      self.texte_etape = self.texte_etape + string.strip(s_etape)
+      self.texte_etape = self.texte_etape + s_etape.strip()
 
   def traite_mcfact(self,s_mcfact,ind) :
       """
@@ -173,7 +180,7 @@ class Formatage :
           L'attribut self.indent est modifié par le traitement
           L'attribut self.indent_courant est modifié par le traitement
       """
-      self.texte_etape = self.texte_etape + string.strip(s_mcfact)
+      self.texte_etape = self.texte_etape + s_mcfact.strip()
       length = len(self.indent)
       if length > 1:
            last = self.indent[length-1]
@@ -207,16 +214,17 @@ class Formatage :
       else : 
           bool_fonction=0
       longueur = self.longueur(self.texte_etape)
-      increment = len((u'\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp))
+      increment = len((u'\n'+self.indent_courant*' ')*ind + s_mcsimp.strip())
       if (bool_fonction == 1 ) :
           self.texte_etape = self.texte_etape+'\n'+self.indent_courant*' ' +s_mcsimp
       elif ( ((1-ind)*longueur+increment) <= self.l_max ) :
-          self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
+          self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind +s_mcsimp.strip() 
       else :
           # il faut couper ...
-          nom,valeur = string.split(s_mcsimp,self.sep,1)
+          #nom,valeur = string.split(s_mcsimp,self.sep,1)
+          nom,valeur = str.split(s_mcsimp,self.sep,1)
           chaine = self.creer_chaine(nom,valeur,'\n'+self.indent_courant*' ',ind)
-          #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + string.strip(s_mcsimp)
+          #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + s_mcsimp.strip()
           self.texte_etape = self.texte_etape + chaine
       return
 
@@ -226,7 +234,7 @@ class Formatage :
        texte est une string qui peut contenir des retours chariots
        Cette méthode retourne la longueur de la dernière ligne de texte 
     """
-    liste = string.split(texte,'\n')
+    liste = texte.split('\n')
     return len(liste[-1])
 
   def creer_chaine(self,nom,valeur,increment,ind):
@@ -258,10 +266,10 @@ class Formatage :
            s=s+valeur
            return s
         # il s'agit d'une liste
-        liste = string.split(valeur,',')
+        liste = valeur.split(',')
         i=0
         for arg in liste :
-          ajout = string.strip(arg)
+          ajout = arg.strip()
           if len(ajout) == 0 : continue
           longueur = self.longueur(texte = (texte + label)) + len(ajout +',') + (1-i)*len(increment)
           if longueur  <= self.l_max:

@@ -20,7 +20,11 @@
 """
 """
 # Modules Python
-import string
+from __future__ import absolute_import
+try : 
+   from builtins import str
+except : pass
+
 
 # Modules Eficas
 from Noyau import N_MCCOMPO
@@ -47,7 +51,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
          self.niveau = self.parent.niveau
          self.etape = self.parent.etape
       else:
-         # Le mot cle a été créé sans parent
+         # Le mot cle a ete cree sans parent
          self.jdc = None
          self.niveau = None
          self.etape = None
@@ -58,20 +62,20 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
    def build_mc(self):
       """ 
           Construit la liste des sous-entites de MCNUPLET
-          à partir de la liste des arguments (valeur)
+          a partir de la liste des arguments (valeur)
       """
       args = self.valeur
       if args ==None : args =()
       mc_liste=[]
 
-      # on crée les sous entites du NUPLET a partir des valeurs initiales
+      # on cree les sous entites du NUPLET a partir des valeurs initiales
       k=0
       for v in self.definition.entites:
         if k < len(args):
           val=args[k]
         else:
           val=None
-        objet=v(val=val,nom=`k`,parent=self)
+        objet=v(val=val,nom=repr(k),parent=self)
         if hasattr(objet.definition,'position'):
           if objet.definition.position == 'global' :
             self.append_mc_global(objet)
@@ -101,7 +105,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
         if len(self.mc_liste) != len(self.definition.entites):
           valid=0
           if cr == 'oui' :
-            self.cr.fatal(string.join(("Nuplet : ",self.nom,tr("Longueur incorrecte"))))
+            self.cr.fatal(''.join(("Nuplet : ",self.nom,tr("Longueur incorrecte"))))
         self.valid = valid
         self.state = 'unchanged'
         if old_valid:
@@ -110,7 +114,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
 
    def __getitem__(self,key):
       """
-          Retourne le key ème élément du nuplet
+          Retourne le key eme element du nuplet
       """
       # Un nuplet est toujours une liste de mots cles simples
       # On retourne donc la valeur
@@ -118,8 +122,8 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
 
    def __str__(self):
       """
-           Retourne une représentation du nuplet sous forme de chaine
-           de caractères
+           Retourne une representation du nuplet sous forme de chaine
+           de caracteres
       """
       s='('
       for e in self.mc_liste:
@@ -128,8 +132,8 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
 
    def __repr__(self):
       """
-           Retourne une représentation du nuplet sous forme de chaine
-           de caractères
+           Retourne une representation du nuplet sous forme de chaine
+           de caracteres
       """
       s='('
       for e in self.mc_liste:
@@ -138,13 +142,13 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
 
    def get_regles(self):
       """
-         Retourne la liste des règles attachées au nuplet
+         Retourne la liste des regles attachees au nuplet
       """
       return []
 
    def verif_condition_bloc(self):
       """
-          Vérifie s'il y a des blocs sous le nuplet et retourne 
+          Verifie s'il y a des blocs sous le nuplet et retourne 
           les blocs en question
       """
       # Il n y a pas de BLOCs sous un NUPLET
@@ -152,10 +156,10 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
 
    def isrepetable(self):
       """ 
-          Indique si le NUPLET peut etre répété.
+          Indique si le NUPLET peut etre repete.
           Retourne 1 si c'est le cas.
           Retourne 0 dans le cas contraire.
-          L'information est donnée par le catalogue, cad la définition de self
+          L'information est donnee par le catalogue, cad la definition de self
       """
       if self.definition.min != self.definition.max :
         return 1
@@ -167,11 +171,11 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
 
    def get_valeur(self):
       """
-          Cette méthode doit retourner la valeur de l'objet. Elle est utilisée par 
-          cree_dict_valeurs pour construire un dictionnaire contenant les mots clés 
-          d'une étape.
+          Cette methode doit retourner la valeur de l'objet. Elle est utilisee par 
+          cree_dict_valeurs pour construire un dictionnaire contenant les mots cles 
+          d'une etape.
           Dans le cas d'un nuplet, on retournera comme valeur une liste des valeurs
-          des mots clé simples contenus.
+          des mots cle simples contenus.
       """
       l=[]
       for v in self.mc_liste:
@@ -180,8 +184,8 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
 
    def get_val(self):
       """
-          Une autre méthode qui retourne une "autre" valeur du mot clé facteur.
-          Elle est utilisée par la méthode get_mocle
+          Une autre methode qui retourne une "autre" valeur du mot cle facteur.
+          Elle est utilisee par la methode get_mocle
       """
       l=[]
       for v in self.mc_liste:

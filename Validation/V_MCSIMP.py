@@ -20,14 +20,19 @@
 # ======================================================================
 
 """
-   Ce module contient la classe mixin MCSIMP qui porte les méthodes
-   nécessaires pour réaliser la validation d'un objet de type MCSIMP
-   dérivé de OBJECT.
+   Ce module contient la classe mixin MCSIMP qui porte les methodes
+   necessaires pour realiser la validation d'un objet de type MCSIMP
+   derive de OBJECT.
 
    Une classe mixin porte principalement des traitements et est
-   utilisée par héritage multiple pour composer les traitements.
+   utilisee par heritage multiple pour composer les traitements.
 """
 # Modules Python
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import object
+except : pass
 import traceback
 
 # Modules EFICAS
@@ -35,28 +40,27 @@ from Noyau import N_CR
 from Noyau.N_Exception import AsException
 from Noyau.N_VALIDATOR import ValError, TypeProtocol, CardProtocol, IntoProtocol
 from Noyau.N_VALIDATOR import listProto
-from Noyau.strfunc import ufmt
 from Extensions.i18n import tr
 
 
-class MCSIMP:
+class MCSIMP(object):
 
     """
        COMMENTAIRE CCAR:
-       Cette classe est quasiment identique à la classe originale d'EFICAS
-       a part quelques changements cosmétiques et des chagements pour la
-       faire fonctionner de facon plus autonome par rapport à l'environnement
+       Cette classe est quasiment identique a la classe originale d'EFICAS
+       a part quelques changements cosmetiques et des chagements pour la
+       faire fonctionner de facon plus autonome par rapport a l'environnement
        EFICAS
 
-       A mon avis, il faudrait aller plus loin et réduire les dépendances
-       amont au strict nécessaire.
+       A mon avis, il faudrait aller plus loin et reduire les dependances
+       amont au strict necessaire.
 
-           - Est il indispensable de faire l'évaluation de la valeur dans le contexte
+           - Est il indispensable de faire l'evaluation de la valeur dans le contexte
              du jdc dans cette classe.
 
-           - Ne pourrait on pas doter les objets en présence des méthodes suffisantes
-             pour éviter les tests un peu particuliers sur GEOM, PARAMETRE et autres. J'ai
-             d'ailleurs modifié la classe pour éviter l'import de GEOM
+           - Ne pourrait on pas doter les objets en presence des methodes suffisantes
+             pour eviter les tests un peu particuliers sur GEOM, PARAMETRE et autres. J'ai
+             d'ailleurs modifie la classe pour eviter l'import de GEOM
     """
 
     CR = N_CR.CR
@@ -85,14 +89,14 @@ class MCSIMP:
 
     def isvalid(self, cr='non'):
         """
-           Cette méthode retourne un indicateur de validité de l'objet de type MCSIMP
+           Cette methode retourne un indicateur de validite de l'objet de type MCSIMP
 
              - 0 si l'objet est invalide
              - 1 si l'objet est valide
 
-           Le paramètre cr permet de paramétrer le traitement. Si cr == 'oui'
-           la méthode construit également un comte-rendu de validation
-           dans self.cr qui doit avoir été créé préalablement.
+           Le parametre cr permet de parametrer le traitement. Si cr == 'oui'
+           la methode construit egalement un comte-rendu de validation
+           dans self.cr qui doit avoir ete cree prealablement.
         """
         if self.state == 'unchanged':
             return self.valid
@@ -100,11 +104,9 @@ class MCSIMP:
             valid = 1
             v = self.valeur
             #  verification presence
-            if self.isoblig() and v == None:
+            if self.isoblig() and (v == None or v == "" ):
                 if cr == 'oui':
-                    self.cr.fatal(
-                        _(u"Mandatory keyword : %s has no value"), tr(self.nom))
-                        #_(u"Mot-clé : %s obligatoire non valorisé"), self.nom)
+                    self.cr.fatal( "Mandatory keyword : %s has no value" % tr(self.nom))
                 valid = 0
 
             lval = listProto.adapt(v)
@@ -119,8 +121,7 @@ class MCSIMP:
             if lval is None:
                 valid = 0
                 if cr == 'oui':
-                    self.cr.fatal(_(u"None is not a valid value"))
-                    #self.cr.fatal(_(u"None n'est pas une valeur autorisée"))
+                    self.cr.fatal("None is not a valid value")
             else:
                 # type,into ...
                 # typeProto=TypeProtocol("type",typ=self.definition.type)
@@ -133,35 +134,33 @@ class MCSIMP:
                 intoProto = self.intoProto
                 cardProto = self.cardProto
                 if cr == 'oui':
-                    # un cr est demandé : on collecte tous les types d'erreur
+                    # un cr est demande : on collecte tous les types d'erreur
                     try:
                         for val in lval:
                             typeProto.adapt(val)
-                    except ValError, e:
+                    except ValError as e:
                         valid = 0
-                        self.cr.fatal(*e)
+                        self.cr.fatal(str(e))
                     try:
                         for val in lval:
                             intoProto.adapt(val)
-                    except ValError, e:
+                    except ValError as e:
                         valid = 0
-                        self.cr.fatal(*e)
+                        self.cr.fatal(str(e))
                     try:
                         cardProto.adapt(lval)
-                    except ValError, e:
+                    except ValError as e:
                         valid = 0
-                        self.cr.fatal(*e)
+                        self.cr.fatal(str(e))
                     #
                     # On verifie les validateurs s'il y en a et si necessaire (valid == 1)
                     #
                     if valid and self.definition.validators:
                         try:
                             self.definition.validators.convert(lval)
-                        except ValError, e:
+                        except ValError as e:
                             self.cr.fatal(
-                                #_(u"Mot-clé %s invalide : %s\nCritère de validité: %s"),
-                                _(u"invalid keyword %s  : %s\nCriteria : %s"),
-                                tr(self.nom), str(e), self.definition.validators.info())
+                                "invalid keyword %s  : %s\nCriteria : %s" % (tr(self.nom)), str(e), self.definition.validators.info())
                             valid = 0
                 else:
                     # si pas de cr demande, on sort a la toute premiere erreur
@@ -174,38 +173,35 @@ class MCSIMP:
                             if hasattr(self.definition.validators, 'set_MCSimp'):
                                 self.definition.validators.set_MCSimp(self)
                             self.definition.validators.convert(lval)
-                    except ValError, e:
+                    except ValError as e:
                         valid = 0
 
             self.set_valid(valid)
             return self.valid
 
     def isoblig(self):
-        """ indique si le mot-clé est obligatoire
+        """ indique si le mot-cle est obligatoire
         """
         return self.definition.statut == 'o'
 
     def init_modif_up(self):
         """
-           Propage l'état modifié au parent s'il existe et n'est l'objet
+           Propage l'etat modifie au parent s'il existe et n'est l'objet
            lui-meme
         """
         if self.parent and self.parent != self:
             self.parent.state = 'modified'
 
     def report(self):
-        """ génère le rapport de validation de self """
+        """ genere le rapport de validation de self """
         self.cr = self.CR()
-        #self.cr.debut = u"Mot-clé simple : " + self.nom
-        self.cr.debut = u"Simple Keyword : " + tr(self.nom)
-        #self.cr.fin = u"Fin Mot-clé simple : " + self.nom
-        self.cr.fin = u"End Simple Keyword: " + tr(self.nom)
+        self.cr.debut = "Simple Keyword : " + tr(self.nom)
+        self.cr.fin = "End Simple Keyword: " + tr(self.nom)
         self.state = 'modified'
         try:
             self.isvalid(cr='oui')
-        except AsException, e:
+        except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()
-            #self.cr.fatal(_(u"Mot-clé simple : %s %s"), self.nom, e)
-            self.cr.fatal(_(u"Simple Keyword  : %s %s"), tr(self.nom), e)
+            self.cr.fatal("Simple Keyword  : %s %s" % (tr(self.nom), e))
         return self.cr

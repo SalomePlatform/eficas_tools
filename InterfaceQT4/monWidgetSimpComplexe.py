@@ -18,23 +18,24 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os, locale
 
 # Modules Eficas
-if monEnvQT5:
-    from PyQt5.QtWidgets import QLineEdit, QRadioButton
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QLineEdit, QRadioButton
+from PyQt5.QtCore import Qt
 
 
 from Extensions.i18n import tr
 
-from feuille                import Feuille
+from .feuille                import Feuille
 from desWidgetSimpComplexe  import Ui_WidgetSimpComplexe 
-from politiquesValidation   import PolitiqueUnique
-from qtSaisie               import SaisieValeur
+from .politiquesValidation   import PolitiqueUnique
+from .qtSaisie               import SaisieValeur
 
 
 class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
@@ -43,18 +44,11 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.setFocusPolicy(Qt.StrongFocus)
-        if monEnvQT5 :
-          self.LEImag.returnPressed.connect(self.LEImagRPressed)
-          self.LEReel.returnPressed.connect()"),self.LEReelRPressed)
-          self.RBRI.clicked.connect(self.ValeurPressed )
-          self.RBMP.clicked.connect(self.ValeurPressed )
-          self.LEComp.returnPressed.connect(self.LECompRPressed)
-        else :
-          self.connect(self.LEImag,SIGNAL("returnPressed()"),self.LEImagRPressed)
-          self.connect(self.LEReel,SIGNAL("returnPressed()"),self.LEReelRPressed)
-          self.connect(self.RBRI,SIGNAL("clicked()"), self.ValeurPressed )
-          self.connect(self.RBMP,SIGNAL("clicked()"), self.ValeurPressed )
-          self.connect(self.LEComp,SIGNAL("returnPressed()"),self.LECompRPressed)
+        self.LEImag.returnPressed.connect(self.LEImagRPressed)
+        self.LEReel.returnPressed.connect(self.LEReelRPressed)
+        self.RBRI.clicked.connect(self.ValeurPressed )
+        self.RBMP.clicked.connect(self.ValeurPressed )
+        self.LEComp.returnPressed.connect(self.LECompRPressed)
         self.maCommande.listeAffichageWidget.append(self.LEComp)
         #self.maCommande.listeAffichageWidget.append(self.RBRI)
         #self.maCommande.listeAffichageWidget.append(self.RBMP)
@@ -66,7 +60,7 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
        self.politique=PolitiqueUnique(self.node,self.editor)
        valeur=self.node.item.get_valeur()
        if valeur == None or valeur == '' : return
-       if type(valeur) not in (types.ListType,types.TupleType) :
+       if type(valeur) not in (list,tuple) :
            self.LEComp.setText(str(valeur))
        else :
            typ_cplx,x1,x2=valeur
@@ -102,7 +96,7 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         commentaire=tr("expression valide")
         valeur = str(self.LEReel.text())
         try :
-          a=string.atof(valeur)
+          a=locale.atof(valeur)
           self.editor.affiche_infos(commentaire)
         except :
           commentaire=tr("expression invalide")
@@ -114,7 +108,7 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         commentaire=tr("expression valide")
         valeur = str(self.LEImag.text())
         try :
-          a=string.atof(valeur)
+          a=locale.atof(valeur)
           self.editor.affiche_infos(commentaire)
         except :
           commentaire=tr("expression invalide")
@@ -172,10 +166,10 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
          self.editor.affiche_infos(commentaire,Qt.red)
          return None
       try :
-         l.append(string.atof(str(self.LEReel.text())))
-         l.append(string.atof(str(self.LEImag.text())))
+         l.append(locale.atof(str(self.LEReel.text())))
+         l.append(locale.atof(str(self.LEImag.text())))
       except :
          return None
-      return `tuple(l)`
+      return repr(tuple(l))
 
       

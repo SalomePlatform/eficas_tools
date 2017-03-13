@@ -18,12 +18,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce package contient tous les convertisseurs de formats d'entrée
-   en objets compréhensibles par EFICAS.
+   Ce package contient tous les convertisseurs de formats d'entree
+   en objets comprehensibles par EFICAS.
 
-   Ces convertisseurs sont implémentés sous forme de plugins
+   Ces convertisseurs sont implementes sous forme de plugins
 """
 
+from __future__ import absolute_import
 from Extensions import pluginloader
 
 import convert

@@ -23,50 +23,41 @@
 """
 
 # Modules Python
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import division
+try :
+   from builtins import str
+   from builtins import object
+except :
+   pass
 import sys
 
 # Modules EFICAS
-from N_Exception import AsException
-from N_types import is_int, is_float, is_complex, is_str, is_sequence, is_assd
-from strfunc import get_encoding
+from .N_Exception import AsException
+from .N_types import is_int, is_float, is_complex, is_str, is_sequence, is_assd
+from .strfunc import get_encoding
+import six
 
 SEP = '_'
 
-try:
-    # Si la version de Python possède la fonction _getframe
-    # on l'utilise.
-    cur_frame = sys._getframe
-except:
-    # Sinon on l'émule
-    def cur_frame(offset=0):
-        """ Retourne la frame d execution effective eventuellement en remontant
-            de offset niveaux dans la pile d execution
-            Si il y a moins de offset niveaux retourne None
-        """
-        try:
-            1 / 0
-        except:
-            frame = sys.exc_info()[2].tb_frame.f_back
-        while offset > 0:
-            if frame == None:
-                return None
-            frame = frame.f_back
-            offset = offset - 1
-        return frame
-
+try :
+  cur_frame = sys._getframe
+except :
+  print ('pb avec la version de python pour cur_frame = sys._getframe')
 
 def callee_where(niveau=4):
     """
        recupere la position de l appel
     """
-    frame = cur_frame(niveau)
+    frame = sys._getframe(niveau)
     if frame == None:
         return 0, "inconnu", 0, {}
     try:
         # Python 2.7 compile function does not accept unicode filename, so we encode it
         # with the current locale encoding in order to have a correct traceback.
         # Here, we convert it back to unicode.
-        filename = unicode(frame.f_code.co_filename, get_encoding())
+        filename = six.text_type(frame.f_code.co_filename, get_encoding())
         return frame.f_lineno, filename, frame.f_code.co_firstlineno, frame.f_locals
     except:
         return 0, "inconnu", 0, {}
@@ -93,9 +84,9 @@ def AsType(a):
 
 
 def prbanner(s):
-    print "*" * (len(s) + 10)
-    print "*" * 5 + s + "*" * 5
-    print "*" * (len(s) + 10)
+    print(("*" * (len(s) + 10)))
+    print(("*" * 5 + s + "*" * 5))
+    print(("*" * (len(s) + 10)))
 
 
 def repr_float(valeur):
@@ -182,13 +173,13 @@ def import_object(uri):
     try:
         __import__(modname)
         mod = sys.modules[modname]
-    except ImportError, err:
+    except ImportError as err:
         raise ImportError(
-            u"can not import module : %s (%s)" % (modname, str(err)))
+            "can not import module : %s (%s)" % (modname, str(err)))
     try:
         object = getattr(mod, objname)
-    except AttributeError, err:
-        raise AttributeError(u"object (%s) not found in module '%s'. "
+    except AttributeError as err:
+        raise AttributeError("object (%s) not found in module '%s'. "
                              "Module content is: %s" % (objname, modname, tuple(dir(mod))))
     return object
 

@@ -18,10 +18,18 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 
 
-import UserDict
+from __future__ import absolute_import
+try :
+   from past.builtins import cmp
+except :
+   pass
+try:
+   from UserDict import UserDict
+except ImportError:
+   from collections import UserDict
 
 
-class _F(UserDict.UserDict):
+class _F(UserDict):
 
     """
         Cette classe a un comportement semblable à un

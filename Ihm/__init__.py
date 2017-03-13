@@ -18,6 +18,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce package contient les fonctionnalités supplémentaires nécessaires
-    pour l'éditeur graphique EFICAS
+    Ce package contient les fonctionnalites supplementaires necessaires
+    pour l'editeur graphique EFICAS
 """

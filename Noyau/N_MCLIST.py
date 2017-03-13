@@ -24,12 +24,24 @@
     de type ENTITE
 """
 
+from __future__ import absolute_import
+try :
+   from future import standard_library
+   standard_library.install_aliases()
+except : 
+   pass
 from copy import copy
-import UserList
 import types
 
+try:
+   from UserList import UserList
+except ImportError:
+   from collections import UserList
 
-class MCList(UserList.UserList):
+
+
+
+class MCList(UserList):
 
     """ Liste semblable a la liste Python
         mais avec quelques methodes en plus
@@ -95,7 +107,7 @@ class MCList(UserList.UserList):
                 if resu != None:
                     return resu
         # Phase 3 : on cherche dans les entites possibles pour les défauts
-        for k, v in obj.definition.entites.items():
+        for k, v in list(obj.definition.entites.items()):
             # if k == name: return v.defaut
             if k == name:
                 if v.defaut != None:
@@ -143,7 +155,7 @@ class MCList(UserList.UserList):
         dico = {}
         for child in self.data:
             daux = child.get_sd_mcs_utilisees()
-            for cle in daux.keys():
+            for cle in daux:
                 dico[cle] = dico.get(cle, [])
                 dico[cle].extend(daux[cle])
         return dico
@@ -211,7 +223,7 @@ class MCList(UserList.UserList):
         """
            Dans le cas d un mot cle facteur de longueur 1 on simule un scalaire
         """
-        if type(key) != types.IntType and len(self) == 1:
+        if type(key) != int and len(self) == 1:
             return self.data[0].get_mocle(key)
         else:
             return self.data[key]
@@ -224,7 +236,7 @@ class MCList(UserList.UserList):
         dresu = []
         for mcf in self:
             dico = mcf.cree_dict_valeurs(mcf.mc_liste)
-            for i in dico.keys():
+            for i in list(dico.keys()):
                 if dico[i] == None:
                     del dico[i]
             dresu.append(dico)

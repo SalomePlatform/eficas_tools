@@ -18,21 +18,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+except : pass
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+import types,os
+
+from six.moves import range
+from PyQt5.QtCore import Qt
 
 # Modules Eficas
 from Extensions.i18n import tr
 
-from feuille               import Feuille
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieValeur
+from .feuille               import Feuille
+from .politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieValeur
 
 
 class MonWidgetSimpTuple(Feuille):
@@ -50,8 +52,7 @@ class MonWidgetSimpTuple(Feuille):
            courant=getattr(self,nomLineEdit)
            if valeur !=None: courant.setText(str(valeur[i]))
            setattr(self,nomLineEdit,courant)
-           if monEnvQT5: courant.returnPressed.connect(self.valeursPressed)
-           else : self.connect(courant,SIGNAL("returnPressed()"),self.valeursPressed)
+           courant.returnPressed.connect(self.valeursPressed)
 
   def valeursPressed(self):
       aLeFocus=self.focusWidget()
@@ -85,7 +86,7 @@ class MonWidgetSimpTuple(Feuille):
       # Passage au champ suivant
       nom=aLeFocus.objectName()[11:]
       try :
-        i=str(nom).toInt()[0]+1
+        i=int(nom)+1
       except :
         try :
           i=i+1

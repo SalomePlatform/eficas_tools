@@ -18,6 +18,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
+from __future__ import print_function
 import types
 
 
@@ -33,16 +35,16 @@ class I_AVANT:
 
    def __init__(self,*args):
       if len(args) > 2 :
-        print ("Erreur a la creation de la regle A_CLASSER(",args,")")
+        print(("Erreur a la creation de la regle A_CLASSER(",args,")"))
         return
-      if type(args[0]) == types.TupleType:
-	 self.listeAvant=args[0]
+      if type(args[0]) == tuple:
+        self.listeAvant=args[0]
       else :
-	 self.listeAvant=(args[0],)
-      if type(args[1]) == types.TupleType:
-	 self.listeApres=args[1]
+        self.listeAvant=(args[0],)
+      if type(args[1]) == tuple:
+        self.listeApres=args[1]
       else :
-	 self.listeApres=(args[1],)
+        self.listeApres=(args[1],)
 
    def verif(self,args):
       """
@@ -55,9 +57,9 @@ class I_AVANT:
       boolListeApres=0
       boolOK=1
       for nom in args:
-	  if nom in self.listeAvant :
+          if nom in self.listeAvant :
              boolListeAvant=1
-	     if boolListeApres == 1 :
+             if boolListeApres == 1 :
                 boolOK = 0
           if nom in self.listeApres :
              boolListeApres=1

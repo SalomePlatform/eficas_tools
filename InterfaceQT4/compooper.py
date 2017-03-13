@@ -17,23 +17,23 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 import os
 import tempfile
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QMessageBox, QAction, QApplication
-   from PyQt5.QtGui  import QCursor
-   from PyQt5.QtCore import Qt
-else :
-   from PyQt4.QtGui  import *
-   from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QMessageBox, QAction, QApplication
+from PyQt5.QtGui  import QCursor
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
 from Editeur     import Objecttreeitem
-import browser
-import typeNode
+from . import browser
+from . import typeNode
 
 class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 
@@ -58,13 +58,13 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
            self.editor.affiche_commentaire(tr("Nommage du concept effectue"))
            self.onValid()
            try :
-	       self.fenetre.LENom.setText(nom)
+             self.fenetre.LENom.setText(nom)
            except :
-               pass
+             pass
 
 
     def getPanel(self):
-        from monWidgetCommande import MonWidgetCommande
+        from .monWidgetCommande import MonWidgetCommande
         return MonWidgetCommande(self,self.editor,self.item.object)
 
     def createPopUpMenu(self):
@@ -75,19 +75,18 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
            self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
            if self.item.isvalid() :
-	      self.ViewElt.setEnabled(1)
+              self.ViewElt.setEnabled(1)
            else:
-	      self.ViewElt.setEnabled(0)
+              self.ViewElt.setEnabled(0)
         if  self.item.get_nom() == "DISTRIBUTION" :
            self.Graphe = QAction(tr('Graphique'),self.tree)
-           if monEnvQT5 : self.Graphe.triggered.connect(self.viewPng)
-           else : self.tree.connect(self.Graphe,SIGNAL("triggered()"),self.viewPng)
+           self.Graphe.triggered.connect(self.viewPng)
            self.Graphe.setStatusTip(tr("affiche la distribution "))
            self.menu.addAction(self.Graphe)
            if self.item.isvalid() :
-	      self.Graphe.setEnabled(1)
+              self.Graphe.setEnabled(1)
            else:
-	      self.Graphe.setEnabled(0)
+              self.Graphe.setEnabled(0)
 
     def view3D(self) :
         from Editeur import TroisDPal
@@ -102,7 +101,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
             g = generator.plugins[self.appliEficas.format_fichier]()
             g.gener(self.item.object, format='beautifie')
             stdGener = g.getGenerateur()
-            loi = g.dictMCLois.keys()[0]
+            loi = list(g.dictMCLois.keys())[0]
             nomLoi = loi.get_name()
             (fd, fichier) = tempfile.mkstemp(prefix = "openturns_graph_", suffix = ".png")
             os.close(fd)
@@ -111,7 +110,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
             script = stdGener.GraphiquePDF(loi, chemin, base)
             #print script
             d = {}
-            exec script in d
+            exec(script, d)
             widgetPng=MonLabelPixmap(self.appliEficas,fichier,nomLoi)
             os.remove(fichier)
             QApplication.restoreOverrideCursor()
@@ -220,9 +219,10 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       except:
           return ''
 
-  def keys(self):
-      keys=self.object.mc_dict.keys()
-      return keys
+  # PNPN ????
+  #def keys(self):
+  #    keys=self.object.mc_dict
+  #    return keys
 
   def GetSubList(self):
       """
@@ -282,7 +282,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
          oldnom=self.object.sd.nom
       test,mess= self.object.nomme_sd(nom)
       if test:self.object.parent.reset_context()
-      if (test and self.appli.dict_reels.has_key(oldnom) ):
+      if (test and oldnom in self.appli.dict_reels ):
               self.appli.dict_reels[nom]=self.appli.dict_reels[oldnom]
       return test,mess
 
@@ -306,14 +306,14 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
           Cette méthode retourne un objet commentarisé
           représentatif de self.object
       """
-      import generator,string,Accas
+      import generator,Accas
       # Format de fichier utilisé
       format=self.appli.appliEficas.format_fichier
       g=generator.plugins[format]()
       texte_commande = g.gener(self.object,format='beautifie')
       # Il faut enlever la premiere ligne vide de texte_commande que 
       # rajoute le generator
-      rebut,texte_commande = string.split(texte_commande,'\n',1)
+      rebut,texte_commande = texte_commande.split('\n',1)
       # on construit l'objet COMMANDE_COMM repésentatif de self mais non 
       # enregistré dans le jdc
       commande_comment = Accas.COMMANDE_COMM(texte=texte_commande,reg='non',

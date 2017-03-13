@@ -16,12 +16,12 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import  QFileDialog, QApplication
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+from PyQt5.QtWidgets import  QFileDialog, QApplication
 
 import os
 from Extensions.i18n import tr
@@ -45,7 +45,7 @@ def traduction(directPath,editor,version):
                         tr('Fichiers JDC  (*.comm);;''Tous les Fichiers (*)'))
 
 
-    if monEnvQT5 : fn=fn[0]
+    fn=fn[0]
     FichieraTraduire=str(fn)
     if (FichieraTraduire == "" or FichieraTraduire == () ) : return
     i=FichieraTraduire.rfind(".")
@@ -65,7 +65,7 @@ def traduction(directPath,editor,version):
     QApplication.setOverrideCursor(QCursor(Qt.ArrowCursor))
 
     Entete=tr("Fichier Traduit : %s\n\n",str(FichierTraduit))
-    if  os.stat(log)[6] != 0L :
+    if  os.stat(log)[6] != 0 :
         f=open(log)
         texte= f.read()
         f.close()
@@ -78,7 +78,7 @@ def traduction(directPath,editor,version):
        except :
          pass
 
-    from monVisu import DVisu
+    from .monVisu import DVisu
     titre = "conversion de "+ FichieraTraduire
     monVisuDialg=DVisu(parent=editor.appliEficas,fl=0)
     monVisuDialg.setWindowTitle(titre)

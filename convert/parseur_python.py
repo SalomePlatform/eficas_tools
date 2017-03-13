@@ -17,18 +17,33 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+  from builtins import str
+  from builtins import range
+  from builtins import object
+except :
+  pass
 import sys,string,re
 import traceback
 from Extensions.i18n import tr
+from six.moves import range
 
 escapedQuotesRE = re.compile(r"(\\\\|\\\"|\\\')")
 stringsAndCommentsRE =  \
       re.compile(u"(\"\"\".*?\"\"\"|'''.*?'''|\"[^\"]*\"|\'[^\']*\'|#.*?\n)", re.DOTALL)
 #stringsAndCommentsRE =  \
 #      re.compile(u"(\"\"\".*\"\"\"|'''.*'''|\"[^\"]*\"|\'[^\']*\'|#.*\n)", re.DOTALL)
-allchars = string.maketrans(u"", "")
-allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
-allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+import six
+if six.PY2 : 
+    allchars = string.maketrans(u"", "")
+    allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
+    allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+else : 
+    allchars=bytes.maketrans(b"",b"")
+    allcharsExceptNewline = allchars[: allchars.index(b'\n')]+allchars[allchars.index(b'\n')+1:]
+    allcharsExceptNewlineTranstable = bytes.maketrans(allcharsExceptNewline, b'*'*len(allcharsExceptNewline))
 
 #if sys.platform[0:5]=="linux" :
 #   allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
@@ -47,12 +62,13 @@ def maskStringsAndComments(src):
 # supprime toutes les chaines ou commentaires ,y compris multiligne i
 # entre 3 ou 1 simples ou doubles quotes (ouvrantes fermantes) ou # 
 # laisse les non fermantes ou non ouvrantes
-    #src = escapedQuotesRE.sub(u"**", src)
-    # le u met le bazar dans le translate
+# on prend 1 sur 2 en raison du split qui donne python, commentaire, python, commentaire...
+
     src = escapedQuotesRE.sub("**", src)
     allstrings = stringsAndCommentsRE.split(src)
-    # every odd element is a string or comment
-    for i in xrange(1, len(allstrings), 2):
+
+    # on a une liste d elements constituee successivement de  (string, comment)
+    for i in range(1, len(allstrings), 2):
         if allstrings[i].startswith(u"'''")or allstrings[i].startswith('"""'):
             allstrings[i] = allstrings[i][:3]+ \
                             allstrings[i][3:-3].translate(allcharsExceptNewlineTranstable)+ \
@@ -133,9 +149,9 @@ def construit_genea(texte,liste_mc):
     return d
 
 
-class ENTITE_JDC :
-    """Classe de base pour tous les objets créés lors de la conversion
-       Tout objet dérivé est enregistré aupres de son pere a sa création
+class ENTITE_JDC(object) :
+    """Classe de base pour tous les objets crees lors de la conversion
+       Tout objet derive est enregistre aupres de son pere a sa creation
     """
     def __init__(self,pere):
         self.texte = ''
@@ -158,8 +174,8 @@ class COMMENTAIRE(ENTITE_JDC):
 
     def __str__(self):
         """
-        Retourne une chaine de caracteres représentants self
-        sous une forme interprétable par EFICAS
+        Retourne une chaine de caracteres representants self
+        sous une forme interpretable par EFICAS
         """
         t=repr(self.texte)
         return "COMMENTAIRE(u"+t+")\n"
@@ -176,7 +192,7 @@ class COMMENTAIRE(ENTITE_JDC):
             self.texte = self.texte+texte[1:]
         else:
             # le diese n'est pas sur le premier caractere
-            amont,aval = string.split(texte,'#',1) # on découpe suivant la premiere occurrence de #
+            amont,aval = texte.split('#',1) # on decoupe suivant la premiere occurrence de #
             self.texte = self.texte +amont + aval
         
 class COMMANDE(ENTITE_JDC):
@@ -189,17 +205,19 @@ class COMMANDE(ENTITE_JDC):
         
     def get_nb_par(self):
         """
-        Retourne la différence entre le nombre de parentheses ouvrantes
-        et le nombre de parentheses fermantes présentes dans self.texte
-        Peut donc retourner un entier négatif
+        Retourne la difference entre le nombre de parentheses ouvrantes
+        et le nombre de parentheses fermantes presentes dans self.texte
+        Peut donc retourner un entier negatif
         """
         # faire attention aux commentaires contenus dans self.texte
         # qui peuvent eux-memes contenir des parentheses !!!!
-        l_lignes = string.split(self.texte,'\n')
+        l_lignes = self.texte.split('\n')
         nb = 0
         for ligne in l_lignes:
-            ligne = string.split(ligne,'#')[0]
-            nb = nb + (string.count(ligne,'(')-string.count(ligne,')'))
+            ligne = ligne.split('#')[0]
+            #nb = nb + (string.count(ligne,'(')-string.count(ligne,')'))
+
+            nb = nb + ( ligne.count('(') - ligne.count(')') )
         return nb
 
 class AFFECTATION(ENTITE_JDC):
@@ -209,18 +227,18 @@ class AFFECTATION(ENTITE_JDC):
         Ajoute texte a self.texte en enlevant tout retour chariot et tout point virgule
         PN et tout commentaire
         """
-        if texte[-1] == '\n' : texte = string.rstrip(texte[0:-1])
-        if texte[-1] == ';' : texte = string.rstrip(texte[0:-1])
+        if texte[-1] == '\n' : texte = texte[0:-1].rstrip()
+        if texte[-1] == ';'  : texte = texte[0:-1].rstrip()
         self.texte = self.texte+texte+'\n'
         
     def __str__(self):
         """
-        Retourne une expression de l'affectation compréhensible par ACCAS
+        Retourne une expression de l'affectation comprehensible par ACCAS
         et exploitable par EFICAS
         """
-        nom,valeur = string.split(self.texte,'=',1)
-        n = string.rstrip(nom)
-        nom = string.lstrip(n)
+        nom,valeur = self.texte.split('=',1)
+        n = nom.rstrip()
+        nom = n.lstrip()
         if valeur[-1] == '\n': valeur = valeur[:-1]
         return n + ' = PARAMETRE(nom=\''+nom+'\',valeur='+valeur+')\n'
 
@@ -230,13 +248,13 @@ class COMMANDE_COMMENTARISEE(ENTITE_JDC):
         """
         Ajoute texte a self.texte en enlevant les doubles commentaires
         """
-        texte = string.strip(texte)
-        texte = string.strip(texte[2:])
+        texte = texte.strip()
+        texte = texte[2:].strip()
         self.texte = self.texte+(len(self.texte)>0)*'\n'+texte
 
     def __str__(self):
         """
-        Retourne une expression de la commande commentarisée compréhensible par ACCAS
+        Retourne une expression de la commande commentarisee comprehensible par ACCAS
         et exploitable par EFICAS
         """
         return "COMMANDE_COMM(texte="+repr(self.texte)+")\n"
@@ -253,19 +271,19 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         
     def __str__(self):
         """
-        Retourne une expression du parametre EVAL compréhensible par ACCAS
+        Retourne une expression du parametre EVAL comprehensible par ACCAS
         et exploitable par EFICAS
         """
-        nom,valeur = string.split(self.texte,'=',1)
-        nom = string.strip(nom)
+        nom,valeur = self.texte.split('=',1)
+        nom = nom.strip()
         if valeur[-1] == '\n': valeur = valeur[:-1]
-        valeur = string.strip(valeur)
+        valeur = valeur.strip()
         return nom+' = PARAMETRE_EVAL(nom=\''+nom+'\',valeur=\''+valeur+'\')\n\n'
         
-class PARSEUR_PYTHON:
+class PARSEUR_PYTHON(object):
     """
-    Cette classe sert a générer un objet PARSEUR_PYTHON qui réalise l'analyse d'un texte 
-    représentant un JDC Python en distinguant :
+    Cette classe sert a generer un objet PARSEUR_PYTHON qui realise l'analyse d'un texte 
+    representant un JDC Python en distinguant :
       - les commentaires inter commandes
       - les affectations
       - les commandes
@@ -282,19 +300,21 @@ class PARSEUR_PYTHON:
 
     def is_affectation(self,texte):
         """
-        Méthode booléenne qui retourne 1 si le texte est celui d'une affectation dans un jeu de commandes
+        Methode booleenne qui retourne 1 si le texte est celui d'une affectation dans un jeu de commandes
         Aster, 0 sinon
         """
         if '=' not in texte : return 0
         if self.pattern_commande.match(texte):
-            # cas d'une procédure ...
+            # cas d'une procedure ...
             return 0
-        amont,aval = string.split(texte,'=',1)
-        aval = string.strip(aval)
+        amont,aval = texte.split('=',1)
+        aval = aval.strip()
+
+
         if self.pattern_commande.match(aval):
             return 0
         else:
-            s= string.strip(amont)
+            s= amont.strip()
             m= self.pattern_name.match(s)
             if m is None : return 0
             if m.start() != 0 :return 0
@@ -303,15 +323,15 @@ class PARSEUR_PYTHON:
 
     def is_eval(self,texte):
         """
-        Méthode booléenne qui retourne 1 si le texte est celui d'une affectation de type EVAL
+        Methode booleenne qui retourne 1 si le texte est celui d'une affectation de type EVAL
         dans un jeu de commandes Aster, 0 sinon
         """
         if '=' not in texte : return 0
         if self.pattern_commande.match(texte):
-            # cas d'une procédure ...
+            # cas d'une procedure ...
             return 0
-        amont,aval = string.split(texte,'=',1)
-        aval = string.strip(aval)
+        amont,aval = texte.split('=',1)
+        aval = aval.strip()
         if not self.pattern_commande.match(aval) : return 0
         if self.pattern_eval.match(aval):
             return 1
@@ -320,18 +340,18 @@ class PARSEUR_PYTHON:
             
     def is_commande(self,texte):
         """
-        Méthode booléenne qui retourne 1 si le texte est celui d'une commande dans un jeu de commandes
+        Methode booleenne qui retourne 1 si le texte est celui d'une commande dans un jeu de commandes
         Aster, 0 sinon
         """
         if self.pattern_commande.match(texte):
-            # cas d'une procédure ...
+            # cas d'une procedure ...
             return 1
         # A ce stade il faut avoir un OPER ou une MACRO, bref un '=' !
         if '=' not in texte : return 0
         # on a un texte de la forme xxxx = yyyyy
         # --> reste a analyser yyyy
-        amont,aval = string.split(texte,'=',1)
-        aval = string.strip(aval)
+        amont,aval = texte.split('=',1)
+        aval = aval.strip()
         if self.pattern_commande.match(aval):
             return 1
         else:
@@ -344,9 +364,9 @@ class PARSEUR_PYTHON:
     def analyse(self):
         """
         Eclate la chaine self.texte en self.l_objets une liste lignes d'instructions
-        et de commentaires (parmi lesquels des instructions "commentarisées").
+        et de commentaires (parmi lesquels des instructions "commentarisees").
         """
-        l_lignes = string.split(self.texte,'\n')
+        l_lignes = self.texte.split('\n')
         commentaire_courant             = None
         commande_courante               = None
         affectation_courante            = None
@@ -382,30 +402,30 @@ class PARSEUR_PYTHON:
             if hangingBraces[0] < 0 or hangingBraces[1] < 0 or hangingBraces[2] < 0: 
                 raise ParserException()
 
-            if string.strip(ligne) == '':
+            if ligne.strip() == '':
                 # il s'agit d'un saut de ligne
                 # --> on l'ignore
                 continue
 
             if pattern_2comments.match(ligne):
-                #on a trouvé une commande commentarisée : double commentaire sans rien devant a part des blancs
+                #on a trouve une commande commentarisee : double commentaire sans rien devant a part des blancs
                 if commentaire_courant:
                     #Si un commentaire ordinaire est en cours on le termine
                     commentaire_courant = None
 
                 if commande_courante :
-                    # on a un objet commentarisé a l'intérieur d'une commande
-                    # --> non traité pour l'instant : on l'ajoute simplement a la commande courante comme
+                    # on a un objet commentarise a l'interieur d'une commande
+                    # --> non traite pour l'instant : on l'ajoute simplement a la commande courante comme
                     # un commentaire ordinaire
                     commande_courante.append_text(ligne)
                 elif commande_commentarisee_courante :
                     # commande_commentarisee en cours : on ajoute la ligne
                     commande_commentarisee_courante.append_text(ligne)
-                    # on a 2 commandes commentarisées de suite
+                    # on a 2 commandes commentarisees de suite
                     if pattern_finComments.match(ligne) :
                        commande_commentarisee_courante = None
                 else:
-                    # debut de commande commentarisée : on crée un objet commande_commentarisee_courante
+                    # debut de commande commentarisee : on cree un objet commande_commentarisee_courante
                     commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
                     commande_commentarisee_courante.append_text(ligne)
 
@@ -419,7 +439,7 @@ class PARSEUR_PYTHON:
                     commande_commentarisee_courante = None
 
                 if commande_courante :
-                    # il s'agit d'un commentaire a l'intérieur d'une commande --> on ne fait rien de special
+                    # il s'agit d'un commentaire a l'interieur d'une commande --> on ne fait rien de special
                     #on l'ajoute au texte de la commande 
                     commande_courante.append_text(ligne)
                 elif commentaire_courant :
@@ -428,20 +448,20 @@ class PARSEUR_PYTHON:
                     commentaire_courant.append_text(ligne)
                 else :
                     # il s'agit d'un nouveau commentaire entre deux commandes
-                    # --> on le crée et il devient le commentaire courant
+                    # --> on le cree et il devient le commentaire courant
                     commentaire_courant = COMMENTAIRE(self)
                     commentaire_courant.append_text(ligne)
 
                 #on passe a la ligne suivante
                 continue
 
-            # la ligne contient des données autre qu'un éventuel commentaire
+            # la ligne contient des donnees autre qu'un eventuel commentaire
             if commentaire_courant :
-                # on clot un éventuel commentaire courant
+                # on clot un eventuel commentaire courant
                 commentaire_courant = None
 
             if commande_commentarisee_courante :
-                # on clot une éventuelle commande commentarisee courante
+                # on clot une eventuelle commande commentarisee courante
                 commande_commentarisee_courante = None
 
             if commande_courante :
@@ -450,7 +470,7 @@ class PARSEUR_PYTHON:
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #la commande est terminée 
+                    #la commande est terminee 
                     self.analyse_reel(commande_courante.texte)
                     commande_courante = None
 
@@ -463,7 +483,7 @@ class PARSEUR_PYTHON:
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #L'affectation est terminée
+                    #L'affectation est terminee
                     affectation_courante=None
                 #on passe a la ligne suivante
                 continue
@@ -479,7 +499,7 @@ class PARSEUR_PYTHON:
                 continue
 
             if self.is_affectation(ligne):
-                # --> affectation
+                #print( '--> affectation')
                 text=ligne
                 #traitement des commentaires en fin de ligne
                 compos=line.find(u"#")
@@ -493,7 +513,7 @@ class PARSEUR_PYTHON:
                 if inspos > 2:
                     #on garde seulement la premiere partie de la ligne
                     #si on a que des blancs apres le point virgule
-                    if string.strip(text[inspos:]) == ";":
+                    if text[inspos:].strip() == ";":
                         text=text[:inspos]
                     else:
                         raise FatalError(tr("Eficas ne peut pas traiter plusieurs instructions \
@@ -504,13 +524,14 @@ class PARSEUR_PYTHON:
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #L'affectation est terminée
+                    #L'affectation est terminee
                     affectation_courante=None
                 #on passe a la ligne suivante
                 continue
 
             if self.is_commande(ligne):
                 # --> nouvelle commande
+                #print ('nouvelle commande')
                 affectation_courante = None
                 commande_courante = COMMANDE(self)
                 commande_courante.append_text(ligne)
@@ -658,7 +679,7 @@ class PARSEUR_PYTHON:
         return txt
 
 def test():
-  import parseur_python
+  #import parseur_python
   import doctest
   doctest.testmod(parseur_python)
 
@@ -666,17 +687,12 @@ def test():
 if __name__ == "__main__" :
     import time
     #fichier = 'D:/Eficas_dev/Tests/zzzz100a.comm'
-    fichier = 'U:/Eficas_dev/Tests/test_eval.comm'
-    fichier = '/local/chris/ASTER/Eficas/Eficas1_10/EficasV1/Tests/testcomm/b.comm'
-    fichier = '/local/chris/ASTER/instals/STA8.2/astest/forma12c.comm'
-    fichier = 'titi.comm'
-    fichier = '../Aster/sdls300a.comm'
-    fichier = '../Aster/az.comm'
+    #fichier = 'U:/Eficas_dev/Tests/test_eval.comm'
     texte = open(fichier,'r').read()
-    class appli:
+    class appli(object):
        dict_reels={}
        liste_simp_reel=["VALE","VALE_C","GROUP_MA","RAYON"]
     a=appli()
 
     compile(txt, '<string>', 'exec')
-    print (a.dict_reels)
+    print((a.dict_reels))

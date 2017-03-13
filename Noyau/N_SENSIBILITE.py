@@ -23,10 +23,9 @@
    sur présence de la sensibilité.
 """
 
-from types import TupleType, ListType
-EnumTypes = (TupleType, ListType)
+from __future__ import absolute_import
 
-from N_REGLE import REGLE
+from .N_REGLE import REGLE
 
 # -----------------------------------------------------------------------------
 class CONCEPT_SENSIBLE(REGLE):
@@ -66,19 +65,19 @@ class CONCEPT_SENSIBLE(REGLE):
       if not hasattr(etape.sd,"sensi"):
          etape.sd.sensi = {}
       # si ENSEMBLE, la sd nominale est forcément produite
-      if self.mode == self._modes['ENSEMBLE'] and not etape.sd.sensi.has_key('nominal'):
+      if self.mode == self._modes['ENSEMBLE'] and not 'nominal' in etape.sd.sensi :
          etape.sd.sensi['nominal'] = id_etape
       # liste des paramètres sensibles
       valeur = obj[self.mocle]
       if valeur == None:
          # pas de sensibilité, la sd nominale est produite
-         if not etape.sd.sensi.has_key('nominal'):
+         if not 'nominal' in etape.sd.sensi:
             etape.sd.sensi['nominal'] = id_etape
          return '', 1
-      if not type(valeur) in EnumTypes:
+      if not type(valeur) in (list, tuple):
          valeur = [valeur,]
       for v in valeur:
-         if not etape.sd.sensi.has_key(v.get_name()):
+         if not v.get_name() in etape.sd.sensi:
             etape.sd.sensi[v.get_name()] = id_etape
       return '', 1
 
@@ -121,7 +120,7 @@ class REUSE_SENSIBLE(REGLE):
                text = "Commande non réentrante en l'absence de sensibilité."
                return text, 0
          else:
-            if not type(valeur) in EnumTypes:
+            if not type(valeur) in (list, tuple):
                valeur = [valeur,]
             for ps in valeur:
                if hasattr(sd, 'sensi') and sd.sensi.get(ps.nom, id_etape) != id_etape:
@@ -158,7 +157,7 @@ class DERIVABLE(REGLE):
          concept = obj[self.mocle]
       except IndexError:
          return '', 1
-      if not type(concept) in EnumTypes:
+      if not type(concept) in (list, tuple):
          concept = [concept,]
       l_ps = obj["SENSIBILITE"]
       for co in concept:
@@ -173,7 +172,7 @@ class DERIVABLE(REGLE):
                return text, 0
          else:
             # sensibilité spécifiée
-            if not type(l_ps) in EnumTypes:
+            if not type(l_ps) in (list, tuple):
                l_ps = [l_ps,]
             for ps in l_ps:
                if not hasattr(co,"sensi") or not co.sensi.get(ps.nom):

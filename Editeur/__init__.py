@@ -18,6 +18,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce package contient les fonctionnalités COMMUNES nécessaires
-    aux deux éditeurs graphiques QT et TK
+    Ce package contient les fonctionnalites COMMUNES necessaires
+    aux deux editeurs graphiques QT et TK
 """

@@ -18,31 +18,33 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,sys
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+   from builtins import object
+except : pass
 
-# Modules Eficas
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets  import QFrame,QApplication, QFrame, QWidget
-    from PyQt5.QtGui  import QIcon
-    from PyQt5.QtCore  import QSize, Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+import types,os,sys
+
+from six.moves import range
+from PyQt5.QtWidgets  import QFrame,QApplication, QFrame, QWidget
+from PyQt5.QtGui  import QIcon
+from PyQt5.QtCore  import QSize, Qt
 
 from Extensions.i18n import tr
 
 
-from feuille               import Feuille
-from politiquesValidation  import PolitiquePlusieurs
-from qtSaisie              import SaisieValeur
-from gereListe             import GereListe
-from gereListe             import LECustom
+from .feuille               import Feuille
+from .politiquesValidation  import PolitiquePlusieurs
+from .qtSaisie              import SaisieValeur
+from .gereListe             import GereListe
+from .gereListe             import LECustom
 from Tuple2                import Ui_Tuple2
 from Tuple3                import Ui_Tuple3
 
 
-class TupleCustom :
+class TupleCustom(object) :
   def __init__(self,tailleTuple,parent,parentQt,index):
       QWidget.__init__(self,parent)
       self.setupUi(self)
@@ -58,8 +60,7 @@ class TupleCustom :
          courant=getattr(self,nomLE)
          courant.num=index
          courant.dansUnTuple=True
-         if monEnvQT5 : courant.returnPressed.connect(self.valueChange)
-         else : self.connect(courant,SIGNAL("returnPressed()"),self.valueChange)
+         courant.returnPressed.connect(self.valueChange)
 
 
   def valueChange(self):
@@ -168,10 +169,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           icon3 = QIcon(fichier3)
           self.BSelectFichier.setIcon(icon3)
           self.BSelectFichier.setIconSize(QSize(32, 32))
-        if monEnvQT5 :
-          self.BSelectFichier.clicked.connect(self.selectInFile)
-        else :
-          self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
+        self.BSelectFichier.clicked.connect(self.selectInFile)
           
         
 
@@ -310,7 +308,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_ligne :
          val=[]
          if  hasattr(self.objSimp.jdc,'LineDico'):
-          for k in self.objSimp.jdc.LineDico.keys() :
+          for k in self.objSimp.jdc.LineDico :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -320,7 +318,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_generateur :
          val=[]
          if  hasattr(self.objSimp.jdc,'MachineDico'):
-          for k in self.objSimp.jdc.MachineDico.keys() :
+          for k in self.objSimp.jdc.MachineDico :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -330,7 +328,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_transfo :
          val=[]
          if  hasattr(self.objSimp.jdc,'TransfoDico'):
-          for k in self.objSimp.jdc.TransfoDico.keys() :
+          for k in self.objSimp.jdc.TransfoDico :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -340,7 +338,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_charge :
          val=[]
          if  hasattr(self.objSimp.jdc,'LoadDico'):
-          for k in self.objSimp.jdc.LoadDico.keys() :
+          for k in self.objSimp.jdc.LoadDico :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))
@@ -350,7 +348,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_moteur :
          val=[]
          if  hasattr(self.objSimp.jdc,'MotorDico'):
-          for k in self.objSimp.jdc.MotorDico.keys() :
+          for k in self.objSimp.jdc.MotorDico :
               try :
                valeur=self.objSimp.jdc.get_concept(k)
                val.append((valeur,0))

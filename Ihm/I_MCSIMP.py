@@ -17,19 +17,21 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import types,string
+from __future__ import absolute_import
+import types
 import traceback
 from copy import copy
-from repr import Repr
+from six.moves.reprlib import Repr
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
+from six.moves import range
 myrepr = Repr()
 myrepr.maxstring = 100
 myrepr.maxother = 100
 
 from Noyau.N_utils import repr_float
 import Validation
-import CONNECTOR
+from . import CONNECTOR
 
 # Attention : les classes ASSD,.... peuvent etre surchargees
 # dans le package Accas. Il faut donc prendre des precautions si
@@ -48,9 +50,9 @@ import Accas
 
 from Extensions import parametre
 from Extensions import param2
-import I_OBJECT
-import CONNECTOR
-from I_VALIDATOR import ValError,listProto
+from . import I_OBJECT
+from . import CONNECTOR
+from .I_VALIDATOR import ValError,listProto
 
 class MCSIMP(I_OBJECT.OBJECT):
 
@@ -87,37 +89,37 @@ class MCSIMP(I_OBJECT.OBJECT):
 
     if self.valeur == None : 
       return None
-    elif type(self.valeur) == types.FloatType : 
+    elif type(self.valeur) == float : 
       # Traitement d'un flottant isole
       txt = str(self.valeur)
       clefobj=self.GetNomConcept()
-      if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
-        if self.jdc.appli.appliEficas.dict_reels[clefobj].has_key(self.valeur):
+      if clefobj in self.jdc.appli.appliEficas.dict_reels :
+        if self.valeur in self.jdc.appli.appliEficas.dict_reels[clefobj]:
            txt=self.jdc.appli.appliEficas.dict_reels[clefobj][self.valeur]
-    elif type(self.valeur) in (types.ListType,types.TupleType) :
+    elif type(self.valeur) in (list,tuple) :
       if self.valeur==[] or self.valeur == (): return str(self.valeur)
       # Traitement des listes
       txt='('
       sep=''
       for val in self.valeur:
-        if type(val) == types.FloatType : 
+        if type(val) == float : 
            clefobj=self.GetNomConcept()
-           if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
-              if self.jdc.appli.appliEficas.dict_reels[clefobj].has_key(val):
+           if clefobj in self.jdc.appli.appliEficas.dict_reels:
+              if val in self.jdc.appli.appliEficas.dict_reels[clefobj]:
                  txt=txt + sep +self.jdc.appli.appliEficas.dict_reels[clefobj][val]
               else :
                  txt=txt + sep + str(val)
            else :
               txt=txt + sep + str(val)
         else: 
-           if isinstance(val,types.TupleType):
+           if isinstance(val,tuple):
               texteVal='('
               for i in val :
-                  if isinstance(i, types.StringType) : texteVal = texteVal +"'"+str(i)+"'," 
+                  if isinstance(i, bytes) : texteVal = texteVal +"'"+str(i)+"'," 
                   else : texteVal = texteVal + str(i)+','
               texteVal=texteVal[:-1]+')'
            else : 
-              if isinstance(val,types.StringType): texteVal="'"+str(val)+"'"
+              if isinstance(val,bytes): texteVal="'"+str(val)+"'"
               else :texteVal=str(val)
            txt = txt + sep+ texteVal 
 
@@ -127,7 +129,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 ##            break
         sep=','
       # cas des listes de tuples de longueur 1
-      if isinstance(val,types.TupleType) and len(self.valeur) == 1 : txt=txt+','
+      if isinstance(val,tuple) and len(self.valeur) == 1 : txt=txt+','
       txt=txt+')'
     else:
       # Traitement des autres cas
@@ -145,12 +147,12 @@ class MCSIMP(I_OBJECT.OBJECT):
        Retourne une chaine de caractere representant la valeur de self 
     """
     val=self.valeur
-    if type(val) == types.FloatType : 
+    if type(val) == float : 
       clefobj=self.GetNomConcept()
-      if self.jdc.appli.appliEficas.dict_reels.has_key(clefobj):
-        if self.jdc.appli.appliEficas.appliEficas.dict_reels[clefobj].has_key(val):
+      if clefobj in self.jdc.appli.appliEficas.dict_reels :
+        if val in self.jdc.appli.appliEficas.appliEficas.dict_reels[clefobj] :
            return self.jdc.appli.appliEficas.dict_reels[clefobj][val]
-    if type(val) != types.TupleType :
+    if type(val) != tuple :
       try:
         return val.get_name()
       except:
@@ -162,14 +164,14 @@ class MCSIMP(I_OBJECT.OBJECT):
         try :
           s=s+item.get_name()+','
         except:
-          s=s+`item`+','
+          s=s+repr(item)+','
       s=s+' )'
       return s
 
   def wait_bool(self):
       for typ in self.definition.type:
           try :
-            if typ == types.BooleanType: return True
+            if typ == bool: return True
           except :
             pass
       return False
@@ -180,7 +182,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         qui n'existe pas encore (type CO()), 0 sinon
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType or isinstance(typ,type):
+      if type(typ) == type or isinstance(typ,type):
         if issubclass(typ,CO) :
            return 1
     return 0
@@ -191,7 +193,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         ou derive, 0 sinon
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType or isinstance(typ,type):
+      if type(typ) == type or isinstance(typ,type):
         if issubclass(typ,ASSD) and not issubclass(typ,GEOM):
           return 1
     return 0
@@ -203,7 +205,7 @@ class MCSIMP(I_OBJECT.OBJECT):
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType or isinstance(typ,type):
+      if type(typ) == type or isinstance(typ,type):
         if typ.__name__ in ("GEOM","ASSD","geom","assd") or issubclass(typ,GEOM) :
           return 1
     return 0
@@ -214,7 +216,7 @@ class MCSIMP(I_OBJECT.OBJECT):
          Retourne 0 dans le cas contraire
     """
     for typ in self.definition.type:
-      if type(typ) == types.ClassType or isinstance(typ,type):
+      if type(typ) == type or isinstance(typ,type):
         if issubclass(typ,GEOM) : return 1
     return 0
 
@@ -233,9 +235,9 @@ class MCSIMP(I_OBJECT.OBJECT):
     """
     if self.valeur == None:
       return []
-    elif type(self.valeur) == types.TupleType:
+    elif type(self.valeur) == tuple:
       return list(self.valeur)
-    elif type(self.valeur) == types.ListType:
+    elif type(self.valeur) == list:
       return self.valeur
     else:
       return [self.valeur]
@@ -361,7 +363,7 @@ class MCSIMP(I_OBJECT.OBJECT):
     if new_valeur in ('True','False') and 'TXM' in self.definition.type  :
        valeur=self.eval_val_item(str(new_valeur))
        return new_valeur
-    if type(new_valeur) in (types.ListType,types.TupleType):
+    if type(new_valeur) in (list,tuple):
        valeurretour=[]
        for item in new_valeur :
           valeurretour.append(self.eval_val_item(item))
@@ -402,7 +404,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           return None
 
   def update_concept(self,sd):
-    if type(self.valeur) in (types.ListType,types.TupleType) :
+    if type(self.valeur) in (list,tuple) :
        if sd in self.valeur:
          self.init_modif()
          self.fin_modif()
@@ -420,13 +422,13 @@ class MCSIMP(I_OBJECT.OBJECT):
         du concept sd
         Attention aux matrices
     """
-    if type(self.valeur) == types.TupleType :
+    if type(self.valeur) == tuple :
       if sd in self.valeur:
         self.init_modif()
         self.valeur=list(self.valeur)
         self.valeur.remove(sd)
         self.fin_modif()
-    elif type(self.valeur) == types.ListType:
+    elif type(self.valeur) == list:
       if sd in self.valeur:
         self.init_modif()
         self.valeur.remove(sd)
@@ -456,14 +458,14 @@ class MCSIMP(I_OBJECT.OBJECT):
         du concept old_sd
     """
     #print "replace_concept",old_sd,sd
-    if type(self.valeur) == types.TupleType :
+    if type(self.valeur) == tuple :
       if old_sd in self.valeur:
         self.init_modif()
         self.valeur=list(self.valeur)
         i=self.valeur.index(old_sd)
         self.valeur[i]=sd
         self.fin_modif()
-    elif type(self.valeur) == types.ListType:
+    elif type(self.valeur) == list:
       if old_sd in self.valeur:
         self.init_modif()
         i=self.valeur.index(old_sd)
@@ -524,8 +526,8 @@ class MCSIMP(I_OBJECT.OBJECT):
      # Attention : possible probleme avec include
      # A priori il n'y a pas de raison de retirer les concepts non existants
      # avant etape. En fait il s'agit uniquement eventuellement de ceux crees par une macro
-     l_sd_avant_etape = self.jdc.get_contexte_avant(self.etape).values()  
-     if type(self.valeur) in (types.TupleType,types.ListType) :
+     l_sd_avant_etape = list(self.jdc.get_contexte_avant(self.etape).values())  
+     if type(self.valeur) in (tuple,list) :
        l=[]
        for sd in self.valeur:
          if isinstance(sd,ASSD) :
@@ -628,7 +630,7 @@ class MCSIMP(I_OBJECT.OBJECT):
            if cr == "oui" : self.cr.fatal(tr("La matrice n'a pas le bon entete"))
            return 0
        if self.monType.methodeCalculTaille != None :
-           apply (MCSIMP.__dict__[self.monType.methodeCalculTaille],(self,))
+           MCSIMP.__dict__[self.monType.methodeCalculTaille](*(self,))
        try :
        #if 1 :
            ok=0

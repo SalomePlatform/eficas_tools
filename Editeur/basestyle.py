@@ -16,7 +16,11 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-class STYLE:
+try :
+  from builtins import object
+except : pass
+
+class STYLE(object):
     background='gray90'
     foreground='black'
     entry_background='white'

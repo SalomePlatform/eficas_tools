@@ -18,24 +18,25 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except : pass
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtCore     import  Qt
-    from PyQt5.QtWidgets  import  QWidget
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+import types,os
+
+from PyQt5.QtCore     import  Qt
+from PyQt5.QtWidgets  import  QWidget
 
 # Modules Eficas
 
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetRadioButton  import Ui_WidgetRadioButton 
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieValeur
+from .politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieValeur
 
 
 class MonWidgetRadioButtonCommun (Feuille):
@@ -54,7 +55,7 @@ class MonWidgetRadioButtonCommun (Feuille):
   def setValeursApresBouton(self):
       if self.objSimp.get_valeur()==None : return
       valeur=self.objSimp.get_valeur()
-      if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
+      if not(type(valeur) == str) : valeur=str(valeur)
       try :
         self.dict_bouton[valeur].setChecked(True)
         self.dict_bouton[valeur].setFocus(True)
@@ -72,11 +73,10 @@ class MonWidgetRadioButtonCommun (Feuille):
          nomBouton="radioButton_"+str(i)
          bouton=getattr(self,nomBouton)
          valeur=self.maListeDeValeur[i-1]
-         if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
+         if not(type(valeur) == str) : valeur=str(valeur)
          bouton.setText(tr(valeur))
          self.dict_bouton[valeur]=bouton
-         if monEnvQT5 : bouton.clicked.connect(self.boutonclic)
-         else : self.connect(bouton,SIGNAL("clicked()"),self.boutonclic)
+         bouton.clicked.connect(self.boutonclic)
          bouton.keyPressEvent=self.keyPressEvent
          setattr(self,nomBouton,bouton)
          i=i+1
@@ -87,7 +87,7 @@ class MonWidgetRadioButtonCommun (Feuille):
          i=i+1
 
   def boutonclic(self):
-      for valeur in self.dict_bouton.keys():
+      for valeur in self.dict_bouton:
           if self.dict_bouton[valeur].isChecked():
              #print "dans boutonclic is checked", valeur, type(valeur)
              SaisieValeur.LEValeurPressed(self,valeur)
@@ -103,7 +103,7 @@ class MonWidgetRadioButtonCommun (Feuille):
   def selectSuivant(self):
       aLeFocus=self.focusWidget()
       nom=aLeFocus.objectName()[12:]
-      i=nom.toInt()[0]+1
+      i=int(nom)+1
       if i ==  len(self.maListeDeValeur) +1 : i=1
       nomBouton="radioButton_"+str(i)
       courant=getattr(self,nomBouton)
@@ -112,7 +112,7 @@ class MonWidgetRadioButtonCommun (Feuille):
   def selectPrecedent(self):
       aLeFocus=self.focusWidget()
       nom=aLeFocus.objectName()[12:]
-      i=nom.toInt()[0]-1
+      i=int(nom)-1
       if i == 0 : i= len(self.maListeDeValeur)  
       nomBouton="radioButton_"+str(i)
       courant=getattr(self,nomBouton)
@@ -121,7 +121,7 @@ class MonWidgetRadioButtonCommun (Feuille):
   def checkFocused(self):
       aLeFocus=self.focusWidget()
       nom=aLeFocus.objectName()[12:]
-      i=nom.toInt()[0]
+      i=int(nom)
       if i > 0 and i <= len(self.maListeDeValeur):
         nomBouton="radioButton_"+str(i)
         courant=getattr(self,nomBouton)

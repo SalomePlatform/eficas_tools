@@ -16,5 +16,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-from N_ASSD import ASSD
+from __future__ import absolute_import
+from .N_ASSD import ASSD
 class LASSD(ASSD,list):pass

@@ -28,20 +28,21 @@
      - gettreeitem(object) -> type d'item : fonction qui retourne un type
        d'item correspondant au type de l'objet noyau fourni.
      - make_objecttreeitem(appli,labeltext, object, setfunction=None) -> item : fonction qui retourne un item
-       correspondant à l'objet noyau fourni.
+       correspondant a l'objet noyau fourni.
 """
-# import généraux
+# import generaux
+from __future__ import absolute_import
 import os,glob,types
 
-# Dictionnaire {object : item} permettant d'associer un item à un object
-# Ce dictionnaire est renseigné par la méthode charger_composants 
+# Dictionnaire {object : item} permettant d'associer un item a un object
+# Ce dictionnaire est renseigne par la methode charger_composants 
 composants = {}
 
 def charger_composants(Ihm="TK"):
     """
         Cette fonction a pour but de charger tous les modules composants graphiques
-        (fichiers compo*.py dans le même répertoire que ce module )
-        et de remplir le dictionnaire composants utilisé par make_objecttreeitem
+        (fichiers compo*.py dans le meme repertoire que ce module )
+        et de remplir le dictionnaire composants utilise par make_objecttreeitem
     """
     reper=os.path.dirname(__file__)
     if Ihm == "TK" :
@@ -62,8 +63,8 @@ def charger_composants(Ihm="TK"):
 
 def gettreeitem(object):
     """
-      Cette fonction retourne la classe item associée à l'objet object.
-      Cette classe item dépend bien sûr de la nature de object, d'où
+      Cette fonction retourne la classe item associee a l'objet object.
+      Cette classe item depend bien sur de la nature de object, d'ou
       l'interrogation du dictionnaire composants
     """
     # Si la definition de l'objet a un attribut itemeditor, il indique 
@@ -81,7 +82,7 @@ def gettreeitem(object):
        pass
 
     # Puis une eventuelle classe heritee (aleatoire car sans ordre)
-    for e in composants.keys():
+    for e in list(composants.keys()):
         if e and isinstance(object,e):
            itemtype= composants[e]
            return itemtype
@@ -93,7 +94,7 @@ def gettreeitem(object):
 def make_objecttreeitem(appli,labeltext, object, setfunction=None):
     """
        Cette fonction permet de construire et de retourner un objet
-       de type item associé à l'object passé en argument.
+       de type item associe a l'object passe en argument.
     """
     c = gettreeitem(object)
     #print appli,labeltext, object, setfunction

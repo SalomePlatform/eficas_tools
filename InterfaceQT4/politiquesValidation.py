@@ -18,13 +18,18 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import types, string
+from __future__ import absolute_import
+try :
+   from builtins import range
+except : pass
+
+import types
 from Accas import PARAMETRE
 from Extensions.i18n import tr
 
 
 #------------------
-class Validation  :
+class Validation(object)  :
 #------------------
   def __init__(self,node,parent) :
          self.node=node
@@ -34,23 +39,23 @@ class Validation  :
          commentaire = None
          valeur,validite=self.node.item.eval_valeur(valeurentree)
          if not validite :
-                  commentaire = "impossible d'evaluer : %s " %`valeurentree`
+                  commentaire = "impossible d'evaluer : %s " %repr(valeurentree)
                   return valeur,validite,commentaire
-         if self.node.item.wait_TXM() and type(valeur) not in types.StringTypes : valeur=str(valeur) 
+         if self.node.item.wait_TXM() and not( type(valeur) == str) : valeur=str(valeur) 
 
          testtype,commentaire = self.node.item.object.verif_type(valeur)
          if not testtype :
                   return valeur,0,commentaire
 
          valide=self.node.item.valide_item(valeur)
-         if type(valide) == types.TupleType:
+         if type(valide) == tuple:
                  validite,commentaire=valide
          else :
                  validite=valide
                  commentaire=" "
 
          if not validite and commentaire is None:
-                  commentaire = "impossible d'evaluer : %s " %`valeurentree`
+                  commentaire = "impossible d'evaluer : %s " %repr(valeurentree)
          return valeur, validite, commentaire
 
 # ----------------------------------------------------------------------------------------
@@ -65,12 +70,12 @@ class Validation  :
                         if str(clef) != str(texteValeur) :
                            self.node.item.object.init_modif()
                            clefobj=self.node.item.object.GetNomConcept()
-                           if not self.parent.appliEficas.dict_reels.has_key(clefobj):
+                           if not clefobj in self.parent.appliEficas.dict_reels:
                               self.parent.appliEficas.dict_reels[clefobj] = {}
                            self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
                            self.parent.appliEficas.dict_reels[clefobj]
                            if clefobj=="" : 
-                              if not self.parent.appliEficas.dict_reels.has_key(self.node.item.object.etape) :
+                              if not self.node.item.object.etape in self.parent.appliEficas.dict_reels :
                                  self.parent.appliEficas.dict_reels[self.node.item.object.etape] = {}
                               self.parent.appliEficas.dict_reels[self.node.item.object.etape][clef]=texteValeur
                            self.node.item.object.fin_modif()
@@ -86,16 +91,19 @@ class Validation  :
              else : return(valeur)
          if "R" in self.node.item.object.definition.type:
                   clefobj=self.node.item.object.GetNomConcept()
-                  if self.parent.appliEficas.dict_reels.has_key(clefobj):
-                     if self.parent.appliEficas.dict_reels[clefobj].has_key(valeur):
+                  if clefobj in self.parent.appliEficas.dict_reels:
+                     if valeur in self.parent.appliEficas.dict_reels[clefobj] :
                         valeurTexte=self.parent.appliEficas.dict_reels[clefobj][valeur]
                   else :
-                     if string.find(str(valeur),'.') == -1 and string.find(str(valeur),'e') == -1 and string.find(str(valeur),'E'):
+                     if str(valeur).find('.') == -1 and str(valeur).find('e') == -1 and str(valeur).find('E'):
                      # aucun '.' n'a ete trouve dans valeur --> on en rajoute un a la fin
                         if (self.is_param(valeur)):
                            return valeur
                         else:
-                          val2=eval(str(valeur)+'.')
+                          try :
+                            val2=eval(str(valeur)+'.')
+                          except :
+                            pass
          return valeurTexte
 
   def is_param(self,valeur) :
@@ -114,11 +122,11 @@ class Validation  :
                    clef=eval(texteValeur)
                    if str(clef) != str(texteValeur) :
                       clefobj=self.node.item.object.GetNomConcept()
-                      if not self.parent.appliEficas.dict_reels.has_key(clefobj):
+                      if not clefobj in self.parent.appliEficas :
                           self.parent.appliEficas.dict_reels[clefobj] = {}
                       self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
                       if clefobj=="" : 
-                         if not self.parent.appliEficas.dict_reels.has_key(self.node.item.object.etape) :
+                         if not self.node.item.object.etape in self.parent.appliEficas.dict_reels :
                             self.parent.appliEficas.dict_reels[self.node.item.object.etape] = {}
                          self.parent.appliEficas.dict_reels[self.node.item.object.etape][clef]=texteValeur
                           
@@ -127,7 +135,7 @@ class Validation  :
 
   def AjoutDsDictReelEtape(self):
       try:
-         if self.parent.appliEficas.dict_reels.has_key(self.node.item.object) :
+         if self.node.item.object in self.parent.appliEficas.dict_reels:
             self.parent.appliEficas.dict_reels[self.node.item.sdnom]=self.parent.appliEficas.dict_reels[self.node.item.object]
             del self.parent.appliEficas.dict_reels[self.node.item.object]
       except :
@@ -185,7 +193,7 @@ class PolitiquePlusieurs(Validation):
          valide=1
          if listevaleur==None: return
          if listevaleur=="": return
-         if not( type(listevaleur)  in (types.ListType,types.TupleType)) :
+         if not( type(listevaleur)  in (list,tuple)) :
             listevaleur=tuple(listevaleur)
          # on verifie que la cardinalite max n a pas ete atteinte
          min,max = self.node.item.GetMinMax()

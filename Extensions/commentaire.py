@@ -19,9 +19,10 @@
 #
 """
    Ce module contient la classe COMMENTAIRE qui sert dans EFICAS
-   pour gérer les commentaires dans un JDC
+   pour gerer les commentaires dans un JDC
 """
 
+from __future__ import absolute_import
 from Noyau.N_CR import CR
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
@@ -29,7 +30,7 @@ from Extensions.i18n import tr
 
 class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   """ 
-      Cette classe permet de créer des objets de type COMMENTAIRE 
+      Cette classe permet de creer des objets de type COMMENTAIRE 
   """
   nature = 'COMMENTAIRE'
   idracine = '_comm'
@@ -41,8 +42,8 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       self.jdc = self.parent = CONTEXT.get_current_step()
     else:
       self.jdc = self.parent = parent
-    # La classe COMMENTAIRE n'a pas de définition. On utilise self
-    # pour complétude
+    # La classe COMMENTAIRE n'a pas de definition. On utilise self
+    # pour completude
     self.definition=self
     self.nom=''
     self.niveau = self.parent.niveau
@@ -52,12 +53,12 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
   def register(self):
     """ 
-        Enregistre le commentaire dans la liste des étapes de son parent
+        Enregistre le commentaire dans la liste des etapes de son parent
         lorsque celui-ci est un JDC 
     """
     if self.parent.nature == 'JDC':
       # le commentaire est entre deux commandes:
-      # il faut l'enregistrer dans la liste des étapes
+      # il faut l'enregistrer dans la liste des etapes
       self.parent.register(self)
 
   def copy(self):
@@ -76,7 +77,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     return 0
 
   def isrepetable(self):
-    """ Indique si self est répétable ou non : retourne toujours 1 """
+    """ Indique si self est repetable ou non : retourne toujours 1 """
     return 1
 
   def active(self):
@@ -94,14 +95,14 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
   def isactif(self):
       """
-      Booléenne qui retourne 1 si self est valide, 0 sinon
+      Booleenne qui retourne 1 si self est valide, 0 sinon
       """
       return self.actif
 
   def supprime(self):
       """
-      Méthode qui supprime toutes les boucles de références afin que 
-      l'objet puisse être correctement détruit par le garbage collector
+      Methode qui supprime toutes les boucles de references afin que 
+      l'objet puisse etre correctement detruit par le garbage collector
       """
       self.parent=None
       self.jdc=None
@@ -141,13 +142,13 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     pass
 
   def report(self):
-    """ Génère l'objet rapport (classe CR) """
+    """ Genere l'objet rapport (classe CR) """
     self.cr=CR()
     if not self.isvalid(): self.cr.warn(tr("Objet commentaire non valorise"))
     return self.cr
 
   def ident(self):
-    """ Retourne le nom interne associé à self
+    """ Retourne le nom interne associe a self
         Ce nom n'est jamais vu par l'utilisateur dans EFICAS
     """
     return self.nom
@@ -161,17 +162,17 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   def verif_condition_bloc(self):
     """
         Evalue les conditions de tous les blocs fils possibles
-        (en fonction du catalogue donc de la définition) de self et
+        (en fonction du catalogue donc de la definition) de self et
         retourne deux listes :
-          - la première contient les noms des blocs à rajouter
-          - la seconde contient les noms des blocs à supprimer
+          - la premiere contient les noms des blocs a rajouter
+          - la seconde contient les noms des blocs a supprimer
     """
     return [],[]
 
   def verif_condition_regles(self,liste_presents):
     """
-        Retourne la liste des mots-clés à rajouter pour satisfaire les règles
-        en fonction de la liste des mots-clés présents
+        Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+        en fonction de la liste des mots-cles presents
     """
     return []
 

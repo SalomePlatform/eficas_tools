@@ -19,49 +19,53 @@
 
 
 """
-    Ce module contient la classe ETAPE qui sert à vérifier et à exécuter
+    Ce module contient la classe ETAPE qui sert a verifier et a executer
     une commande
 """
 
 # Modules Python
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except :
+   pass
 import types
 import sys
-import string
 import os
 import linecache
 import traceback
 from copy import copy
 
 # Modules EFICAS
-import N_MCCOMPO
-from N_Exception import AsException
-import N_utils
-from N_utils import AsType
-from N_ASSD import ASSD
-from N_info import message, SUPERV
+from . import N_MCCOMPO
+from .N_Exception import AsException
+from . import N_utils
+from .N_utils import AsType
+from .N_ASSD import ASSD
 
 
 class ETAPE(N_MCCOMPO.MCCOMPO):
 
     """
-       Cette classe hérite de MCCOMPO car ETAPE est un OBJECT composite
+       Cette classe herite de MCCOMPO car ETAPE est un OBJECT composite
 
     """
     nature = "OPERATEUR"
 
-    # L'attribut de classe codex est utilisé pour rattacher le module de calcul éventuel (voir Build)
-    # On le met à None pour indiquer qu'il n'y a pas de module de calcul
-    # rattaché
+    # L'attribut de classe codex est utilise pour rattacher le module de calcul eventuel (voir Build)
+    # On le met a None pour indiquer qu'il n'y a pas de module de calcul
+    # rattache
     codex = None
 
     def __init__(self, oper=None, reuse=None, args={}, niveau=4):
         """
         Attributs :
-         - definition : objet portant les attributs de définition d'une étape de type opérateur. Il
-                        est initialisé par l'argument oper.
-         - reuse : indique le concept d'entrée réutilisé. Il se trouvera donc en sortie
-                   si les conditions d'exécution de l'opérateur l'autorise
-         - valeur : arguments d'entrée de type mot-clé=valeur. Initialisé avec l'argument args.
+         - definition : objet portant les attributs de definition d'une etape de type operateur. Il
+                        est initialise par l'argument oper.
+         - reuse : indique le concept d'entree reutilise. Il se trouvera donc en sortie
+                   si les conditions d'execution de l'operateur l'autorise
+         - valeur : arguments d'entree de type mot-cle=valeur. Initialise avec l'argument args.
         """
         self.definition = oper
         self.reuse = reuse
@@ -80,8 +84,8 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
     def make_register(self):
         """
-        Initialise les attributs jdc, id, niveau et réalise les
-        enregistrements nécessaires
+        Initialise les attributs jdc, id, niveau et realise les
+        enregistrements necessaires
         """
         if self.parent:
             self.jdc = self.parent.get_jdc_root()
@@ -94,10 +98,10 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
     def nettoiargs(self):
         """
-           Cette methode a pour fonction de retirer tous les arguments egaux à None
-           de la liste des arguments. Ils sont supposés non présents et donc retirés.
+           Cette methode a pour fonction de retirer tous les arguments egaux a None
+           de la liste des arguments. Ils sont supposes non presents et donc retires.
         """
-        for k in self.valeur.keys():
+        for k in list(self.valeur.keys()):
             if self.valeur[k] == None:
                 del self.valeur[k]
 
@@ -110,23 +114,22 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
     def Build_sd(self, nom):
         """
-           Construit le concept produit de l'opérateur. Deux cas
-           peuvent se présenter :
+           Construit le concept produit de l'operateur. Deux cas
+           peuvent se presenter :
 
-             - le parent n'est pas défini. Dans ce cas, l'étape prend en charge la création
+             - le parent n'est pas defini. Dans ce cas, l'etape prend en charge la creation
                et le nommage du concept.
 
-             - le parent est défini. Dans ce cas, l'étape demande au parent la création et
+             - le parent est defini. Dans ce cas, l'etape demande au parent la creation et
                le nommage du concept.
 
         """
-        # message.debug(SUPERV, "Build_sd %s", self.nom)
         self.sdnom = nom
         try:
             if self.parent:
                 sd = self.parent.create_sdprod(self, nom)
                 if type(self.definition.op_init) == types.FunctionType:
-                    apply(self.definition.op_init, (
+                    self.definition.op_init(*(
                         self, self.parent.g_context))
             else:
                 sd = self.get_sd_prod()
@@ -136,7 +139,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                     # On ne nomme le concept que dans le cas de non reutilisation
                     # d un concept
                     sd.set_name(nom)
-        except AsException, e:
+        except AsException as e:
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1], e)
         except EOFError:
@@ -146,7 +149,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                 sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1] + '\n',
-                              string.join(l))
+                              ''.join(l))
 
         self.Execute()
         return sd
@@ -161,31 +164,31 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
 
     def get_sd_prod(self):
         """
-            Retourne le concept résultat de l'étape
+            Retourne le concept resultat de l'etape
             Deux cas :
                      - cas 1 : sd_prod de oper n'est pas une fonction
                        il s'agit d'une sous classe de ASSD
-                       on construit le sd à partir de cette classe
+                       on construit le sd a partir de cette classe
                        et on le retourne
                      - cas 2 : il s'agit d'une fonction
-                       on l'évalue avec les mots-clés de l'étape (mc_liste)
-                       on construit le sd à partir de la classe obtenue
+                       on l'evalue avec les mots-cles de l'etape (mc_liste)
+                       on construit le sd a partir de la classe obtenue
                        et on le retourne
         """
         if type(self.definition.sd_prod) == types.FunctionType:
             d = self.cree_dict_valeurs(self.mc_liste)
             try:
-                sd_prod = apply(self.definition.sd_prod, (), d)
+                sd_prod = self.definition.sd_prod(*(), **d)
             except EOFError:
                 raise
-            except Exception, exc:
+            except Exception as exc:
                 if CONTEXT.debug:
                     traceback.print_exc()
                 raise AsException("impossible d affecter un type au resultat:",
                                   str(exc))
         else:
             sd_prod = self.definition.sd_prod
-        # on teste maintenant si la SD est réutilisée ou s'il faut la créer
+        # on teste maintenant si la SD est reutilisee ou s'il faut la creer
         if self.definition.reentrant != 'n' and self.reuse:
             # Le concept produit est specifie reutilise (reuse=xxx). C'est une erreur mais non fatale.
             # Elle sera traitee ulterieurement.
@@ -194,14 +197,14 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
             self.sd = sd_prod(etape=self)
             # Si l'operateur est obligatoirement reentrant et reuse n'a pas ete specifie, c'est une erreur.
             # On ne fait rien ici. L'erreur sera traiter par la suite.
-        # précaution
+        # precaution
         if self.sd is not None and not isinstance(self.sd, ASSD):
             raise AsException("""
-Impossible de typer le résultat !
+Impossible de typer le resultat !
 Causes possibles :
    Utilisateur : Soit la valeur fournie derrière "reuse" est incorrecte,
-                 soit il y a une "," à la fin d'une commande précédente.
-   Développeur : La fonction "sd_prod" retourne un type invalide.""")
+                 soit il y a une "," a la fin d'une commande precedente.
+   Developpeur : La fonction "sd_prod" retourne un type invalide.""")
         return self.sd
 
     def get_type_produit(self):
@@ -212,34 +215,34 @@ Causes possibles :
 
     def get_type_produit_brut(self):
         """
-            Retourne le type du concept résultat de l'étape
+            Retourne le type du concept resultat de l'etape
             Deux cas :
               - cas 1 : sd_prod de oper n'est pas une fonction
                 il s'agit d'une sous classe de ASSD
                 on retourne le nom de la classe
               - cas 2 : il s'agit d'une fonction
-                on l'évalue avec les mots-clés de l'étape (mc_liste)
-                et on retourne son résultat
+                on l'evalue avec les mots-cles de l'etape (mc_liste)
+                et on retourne son resultat
         """
         if type(self.definition.sd_prod) == types.FunctionType:
             d = self.cree_dict_valeurs(self.mc_liste)
-            sd_prod = apply(self.definition.sd_prod, (), d)
+            sd_prod = self.definition.sd_prod(*(), **d)
         else:
             sd_prod = self.definition.sd_prod
         return sd_prod
 
     def get_etape(self):
         """
-           Retourne l'étape à laquelle appartient self
-           Un objet de la catégorie etape doit retourner self pour indiquer que
-           l'étape a été trouvée
+           Retourne l'etape a laquelle appartient self
+           Un objet de la categorie etape doit retourner self pour indiquer que
+           l'etape a ete trouvee
         """
         return self
 
     def supprime(self):
         """
-           Méthode qui supprime toutes les références arrières afin que l'objet puisse
-           etre correctement détruit par le garbage collector
+           Methode qui supprime toutes les references arrières afin que l'objet puisse
+           etre correctement detruit par le garbage collector
         """
         N_MCCOMPO.MCCOMPO.supprime(self)
         self.jdc = None
@@ -251,14 +254,11 @@ Causes possibles :
             self.sd.supprime()
 
     def __del__(self):
-        # message.debug(SUPERV, "__del__ ETAPE %s <%s>", getattr(self, 'nom', 'unknown'), self)
-        # if self.sd:
-            # message.debug(SUPERV, "            sd : %s", self.sd.nom)
         pass
 
     def get_created_sd(self):
-        """Retourne la liste des sd réellement produites par l'étape.
-        Si reuse est présent, `self.sd` a été créée avant, donc n'est pas dans
+        """Retourne la liste des sd reellement produites par l'etape.
+        Si reuse est present, `self.sd` a ete creee avant, donc n'est pas dans
         cette liste."""
         if not self.reuse and self.sd:
             return [self.sd, ]
@@ -266,7 +266,7 @@ Causes possibles :
 
     def isactif(self):
         """
-           Indique si l'étape est active (1) ou inactive (0)
+           Indique si l'etape est active (1) ou inactive (0)
         """
         return self.actif
 
@@ -275,10 +275,9 @@ Causes possibles :
             Methode utilisee pour que l etape self se declare etape
             courante. Utilise par les macros
         """
-        # message.debug(SUPERV, "call etape.set_current_step", stack_id=-1)
         cs = CONTEXT.get_current_step()
         if self.parent != cs:
-            raise AsException("L'étape courante", cs.nom, cs,
+            raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre le parent de", self.nom, self)
         else:
             CONTEXT.unset_current_step()
@@ -291,7 +290,7 @@ Causes possibles :
         """
         cs = CONTEXT.get_current_step()
         if self != cs:
-            raise AsException("L'étape courante", cs.nom, cs,
+            raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre", self.nom, self)
         else:
             CONTEXT.unset_current_step()
@@ -303,13 +302,13 @@ Causes possibles :
             sous etape de self ou non
             1 = oui
             0 = non
-            Une étape simple n'a pas de sous etape
+            Une etape simple n'a pas de sous etape
         """
         return 0
 
     def get_file(self, unite=None, fic_origine='', fname=None):
         """
-            Retourne le nom du fichier correspondant à un numero d'unité
+            Retourne le nom du fichier correspondant a un numero d'unite
             logique (entier) ainsi que le source contenu dans le fichier
         """
         if self.jdc:
@@ -343,12 +342,12 @@ Causes possibles :
             l'appelant en argument (d) en fonction de sa definition
         """
         if type(self.definition.op_init) == types.FunctionType:
-            apply(self.definition.op_init, (self, d))
+            self.definition.op_init(*(self, d))
         if self.sd:
             d[self.sd.nom] = self.sd
 
     def copy(self):
-        """ Méthode qui retourne une copie de self non enregistrée auprès du JDC
+        """ Methode qui retourne une copie de self non enregistree auprès du JDC
             et sans sd
         """
         etape = copy(self)
@@ -365,13 +364,13 @@ Causes possibles :
         return etape
 
     def copy_reuse(self, old_etape):
-        """ Méthode qui copie le reuse d'une autre étape.
+        """ Methode qui copie le reuse d'une autre etape.
         """
         if hasattr(old_etape, "reuse"):
             self.reuse = old_etape.reuse
 
     def copy_sdnom(self, old_etape):
-        """ Méthode qui copie le sdnom d'une autre étape.
+        """ Methode qui copie le sdnom d'une autre etape.
         """
         if hasattr(old_etape, "sdnom"):
             self.sdnom = old_etape.sdnom
@@ -390,7 +389,7 @@ Causes possibles :
 
     def get_cmd(self, nomcmd):
         """
-            Méthode pour recuperer la definition d'une commande
+            Methode pour recuperer la definition d'une commande
             donnee par son nom dans les catalogues declares
             au niveau du jdc
             Appele par un ops d'une macro en Python
@@ -399,16 +398,16 @@ Causes possibles :
 
     def copy_intern(self, etape):
         """
-            Méthode permettant lors du processus de recopie de copier
+            Methode permettant lors du processus de recopie de copier
             les elements internes d'une etape dans une autre
         """
         return
 
     def full_copy(self, parent=None):
         """
-           Méthode permettant d'effectuer une copie complète
-           d'une étape (y compris concept produit, éléments internes)
-           Si l'argument parent est fourni, la nouvelle étape
+           Methode permettant d'effectuer une copie complète
+           d'une etape (y compris concept produit, elements internes)
+           Si l'argument parent est fourni, la nouvelle etape
            aura cet objet comme parent.
         """
         new_etape = self.copy()
@@ -434,22 +433,22 @@ Causes possibles :
             self.parent.NommerSdprod(self.sd, self.sd.nom)
 
     def is_include(self):
-        """Permet savoir si on a affaire à la commande INCLUDE
+        """Permet savoir si on a affaire a la commande INCLUDE
         car le comportement de ces macros est particulier.
         """
         return self.nom.startswith('INCLUDE')
 
     def sd_accessible(self):
-        """Dit si on peut acceder aux "valeurs" (jeveux) de l'ASSD produite par l'étape.
+        """Dit si on peut acceder aux "valeurs" (jeveux) de l'ASSD produite par l'etape.
         """
         if CONTEXT.debug:
-            print '`- ETAPE sd_accessible :', self.nom
+            print(('`- ETAPE sd_accessible :', self.nom))
         return self.parent.sd_accessible()
 
     def get_concept(self, nomsd):
         """
-            Méthode pour recuperer un concept à partir de son nom
+            Methode pour recuperer un concept a partir de son nom
         """
-        # pourrait être appelée par une commande fortran faisant appel à des fonctions python
+        # pourrait etre appelee par une commande fortran faisant appel a des fonctions python
         # on passe la main au parent
         return self.parent.get_concept(nomsd)

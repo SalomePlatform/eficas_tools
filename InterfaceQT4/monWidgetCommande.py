@@ -18,26 +18,25 @@
 #
 # Modules Python
 # Modules Eficas
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 import types
 
 from desWidgetCommande import Ui_WidgetCommande
-from groupe import Groupe
-from gereIcones import FacultatifOuOptionnel
-from determine import monEnvQT5
+from .groupe import Groupe
+from .gereIcones import FacultatifOuOptionnel
 
-if monEnvQT5:
-   from PyQt5.QtWidgets  import QApplication, QWidget, QSpacerItem, QSizePolicy
-   from PyQt5.QtGui import QFont, QIcon
-   from PyQt5.QtCore import QTimer
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from PyQt5.QtWidgets  import QApplication, QWidget, QSpacerItem, QSizePolicy
+from PyQt5.QtGui import QFont, QIcon
+from PyQt5.QtCore import QTimer
 
 
 from Extensions.i18n import tr
 import Accas 
 import os
-import string
 
     
 # Import des panels
@@ -60,7 +59,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.frameAffichage.resize(self.frameAffichage.width(),50)
       
       #if (etape.get_type_produit()==None): self.LENom.close()
-      test,mess = self.node.item.nomme_sd('ee')
+      #test,mess = self.node.item.nomme_sd('ee')
       if not(hasattr(etape.definition,'sd_prod')) or (etape.definition.sd_prod==None): self.LENom.close()
       elif (hasattr(etape.definition,'sd_prod') and type(etape.definition.sd_prod)== types.FunctionType):self.LENom.close()
       elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom)
@@ -74,22 +73,13 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
       if self.editor.closeFrameRechercheCommande==True : self.closeAutreCommande()
       else :
-        if monEnvQT5 :
-         try :
+        try :
            self.bCatalogue.clicked.connect(self.afficheCatalogue)
            self.bAvant.clicked.connect(self.afficheAvant)
            self.bApres.clicked.connect(self.afficheApres)
-         except :
+        except :
            pass
-         self.LENom.returnPressed.connect(self.nomChange)
-        else : 
-         try :
-            self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-            self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-            self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
-         except :
-            pass
-         self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
+        self.LENom.returnPressed.connect(self.nomChange)
    
       if self.editor.code in ['Adao','ADAO'] and self.editor.closeFrameRechercheCommande==True  : 
                       self.frameAffichage.close()
@@ -105,14 +95,16 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          self.RBPoubelle.close() # JDC Fige
          return                  # Pas de MC Optionnels pour Carmel
 
-      from monWidgetOptionnel import MonWidgetOptionnel
+      from .monWidgetOptionnel import MonWidgetOptionnel
       if self.editor.widgetOptionnel!= None : 
         self.monOptionnel=self.editor.widgetOptionnel
       else :
+        self.editor.inhibeSplitter=1
         self.monOptionnel=MonWidgetOptionnel(self.editor)
         self.editor.widgetOptionnel=self.monOptionnel
         self.editor.splitter.addWidget(self.monOptionnel)
         self.editor.ajoutOptionnel()
+        self.editor.inhibeSplitter=0
       self.afficheOptionnel()
       #self.editor.restoreSplitterSizes()
 
@@ -187,7 +179,12 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          i=i+1
       # si on boucle on perd l'ordre
  
+  def  afficheNieme(self,n):
+      #print ('ds afficheNieme')
+      self.listeAffichageWidget[n].setFocus(7)
+
   def  afficheSuivant(self,f):
+      #print ('ds afficheSuivant')
       try :
         i=self.listeAffichageWidget.index(f) 
         next=i+1
@@ -203,14 +200,14 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def nomChange(self):
       nom = str(self.LENom.text())
-      nom = string.strip(nom)
+      nom = nom.strip()
       if nom == '' : return                  # si pas de nom, on ressort sans rien faire
       test,mess = self.node.item.nomme_sd(nom)
       self.editor.affiche_commentaire(mess)
 
       #Notation scientifique
       if test :
-        from politiquesValidation import Validation
+        from .politiquesValidation import Validation
         validation=Validation(self.node,self.editor)
         validation.AjoutDsDictReelEtape()
 

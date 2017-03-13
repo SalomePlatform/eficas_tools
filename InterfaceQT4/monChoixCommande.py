@@ -19,15 +19,15 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 from desChoixCommandes import Ui_ChoixCommandes
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QWidget, QAction ,QButtonGroup, QRadioButton, QLabel 
-   from PyQt5.QtGui  import QIcon
-   from PyQt5.QtCore import QSize
-else :
-   from PyQt4.QtGui  import *
-   from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QWidget, QAction ,QButtonGroup, QRadioButton, QLabel , QPushButton, QSpacerItem, QSizePolicy, QGridLayout
+from PyQt5.QtGui  import QIcon, QPixmap
+from PyQt5.QtCore import QSize, QRect
 
 from Extensions.i18n import tr
 import os
@@ -62,27 +62,19 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.editor.appliEficas.setWindowTitle(nouveauTitre)
 
 
-      if monEnvQT5 :
-         self.RBalpha.clicked.connect(self.afficheAlpha)
-         self.RBGroupe.clicked.connect(self.afficheGroupe)
-         self.RBOrdre.clicked.connect(self.afficheOrdre)
-         self.RBClear.clicked.connect(self.clearFiltre)
-         self.RBCasse.toggled.connect(self.ajouteRadioButtons)
-         self.LEFiltre.returnPressed.connect(self.ajouteRadioButtons)
-         self.LEFiltre.textChanged.connect(self.ajouteRadioButtons)
-      else :
-         self.connect(self.RBalpha,SIGNAL("clicked()"),self.afficheAlpha)
-         self.connect(self.RBGroupe,SIGNAL("clicked()"),self.afficheGroupe)
-         self.connect(self.RBOrdre,SIGNAL("clicked()"),self.afficheOrdre)
-         self.connect(self.RBClear,SIGNAL("clicked()"),self.clearFiltre)
-         self.connect(self.RBCasse,SIGNAL("toggled(bool)"),self.ajouteRadioButtons)
-         self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.ajouteRadioButtons)
+      self.RBalpha.clicked.connect(self.afficheAlpha)
+      self.RBGroupe.clicked.connect(self.afficheGroupe)
+      self.RBOrdre.clicked.connect(self.afficheOrdre)
+      self.RBClear.clicked.connect(self.clearFiltre)
+      self.RBCasse.toggled.connect(self.ajouteRadioButtons)
+      self.LEFiltre.returnPressed.connect(self.ajouteRadioButtons)
+      self.LEFiltre.textChanged.connect(self.ajouteRadioButtons)
+
       if self.node.tree.item.get_regles() == () :
          self.RBRegle.close()
          self.labelRegle.close()
       else : 
-        if monEnvQT5 : self.RBRegle.clicked.connect(self.afficheRegle)
-        else         : self.connect(self.RBRegle,SIGNAL("clicked()"),self.afficheRegle)
+        self.RBRegle.clicked.connect(self.afficheRegle)
 
       if self.editor.Ordre_Des_Commandes == None : self.RBOrdre.close()
 
@@ -109,7 +101,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          self.RBOrdre.setChecked(True);  
          self.afficheOrdre()
       if self.editor.closeFrameRechercheCommande == True : self.frameAffichage.close()
-      self.editor.restoreSplitterSizes(2) 
+
+      if self.editor.widgetTree != None : self.editor.restoreSplitterSizes(2) 
+      else: self.editor.restoreSplitterSizes(3)
 
   def afficheRegle(self):
       self.node.tree.AppelleBuildLBRegles()
@@ -132,9 +126,10 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.affiche_ordre=1
       self.ajouteRadioButtons()
 
-  def mouseDoubleClickEvent(self,event):
+  def insereNoeudApresClick(self,event):
       #print self.editor.Classement_Commandes_Ds_Arbre
       #if self.editor.Classement_Commandes_Ds_Arbre!= () : self.chercheOu()
+      #print ('dans insereNoeudApresClick')
       nodeCourrant=self.node.tree.currentItem()
       if nodeCourrant==None: nodeCourrant=self.node.tree.racine
       if self.name != None :
@@ -156,14 +151,14 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            self.node.setSelected(False)
            nouveau.setSelected(True)
            self.node.tree.setCurrentItem(nouveau)
-      event.accept()
+      if event != None : event.accept()
       
          
 
   def creeListeCommande(self,filtre):
       listeGroupes,dictGroupes=self.jdc.get_groups()
       sensibleALaCasse=self.RBCasse.isChecked()
-      if "CACHE" in dictGroupes.keys():
+      if "CACHE" in dictGroupes:
          aExclure=dictGroupes["CACHE"]
       else:
          aExclure=()
@@ -176,6 +171,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       return listeACreer
 
   def ajouteRadioButtons(self):
+      if self.editor.nombreDeBoutonParLigne != 0 :
+         self.ajoutePushButtons()
+         return
       #print 'ds ajouteRadioButtons'
       filtre=str(self.LEFiltre.text())
       if filtre==str("") : filtre=None
@@ -196,21 +194,15 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            self.dicoCmd[tr(cmd)]=cmd
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
+           rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
            self.commandesLayout.addWidget(rbcmd)
-           rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
-           if monEnvQT5:
-              self.buttonGroup.buttonClicked.connect(self.rbClique) 
-           else :
-              self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique) 
+           self.buttonGroup.buttonClicked.connect(self.rbClique) 
       elif  self.affiche_groupe==1 :
          listeGroupes,dictGroupes=self.jdc.get_groups()
          for grp in listeGroupes:
            if grp == "CACHE" : continue
            label=QLabel(self)
-           if monEnvQT5 :
-              text=tr('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+tr(grp)+'</span></p></body></html>')
-           else :
-              text=QString.fromUtf8('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+tr(grp)+'</span></p></body></html>')
+           text=tr('<html><head/><body><p><span style=\" font-weight:600;\">Groupe : '+tr(grp)+'</span></p></body></html>')
            label.setText(text)
            self.listeWidget.append(label)
            aAjouter=1
@@ -225,11 +217,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
               rbcmd=(QRadioButton(tr(cmd)))
               self.buttonGroup.addButton(rbcmd)
               self.commandesLayout.addWidget(rbcmd)
-              rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
-              if monEnvQT5:
-                 self.buttonGroup.buttonClicked.connect(self.rbClique) 
-              else :
-                  self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique)
+              rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
+              self.buttonGroup.buttonClicked.connect(self.rbClique) 
            label2=QLabel(self)
            label2.setText(" ")
            self.listeWidget.append(label2)
@@ -247,19 +236,66 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
-           rbcmd.mouseDoubleClickEvent=self.mouseDoubleClickEvent
-           if monEnvQT5:
-              self.buttonGroup.buttonClicked.connect(self.rbClique) 
-           else :
-              self.connect(self.buttonGroup, SIGNAL("buttonClicked(QAbstractButton*)"),self.rbClique)
+           rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
+           self.buttonGroup.buttonClicked.connect(self.rbClique) 
 
      
+  def ajoutePushButtons(self):
+      if hasattr(self,'buttonGroup') :
+         for b in self.buttonGroup.buttons():
+             self.buttonGroup.removeButton(b)
+             b.setParent(None)
+             b.close()
+      else :
+         self.buttonGroup = QButtonGroup()
+         self.buttonGroup.buttonClicked.connect(self.rbCliqueEtInsere) 
+      for w in self.listeWidget :
+         w.setParent(None)
+         w.close()
+      self.listeWidget=[]
+
+      if not hasattr(self,'maGrilleBouton') :
+         #self.commandesLayout.close()
+         self.maGrilleBouton=QGridLayout()
+         self.maGrilleBouton.setSpacing(20)
+         self.verticalLayout.addLayout(self.maGrilleBouton)
+      col=-1
+      ligne = 0
+      if self.affiche_alpha==1 :
+         liste=self.creeListeCommande(None)
+         for cmd in liste :
+           col=col+1
+           if col == self.editor.nombreDeBoutonParLigne :
+              col=0
+              ligne=ligne+1
+           self.dicoCmd[tr(cmd)]=cmd
+           rbcmd=QPushButton(tr(cmd))
+           rbcmd.setGeometry(QRect(40, 20, 211, 71))
+           rbcmd.setMaximumSize(QSize(250, 81))
+           rbcmd.setStyleSheet("background-color : rgb(168, 227, 142);\n"
+"/*border-style : outset;*/\n"
+"border-radius : 20px;\n"
+"border-width : 30 px;\n"
+"border-color : beige;\n"
+"text-align : left")
+           icon = QIcon()
+           icon.addPixmap(QPixmap("../monCode/images/essaiAster.png"), QIcon.Normal, QIcon.Off)
+           rbcmd.setIcon(icon)
+           rbcmd.setIconSize(QSize(48, 48))
+
+           self.buttonGroup.addButton(rbcmd)
+           self.maGrilleBouton.addWidget(rbcmd,ligne,col)
 
   def clearFiltre(self):
       self.LEFiltre.setText("")
       self.ajouteRadioButtons()
 
+  def rbCliqueEtInsere(self,id):
+      self.rbClique(id)
+      self.insereNoeudApresClick(None)
+
   def rbClique(self,id):
+      #print ('ds rbClique')
       self.name=self.dicoCmd[str(id.text())]
       definitionEtape=getattr(self.jdc.cata[0],self.name)
       commentaire=getattr(definitionEtape,self.jdc.lang)

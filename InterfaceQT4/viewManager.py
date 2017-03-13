@@ -18,18 +18,20 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import os, string
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import object
+except : pass
+
+import os
 from Extensions.i18n import tr
-from determine import monEnvQT5
-if monEnvQT5:
-   from  PyQt5.QtWidgets  import QFileDialog, QMessageBox
-   from  PyQt5.QtCore  import QFileInfo
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+import six
+from  PyQt5.QtWidgets  import QFileDialog, QMessageBox
+from  PyQt5.QtCore     import QFileInfo
 
 DictExtensions= {"MAP" : ".map"}
-class MyTabview:
+class MyTabview(object):
 
    def __init__(self,appliEficas):
        self.appliEficas=appliEficas
@@ -43,17 +45,12 @@ class MyTabview:
 
        self.myQtab = self.appliEficas.myQtab
 
-       if monEnvQT5:
-          self.myQtab.currentChanged.connect(self.indexChanged)
-          self.myQtab.tabCloseRequested.connect(self.closeTab)
-       else :
-          self.myQtab.connect(self.myQtab, SIGNAL('tabCloseRequested(int)'), self.closeTab)
-          if self.appliEficas.multi== True:
-             self.myQtab.connect(self.myQtab,SIGNAL("currentChanged(int)"),self.indexChanged)
+       self.myQtab.currentChanged.connect(self.indexChanged)
+       self.myQtab.tabCloseRequested.connect(self.closeTab)
         
    def indexChanged(self):
        index=self.myQtab.currentIndex()
-       if  self.dict_editors.has_key(index):
+       if index in self.dict_editors:
            editor=self.dict_editors[index]
            self.appliEficas.CONFIGURATION=editor.CONFIGURATION
            self.appliEficas.code=editor.CONFIGURATION.code
@@ -67,7 +64,7 @@ class MyTabview:
                self.appliEficas.definitCode(None,None)
                if self.appliEficas.code == None:return
             
-            if DictExtensions.has_key(self.appliEficas.code) :
+            if self.appliEficas.code in DictExtensions:
                chaine="JDC (*"+DictExtensions[self.appliEficas.code]+");;"
                extensions=tr(chaine+ "All Files (*)")
             else :
@@ -77,10 +74,9 @@ class MyTabview:
                         tr('Ouvrir Fichier'),
                         self.appliEficas.CONFIGURATION.savedir,
                          extensions)
-            if monEnvQT5 : fichier=fichier[0]
-            if not fichier: return result
-       fichier = os.path.abspath(unicode(fichier))
-       ulfile = os.path.abspath(unicode(fichier))
+            fichier=fichier[0]
+       fichier = os.path.abspath(six.text_type(fichier))
+       ulfile = os.path.abspath(six.text_type(fichier))
        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
@@ -193,6 +189,16 @@ class MyTabview:
        if index < 0 : return
        self.dict_editors[index].viewJdcSource()
 
+   def ouvreArbre(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       self.dict_editors[index].ouvreArbre()
+
+   def fermeArbre(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       self.dict_editors[index].fermeArbre()
+
    def handleViewJdcRegles(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return
@@ -219,7 +225,7 @@ class MyTabview:
        index=self.myQtab.currentIndex()
        if index < 0 : return
        editor=self.dict_editors[index]
-       if editor in self.doubles.keys() :
+       if editor in self.doubles :
            QMessageBox.warning(
                      None,
                      tr("Fichier Duplique"),
@@ -227,7 +233,7 @@ class MyTabview:
            return
        ok, newName = editor.saveFile()
        if ok :
-           fileName=os.path.basename(unicode(newName))
+           fileName=os.path.basename(six.text_type(newName))
            self.myQtab.setTabText(index,fileName)
        return ok
 
@@ -242,7 +248,7 @@ class MyTabview:
        index=self.myQtab.currentIndex()
        if index < 0 : return
        editor=self.dict_editors[index]
-       if editor in self.doubles.keys() :
+       if editor in self.doubles :
            QMessageBox.warning(
                      None,
                      tr("Fichier Duplique"),
@@ -250,7 +256,7 @@ class MyTabview:
            return
        ok, newName = editor.sauveLigneFile()
        if ok :
-           fileName=os.path.basename(unicode(newName))
+           fileName=os.path.basename(six.text_type(newName))
            self.myQtab.setTabText(index,fileName)
        return ok
 
@@ -261,9 +267,9 @@ class MyTabview:
        oldName=editor.fichier
        ok,newName = editor.saveFileAs()
        if ok :
-           fileName=os.path.basename(unicode(newName))
+           fileName=os.path.basename(six.text_type(newName))
            self.myQtab.setTabText(index,fileName)
-       if editor in self.doubles.keys():
+       if editor in self.doubles :
           if oldName != newName :
              del self.doubles[editor]
        return ok
@@ -283,26 +289,19 @@ class MyTabview:
        newWin = 0
        double = None
        indexEditor=0
-       for indexEditor in self.dict_editors.keys():
+       for indexEditor in self.dict_editors :
            editor=self.dict_editors[indexEditor]
            if self.samepath(fichier, editor.getFileName()):
-              if monEnvQT5 :
-                msgBox = QMessageBox()
-                msgBox.setWindowTitle(tr("Fichier"))
-                msgBox.setText(tr("Le fichier <b>%s</b> est deja ouvert", str(fichier)))
-                msgBox.addButton(tr("&Duplication"),0)
-                msgBox.addButton(tr("&Abandonner"),1)
-                abort=msgBox.exec_()
-              else :
-                abort = QMessageBox.warning(self.appliEficas,
-                      tr("Fichier"),
-                      tr("Le fichier <b>%s</b> est deja ouvert.",str(fichier)),
-                      tr("&Duplication"),
-                      tr("&Abort"))
+              msgBox = QMessageBox()
+              msgBox.setWindowTitle(tr("Fichier"))
+              msgBox.setText(tr("Le fichier <b>%s</b> est deja ouvert", str(fichier)))
+              msgBox.addButton(tr("&Duplication"),0)
+              msgBox.addButton(tr("&Abandonner"),1)
+              abort=msgBox.exec_()
               if abort: break
               double=editor
        else :
-            from editor import JDCEditor
+            from .editor import JDCEditor
             editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,vm = self,include=include)
 
             if double != None : 
@@ -364,45 +363,29 @@ class MyTabview:
         @return flag indicating successful reset of the dirty flag (boolean)
         """        
         res=1 
-        if (editor.modified) and (editor in self.doubles.keys()) :
-            if monEnvQT5 :
-              msgBox = QMessageBox(None)
-              msgBox.setWindowTitle(tr("Fichier Duplique"))
-              msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
-              msgBox.addButton(texte,0)
-              msgBox.addButton(tr("&Annuler"),1)
-              res=msgBox.exec_()
-            else:
-              res = QMessageBox.warning(
-                     None,
-                     tr("Fichier Duplique"),
-                     tr("Le fichier ne sera pas sauvegarde."),
-                     tr(texte), 
-                     tr("&Annuler"))
+        if (editor.modified) and (editor in self.doubles) :
+            msgBox = QMessageBox(None)
+            msgBox.setWindowTitle(tr("Fichier Duplique"))
+            msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
+            msgBox.addButton(texte,0)
+            msgBox.addButton(tr("&Annuler"),1)
+            res=msgBox.exec_()
             if res == 0 : return 1
             return 2
         if editor.modified:
             fn = editor.getFileName()
             if fn is None: fn = tr('Noname')
-            if monEnvQT5 :
-              msgBox = QMessageBox(None)
-              msgBox.setWindowTitle(tr("Fichier Modifie"))
-              msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
-              msgBox.addButton(tr("&Sauvegarder"),1)
-              msgBox.addButton(tr("&Quitter sans sauvegarder"),0)
-              res=msgBox.exec_()
-            else :
-              res = QMessageBox.warning(self.appliEficas, 
-                tr("Fichier Modifie"),
-                tr("Le fichier %s n a pas ete sauvegarde.",str(fn)),
-                tr("&Sauvegarder"),
-                tr(texte),
-                tr("&Quitter sans sauvegarder") )
-              if res == 2 : res = 1
+            msgBox = QMessageBox(None)
+            msgBox.setWindowTitle(tr("Fichier Modifie"))
+            msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
+            msgBox.addButton(tr("&Sauvegarder"),1)
+            msgBox.addButton(tr("&Quitter sans sauvegarder"),0)
+            res=msgBox.exec_()
+            if res == 2 : res = 1
             if res == 0:
                 (ok, newName) = editor.saveFile()
                 if ok:
-                    fileName=os.path.basename(unicode(newName))
+                    fileName=os.path.basename(six.text_type(newName))
                     index=self.myQtab.currentIndex()
                     self.myQtab.setTabText(index,fileName)
                 return ok

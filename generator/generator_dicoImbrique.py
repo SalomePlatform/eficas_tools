@@ -20,10 +20,15 @@
 """Ce module contient le plugin generateur de fichier au format  Code_Carmel3D pour EFICAS.
 """
 
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 import traceback
-import types,string,re,os
+import types,re,os
 from Extensions.i18n import tr
-from generator_python import PythonGenerator
+from .generator_python import PythonGenerator
 
 def entryPoint():
    """
@@ -99,12 +104,12 @@ class DicoImbriqueGenerator(PythonGenerator):
         if hasattr(obj.etape,'sdnom') and obj.etape.sdnom != None and obj.etape.sdnom != "" : 
            nom = nom+ obj.etape.sdnom
 
-        if not(self.Dico.has_key(nom)) : dicoCourant={}
+        if not(nom in self.Dico) : dicoCourant={}
         else : dicoCourant=self.Dico [nom]
 
         nomFeuille=liste[-1]
-        if dicoCourant.has_key(nomFeuille) or self.DicoDejaLa.has_key(nomFeuille) :
-           if self.DicoDejaLa.has_key(nomFeuille):
+        if nomFeuille in dicoCourant or nomFeuille in self.DicoDejaLa:
+           if nomFeuille in self.DicoDejaLa:
               nomTravail= nomFeuille +'_'+str(self.DicoDejaLa[nomFeuille])
               self.DicoDejaLa[nomFeuille]=self.DicoDejaLa[nomFeuille]+1
               nomFeuille=nomTravail
@@ -118,7 +123,7 @@ class DicoImbriqueGenerator(PythonGenerator):
 
         if hasattr(obj.valeur,'nom'): dicoCourant[nomFeuille]=obj.valeur.nom
         else : 
-           if type(obj.valeur)  in (types.ListType,types.TupleType):
+           if type(obj.valeur)  in (list,tuple):
               try :
 #PNPNPN a remplacer par plus propre
                  if obj.definition.validators.typeDesTuples[0] !='R' :

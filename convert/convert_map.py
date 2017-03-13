@@ -20,8 +20,8 @@
 """
 """
 
-import parseur_python
-from convert_python import *
+from __future__ import absolute_import
+from .convert_python import PythonParser
 
 def entryPoint():
    """

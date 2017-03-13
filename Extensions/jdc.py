@@ -18,12 +18,17 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce module contient la classe mixin qui porte les méthodes
+   Ce module contient la classe mixin qui porte les methodes
    pour traiter les niveaux au sein d'un JDC
 """
-import etape_niveau
+from __future__ import absolute_import
+try : 
+   from builtins import object
+except : pass
 
-class JDC:
+from . import etape_niveau
+
+class JDC(object):
   def __init__(self):
     self.dict_niveaux={}
     self.build_niveaux()

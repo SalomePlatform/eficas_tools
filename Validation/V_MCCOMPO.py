@@ -21,10 +21,17 @@
 
 
 """
-   Ce module contient la classe  de base MCCOMPO qui sert à factoriser
+   Ce module contient la classe  de base MCCOMPO qui sert a factoriser
    les traitements des objets composites de type OBJECT
 """
+from __future__ import print_function
 # Modules Python
+from __future__ import absolute_import
+try :
+  from builtins import str
+  from builtins import object
+except : pass
+
 import os
 import traceback
 
@@ -32,13 +39,12 @@ import traceback
 from Noyau import MAXSIZE, MAXSIZE_MSGCHK
 from Noyau import N_CR
 from Noyau.N_Exception import AsException
-from Noyau.strfunc import ufmt, to_unicode
 
 
-class MCCOMPO:
+class MCCOMPO(object):
 
     """
-        L'attribut mc_liste a été créé par une classe dérivée de la
+        L'attribut mc_liste a ete cree par une classe derivee de la
         classe MCCOMPO du Noyau
     """
 
@@ -46,12 +52,12 @@ class MCCOMPO:
 
     def __init__(self):
         self.state = 'undetermined'
-        # défini dans les classes dérivées
+        # defini dans les classes derivees
         self.txt_nat = ''
 
     def init_modif_up(self):
         """
-           Propage l'état modifié au parent s'il existe et n'est pas l'objet
+           Propage l'etat modifie au parent s'il existe et n'est pas l'objet
            lui-meme
         """
         if self.parent and self.parent != self:
@@ -59,12 +65,11 @@ class MCCOMPO:
 
     def report(self):
         """
-            Génère le rapport de validation de self
+            Genere le rapport de validation de self
         """
         self.cr = self.CR()
         self.cr.debut = self.txt_nat + self.nom
-        #self.cr.fin = u"Fin " + self.txt_nat + self.nom
-        self.cr.fin = u"END " + self.txt_nat + self.nom
+        self.cr.fin = "END " + self.txt_nat + self.nom
         i = 0
         for child in self.mc_liste:
             i += 1
@@ -75,7 +80,7 @@ class MCCOMPO:
         self.state = 'modified'
         try:
             self.isvalid(cr='oui')
-        except AsException, e:
+        except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()
             self.cr.fatal(' '.join((self.txt_nat, self.nom, str(e))))
@@ -83,16 +88,16 @@ class MCCOMPO:
 
     def verif_regles(self):
         """
-           A partir du dictionnaire des mots-clés présents, vérifie si les règles
+           A partir du dictionnaire des mots-cles presents, verifie si les regles
            de self sont valides ou non.
 
-           Retourne une chaine et un booléen :
+           Retourne une chaine et un booleen :
 
-             - texte = la chaine contient le message d'erreur de la (les) règle(s) violée(s) ('' si aucune)
+             - texte = la chaine contient le message d'erreur de la (les) regle(s) violee(s) ('' si aucune)
 
-             - testglob = booléen 1 si toutes les règles OK, 0 sinon
+             - testglob = booleen 1 si toutes les regles OK, 0 sinon
         """
-        # On verifie les regles avec les defauts affectés
+        # On verifie les regles avec les defauts affectes
         dictionnaire = self.dict_mc_presents(restreint='non')
         texte = ['']
         testglob = 1
@@ -100,21 +105,21 @@ class MCCOMPO:
             erreurs, test = r.verif(dictionnaire)
             testglob = testglob * test
             if erreurs != '':
-                texte.append(to_unicode(erreurs))
+                texte.append(str(erreurs))
         texte = os.linesep.join(texte)
         return texte, testglob
 
     def dict_mc_presents(self, restreint='non'):
         """
-            Retourne le dictionnaire {mocle : objet} construit à partir de self.mc_liste
-            Si restreint == 'non' : on ajoute tous les mots-clés simples du catalogue qui ont
-            une valeur par défaut
-            Si restreint == 'oui' : on ne prend que les mots-clés effectivement entrés par
-            l'utilisateur (cas de la vérification des règles)
+            Retourne le dictionnaire {mocle : objet} construit a partir de self.mc_liste
+            Si restreint == 'non' : on ajoute tous les mots-cles simples du catalogue qui ont
+            une valeur par defaut
+            Si restreint == 'oui' : on ne prend que les mots-cles effectivement entres par
+            l'utilisateur (cas de la verification des regles)
         """
         dico = {}
-        # on ajoute les couples {nom mot-clé:objet mot-clé} effectivement
-        # présents
+        # on ajoute les couples {nom mot-cle:objet mot-cle} effectivement
+        # presents
         for v in self.mc_liste:
             if v == None:
                 continue
@@ -123,14 +128,14 @@ class MCCOMPO:
         if restreint == 'oui':
             return dico
         # Si restreint != 'oui',
-        # on ajoute les couples {nom mot-clé:objet mot-clé} des mots-clés simples
-        # possibles pour peu qu'ils aient une valeur par défaut
-        for k, v in self.definition.entites.items():
+        # on ajoute les couples {nom mot-cle:objet mot-cle} des mots-cles simples
+        # possibles pour peu qu'ils aient une valeur par defaut
+        for k, v in list(self.definition.entites.items()):
             if v.label != 'SIMP':
                 continue
             if not v.defaut:
                 continue
-            if not dico.has_key(k):
+            if not k in dico :
                 dico[k] = v(nom=k, val=None, parent=self)
         # on ajoute l'objet detenteur de regles pour des validations plus
         # sophistiquees (a manipuler avec precaution)

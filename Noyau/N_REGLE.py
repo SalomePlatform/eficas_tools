@@ -37,10 +37,15 @@
     r.verif({"INFO":v1,"AFFE":v2)
 """
 
+from __future__ import absolute_import
+try : 
+   from builtins import object
+except :
+   pass
 import types
 
 
-class REGLE:
+class REGLE(object):
 
     def __init__(self, *args):
         """
@@ -71,9 +76,9 @@ class REGLE:
 
            Ceci permet d'avoir un traitement identique pour les listes et les dictionnaires
         """
-        if type(args) == types.DictionaryType:
+        if type(args) == dict:
             return args
-        elif type(args) == types.ListType:
+        elif type(args) == list:
             dico = {}
             for arg in args:
                 dico[arg] = 0

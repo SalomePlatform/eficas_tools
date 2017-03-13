@@ -18,18 +18,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import string
+from __future__ import absolute_import
 
-from determine import monEnvQT5
-if monEnvQT5 :
-  from PyQt5.QtWidgets import QAction
-else :
-  from PyQt4.QtGui import *
-  from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QAction
 
 from Editeur     import Objecttreeitem
-import browser
-import typeNode
+from . import browser
+from . import typeNode
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
@@ -38,14 +33,13 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
     def getPanel( self ):
         """
         """
-        from monWidgetCommentaire import MonWidgetCommentaire
+        from .monWidgetCommentaire import MonWidgetCommentaire
         return MonWidgetCommentaire(self,self.editor,self.item.object)
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
         self.Decommente = QAction(tr("Decommenter"),self.tree)
-        if monEnvQT5 : self.Decommente.triggered(self.Decommenter)
-        else         : self.tree.connect(self.Decommente,SIGNAL("triggered()"),self.Decommenter)
+        self.Decommente.triggered(self.Decommenter)
         self.Decommente.setStatusTip(tr("Decommente la commande "))
 
         if hasattr(self.item,'uncomment'):
@@ -71,15 +65,15 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def GetIconName(self):
       """
-      Retourne le nom de l'icône associée au noeud qui porte self,
-      dépendant de la validité de l'objet
+      Retourne le nom de l'icone associee au noeud qui porte self,
+      dependant de la validite de l'objet
       NB : un commentaire est toujours valide ...
       """
       return "ast-white-percent"
 
     def GetLabelText(self):
         """ Retourne 3 valeurs :
-        - le texte à afficher dans le noeud représentant l'item
+        - le texte a afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
         """
@@ -93,7 +87,7 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     
     def GetText(self):
         texte = self.object.valeur
-        texte = string.split(texte,'\n')[0]
+        texte = texte.split('\n')[0]
         if len(texte) < 25 :
             return texte
         else :
@@ -101,7 +95,7 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def set_valeur(self,valeur):
       """
-      Afecte valeur à l'objet COMMENTAIRE
+      Affecte valeur a l'objet COMMENTAIRE
       """
       self.object.set_valeur(valeur)
       
@@ -114,8 +108,8 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def get_objet_commentarise(self):
        """
-           La méthode get_objet_commentarise() de la classe compocomm.COMMTreeItem
-           surcharge la méthode get_objet_commentarise de la classe Objecttreeitem.ObjectTreeItem
+           La methode get_objet_commentarise() de la classe compocomm.COMMTreeItem
+           surcharge la methode get_objet_commentarise de la classe Objecttreeitem.ObjectTreeItem
            elle a pour but d'empecher l'utilisateur final de commentariser un commentaire.
        """
        raise EficasException( 'Impossible de commentariser un commentaire' )

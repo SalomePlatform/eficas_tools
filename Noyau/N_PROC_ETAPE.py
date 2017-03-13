@@ -24,16 +24,16 @@
 """
 
 # Modules Python
+from __future__ import absolute_import
 import types
 import sys
-import string
 import traceback
 
 # Modules EFICAS
-import N_MCCOMPO
-import N_ETAPE
-from N_Exception import AsException
-import N_utils
+from . import N_MCCOMPO
+from . import N_ETAPE
+from .N_Exception import AsException
+from . import N_utils
 
 
 class PROC_ETAPE(N_ETAPE.ETAPE):
@@ -68,11 +68,11 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
         try:
             if self.parent:
                 if type(self.definition.op_init) == types.FunctionType:
-                    apply(self.definition.op_init, (
+                    self.definition.op_init(*(
                         self, self.parent.g_context))
             else:
                 pass
-        except AsException, e:
+        except AsException as e:
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1], e)
         except EOFError:
@@ -82,7 +82,7 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
                 sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1] + '\n',
-                              string.join(l))
+                              ''.join(l))
 
         self.Execute()
         return None
@@ -110,4 +110,4 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
            Seule une fonction enregistree dans op_init pourrait le faire
         """
         if type(self.definition.op_init) == types.FunctionType:
-            apply(self.definition.op_init, (self, d))
+            self.definition.op_init(*(self, d))

@@ -17,7 +17,12 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import os,traceback,string
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+  from builtins import str
+except : pass
+import os,traceback
 import re
 
 from Noyau.N_CR import CR
@@ -28,7 +33,7 @@ from Extensions.i18n import tr
 
 class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     """
-    Cette classe sert à définir les objets de type Commande commentarisée
+    Cette classe sert a definir les objets de type Commande commentarisee
     """
     nature = "COMMANDE_COMMENTARISEE"
     idracine='_comm'
@@ -56,10 +61,10 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def report(self):
         """
-        Génère l'objet rapport (classe CR)
+        Genere l'objet rapport (classe CR)
         """
         self.cr=CR()
-        if not self.isvalid(): self.cr.warn(tr("Objet commande commentarisé invalide"))
+        if not self.isvalid(): self.cr.warn(tr("Objet commande commentarise invalide"))
         return self.cr
 
     def copy(self):
@@ -82,13 +87,13 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def get_valeur(self) :
         """
-        Retourne la valeur de self, cad le texte de la commande commentarisée
+        Retourne la valeur de self, cad le texte de la commande commentarisee
         """
         return self.valeur
 
     def register(self):
         """
-        Enregistre la commande commenatrisée dans la liste des étapes de son parent lorsque celui-ci
+        Enregistre la commande commenatrisee dans la liste des etapes de son parent lorsque celui-ci
         est un JDC
         """
         self.parent.register(self)
@@ -101,20 +106,20 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def ident(self):
         """
-        Retourne le nom interne associé à self
+        Retourne le nom interne associe a self
         Ce nom n'est jamais vu par l'utilisateur dans EFICAS
         """
         return self.nom
 
     def isrepetable(self):
         """
-        Indique si self est répétable ou non : retourne toujours 1
+        Indique si self est repetable ou non : retourne toujours 1
         """
         return 1        
 
     def get_attribut(self,nom_attribut) :
         """
-        Retourne l'attribut de nom nom_attribut de self (ou hérité)
+        Retourne l'attribut de nom nom_attribut de self (ou herite)
         """
         if hasattr(self,nom_attribut) :
           return getattr(self,nom_attribut)
@@ -136,8 +141,8 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def supprime(self):
         """ 
-        Méthode qui supprime toutes les boucles de références afin que l'objet puisse
-        être correctement détruit par le garbage collector 
+        Methode qui supprime toutes les boucles de references afin que l'objet puisse
+        etre correctement detruit par le garbage collector 
         """
         self.parent = None
         self.etape = None
@@ -169,15 +174,15 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def uncomment(self):
         """
-        Cette méthode a pour but de décommentariser l'objet courant,
+        Cette methode a pour but de decommentariser l'objet courant,
         cad de retourner un tuple contenant :
-          - l'objet CMD associé
-          - le nom de la sdprod éventuellement produite (sinon None)
+          - l'objet CMD associe
+          - le nom de la sdprod eventuellement produite (sinon None)
         """
-        # on récupère le contexte avant la commande commentarisée
+        # on recupere le contexte avant la commande commentarisee
         context_ini = self.jdc.get_contexte_avant(self)
         try:
-            # on essaie de créer un objet JDC...
+            # on essaie de creer un objet JDC...
             CONTEXT.unset_current_step()
             if re.search('Fin Commentaire',self.valeur) :
                self.valeur=self.valeur.replace('Fin Commentaire','')
@@ -193,12 +198,12 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
             #self.jdc.set_context()
             raise AsException(tr("Erreur"),e.__str__())
         if len(J.cr.crfatal)>0 :
-            # des erreurs fatales ont été rencontrées
+            # des erreurs fatales ont ete rencontrees
             #self.jdc.set_context()
             print ('erreurs fatales !!!')
-            raise AsException(tr("Erreurs fatales"),string.join(J.cr.crfatal))
+            raise AsException(tr("Erreurs fatales"),''.join(J.cr.crfatal))
         if not J.etapes :
-            # des erreurs ont été rencontrées
+            # des erreurs ont ete rencontrees
             raise AsException(tr("Impossible reconstruire commande\n"),str(J.cr))
         #self.jdc.set_context()
 
@@ -230,24 +235,24 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def isactif(self):
         """
-        Booléenne qui retourne 1 si self est valide, 0 sinon
+        Booleenne qui retourne 1 si self est valide, 0 sinon
         """
         return self.actif
     
     def verif_condition_bloc(self):
       """
           Evalue les conditions de tous les blocs fils possibles
-          (en fonction du catalogue donc de la définition) de self et
+          (en fonction du catalogue donc de la definition) de self et
           retourne deux listes :
-            - la première contient les noms des blocs à rajouter
-            - la seconde contient les noms des blocs à supprimer
+            - la premiere contient les noms des blocs a rajouter
+            - la seconde contient les noms des blocs a supprimer
       """
       return [],[]
 
     def verif_condition_regles(self,liste_presents):
       """
-          Retourne la liste des mots-clés à rajouter pour satisfaire les règles
-          en fonction de la liste des mots-clés présents
+          Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+          en fonction de la liste des mots-cles presents
       """
       return []
 
@@ -261,14 +266,14 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def verif_existence_sd(self):
       """
-         Vérifie que les structures de données utilisées dans self existent bien dans le contexte
-         avant étape, sinon enlève la référence à ces concepts
-         --> sans objet pour les commandes commentarisées
+         Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
+         avant etape, sinon enleve la reference a ces concepts
+         --> sans objet pour les commandes commentarisees
       """
       pass
         
     def control_sdprods(self,d):
-      """sans objet pour les commandes commentarisées"""
+      """sans objet pour les commandes commentarisees"""
       pass
 
     def close(self):

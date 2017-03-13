@@ -18,27 +18,29 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+except : pass
+
+import types,os
 
 # Modules Eficas
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication, QLabel
-    from PyQt5.QtWidgets  import QSizePolicy,QSpacerItem
-    from PyQt5.QtGui  import QPalette, QFont
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from six.moves import range
+from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication, QLabel
+from PyQt5.QtWidgets  import QSizePolicy,QSpacerItem
+from PyQt5.QtGui  import QPalette, QFont
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 
-from feuille                import Feuille
+from .feuille                import Feuille
 from desWidgetPlusieursInto import Ui_WidgetPlusieursInto 
-from politiquesValidation   import PolitiquePlusieurs
-from qtSaisie               import SaisieValeur
-from gereListe              import GerePlie
-from gereListe              import GereListe
+from .politiquesValidation   import PolitiquePlusieurs
+from .qtSaisie               import SaisieValeur
+from .gereListe              import GerePlie
+from .gereListe              import GereListe
 
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe):
 
@@ -55,8 +57,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
         GereListe.__init__(self)
 
         self.parentQt.commandesLayout.insertWidget(-1,self)
-        if monEnvQT5 : self.CBCheck.stateChanged.connect(self.changeTout)
-        else         : self.connect(self.CBCheck, SIGNAL('stateChanged(int)'),self.changeTout)
+        self.CBCheck.stateChanged.connect(self.changeTout)
 
         self.gereIconePlier()
         self.editor.listeDesListesOuvertes.add(self.node.item)
@@ -155,8 +156,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
            if maListe[i] in self.PourEtreCoche : courant.setChecked(True)
            else                                : courant.setChecked(False)
 
-           if monEnvQT5 : courant.toggled.connect(self.changeValeur)
-           else         : self.connect(courant,SIGNAL("toggled(bool)"),self.changeValeur)
+           courant.toggled.connect(self.changeValeur)
        self.inhibe=False
 
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)

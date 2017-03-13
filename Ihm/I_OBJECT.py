@@ -19,10 +19,10 @@
 #
 """
 """
-import string
+from __future__ import absolute_import
 import Noyau
 
-import CONNECTOR
+from . import CONNECTOR
 
 class OBJECT:
   from Noyau.N_CO import CO
@@ -110,10 +110,10 @@ class OBJECT:
   def get_genealogie_precise(self):
     if self.parent:
        l=self.parent.get_genealogie_precise()
-       l.append(string.strip(self.nom))
+       l.append(self.nom.strip())
        return l
     else:
-       return [string.strip(self.nom)]
+       return [self.nom.strip()]
 
   def get_genealogie(self):
     """ 
@@ -122,10 +122,10 @@ class OBJECT:
     """
     if self.parent:
        l=self.parent.get_genealogie()
-       l.append(string.strip(self.nom))
+       l.append(self.nom.strip())
        return l
     else:
-       return [string.strip(self.nom)]
+       return [self.nom.strip()]
 
   def get_fr(self):
      """
@@ -134,11 +134,13 @@ class OBJECT:
      """
      try:
      #if 1 :
-        return getattr(self.definition,self.jdc.lang)
+        c=getattr(self.definition,self.jdc.lang).decode('latin-1','ignore')
+        return c
      except:
      #else:
         try :
-            return getattr(self.definition,"fr")
+            c=getattr(self.definition,"fr").decode('latin-1','ignore')
+            return c
         except :
             return ''
 

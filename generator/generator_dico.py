@@ -20,10 +20,16 @@
 """Ce module contient le plugin generateur de fichier au format  Code_Carmel3D pour EFICAS.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except : pass
+
 import traceback
-import types,string,re,os
+import types,re,os
 from Extensions.i18n import tr
-from generator_python import PythonGenerator
+from .generator_python import PythonGenerator
 
 def entryPoint():
    """
@@ -75,7 +81,7 @@ class DicoGenerator(PythonGenerator):
        fileDico = fn[:fn.rfind(".")] + '.py'
        f = open( str(fileDico), 'wb')
        f.write( self.texteDico )
-       print (self.texteDico)
+       print((self.texteDico))
        f.close()
 
 #----------------------------------------------------------------------------------------

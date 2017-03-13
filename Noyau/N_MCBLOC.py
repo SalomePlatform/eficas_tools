@@ -24,9 +24,10 @@
     de type ENTITE
 """
 
+from __future__ import absolute_import
 import types
 
-import N_MCCOMPO
+from . import N_MCCOMPO
 
 
 class MCBLOC(N_MCCOMPO.MCCOMPO):
@@ -99,8 +100,8 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
         # et caché ('c')
         # On n'ajoute aucune information sur les blocs. Ils n'ont pas de défaut seulement
         # une condition.
-        for k, v in self.definition.entites.items():
-            if not dico.has_key(k):
+        for k, v in list(self.definition.entites.items()):
+            if not k in dico:
                 if v.label == 'SIMP':
                     # Mot clé simple
                     dico[k] = v.defaut

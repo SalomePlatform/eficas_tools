@@ -17,8 +17,14 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from string import split,strip,lowercase,uppercase
-import re,string,os
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+  from builtins import str
+  from builtins import object
+except :
+  pass
+import re,os
 
 from Extensions.i18n import tr
 #
@@ -27,7 +33,7 @@ __version__="$Name: V7_main $"
 #
 
                 
-class Catalogue_initial:
+class Catalogue_initial(object):
         def __init__(self,fichier):
                 self.liste_commandes=[]
                 self.lignes=[]
@@ -41,7 +47,7 @@ class Catalogue_initial:
                         self.lignes=f.readlines()
                         f.close()
                 except :
-                        print tr("Impossible d'ouvrir le fichier : %s", str(self.fichier))
+                        print(tr("Impossible d'ouvrir le fichier : %s", str(self.fichier)))
 
         def constr_list_txt_cmd(self):
                 pattern = '^# Ordre Catalogue '
@@ -58,7 +64,7 @@ def analyse_catalogue(nom_cata):
 
 
 if __name__ == "__main__" :
-	monCata="/local/noyret/Install_Eficas/EficasQT4/Openturns_StudyOpenTURNS_Cata_Study_V4.py"
+        monCata="/local/noyret/Install_Eficas/EficasQT4/Openturns_StudyOpenTURNS_Cata_Study_V4.py"
         analyse_catalogue(monCata)
 
 

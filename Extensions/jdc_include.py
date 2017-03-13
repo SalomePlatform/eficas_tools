@@ -26,6 +26,7 @@
    que le jeu de commandes inclus est valide et compatible
    avec le contexte avant et apres l'insertion
 """
+from __future__ import absolute_import
 import string
 from Accas import JDC,ASSD,AsException,JDC_CATA
 from Ihm import CONNECTOR
@@ -62,7 +63,7 @@ class JDC_POURSUITE(JDC):
           non utilise
           Ajoute un prefixe s'il est specifie (INCLUDE_MATERIAU)
           Si le nom est deja utilise, leve une exception
-          Met le concept créé dans le contexe global g_context
+          Met le concept cree dans le contexe global g_context
       """
       #print "NommerSdprod",sd,sdnom,restrict
       if self.prefix_include:
@@ -74,15 +75,15 @@ class JDC_POURSUITE(JDC):
         # 
         # nom commencant par __ : il s'agit de concepts qui seront detruits
         # nom commencant par _ : il s'agit de concepts intermediaires qui seront gardes
-        # ATTENTION : il faut traiter différemment les concepts dont le nom
-        # commence par _ mais qui sont des concepts nommés automatiquement par
-        # une éventuelle sous macro.
+        # ATTENTION : il faut traiter differemment les concepts dont le nom
+        # commence par _ mais qui sont des concepts nommes automatiquement par
+        # une eventuelle sous macro.
         if sdnom[1] in string.digits:
           # Ce concept provient probablement d'une sous macro (cas improbable)
           #pas de renommage
           pass
         elif sdnom[1] == '_':
-          #cas d'un concept à ne pas conserver apres execution de la commande
+          #cas d'un concept a ne pas conserver apres execution de la commande
           sdnom=sd.id[2:]
           pass
         else:
@@ -117,7 +118,7 @@ class JDC_POURSUITE(JDC):
       return j_context
 
    def force_contexte(self,contexte):
-      for nom_sd,sd in contexte.items():
+      for nom_sd,sd in list(contexte.items()):
         if not isinstance(sd,ASSD):continue
         autre_sd= self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
                                                        etape=self.etape_include)
@@ -132,16 +133,16 @@ class JDC_POURSUITE(JDC):
 
    def verif_contexte(self,context):
       """
-         Cette methode verifie si le contexte passé en argument (context)
-         peut etre inséré dans le jdc pere de l'include.
+         Cette methode verifie si le contexte passe en argument (context)
+         peut etre insere dans le jdc pere de l'include.
          Elle verifie que les concepts contenus dans ce contexte n'entrent
          pas en conflit avec les concepts produits dans le jdc pere
          apres l'include.
-         Si le contexte ne peut pas etre inséré, la méthode leve une
-         exception sinon elle retourne le contexte inchangé
+         Si le contexte ne peut pas etre insere, la methode leve une
+         exception sinon elle retourne le contexte inchange
       """
       #print "verif_contexte"
-      for nom_sd,sd in context.items():
+      for nom_sd,sd in list(context.items()):
         if not isinstance(sd,ASSD):continue
         autre_sd= self.jdc_pere.get_sd_apres_etape_avec_detruire(nom_sd,sd,
                                                        etape=self.etape_include)
@@ -150,7 +151,7 @@ class JDC_POURSUITE(JDC):
            # Il existe un concept produit par une etape apres self 
            # => impossible d'inserer
            raise Exception("Impossible d'inclure le fichier. Un concept de nom " +
-                           "%s existe déjà dans le jeu de commandes." % nom_sd)
+                           "%s existe deja dans le jeu de commandes." % nom_sd)
 
       return context
 
@@ -172,12 +173,12 @@ class JDC_POURSUITE(JDC):
 
    def init_modif(self):
       """
-         Met l'état de l'étape à : modifié
+         Met l'etat de l'etape a : modifie
          Propage la modification au parent
 
-         Attention : init_modif doit etre appelé avant de réaliser une modification
-         La validité devra etre recalculée apres cette modification
-         mais par un appel à fin_modif pour préserver l'état modified
+         Attention : init_modif doit etre appele avant de realiser une modification
+         La validite devra etre recalculee apres cette modification
+         mais par un appel a fin_modif pour preserver l'etat modified
          de tous les objets entre temps
       """
       #print "jdc_include.init_modif",self,self.etape_include
@@ -187,8 +188,8 @@ class JDC_POURSUITE(JDC):
 
    def fin_modif(self):
       """
-          Méthode appelée une fois qu'une modification a été faite afin de
-          déclencher d'éventuels traitements post-modification
+          Methode appelee une fois qu'une modification a ete faite afin de
+          declencher d'eventuels traitements post-modification
           ex : INCLUDE et POURSUITE
       """
       #print "jdc_include.fin_modif",self,self.etape_include
@@ -239,8 +240,8 @@ class JDC_POURSUITE(JDC):
 
    def get_sd_apres_etape(self,nom_sd,etape,avec='non'):
       """
-           Cette méthode retourne la SD de nom nom_sd qui est éventuellement
-           définie apres etape
+           Cette methode retourne la SD de nom nom_sd qui est eventuellement
+           definie apres etape
            Si avec vaut 'non' exclut etape de la recherche
       """
       if self.etape_include:
@@ -251,9 +252,9 @@ class JDC_POURSUITE(JDC):
    def get_sd_apres_etape_avec_detruire(self,nom_sd,sd,etape,avec='non'):
       """
            On veut savoir ce que devient le concept sd de nom nom_sd apres etape.
-           Il peut etre detruit, remplacé ou conservé
-           Cette méthode retourne la SD sd de nom nom_sd qui est éventuellement
-           définie apres etape en tenant compte des concepts detruits
+           Il peut etre detruit, remplace ou conserve
+           Cette methode retourne la SD sd de nom nom_sd qui est eventuellement
+           definie apres etape en tenant compte des concepts detruits
            Si avec vaut 'non' exclut etape de la recherche
       """
       #print "jdc_include.get_sd_apres_etape_avec_detruire",nom_sd,sd,id(sd)
@@ -268,7 +269,7 @@ class JDC_POURSUITE(JDC):
 
    def delete_concept(self,sd):
       """
-          Fonction : Mettre a jour les etapes du JDC suite à la disparition du
+          Fonction : Mettre a jour les etapes du JDC suite a la disparition du
           concept sd
           Seuls les mots cles simples MCSIMP font un traitement autre
           que de transmettre aux fils
@@ -281,7 +282,7 @@ class JDC_POURSUITE(JDC):
 
    def delete_concept_after_etape(self,etape,sd):
       """
-          Fonction : Mettre à jour les étapes du JDC qui sont après etape suite à
+          Fonction : Mettre a jour les etapes du JDC qui sont apres etape suite a
           la disparition du concept sd
       """
       # Nettoyage des etapes de l'include
@@ -301,7 +302,7 @@ class JDC_POURSUITE(JDC):
 
    def replace_concept_after_etape(self,etape,old_sd,sd):
       """
-          Fonction : Mettre à jour les étapes du JDC qui sont après etape suite au
+          Fonction : Mettre a jour les etapes du JDC qui sont apres etape suite au
           remplacement du concept old_sd par sd
       """
       # Nettoyage des etapes de l'include
@@ -317,10 +318,10 @@ class JDC_POURSUITE(JDC):
 
    def control_context_apres(self,etape):
       """
-         Cette méthode verifie que les etapes apres l'etape etape
+         Cette methode verifie que les etapes apres l'etape etape
          ont bien des concepts produits acceptables (pas de conflit de
          nom principalement)
-         Si des concepts produits ne sont pas acceptables ils sont supprimés.
+         Si des concepts produits ne sont pas acceptables ils sont supprimes.
          Effectue les verifications sur les etapes du jdc mais aussi sur les
          jdc parents s'ils existent.
       """

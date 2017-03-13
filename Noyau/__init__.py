@@ -21,35 +21,31 @@
 
 """
     Ce package fournit les classes de base d'EFICAS.
-    Ces classes permettent d'effectuer quelques opérations basiques :
+    Ces classes permettent d'effectuer quelques operations basiques :
 
-      - la création
-
-      - la vérification des définitions
-
-      - la création d'objets de type OBJECT à partir d'une définition de type ENTITE
+      - la creation
+      - la verification des definitions
+      - la creation d'objets de type OBJECT a partir d'une definition de type ENTITE
 """
 # Avant toutes choses, on met le module context dans le global de l'interpreteur (__builtin__)
-# sous le nom CONTEXT afin d'avoir accès aux fonctions
-# get_current_step, set_current_step et unset_current_step de n'importe où
-import context
-import __builtin__
-__builtin__.CONTEXT = context
+# sous le nom CONTEXT afin d'avoir acces aux fonctions
+# get_current_step, set_current_step et unset_current_step de n'importe ou
 
+from __future__ import absolute_import
+from . import context
 
-def _(msg):
-    """Differs translation."""
-    # 'codex' should install its translation functions later
-    return msg
-__builtin__._ = _
+try :
+   import __builtin__
+   __builtin__.CONTEXT = context
+except : 
+   import builtins
+   builtins.CONTEXT = context
+
 
 # Classes de base
-from N_SIMP import SIMP
-from N_FACT import FACT
+#from .N_SIMP import SIMP
+#from .N_FACT import FACT
 
-# structures de données
-import asojb
-from asojb import AsBase
 
 # Only the first MAXSIZE objects will be checked
 # This is used for the number of MCFACT, the number of MCSIMP and the number of

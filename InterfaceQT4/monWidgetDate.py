@@ -18,13 +18,14 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+import types,os
 
 # Modules Eficas
 from Extensions.i18n import tr
 
-from feuille               import Feuille
-from monWidgetSimpTuple    import MonWidgetSimpTuple 
+from .feuille               import Feuille
+from .monWidgetSimpTuple    import MonWidgetSimpTuple 
 from desWidgetDate       import Ui_WidgetDate 
 
 

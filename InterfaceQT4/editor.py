@@ -17,23 +17,28 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+   from builtins import range
+except : pass
+
 import types,sys,os, re
 import  subprocess
 import traceback
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QSplitter
-    from PyQt5.QtGui import QPalette
-    from PyQt5.QtCore import QProcess, QFileInfo, QTimer, Qt, QDir, QSize
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+import six
+from six.moves import range
+from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QSplitter
+from PyQt5.QtGui import QPalette
+from PyQt5.QtCore import QProcess, QFileInfo, QTimer, Qt, QDir, QSize
 import time
 import pdb
 from datetime import date
 from Extensions.i18n import tr
 
+import traceback
 
 # Modules Eficas
 
@@ -42,10 +47,10 @@ from Editeur        import session
 from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from desBaseWidget  import Ui_baseWidget
-from monViewTexte   import ViewText 
+from InterfaceQT4.monViewTexte   import ViewText
 from monWidgetCreeParam import MonWidgetCreeParam 
-import browser
-import readercata
+from . import browser
+from . import readercata
 
 DictExtensions= {"MAP" : ".map", "TELEMAC" : '.comm'}
 
@@ -78,6 +83,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.first	 = True
         self.QWParent    = QWParent
         self.couleur     = Qt.black
+        self.nodeEnCours=None
          
         if appli != None :
            self.salome =  self.appliEficas.salome
@@ -87,6 +93,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code   = self.appliEficas.CONFIGURATION.code
+        self.initSplitterSizes()
 
         #self.afficheListesPliees=False
         self.afficheListesPliees=True
@@ -98,6 +105,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.closeFrameRechercheCommande=self.appliEficas.CONFIGURATION.closeFrameRechercheCommande
         self.closeArbre=self.appliEficas.CONFIGURATION.closeArbre
         self.affiche=self.appliEficas.CONFIGURATION.affiche
+        self.nombreDeBoutonParLigne = self.appliEficas.CONFIGURATION.nombreDeBoutonParLigne
         #self.taille = self.appliEficas.taille
 
         #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
@@ -105,13 +113,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code in ['MAP',]:
            self.widgetTree.close()
            self.widgetTree=None
-        if self.closeArbre:
-           self.widgetTree.close()
-           self.widgetTree=None
-
-      
+        if self.closeArbre: self.fermeArbre()
 
         self.version_code = session.d_env.cata
+
 
         if not hasattr ( self.appliEficas, 'readercata') or  self.appliEficas.multi==True:
            self.readercata  = readercata.READERCATA( self, self.appliEficas )
@@ -183,10 +188,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
             if jdc==None :
-               try :
+               #try :
                    self.jdc = self.readFile(self.fichier)
-               except :
-                   print ("mauvaise lecture")
+               #except :
+               #    print ("mauvaise lecture")
             else :
                self.jdc=jdc
             if self.jdc is not None and units is not None:
@@ -234,6 +239,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------#  Pour execution avec output et error dans le bash
     def runPSEN(self):
     #-------------------#
+    
       #if self.modified or self.fichier==None  : self.saveFile()
       self.saveFile()
         
@@ -257,7 +263,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
       if not(self.jdc.isvalid()):
          QMessageBox.information( self, tr( "Unvalid JDC"),tr("incorrect keywords will be ignored"))
-      if generator.plugins.has_key('dicoImbrique'):
+      if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
          dico=self.generator.Dico 
@@ -265,7 +271,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          ###to delete
          #fileDico =  r'C:\Logiciels DER\PSEN_V16\Code\ProcessOutputs_Eficas\TreatOutputs\dicoN1.py'
          fileDico =  os.path.join(path1, 'dicoN1.py') #r'C:\Logiciels DER\PSEN_V16\Code\ProcessOutputs_Eficas\TreatOutputs\dicoN1.py'
-         f = open( str(fileDico), 'wb')
+         f = open( str(fileDico), 'w')
          f.write("Dico =" + str(dico) )
          f.close()
          ###
@@ -286,13 +292,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
       sys.path.append(path1)
 
 
-      if generator.plugins.has_key('dicoImbrique'):
+      if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
          dico=self.get_Dico() #generator.Dico
 
 
-         for k in dico['CONTINGENCY_PROCESSING'].keys():
+         for k in dico['CONTINGENCY_PROCESSING']:
              #print (k)
              if k[0:19] == 'Component_List_For_' or k[0:21] =='Contingency_List_For_' :
                 newK=k.replace('___',' ')
@@ -302,7 +308,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
          ###to delete
          fileDico =  os.path.join(path1, 'dicoN1_process.py')
-         f = open( str(fileDico), 'wb')
+         f = open( str(fileDico), 'w')
          f.write("Dico =" + str(dico) )
          f.close()
          ###
@@ -386,7 +392,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         Public slot to read the text from a file.
         @param fn filename to read from (string or QString)
         """
-        fn = unicode(fn)
+        fn = six.text_type(fn)
 
         # ------------------------------------------------------------------------------------
         #                         charge le JDC
@@ -394,7 +400,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         jdcName=os.path.basename(fn)
         # Il faut convertir le contenu du fichier en fonction du format
-        if convert.plugins.has_key( self.appliEficas.format_fichier_in ):
+        if self.appliEficas.format_fichier_in in convert.plugins:
              # Le convertisseur existe on l'utilise
              #appli = self
              p=convert.plugins[self.appliEficas.format_fichier_in]()
@@ -446,7 +452,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------#
 
         # Il faut convertir le contenu du fichier en fonction du format
-        if convert.plugins.has_key(self.format):
+        if self.format in convert.plugins :
             # Le convertisseur existe on l'utilise
             p=convert.plugins[self.format]()
             p.readfile(file)
@@ -488,12 +494,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         f=open(nomFichier,'w')
         f.write(txt)
         f.close()
-        if monEnvQT5 :
-           self.monExe.readyReadStandardOutput.connect( self.readFromStdOut)
-           self.monExe.readyReadStandardError.connect( self.readFromStdErr)
-        else :
-           self.connect(self.monExe, SIGNAL("readyReadStandardOutput()"), self.readFromStdOutQT4 )
-           self.connect(self.monExe, SIGNAL("readyReadStandardError()"), self.readFromStdErrQT4 )
+        self.monExe.readyReadStandardOutput.connect( self.readFromStdOut)
+        self.monExe.readyReadStandardError.connect( self.readFromStdErr)
         exe='sh ' + nomFichier
         self.monExe.start(exe)
         self.monExe.closeWriteChannel()
@@ -531,6 +533,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------#
     def viewJdcSource(self):
     #-----------------------#
+        if self.fichier == None : return
         f=open(self.fichier,'r')
         texteSource=f.read()
         f.close()
@@ -545,7 +548,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------#
     def viewJdcRapport(self):
     #-----------------------#
-        strRapport = unicode( self.jdc.report() )
+        strRapport = six.text_type( self.jdc.report() )
         # on ajoute les regles
         
         self._viewText(strRapport, "JDC_RAPPORT")
@@ -626,7 +629,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #---------------------#
     def handleRechercher(self):
     #---------------------#
-      from monRecherche import DRecherche
+      from .monRecherche import DRecherche
       monRechercheDialg=DRecherche(parent=self,fl=0)
       monRechercheDialg.show()
 
@@ -634,7 +637,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #--------------------------------#
     def handleRechercherDsCatalogue(self):
     #-----------------------------#
-      from monRechercheCatalogue import DRechercheCatalogue
+      from .monRechercheCatalogue import DRechercheCatalogue
       monRechercheDialg=DRechercheCatalogue(self.QWParent,self)
       monRechercheDialg.show()
 
@@ -872,7 +875,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         @return flag indicating success
         """
 
-        fn = unicode(fn)
+        fn = six.text_type(fn)
        
         if txt == None :
             txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
@@ -887,7 +890,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             txt=txt+checksum
         if self.code=="TELEMAC" : return 1
         try:
-            f = open(fn, 'wb')
+            f = open(fn, 'w')
             f.write(txt)
             f.close()
             return 1
@@ -902,8 +905,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------------------------------------------#
     def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie"):
     #-----------------------------------------------------------#
-      if self.code == "MAP" and not(generator.plugins.has_key(format)): format = "MAP"
-      if generator.plugins.has_key(format):
+      if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
+      if format in generator.plugins:
          
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
@@ -912,6 +915,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
             if pourRun : jdc_formate=self.generator.textePourRun
          except ValueError as e:
             QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
+            return
+
          if not self.generator.cr.estvide():
             self.affiche_infos(tr("Erreur a la generation"),Qt.red)
             QMessageBox.critical( self, tr("Erreur a la generation"),tr("EFICAS ne sait pas convertir ce JDC"))
@@ -927,7 +932,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #----------------------#
     def get_Dico(self):
     #---------------------#
-      if generator.plugins.has_key('dicoImbrique'):
+      if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
          dico=self.generator.Dico 
@@ -943,13 +948,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #------------#
       fonction="run"+self.code
       #print fonction
-      if fonction in JDCEditor.__dict__.keys(): apply(JDCEditor.__dict__[fonction],(self,))
+      if fonction in JDCEditor.__dict__: JDCEditor.__dict__[fonction],(self,)
 
     #------------#
     def saveRun(self):
     #------------#
       fonction="saveRun"+self.code
-      if fonction in JDCEditor.__dict__.keys(): apply(JDCEditor.__dict__[fonction],(self,))
+      if fonction in JDCEditor.__dict__: JDCEditor.__dict__[fonction],(self,)
 
     #---------------#
     def runMAP(self):
@@ -989,7 +994,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           #except :
           #   pass
       except Exception as e:
-          print (traceback.print_exc())
+          print((traceback.print_exc()))
 
     #-------------------#
     def runZCRACKS(self):
@@ -1010,7 +1015,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           textePython=(commande + self.fichierZcracksInput)
           self._viewTextExecute( textePython,"run_zcracks",".sh")
       except Exception as e:
-          print (traceback.print_exc())
+          print((traceback.print_exc()))
 
     #-------------------#
     def runCARMELCND(self):
@@ -1041,12 +1046,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
           commande="runSession pilotyacsCS.py"
           os.system(commande)
       except Exception as e:
-          print (traceback.print_exc())
+          print((traceback.print_exc()))
 
     #-----------------------------------------------------#
     def determineNomFichier(self,path,extension):
     #-----------------------------------------------------#
-      if DictExtensions.has_key(self.appli.code) :
+      if self.appli.code in DictExtensions:
          chaine1="JDC (*"+DictExtensions[self.appli.code]+");;"
          extensions= tr(chaine1+ "All Files (*)")
       else :
@@ -1060,26 +1065,19 @@ class JDCEditor(Ui_baseWidget,QWidget):
              extensions,None,
              QFileDialog.DontConfirmOverwrite)
       if fn == None : return (0, None)
-      if monEnvQT5 :  fn=fn[0]
+      fn=fn[0]
       if fn=='': return (0, None)
 
       ext = QFileInfo(fn).suffix()
       if ext == '': fn+=extension
 
       if QFileInfo(fn).exists():
-           if monEnvQT5 :
-             msgBox = QMessageBox(self)
-             msgBox.setWindowTitle(tr("Sauvegarde du Fichier"))
-             msgBox.setText(tr("Le fichier <b>%s</b> existe deja.", unicode(fn)))
-             msgBox.addButton(tr("&Ecraser"),0)
-             msgBox.addButton(tr("&Abandonner"),1)
-             abort=msgBox.exec_()
-           else :
-             abort = QMessageBox.warning(self,
-                   tr("Sauvegarde du Fichier"),
-                   tr("Le fichier <b>%s</b> existe deja.",str(fn)),
-                   tr("&Ecraser"),
-                   tr("&Abandonner"))
+           msgBox = QMessageBox(self)
+           msgBox.setWindowTitle(tr("Sauvegarde du Fichier"))
+           msgBox.setText(tr("Le fichier <b>%s</b> existe deja.", six.text_type(fn)))
+           msgBox.addButton(tr("&Ecraser"),0)
+           msgBox.addButton(tr("&Abandonner"),1)
+           abort=msgBox.exec_()
            if abort == 1 :  return (0, "")
       return (1,fn)
 
@@ -1120,19 +1118,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
                for b in c.children():
                   if isinstance(b,QPushButton):
                      avant=b.text()
-                     if (not monEnvQT5) and avant.toLatin1()=="&Open": b.setText("Save")
-                     if monEnvQT5 and avant=="&Open": b.setText("Save")
-        if monEnvQT5 :
-           mesFiltres= "input Map (*.input);;All Files (*)"
-        else :
-           mesFiltres=QStringList()
-           mesFiltres << "input Map (*.input)" << "All Files (*)"
+                     if avant=="&Open": b.setText("Save")
+        mesFiltres= "input Map (*.input);;All Files (*)"
         monDialog.setNameFilters(mesFiltres)
         if monNomFichier!="" : monDialog.selectFile(monNomFichier)
         BOk=monDialog.exec_()
         if BOk==0: return
-        if monEnvQT5 : fn=str(monDialog.selectedFiles()[0])
-        else : fn=str(monDialog.selectedFiles()[0].toLatin1())
+        fn=str(monDialog.selectedFiles()[0])
         if fn == "" or fn == None : return
         if not fn.endswith(".input"):
             fn += ".input"
@@ -1166,7 +1158,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------------------------#
         dicoCourant={}
         format =  self.appliEficas.format_fichier
-        if generator.plugins.has_key(format):
+        if format in generator.plugins:
            # Le generateur existe on l'utilise
            self.generator=generator.plugins[format]()
            jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
@@ -1202,9 +1194,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
           if fn == None : return (0, None)
           if fn== '' : return (0, None)
 
-          ulfile = os.path.abspath(unicode(fn))
+          ulfile = os.path.abspath(six.text_type(fn))
           self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
-          fn = unicode(QDir.toNativeSeparators(fn))
+          fn = six.text_type(QDir.toNativeSeparators(fn))
 
         self.fichier = os.path.splitext(fn)[0]+extension
 
@@ -1233,7 +1225,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
 
-        if DictExtensions.has_key(self.appli.code) :
+        if self.appli.code in DictExtensions :
            extension=DictExtensions[self.appli.code]
         else :
            extension='.comm'
@@ -1247,9 +1239,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
           if fn == None : return (0, None)
           if fn== '' : return (0, None)
 
-          ulfile = os.path.abspath(unicode(fn))
+          ulfile = os.path.abspath(six.text_type(fn))
           self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
-          fn = unicode(QDir.toNativeSeparators(fn))
+          fn = six.text_type(QDir.toNativeSeparators(fn))
           newName = fn
 
 
@@ -1330,9 +1322,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
         # ce retour est impose par le get_file d'I_JDC
         if fn== '' : return None," "
         if not fn : return (0, " ")
-        if monEnvQT5 :  fn=fn[0]
+        fn=fn[0]
 
-        ulfile = os.path.abspath(unicode(fn))
+        ulfile = os.path.abspath(six.text_type(fn))
         self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
 
         # On utilise le convertisseur defini par format_fichier
@@ -1567,7 +1559,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
                         caption='Fichier Med',
                         filter=extensions)
-      if monEnvQT5 : QSfichier=QSfichier[0]
+      QSfichier=QSfichier[0]
       self.fichierMED=QSfichier
       from acquiertGroupes import getGroupes
       erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
@@ -1614,37 +1606,40 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------------------------
     def initSplitterSizes(self, nbWidget=3):
     #-----------------------------------------
-       #print "je passe ds initSplitterSizes"
-       if nbWidget==3 :
-          if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes=[1,1550,150]
-          elif self.code in [ 'MAP']            : self.splitterSizes=[700,300]
-          else                                  : self.splitterSizes=[150,800,500]
-          self.oldSizeWidgetOptionnel = 30
-       if nbWidget==2 :
-          if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes=[5,1500]
-          else                                  : self.splitterSizes=[300,1000]
-          self.oldSizeWidgetOptionnel = 30
-       self.splitter.setSizes(self.splitterSizes)
+       #print ("je passe ds initSplitterSizes", nbWidget)
+
+       if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes3=[1,1550,150]
+       elif self.code in [ 'MAP']            : self.splitterSizes3=[700,300]
+       else                                  : self.splitterSizes3=[150,1000,300]
+
+       if   self.code in [ 'Adao', 'ADAO', ] : self.splitterSizes2=[5,1500]
+       else                                  : self.splitterSizes2=[300,1000]
+
 
 
     #-----------------------------------------
     def restoreSplitterSizes(self,nbWidget=3):
     #----------------------------------------
-      #self.inhibeSplitter = 1
       
-      #print 'ds restoreSplitterSizes'
-      #print self.splitterSizes
+      #traceback.print_stack()
+      #print ("je passe ds restoreSplitterSizes")
       if not(hasattr(self,'splitter')) : return
-      if nbWidget==2 and len(self.splitterSizes) == 3 :
-         self.splitterSizes[1]+=self.splitterSizes[2]
-      newSizes=self.splitterSizes[:nbWidget]
+      if nbWidget==2  : newSizes=self.splitterSizes2
+      if nbWidget==3  : newSizes=self.splitterSizes3
+      #self.inhibeSplitter = 1
       self.splitter.setSizes(newSizes)
+      #self.inhibeSplitter = 0
       QApplication.processEvents()
       # seule la fentetre du milieu est necessaire
       self.splitter.widget(1).resizeEvent=self.saveSplitterSizes
    
+    #-----------------------------------------
     def saveSplitterSizes(self,event):
-      self.splitterSizes= self.splitter.sizes()
+    #-----------------------------------------
+      #print ("je passe ds saveSplitterSizes")
+      if self.inhibeSplitter : return
+      if self.widgetOptionnel == None  : self.splitterSizes2 = self.splitter.sizes()[0:2]
+      else                             : self.splitterSizes3 = self.splitter.sizes()[0:3]
 
     #------------------------
     def fermeOptionnel(self):
@@ -1652,26 +1647,39 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if self.widgetOptionnel == None : return
 
       self.inhibeSplitter=1
-      self.splitterSizes[1] = self.splitterSizes[1] + self.splitterSizes[2]
-      if self.splitterSizes[2]!=0 : self.oldSizeWidgetOptionnel = self.splitterSizes[2]
-      self.splitterSizes[2]=0
-
       self.widgetOptionnel.setParent(None)
       self.widgetOptionnel.close()
       self.widgetOptionnel.deleteLater()
       self.widgetOptionnel=None
       self.inhibeSplitter=0
       self.restoreSplitterSizes(2)
-      
+
     #------------------------
     def ajoutOptionnel(self):
     #------------------------
-      if len(self.splitterSizes) == 2 : self.splitterSizes.append(self.oldSizeWidgetOptionnel)
-      else : self.splitterSizes[2] = self.oldSizeWidgetOptionnel # ceinture pour les close bizarres
+      #if len(self.splitterSizes) == 2 : self.splitterSizes.append(self.oldSizeWidgetOptionnel)
+      #else : self.splitterSizes[2] = self.oldSizeWidgetOptionnel # ceinture pour les close bizarres
       #self.splitterSizes[1] = self.splitterSizes[1] - self.splitterSizes[2]
       
       self.restoreSplitterSizes(3)
 
+
+    #------------------------
+    def fermeArbre(self):
+    #------------------------
+       #print (self.widgetTree)
+       self.oldWidgetTree=self.widgetTree
+       self.widgetTree.hide()
+       #self.widgetTree=None
+
+    #------------------------
+    def ouvreArbre(self):
+    #------------------------
+       #print ('je passe la')
+       #print (self.widgetTree)
+       #self.widgetTree=self.oldWidgetTree
+       self.widgetTree.show()
+       #self.restoreSplitterSizes(3)
 
     #-----------------------------
     def getTreeIndex(self,noeud):

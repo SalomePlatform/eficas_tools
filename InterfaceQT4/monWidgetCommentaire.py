@@ -19,20 +19,19 @@
 # Modules Python
 # Modules Eficas
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QWidget
-    from PyQt5.QtCore    import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore    import Qt
 
 from desWidgetCommentaire import Ui_WidgetCommentaire
-from gereIcones import FacultatifOuOptionnel
+from .gereIcones import FacultatifOuOptionnel
 from Extensions.i18n import tr
 import Accas 
 import os
-import string
 
     
 # Import des panels
@@ -52,27 +51,15 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       self.remplitTexte()
       self.monOptionnel=None
 
-      if monEnvQT5 :
-         self.commentaireTE.textChanged.connect(self.TexteCommentaireEntre)
-         #if self.editor.code in ['MAP','CARMELCND','CF'] : self.bCatalogue.close()
-         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-         else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
-         #if self.editor.code in ['Adao','MAP','CF'] :
-         if self.editor.code in ['Adao','MAP','ADAO'] :
-               self.bAvant.close()
-               self.bApres.close()
-         else :
-               self.bAvant.clicked.connect(self.afficheAvant)
-               self.bApres.clicked.connect(self.afficheApres)
+      self.commentaireTE.textChanged.connect(self.TexteCommentaireEntre)
+      if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+      else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
+      if self.editor.code in ['Adao','MAP','ADAO'] :
+           self.bAvant.close()
+           self.bApres.close()
       else :
-         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-         else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-         if self.editor.code in ['Adao','MAP','ADAO'] :
-               self.bAvant.close()
-               self.bApres.close()
-         else :
-               self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-               self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
+           self.bAvant.clicked.connect(self.afficheAvant)
+           self.bApres.clicked.connect(self.afficheApres)
       self.editor.fermeOptionnel()
 
 

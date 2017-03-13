@@ -18,27 +18,30 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,sys
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+   from builtins import object
+except : pass
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtGui     import QIcon 
-    from PyQt5.QtWidgets import QApplication
-    from PyQt5.QtCore    import QTimer, QSize, Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+import types,os,sys
+
+from six.moves import range
+from PyQt5.QtGui     import QIcon 
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore    import QTimer, QSize, Qt
 
 # Modules Eficas
 from Extensions.i18n import tr
 
-from feuille                import Feuille
+from .feuille                import Feuille
 from desWidgetPlusieursBase import Ui_WidgetPlusieursBase 
-from politiquesValidation   import PolitiquePlusieurs
-from qtSaisie               import SaisieValeur
-from gereListe              import GereListe
-from gereListe              import GerePlie
-from gereListe              import LECustom
+from .politiquesValidation   import PolitiquePlusieurs
+from .qtSaisie               import SaisieValeur
+from .gereListe              import GereListe
+from .gereListe              import GerePlie
+from .gereListe              import LECustom
 
 dicoLongueur={2:95,3:125,4:154,5:183,6:210}
 hauteurMax=253
@@ -55,10 +58,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
         self.gereIconePlier()
-        if monEnvQT5:
-           self.BSelectFichier.clicked.connect(self.selectInFile)
-        else :
-           self.connect(self.BSelectFichier,SIGNAL("clicked()"), self.selectInFile)
+        self.BSelectFichier.clicked.connect(self.selectInFile)
 
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
@@ -96,7 +96,8 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
        # construction du min de valeur a entrer
        if self.monSimpDef.max == "**" : aConstruire=7
        else                           : aConstruire=self.monSimpDef.max
-       for i in range(1,aConstruire):
+       #for i in range(1,aConstruire):
+       for i in range(1,7):
            self.ajoutLineEdit()
        QApplication.processEvents()
        self.scrollArea.ensureWidgetVisible(self.lineEditVal1)
@@ -130,10 +131,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       if self.indexDernierLabel % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
       else :	                           nouveauLE.setStyleSheet("background:rgb(235,235,235)")
       nouveauLE.setFrame(False)
-      if monEnvQT5:
-          nouveauLE.returnPressed.connect(self.changeValeur)
-      else :
-          self.connect(nouveauLE,SIGNAL("returnPressed()"),self.changeValeur)
+      nouveauLE.returnPressed.connect(self.changeValeur)
       setattr(self,nomLineEdit,nouveauLE)
       self.listeAffichageWidget.append(nouveauLE)
       self.etablitOrdre()

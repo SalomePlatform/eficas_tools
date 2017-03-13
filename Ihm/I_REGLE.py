@@ -19,22 +19,22 @@
 #
 """
 """
-import string
+from __future__ import absolute_import
 
 class REGLE:
 
   def gettext(self):
     text = self.__class__.__name__+ ' :\n'
     for mc in self.mcs :
-      text = text + '\t' + string.strip(mc) + '\n'
+      text = text + '\t' + mc.strip() + '\n'
     return text
 
   def purge_liste(self,liste_a_purger,liste_mc_presents):
     """
-         Cette méthode doit retirer de la liste liste_a_purger
-         les éléments qui ne doivent plus apparaitre en fonction du contexte
+         Cette methode doit retirer de la liste liste_a_purger
+         les elements qui ne doivent plus apparaitre en fonction du contexte
     """
-    # Dans le cas général on ne touche pas à la liste
+    # Dans le cas general on ne touche pas a la liste
     return liste_a_purger
 
   def has_operande(self,nom):

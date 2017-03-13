@@ -21,7 +21,9 @@
 """
 
 """
-from N_ASSD import ASSD
+from __future__ import absolute_import
+from .N_ASSD import ASSD
+import six
 
 
 class GEOM(ASSD):
@@ -56,7 +58,7 @@ class GEOM(ASSD):
         return self.nom
 
     def __convert__(cls, valeur):
-        if isinstance(valeur, (str, unicode)) and len(valeur.strip()) <= 8:
+        if isinstance(valeur, (str, six.text_type)) and len(valeur.strip()) <= 8:
             return valeur.strip()
         raise ValueError(
             _(u'On attend une chaine de caractères (de longueur <= 8).'))

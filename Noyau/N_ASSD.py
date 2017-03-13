@@ -21,9 +21,12 @@
 
 """
 
-from N_utils import import_object
-from N_info import message, SUPERV
 
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+  from builtins import object
+except : pass
 
 class ASSD(object):
 
@@ -35,8 +38,8 @@ class ASSD(object):
 
     def __init__(self, etape=None, sd=None, reg='oui'):
         """
-          reg est un paramètre qui vaut oui ou non :
-            - si oui (défaut) : on enregistre la SD auprès du JDC
+          reg est un parametre qui vaut oui ou non :
+            - si oui (défaut) : on enregistre la SD aupres du JDC
             - si non : on ne l'enregistre pas
         """
         self.etape = etape
@@ -93,10 +96,7 @@ class ASSD(object):
     sdj = property(_get_sdj, None, _del_sdj)
 
     def __getitem__(self, key):
-        from strfunc import convert
-        text_error = convert(_(u"ASSD.__getitem__ est déprécié car la référence à "
-                               u"l'objet ETAPE parent sera supprimée."))
-        # raise NotImplementedError(text_error)
+        text_error = "ASSD.__getitem__ est déprécié car la référence a l'objet ETAPE parent sera supprimée."
         from warnings import warn
         warn(text_error, DeprecationWarning, stacklevel=2)
         return self.etape[key]
@@ -151,10 +151,6 @@ class ASSD(object):
         # 'del self.sdj' appellerait la méthode '_get_sdj()'...
         self._del_sdj()
 
-    def __del__(self):
-        # message.debug(SUPERV, "__del__ ASSD %s <%s>", getattr(self, 'nom',
-        # 'unknown'), self)
-        pass
 
     def accept(self, visitor):
         """
@@ -167,15 +163,15 @@ class ASSD(object):
         """
             Cette methode permet de pickler les objets ASSD
             Ceci est possible car on coupe les liens avec les objets
-            parent, etape et jdc qui conduiraient à pickler de nombreux
+            parent, etape et jdc qui conduiraient a pickler de nombreux
             objets inutiles ou non picklables.
-            En sortie, l'objet n'est plus tout à fait le même !
+            En sortie, l'objet n'est plus tout a fait le même !
         """
         d = self.__dict__.copy()
         for key in ('parent', 'etape', 'jdc'):
-            if d.has_key(key):
+            if key in d :
                 del d[key]
-        for key in d.keys():
+        for key in list(d.keys()):
             if key in ('_as_co', ):
                 continue
             if key[0] == '_':
@@ -186,23 +182,23 @@ class ASSD(object):
         """Dit si on peut acceder aux "valeurs" (jeveux) de l'ASSD.
         """
         if CONTEXT.debug:
-            print '| accessible ?', self.nom
+            print(('| accessible ?', self.nom))
         is_accessible = CONTEXT.get_current_step().sd_accessible()
         if CONTEXT.debug:
-            print '  `- is_accessible =', repr(is_accessible)
+            print(('  `- is_accessible =', repr(is_accessible)))
         return is_accessible
 
     def filter_context(self, context):
         """Filtre le contexte fourni pour retirer (en gros) ce qui vient du catalogue."""
-        from N_ENTITE import ENTITE
+        from .N_ENTITE import ENTITE
         import types
         ctxt = {}
-        for key, value in context.items():
-            if type(value) is types.ClassType:
+        for key, value in list(context.items()):
+            if type(value) is type:
                 continue
             if type(value) is types.ModuleType and value.__name__.startswith('Accas'):
                 continue
-            if issubclass(type(value), types.TypeType):
+            if issubclass(type(value), type):
                 continue
             if isinstance(value, ENTITE):
                 continue

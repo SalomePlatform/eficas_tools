@@ -18,11 +18,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
 from Ihm import I_ASSD
 from Ihm import I_LASSD
 from Ihm import I_FONCTION
 from Noyau import N_ASSD 
-#from Noyau import N_LASSD 
 from Noyau import N_GEOM 
 from Noyau import N_FONCTION 
 from Noyau import N_CO 

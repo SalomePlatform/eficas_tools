@@ -20,6 +20,7 @@ This class supports the internationalization mechanism provided in
 the ``i18n`` module.
 """
 
+from __future__ import absolute_import
 class EficasException(Exception):
     """
     ``EficasException`` class, which embeds the translation mechanism.

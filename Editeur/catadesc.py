@@ -17,7 +17,11 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-class CatalogDescription:
+try :
+   from builtins import object
+except : pass
+
+class CatalogDescription(object):
     
     def __init__(self, identifier, cata_file_path, file_format = "python",
                  default = False, code = None,ss_code=None, user_name = None,

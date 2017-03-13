@@ -17,20 +17,16 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 import os
 import prefs
 name='prefs_'+prefs.code
 prefsCode=__import__(name)
-import basestyle
 from basestyle import STYLE,style
 
 inistylefile=os.path.join(prefsCode.repIni,"style.py")
 if os.path.isfile(inistylefile):
-   execfile(inistylefile)
-
-userstylefile=os.path.expanduser("~/Eficas_install/style.py")
-if os.path.isfile(userstylefile):
-   execfile(userstylefile)
+   exec(compile(open(inistylefile).read(), inistylefile, 'exec'))
 
 import fontes
 for attr in dir(style):

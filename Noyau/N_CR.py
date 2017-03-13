@@ -21,14 +21,19 @@
 """ Ce module contient la classe compte-rendu de validation
 """
 
-import string
-from strfunc import convert, ufmt
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import object
+except :
+   pass
+import six
 
 
-class CR:
+class CR(object):
 
     """
-         Classe servant à la construction et à l'affichage des objets Comptes-rendus
+         Classe servant a la construction et a l'affichage des objets Comptes-rendus
     """
 
     def __init__(self, verbeux='non', debut='', fin='', dec='   '):
@@ -50,23 +55,24 @@ class CR:
         self.subcr = []
 
     def ok(self, comment):
-        """ Ajoute un commentaire OK à la liste crok"""
+        """ Ajoute un commentaire OK a la liste crok"""
         self.crok.append(comment)
 
     def warn(self, comment):
-        """ Ajoute un commentaire Warning à la liste crwarn"""
+        """ Ajoute un commentaire Warning a la liste crwarn"""
         self.crwarn.append(comment)
 
     def fatal(self, comment, *args):
-        """Ajoute un commentaire Erreur Fatale à la liste crfatal à formater"""
-        self.crfatal.append(ufmt(comment, *args))
+        """Ajoute un commentaire Erreur Fatale a la liste crfatal a formater"""
+        self.crfatal.append(comment)
+        self.crfatal.append(str( *args))
 
     def exception(self, comment):
-        """ Ajoute un commentaire Exception à la liste crexception"""
+        """ Ajoute un commentaire Exception a la liste crexception"""
         self.crexception.append(comment)
 
     def add(self, cr):
-        """ Ajoute un objet CR à la liste subcr :il s'agit de l'objet CR d'un fils de self """
+        """ Ajoute un objet CR a la liste subcr :il s'agit de l'objet CR d'un fils de self """
         self.subcr.append(cr)
 
     def estvide(self):
@@ -120,8 +126,9 @@ class CR:
         """
           Insère en tete de chaque ligne du texte s la chaine self.dec
         """
-        l = string.split(s, '\n')
-        return self.dec + string.join(l, '\n' + self.dec)[:-3]
+        l = s.split( '\n')
+        a='\n' + self.dec
+        return self.dec + a.join(l)[:-3]
 
     def __unicode__(self):
         """
@@ -129,16 +136,16 @@ class CR:
         """
         s = ''
         self.beautifie_messages()
-        s = s + string.join(self.crok_belle, '')
-        s = s + string.join(self.crwarn_belle, '')
-        s = s + string.join(self.crfatal_belle, '')
-        s = s + string.join(self.crexception_belle, '')
+        s = s + ''.join(self.crok_belle)
+        s = s + ''.join(self.crwarn_belle)
+        s = s + ''.join(self.crfatal_belle)
+        s = s + ''.join(self.crexception_belle)
         for subcr in self.subcr:
             if self.verbeux == 'oui':
-                s = s + unicode(subcr) + '\n'
+                s = s + six.text_type(subcr) + '\n'
             else:
                 if not subcr.estvide():
-                    s = s + unicode(subcr)
+                    s = s + six.text_type(subcr)
         if s != '':
             s = self.debut + '\n' + self.indent(s) + self.fin + '\n'
         else:
@@ -147,8 +154,7 @@ class CR:
 
     def __str__(self):
         """Return the report representation"""
-        # convert into the output encoding
-        txt = convert(self.__unicode__())
+        txt = self.__unicode__()
         return txt
 
     def report(self, decalage=2):
@@ -204,7 +210,7 @@ separateurs = (' ', ',', '/')
 
 
 def split(ligne, cesure):
-    ligne = string.rstrip(ligne)
+    ligne = ligne.rstrip()
     if len(ligne) <= cesure:
         return ligne
     else:
@@ -223,10 +229,11 @@ def split(ligne, cesure):
 
 
 def justify_text(texte='', cesure=50):
-    texte = string.strip(texte)
-    liste_lignes = string.split(texte, '\n')
+    if not isinstance (texte,str) :  texte = ''.join(texte)
+    texte = texte.strip()
+    liste_lignes = texte.split('\n')
     l = [split(l, cesure) for l in liste_lignes]
-    texte_justifie = string.join(l, '\n')
+    texte_justifie = '\n'.join(l)
     return texte_justifie
 
 
@@ -236,15 +243,17 @@ def encadre_message(texte, motif):
        d'éléments 'motif'
     """
     texte = justify_text(texte, cesure=80)
-    lignes = string.split(texte, '\n')
+    if texte.strip() == "" : return ''
+    lignes = texte.split( '\n')
     longueur = 0
     for ligne in lignes:
-        ligne = string.rstrip(ligne)
+        ligne = ligne.rstrip()
         if len(ligne) > longueur:
             longueur = len(ligne)
     longueur = longueur + 4
     txt = motif * longueur + '\n'
     for ligne in lignes:
+        if ligne == '' : continue
         txt = txt + motif + ' ' + ligne + ' ' * \
             (longueur - len(motif + ligne) - 2) + motif + '\n'
     txt = txt + motif * longueur + '\n'

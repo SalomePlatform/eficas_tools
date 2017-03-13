@@ -59,7 +59,16 @@ QMenuBar {
     <string notr="true">QComboBox{combobox-popup:0;}</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -121,7 +130,7 @@ QMenuBar {
      <x>0</x>
      <y>0</y>
      <width>1676</width>
-     <height>24</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichier">
@@ -164,6 +173,9 @@ QMenuBar {
     <addaction name="separator"/>
     <addaction name="actionCommentaire"/>
     <addaction name="actionParametres"/>
+    <addaction name="separator"/>
+    <addaction name="actionCacher_l_Arbre"/>
+    <addaction name="actionAfficher_l_Arbre"/>
    </widget>
    <widget class="QMenu" name="menuAide">
     <property name="title">
@@ -209,8 +221,7 @@ QMenuBar {
   <action name="action_Nouveau">
    <property name="icon">
     <iconset theme="document-new">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Nouveau</string>
@@ -235,8 +246,7 @@ QMenuBar {
   <action name="actionOuvrir">
    <property name="icon">
     <iconset theme="document-open">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Ouvrir</string>
@@ -248,8 +258,7 @@ QMenuBar {
   <action name="actionEnregistrer">
    <property name="icon">
     <iconset theme="document-save">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Enregistrer</string>
@@ -266,8 +275,7 @@ QMenuBar {
   <action name="actionEnregistrer_sous">
    <property name="icon">
     <iconset theme="document-save-as">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Enregistrer sous</string>
@@ -292,8 +300,7 @@ QMenuBar {
   <action name="actionCouper">
    <property name="icon">
     <iconset theme="edit-cut">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Couper</string>
@@ -308,8 +315,7 @@ QMenuBar {
   <action name="actionCopier">
    <property name="icon">
     <iconset theme="edit-copy">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Copier</string>
@@ -324,8 +330,7 @@ QMenuBar {
   <action name="actionColler">
    <property name="icon">
     <iconset theme="edit-paste">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Coller</string>
@@ -384,8 +389,7 @@ QMenuBar {
   <action name="actionSupprimer">
    <property name="icon">
     <iconset theme="edit-delete">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Supprimer</string>
@@ -408,8 +412,7 @@ QMenuBar {
   <action name="actionRechercher">
    <property name="icon">
     <iconset theme="edit-find">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Rechercher</string>
@@ -463,6 +466,16 @@ QMenuBar {
   <action name="actionRegles_du_JdC">
    <property name="text">
     <string>Régles du JdC</string>
+   </property>
+  </action>
+  <action name="actionCacher_l_Arbre">
+   <property name="text">
+    <string>Cacher l'Arbre</string>
+   </property>
+  </action>
+  <action name="actionAfficher_l_Arbre">
+   <property name="text">
+    <string>Afficher l'Arbre</string>
    </property>
   </action>
  </widget>

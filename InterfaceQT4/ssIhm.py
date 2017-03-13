@@ -18,8 +18,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 #    permet de lancer  EFICAS en n affichant rien
+try :
+   from builtins import object
+except : pass
 
-class appliEficasSSIhm:
+class appliEficasSSIhm(object):
    def __init__ (self,code):
        self.VERSION_EFICAS="Sans Ihm"
        self.code=code
@@ -47,7 +50,7 @@ class appliEficasSSIhm:
        configuration=__import__(nameConf)
        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
         
-class QWParentSSIhm:
+class QWParentSSIhm(object):
    def __init__(self,code,appliEficas,version_code,ssCode=None):
         self.ihm="QT"
         self.code=code

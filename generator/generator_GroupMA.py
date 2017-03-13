@@ -20,20 +20,21 @@
 """
     Ce module contient le plugin generateur d une liste des GroupNo et GroupMA
 """
+from __future__ import absolute_import
 import traceback
-import types,string,re
+import types,re
 
-from generator_python import PythonGenerator
+from .generator_python import PythonGenerator
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'GroupMA',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : GroupMAGenerator,
           }
 
@@ -45,7 +46,7 @@ class GroupMAGenerator(PythonGenerator):
        un texte au format homard 
 
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisees
    extensions=('.comm',)
 
    def __init__(self):
@@ -63,7 +64,7 @@ class GroupMAGenerator(PythonGenerator):
           if not type(obj.valeur) in (list, tuple):
              aTraiter=(obj.valeur,)
           else :
-	     aTraiter=obj.valeur
+             aTraiter=obj.valeur
           for group in aTraiter :
              if group not in self.listeMA :
                 self.listeMA.append(group)
@@ -71,7 +72,7 @@ class GroupMAGenerator(PythonGenerator):
           if not type(obj.valeur) in (list, tuple):
              aTraiter=(obj.valeur,)
           else :
-	     aTraiter=obj.valeur
+             aTraiter=obj.valeur
           for group in aTraiter :
              if group not in self.listeNO :
                 self.listeNO.append(group)

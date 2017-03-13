@@ -18,17 +18,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+import types,os
 import traceback
 
 from Extensions.i18n import tr
-from determine import monEnvQT5
-if monEnvQT5:
-   from PyQt5.QtCore import Qt
-   from PyQt5.QtWidgets import QDialog, QListWidgetItem
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialog, QListWidgetItem
 from desViewRegles import Ui_viewRegles
 
 # ------------------------------------ #
@@ -41,8 +37,7 @@ class ViewRegles(Ui_viewRegles,QDialog):
         QDialog.__init__(self,parent)
         self.setupUi(self)
         self.setModal(False)
-        if monEnvQT5 : self.bclose.clicked.connect(self.close)
-        else         : self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
+        self.bclose.clicked.connect(self.close)
 
         if entete != None : self.setWindowTitle (entete)
         for ligne in liste :

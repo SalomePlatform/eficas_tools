@@ -20,25 +20,25 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 import os,sys,re
 from desChoixCode import Ui_ChoixCode
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QDialog, QRadioButton, QGroupBox, QButtonGroup
-    from PyQt5.QtGui import QPalette
-    from PyQt5.QtCore import QProcess, QFileInfo, Qt, QSize
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QDialog, QRadioButton, QGroupBox, QButtonGroup
+from PyQt5.QtGui import QPalette
+from PyQt5.QtCore import QProcess, QFileInfo, Qt, QSize
 
     
 # Import des panels
 
 class MonChoixCode(Ui_ChoixCode,QDialog):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
+  Classe definissant le panel associe aux mots-cles qui demandent
+  a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
+  discretes
   """
   def __init__(self,  parentAppli=None):
       QDialog.__init__(self,parentAppli)
@@ -47,19 +47,15 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
       self.parentAppli=parentAppli
       self.verifieInstall()
       self.code=None
-      if monEnvQT5:
-         self.pB_OK.clicked.connect(self.choisitCode)
-         self.pB_cancel.clicked.connect(self.sortie)
-      else :
-         self.connect(self.pB_OK,SIGNAL("clicked()"),self.choisitCode)
-         self.connect(self.pB_cancel,SIGNAL("clicked()"),self.sortie)
+      self.pB_OK.clicked.connect(self.choisitCode)
+      self.pB_cancel.clicked.connect(self.sortie)
 
   def sortie(self):
       QDialog.reject(self)
 
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self.groupBox)
-      vars=os.environ.items()
+      vars=list(os.environ.items())
       listeCode=('Aster','Adao','Carmel3D','CarmelCND','CF','MAP','MT','PSEN','PSEN_N1','Telemac','ZCracks',)
       for code in listeCode:
           dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))

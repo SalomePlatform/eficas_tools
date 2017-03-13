@@ -17,10 +17,11 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Noyau import N_FACT
 from Ihm import I_ENTITE
-import A_MCFACT
-import A_MCLIST
+from . import A_MCFACT
+from . import A_MCLIST
 
 class FACT(N_FACT.FACT,I_ENTITE.ENTITE):
    class_instance=A_MCFACT.MCFACT

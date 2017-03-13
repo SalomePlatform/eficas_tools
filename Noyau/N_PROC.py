@@ -23,13 +23,12 @@
     qui permet de spécifier les caractéristiques d'une procédure
 """
 
+from __future__ import absolute_import
 import types
-import string
 import traceback
 
-import N_ENTITE
-import N_PROC_ETAPE
-from strfunc import ufmt
+from . import N_ENTITE
+from . import N_PROC_ETAPE
 
 
 class PROC(N_ENTITE.ENTITE):
@@ -95,7 +94,7 @@ class PROC(N_ENTITE.ENTITE):
         #self.ang=""
         self.ang=ang
         self.docu = docu
-        if type(regles) == types.TupleType:
+        if type(regles) == tuple:
             self.regles = regles
         else:
             self.regles = (regles,)

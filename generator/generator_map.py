@@ -22,11 +22,17 @@
    CARMEL3D pour EFICAS.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 import traceback
-import types,string,re,os
+import types,re,os
 import Accas
 
-from generator_python import PythonGenerator
+from .generator_python import PythonGenerator
 
 def entryPoint():
    """

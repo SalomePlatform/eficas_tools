@@ -24,13 +24,14 @@
     de type ENTITE
 """
 
+from __future__ import absolute_import
 from copy import copy
 
 from Noyau.N_ASSD import ASSD
 from Noyau.N_CO import CO
-import N_OBJECT
-from N_CONVERT import ConversionFactory
-from N_types import force_list, is_sequence
+from . import N_OBJECT
+from .N_CONVERT import ConversionFactory
+from .N_types import force_list, is_sequence
 
 
 class MCSIMP(N_OBJECT.OBJECT):
@@ -102,8 +103,7 @@ class MCSIMP(N_OBJECT.OBJECT):
         elif not is_sequence(v) and self.definition.max != 1:
             v = (v, )
         # traitement particulier pour les complexes ('RI', r, i)
-        if 'C' in self.definition.type and self.definition.max != 1 \
-                and v[0] in ('RI', 'MP'):
+        if 'C' in self.definition.type and self.definition.max != 1 and v != None and v[0] in ('RI', 'MP'):
             v = (v, )
         return v
 

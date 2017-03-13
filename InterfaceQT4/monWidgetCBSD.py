@@ -18,23 +18,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os
 
 # Modules Eficas
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetCB           import Ui_WidgetCB 
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieValeur
+from .politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieValeur
 
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QComboBox, QCompleter
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QComboBox, QCompleter
 
 
 class MonWidgetCB (Ui_WidgetCB,Feuille):
@@ -44,10 +44,7 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.determineChoix()
         self.setValeursApresBouton()
-        if monEnvQT5:
-           self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
-        else :
-           self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
+        self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
 
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.CBChoix)
@@ -59,19 +56,15 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
          self.CBChoix.setCurrentIndex(-1)
          return
       valeur=self.objSimp.get_valeur()
-      if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
+      if not(type(valeur) == str) : valeur=str(valeur)
       self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
       
   def determineChoix(self):
-        if monEnvQT5:
-           self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
-        else :
-           self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi
+      self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
 
       for choix in self.monSimpDef.into:
-          if not(type(choix) in types.StringTypes) : choix=str(choix)
-          if monEnvQT5: self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
-          else : self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
+          if not(type(choix) == str) : choix=str(choix)
+          self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
           self.CBChoix.addItem(choix)
       self.CBChoix.setEditable(True)
       monCompleteur=QCompleter(listeChoix,self) 

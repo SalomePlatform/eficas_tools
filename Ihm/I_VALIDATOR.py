@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
 from Noyau.N_VALIDATOR import *
 
 class Compulsory(Compulsory):
@@ -29,7 +30,7 @@ class Compulsory(Compulsory):
 class OrdList(OrdList):
       def valide_liste_partielle(self,liste_courante=None):
           """
-           Méthode de validation de liste partielle pour le validateur OrdList
+           Methode de validation de liste partielle pour le validateur OrdList
           """
           try:
              self.convert(liste_courante)

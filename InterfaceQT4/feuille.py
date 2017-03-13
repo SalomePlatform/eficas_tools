@@ -18,23 +18,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+  from builtins import str
+except :
+  pass
+import types,os
 import traceback
 
-from determine import monEnvQT5
-if monEnvQT5:
-   from PyQt5.QtWidgets import QToolButton ,QWidget
-   from PyQt5.QtGui import QFont, QFontMetrics
-   from PyQt5.QtCore import Qt
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QToolButton ,QWidget
+from PyQt5.QtGui import QFont, QFontMetrics
+from PyQt5.QtCore import Qt
+
 from Extensions.i18n import tr
 
-
-from gereIcones import ContientIcones
-from gereIcones import FacultatifOuOptionnel
-from qtSaisie    import SaisieValeur
+from .gereIcones import ContientIcones
+from .gereIcones import FacultatifOuOptionnel
+from .qtSaisie    import SaisieValeur
 
 nomMax=250
 # ---------------------------------------------------------------------- #
@@ -78,7 +78,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        self.setIconesGenerales()
        self.setCommentaire()
        self.setZoneInfo()
-          
+     
 
    def setNom(self):
        self.debutToolTip=""
@@ -95,6 +95,13 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        if self.height() < 40 :
           self.setMinimumHeight(50)
           self.resize(self.width(),200)
+
+   #def mousePressEvent(self, event):
+     #print 'mousePressEvent'
+     #import inspect
+     #print (inspect.getmro(self.__class__))
+     #self.__class__.mousePressEvent(self, event)
+
 
                                  
    def setValeurs(self):
@@ -114,7 +121,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
                   'I'   : 'entiers',
                   'C'   : 'complexes'}
         type = mc.type[0]
-        if not d_aides.has_key(type) :
+        if not type in d_aides :
            if mc.min == mc.max:
                commentaire=tr("Entrez ")+str(mc.min)+tr(" valeurs ")+'\n'
            else :
@@ -143,9 +150,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       #if self.node.item.definition.validators : c+=self.node.item.definition.validators.aide()
       self.aide=c
       if self.objSimp.get_fr() != None and self.objSimp.get_fr() != "":
-          c2 = '<html><head/><body><p>'+c+unicode(self.objSimp.get_fr())+"</p></body></html>"
+          c2 = '<html><head/><body><p>'+c+self.objSimp.get_fr().decode('latin-1','replace')+"</p></body></html>"
           self.label.setToolTip(c2)
-          self.aide=unicode(self.objSimp.get_fr())+" "+c
+          self.aide=self.objSimp.get_fr().decode('latin-1','ignore')+" "+c
       else :
          c+=self.finCommentaire()
          if c != "" and c != None :
@@ -178,8 +185,11 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       if mc.min == mc.max: commentaire=tr("Entrez ")+" "+str(mc.min)+" "
       else :               commentaire=tr("Entrez entre ")+str(mc.min)+tr(" et ")+str(mc.max)
 
-      if type(mctype) == types.ClassType: ctype = getattr(mctype, 'help_message', tr("Type de base inconnu"))
-      else:                               ctype = d_aides.get(mctype, tr("Type de base inconnu"))
+      try :
+         if issubclass(mctype,object) : ctype = getattr(mctype, 'help_message', tr("Type de base inconnu"))
+         else : ctype = d_aides.get(mctype, tr("Type de base inconnu"))
+      except:                        
+         ctype = d_aides.get(mctype, tr("Type de base inconnu"))
       if ctype == tr("Type de base inconnu") and "Tuple" in str(mctype): ctype=str(mctype)
 
       commentaire+=ctype
@@ -193,7 +203,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       pass
 
    def reaffiche(self):
-      #print "dans reaffiche de feuille", self.nom
+
       if self.editor.jdc.aReafficher==True :
          self.parentQt.reaffiche()
 
@@ -224,7 +234,8 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
             try :
                self.setValeursApresBouton()
             except :
-               self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
+               pass
+            self.editor.fenetreCentraleAffichee.afficheSuivant(self.AAfficher)
          else :
             if hasattr(self, 'AAfficher'): self.AAfficher.setFocus(7)
 
@@ -232,7 +243,6 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       self.parentQt.reaffiche()
 
    def rendVisible(self):
-       #print "jjjjjjjjjjjjjjjjjjjjj"
        pass
 
    #def enterEvent(self,event):
@@ -240,8 +250,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    #   QWidget.enterEvent(self,event)
 
    def traiteClicSurLabel(self,texte):
-       #print self.aide 
-       aide=self.aide+"\n"+self.aideALaSaisie()
+       aide=self.aide.encode('latin-1', 'ignore').decode('latin-1')+"\n"+self.aideALaSaisie().encode('latin-1', 'ignore').decode('latin-1')
        self.editor.affiche_commentaire(aide)
 
    def formate(self,t):

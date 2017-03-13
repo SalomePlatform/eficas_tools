@@ -22,11 +22,15 @@
     Ce module contient la classe OBJECT classe mère de tous les objets
     servant à controler les valeurs par rapport aux définitions
 """
-from N_CR import CR
-from strfunc import ufmt
+from __future__ import absolute_import
+try :
+   from builtins import object
+except :
+   pass 
+from .N_CR import CR
 
 
-class OBJECT:
+class OBJECT(object):
 
     """
        Classe OBJECT : cette classe est virtuelle et sert de classe mère

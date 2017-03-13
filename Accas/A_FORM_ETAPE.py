@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
 from Noyau import N_FORM_ETAPE
 from Validation import V_MACRO_ETAPE
 from Ihm import I_FORM_ETAPE

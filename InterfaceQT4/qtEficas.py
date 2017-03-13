@@ -18,15 +18,19 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except : pass
+
 import os, sys
-from  determine import monEnvQT5
-if monEnvQT5 :
-  from PyQt5.QtWidgets import QApplication, QMainWindow, QBoxLayout, QMenu, QAction, QMessageBox
-  from PyQt5.QtGui import QIcon
-  from PyQt5.QtCore import Qt
-else:
-  from PyQt4.QtGui  import *
-  from PyQt4.QtCore import *
+import six
+
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QBoxLayout, QMenu, QAction, QMessageBox
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
@@ -34,8 +38,8 @@ from Extensions import param2
 
 
 from myMain import Ui_Eficas
-from viewManager import MyTabview
-from getVersion import getEficasVersion
+from .viewManager import MyTabview
+from .getVersion import getEficasVersion
 from Editeur import session
 
 
@@ -53,8 +57,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
         version=getEficasVersion()
-        self.VERSION_EFICAS="Eficas QT4 Salome "+version
-        if monEnvQT5 : self.VERSION_EFICAS="Eficas QT5 Salome "
+        self.VERSION_EFICAS="Eficas QT5 Salome " + version
         self.salome=salome
         self.parentMainWindow=parent
         self.ihm="QT"
@@ -65,8 +68,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.indice=0
         self.first=1
         self.dict_reels={}
-        if monEnvQT5 : self.recent =  []
-        else : self.recent =  QStringList()
+        self.recent =  []
         self.ficRecents={}
         self.mesScripts={}
         self.listeAEnlever=[]
@@ -98,7 +100,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.suiteTelemac=False 
         if hasattr (self, 'CONFIGURATION') :
            if self.CONFIGURATION.force_langue :
-              from monChoixLangue import MonChoixLangue
+              from .monChoixLangue import MonChoixLangue
               widgetLangue = MonChoixLangue(self)
               ret=widgetLangue.exec_()
            self.suiteTelemac=self.CONFIGURATION.suiteTelemac 
@@ -106,7 +108,9 @@ class Appli(Ui_Eficas,QMainWindow):
 
         from Extensions import localisation
         app=QApplication
-        localisation.localise(None,self.langue)
+        localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
+
+
 
         self.setupUi(self)
         #if parent != None : self.parentCentralWidget = parent.centralWidget()
@@ -140,8 +144,7 @@ class Appli(Ui_Eficas,QMainWindow):
         # actionARemplacer ne sert que pour l insert Menu
         self.menuFichier.insertMenu(self.actionARemplacer ,self.recentMenu)
         self.menuFichier.removeAction(self.actionARemplacer)
-        if monEnvQT5 : self.connecterSignaux()
-        else         : self.connecterSignauxQT4()
+        self.connecterSignaux()
         self.toolBar.addSeparator()
         if self.code != None : self.construitMenu()
 
@@ -166,7 +169,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ssCode=ssCode
         if self.code==None :
            self.cleanPath()
-           from monChoixCode import MonChoixCode
+           from .monChoixCode import MonChoixCode
            widgetChoix = MonChoixCode(self)
            ret=widgetChoix.exec_()
         import sys
@@ -208,8 +211,8 @@ class Appli(Ui_Eficas,QMainWindow):
             if hasattr(self,intituleAction):
               action=getattr(self,intituleAction)
               self.toolBar.removeAction(action)
-        if self.code.upper() in Appli.__dict__.keys():
-          listeTexte=apply(Appli.__dict__[self.code.upper()],(self,))
+        if self.code.upper() in Appli.__dict__:
+          listeTexte=Appli.__dict__[self.code.upper()],(self,)
         if self.suiteTelemac : self.lookSuiteTelemac()
 
     def initAides(self):
@@ -260,9 +263,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionN1 = QAction(self)
         self.actionN1.setText(tr("Process Output"))
         self.menuN1.addAction(self.actionN1)
-        if monEnvQT5 : self.actionN1.triggered.connect(self.newN1)
-        else         : self.connect(self.actionN1,SIGNAL("triggered()"),self.newN1)
-
+        self.actionN1.triggered.connect(self.newN1)
 
 
         if hasattr(self,'actionOpenProcess'):return
@@ -270,8 +271,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionOpenProcess = QAction(self)
         self.actionOpenProcess.setText(tr("Open Process_Output File"))
         self.menuN1.addAction(self.actionOpenProcess)
-        if monEnvQT5 : self.actionOpenProcess.triggered.connect(self.openProcess)
-        else         : self.connect(self.actionOpenProcess,SIGNAL("triggered()"),self.openProcess)
+        self.actionOpenProcess.triggered.connect(self.openProcess)
 
     def ajoutExecution(self):
         self.menuExecution = self.menubar.addMenu(tr("&Run"))
@@ -286,8 +286,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if not(self.actionExecution in self.toolBar.actions()):
            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(tr("Run"))
-        if monEnvQT5 : self.actionExecution.triggered.connect(self.run)
-        else         : self.connect(self.actionExecution,SIGNAL("triggered()"),self.run)
+        self.actionExecution.triggered.connect(self.run)
 
     def ajoutSauveExecution(self):
         self.actionSaveRun = QAction(self)
@@ -298,8 +297,7 @@ class Appli(Ui_Eficas,QMainWindow):
         if not(self.actionSaveRun in self.toolBar.actions()):
            self.toolBar.addAction(self.actionSaveRun)
         self.actionSaveRun.setText(tr("Save Run"))
-        if monEnvQT5 : self.actionSaveRun.triggered.connect(self.saveRun)
-        else         : self.connect(self.actionSaveRun,SIGNAL("triggered()"),self.saveRun)
+        self.actionSaveRun.triggered.connect(self.saveRun)
 
     def griserActionsStructures(self):
         self.actionCouper.setEnabled(False)
@@ -330,20 +328,14 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionRechercherDsCatalogue.setVisible(False)
 
     def connectRechercherDsCatalogue(self):
-        if monEnvQT5:
-          self.actionRechercherDsCatalogue.triggered.connect(self.handleRechercherDsCatalogue)
-        else :
-          self.connect(self.actionRechercherDsCatalogue,SIGNAL("triggered()"),self.handleRechercherDsCatalogue)
+        self.actionRechercherDsCatalogue.triggered.connect(self.handleRechercherDsCatalogue)
 
     def ajoutSortieLegere(self):
         if hasattr(self,'actionSortieLegere') : return
         self.actionSortieLegere = QAction(self)
         self.actionSortieLegere.setText(tr("Sortie Legere"))
         self.menuFichier.insertAction(self.actionEnregistrer_sous,self.actionSortieLegere)
-        if monEnvQT5:
-          self.actionSortieLegere.triggered.connect(self.handleSortieLegere)
-        else :
-          self.connect(self.actionSortieLegere,SIGNAL("triggered()"),self.handleSortieLegere)
+        self.actionSortieLegere.triggered.connect(self.handleSortieLegere)
 
 
     def ZCRACKS(self):
@@ -398,15 +390,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.setTitle(tr("Options"))
 
     def PSEN(self):
-        if self.first:
-         self.first=0
-         if monEnvQT5:
-           self.action_Nouveau.triggered.disconnect(self.fileNew)
-           self.action_Nouveau.triggered.connect(self.newPSEN)
-           self
-         else :
-           self.disconnect(self.action_Nouveau,SIGNAL("triggered()"),self.fileNew)
-           self.connect(self.action_Nouveau,SIGNAL("triggered()"),self.newPSEN)
+        if self.first: self.first=0
+        self.action_Nouveau.triggered.disconnect(self.fileNew)
+        self.action_Nouveau.triggered.connect(self.newPSEN)
         self.enleverActionsStructures()
         self.enleverParametres()
         self.enleverRechercherDsCatalogue()
@@ -439,8 +425,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def ajoutHelpPSEN(self):
         self.actionParametres_Eficas.setText('Help PSEN')
-        if monEnvQT5 :  self.actionParametres_Eficas.triggered.connect(self.aidePSEN)
-        else  : self.connect(self.actionParametres_Eficas,SIGNAL("triggered()"),self.aidePSEN)
+        self.actionParametres_Eficas.triggered.connect(self.aidePSEN)
         
 
 
@@ -520,6 +505,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
 
+
         # Pour Aster
         self.actionTraduitV9V10 = QAction(self)
         self.actionTraduitV9V10.setObjectName("actionTraduitV9V10")
@@ -583,6 +569,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionRegles_du_JdC.triggered.connect(self.jdcRegles)
         self.actionFichier_Source.triggered.connect(self.jdcFichierSource)
         self.actionFichier_Resultat.triggered.connect(self.visuJdcPy)
+        self.actionAfficher_l_Arbre.triggered.connect(self.ouvreArbre)
+        self.actionCacher_l_Arbre.triggered.connect(self.fermeArbre)
 
 
         # Pour Aster
@@ -643,7 +631,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def initPatrons(self) :
     # Mise a jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
-        if not(self.code in listePatrons.sous_menus.keys()) :
+        if not(self.code in listePatrons.sous_menus) :
            if hasattr(self,"menuPatrons"):
               self.menuPatrons.setAttribute(Qt.WA_DeleteOnClose)
               self.menuPatrons.close()
@@ -658,19 +646,17 @@ class Appli(Ui_Eficas,QMainWindow):
            self.menuPatrons.clear()
         self.listePatrons = listePatrons.listePatrons(self.code)
         idx = 0
-        for nomSsMenu in self.listePatrons.liste.keys():
+        for nomSsMenu in self.listePatrons.liste:
             ssmenu=self.menuPatrons.addMenu(nomSsMenu)
             for fichier in self.listePatrons.liste[nomSsMenu]:
                id = ssmenu.addAction(fichier)
                self.ficPatrons[id]=fichier
-               if monEnvQT5 :  self.id.triggered.connect(self.handleOpenPatrons)
-               else : self.connect(id, SIGNAL('triggered()'),self.handleOpenPatrons)
+               self.id.triggered.connect(self.handleOpenPatrons)
             #   self.Patrons.setItemParameter(id,idx)
                idx=idx+1
 
     def initRecents(self):
-       if monEnvQT5 : self.recent =  []
-       else : self.recent =  QStringList()
+       self.recent =  []
        try :
            if sys.platform[0:5]=="linux" :
               rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
@@ -692,7 +678,6 @@ class Appli(Ui_Eficas,QMainWindow):
        except : pass
 
     def addToRecentList(self, fn):
-      if not monEnvQT5 : self.addToRecentListQT4(fn); return
       while fn in self.recent: self.recent.remove(fn)
       self.recent.insert(0,fn)
       if len(self.recent) > 9:
@@ -736,19 +721,19 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
     def traductionV11V12(self):
-        from gereTraduction import traduction
+        from .gereTraduction import traduction
         traduction(self.CONFIGURATION.repIni,self.viewmanager,"V11V12")
 
     def traductionV10V11(self):
-        from gereTraduction import traduction
+        from .gereTraduction import traduction
         traduction(self.CONFIGURATION.repIni,self.viewmanager,"V10V11")
 
     def traductionV9V10(self):
-        from gereTraduction import traduction
+        from .gereTraduction import traduction
         traduction(self.CONFIGURATION.repIni,self.viewmanager,"V9V10")
 
     def version(self) :
-        from monVisu import DVisu
+        from .monVisu import DVisu
         titre = tr("version ")
         monVisuDialg=DVisu(parent=self,fl=0)
         monVisuDialg.setWindowTitle(titre)
@@ -823,8 +808,7 @@ class Appli(Ui_Eficas,QMainWindow):
         for rp in self.recent:
             id = self.recentMenu.addAction(rp)
             self.ficRecents[id]=rp
-            if monEnvQT5 : id.triggered.connect(self.handleOpenRecent)
-            else         : self.connect(id, SIGNAL('triggered()'),self.handleOpenRecent)
+            id.triggered.connect(self.handleOpenRecent)
         self.recentMenu.addSeparator()
         self.recentMenu.addAction(tr('&Effacer'), self.handleClearRecent)
 
@@ -850,7 +834,7 @@ class Appli(Ui_Eficas,QMainWindow):
         try:
             self.viewmanager.newEditor()
         except EficasException as exc:
-            msg = unicode(exc)
+            msg = six.text_type(exc)
             if msg != "": QMessageBox.warning(self, tr(u"Erreur"), msg)
 
     def openProcess(self):
@@ -871,7 +855,7 @@ class Appli(Ui_Eficas,QMainWindow):
         try:
             self.viewmanager.handleOpen()
         except EficasException as exc:
-            msg = unicode(exc)
+            msg = six.text_type(exc)
             if msg != "":
                 QMessageBox.warning(self, tr(u"Erreur"), msg)
 
@@ -934,6 +918,11 @@ class Appli(Ui_Eficas,QMainWindow):
     def visuJdcPy(self):
         self.viewmanager.handleViewJdcPy()
 
+    def ouvreArbre(self):
+        self.viewmanager.ouvreArbre()
+
+    def fermeArbre(self):
+        self.viewmanager.fermeArbre()
 
     def NewInclude(self):
         self.viewmanager.newIncludeEditor()

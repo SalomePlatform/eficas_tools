@@ -18,14 +18,15 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+import types,os
 
 # Modules Eficas
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetVide         import Ui_WidgetVide 
-from politiquesValidation  import PolitiqueUnique
+from .politiquesValidation  import PolitiqueUnique
 
 
 

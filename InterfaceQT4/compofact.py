@@ -18,12 +18,14 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import browser
-import typeNode
+from __future__ import absolute_import
+from . import browser
+from . import typeNode
 from Extensions.i18n import tr
 
 
 from Editeur import Objecttreeitem
+import six
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
@@ -37,10 +39,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         else : self.niveau=1
         #if  hasattr(self,'plie') :print self.item.nom, self.plie
         if  hasattr(self,'plie') and self.plie==True : 
-           from monWidgetFactPlie import MonWidgetFactPlie
+           from .monWidgetFactPlie import MonWidgetFactPlie
            widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         else:
-           from monWidgetFact import MonWidgetFact
+           from .monWidgetFact import MonWidgetFact
            widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         return widget
 
@@ -81,9 +83,10 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
     else:
       return "ast-yel-los"
 
-  def keys(self):
-    keys=self.object.mc_dict.keys()
-    return keys
+  #PNPN ????
+  #def keys(self):
+  #  keys=self.object.mc_dict
+  #  return keys
 
   def GetSubList(self):
       """
@@ -130,7 +133,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          return (0, tr('Impossible de supprimer un mot-cle obligatoire '))
 
       if self.object.suppentite(itemobject):
-         message = tr("Mot-cle %s supprime")+ unicode(itemobject.nom)
+         message = tr("Mot-cle %s supprime")+ six.text_type(itemobject.nom)
          #self.editor.affiche_commentaire(message)
          return (1, message)
       else:

@@ -18,17 +18,18 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-from determine import monEnvQT5
-if monEnvQT5 :
-  from PyQt5.QtCore import Qt
-else:
-  from PyQt4.QtCore import *
-from  monViewRegles  import ViewRegles
+from __future__ import absolute_import
+try :
+   from builtins import object
+except : pass
 
-class GereRegles :
+from PyQt5.QtCore import Qt
+from  .monViewRegles  import ViewRegles
+
+class GereRegles(object) :
 
    def AppelleBuildLBRegles(self):
-       from browser import JDCTree
+       from .browser import JDCTree
        if isinstance(self,JDCTree):
           self.AppelleBuildLBReglesForJdC()
        else :

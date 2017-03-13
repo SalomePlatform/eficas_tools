@@ -18,13 +18,14 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+import types,os
 
 # Modules Eficas
 from Extensions.i18n import tr
 
 from desWidgetSimpTxt  import Ui_WidgetSimpTxt 
-from monWidgetSimpBase     import MonWidgetSimpBase
+from .monWidgetSimpBase     import MonWidgetSimpBase
 
 
 class MonWidgetSimpTxt (Ui_WidgetSimpTxt,MonWidgetSimpBase):

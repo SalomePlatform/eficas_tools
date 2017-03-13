@@ -21,6 +21,7 @@
 # (defined in Salome EFICAS module) when Eficas is launched in Salome context.
 # It handles the objects that can be selected from Salome object browser.
 
+from __future__ import absolute_import
 from Ihm import I_FICHIER
 
 class Fichier (I_FICHIER.Fichier):

@@ -17,6 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import I_MCCOMPO
+from __future__ import absolute_import
+from . import I_MCCOMPO
 class MCBLOC(I_MCCOMPO.MCCOMPO):pass
 

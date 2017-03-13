@@ -21,17 +21,20 @@
     Ce module sert pour charger les parametres de configuration d'EFICAS
 """
 # Modules Python
-import os, sys, string, types, re
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+   from builtins import object
+except : pass
+
+import os, sys,  types, re
 import traceback
-from  determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QMessageBox
-else :
-   from PyQt4.QtGui import QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 from  Editeur.utils import read_file
 from Extensions.i18n import tr
 
-class CONFIG_BASE:
+class CONFIG_BASE(object):
 
   #-------------------------------
   def __init__(self,appli,repIni):
@@ -102,6 +105,8 @@ class CONFIG_BASE:
       self.closeArbre = False
       self.force_langue=False
       self.suiteTelemac=False
+      self.nombreDeBoutonParLigne=0
+      self.translatorFichier=None
 
  
   #--------------------------------------
@@ -133,7 +138,7 @@ class CONFIG_BASE:
       txt = read_file(fic_ini_integrateur)
       d=locals()
       try:
-         exec txt in d
+         exec(txt, d)
       except :
          QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
 			tr("Erreur a la lecture du fichier de configuration %s " , str(fic_ini_integrateur)))
@@ -146,7 +151,7 @@ class CONFIG_BASE:
             pass
       #Glut pour les repertoires materiaux
       #et pour la doc
-      for k in d.keys() :
+      for k in d :
           if (k[0:8]=="rep_mat_") or (k[0:8]=="rep_doc_"):
              setattr(self,k,d[k])
 
@@ -161,7 +166,7 @@ class CONFIG_BASE:
       txt = read_file(self.fic_ini_utilisateur)
       d=locals()
       try:
-         exec txt in d
+         exec(txt, d)
       except :
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
          QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
@@ -171,7 +176,7 @@ class CONFIG_BASE:
             setattr(self,k,d[k])
          except :
             pass
-      for k in d.keys() :
+      for k in d :
           if (k[0:8]=="rep_mat_") or (k[0:8]=="rep_doc_"):
              setattr(self,k,d[k])
 

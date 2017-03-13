@@ -25,14 +25,16 @@ Ces objets sont crees a partir de la modification du fichier de commandes
 de l'utilisateur par le parseur de fichiers Python
 """
 # import de modules Python
-import string,types,re
+from __future__ import absolute_import
+from __future__ import print_function
+import types,re
 import traceback
 
 # import modules Eficas
-import interpreteur_formule
+from . import interpreteur_formule
 from Noyau.N_CR import CR
 from Extensions.i18n import tr
-import parametre
+from . import parametre
 
 pattern_eval       = re.compile(r'^(EVAL)([ \t\r\f\v]*)\(([\w\W]*)')
 
@@ -76,13 +78,13 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
 
   def interprete_valeur(self,val):
     """
-    Essaie d'interpreter val (chaîne de caracteres ou None) comme :
+    Essaie d'interpreter val (chaine de caracteres ou None) comme :
     une instance de Accas.EVAL
     Retourne la valeur interpretee
     """
     if not val : return None
     d={}
-    val = string.strip(val)
+    val = val.strip()
     if val[-1] == ';' : val = val[0:-1]
     d['EVAL'] = self.Accas_EVAL
     try:
@@ -90,7 +92,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
         return valeur
     except:
         traceback.print_exc()
-        print ("Le texte %s n'est pas celui d'un parametre evalue" %val)
+        print(("Le texte %s n'est pas celui d'un parametre evalue" %val))
         return None
 
   def set_valeur(self,new_valeur):
@@ -142,7 +144,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
         if cr == 'oui' :
           if not verificateur.cr.estvide():
             self.cr.fatal(verificateur.cr.get_mess_fatal())
-        return verificateur.isvalid(),string.join(verificateur.cr.crfatal)
+        return verificateur.isvalid(),''.join(verificateur.cr.crfatal)
     else:
         # pas d'expression EVAL --> self non valide
         if cr == 'oui' : 

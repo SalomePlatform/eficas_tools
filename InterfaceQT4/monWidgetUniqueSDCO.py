@@ -18,17 +18,18 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+import types,os
 
 # Modules Eficas
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetUniqueSDCO   import Ui_WidgetUniqueSDCO 
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieSDCO
+from .politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieSDCO
 
 
 

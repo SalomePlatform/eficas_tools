@@ -18,12 +18,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+import types,os
 
 # Modules Eficas
 from Extensions.i18n import tr
 
-from monWidgetRadioButton  import MonWidgetRadioButtonCommun 
+from .monWidgetRadioButton  import MonWidgetRadioButtonCommun 
 from desWidget4a6RadioButton  import Ui_Widget4a6RadioButton 
 
 

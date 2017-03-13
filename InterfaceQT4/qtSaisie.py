@@ -18,20 +18,21 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+except : pass
+
+import types,os
 from Extensions.i18n import tr
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtCore import Qt
 
 
 # Import des panels
 
-class SaisieValeur:
+class SaisieValeur(object):
   """
   Classe contenant les methodes communes aux  panels
   permettant de choisir des valeurs 
@@ -44,8 +45,17 @@ class SaisieValeur:
          if valeur == None :
             nouvelleValeur=str(self.lineEditVal.text())
          else :
-            if hasattr(self,"lineEditVal"):self.lineEditVal.setText(tr(valeur.nom))
+            #PN PN PN ???? la 1 ligne est tres bizarre.
+            try : 
+              if hasattr(self,"lineEditVal"):self.lineEditVal.setText(tr(valeur.nom))
+            except : 
+              if hasattr(self,"lineEditVal"):self.lineEditVal.setText(valeur)
             nouvelleValeur=valeur
+         if self.node.item.definition.validators != None :
+          if self.node.item.definition.validators.verif_item(nouvelleValeur) !=1 :
+                commentaire=self.node.item.definition.validators.info_erreur_item()
+                self.editor.affiche_infos(commentaire,Qt.red)
+                return
          nouvelleValeurFormat=self.politique.GetValeurTexte(nouvelleValeur)
          validite,commentaire=self.politique.RecordValeur(nouvelleValeurFormat)
          if commentaire != "" :
@@ -87,7 +97,7 @@ class SaisieValeur:
         except :
             valeur=valeurBrute
 
-        if type(valeur)  in (types.ListType,types.TupleType) :
+        if type(valeur)  in (list,tuple) :
            if self.node.item.wait_complex() :
               indice = 0
               while (indice < len(valeur)):
@@ -111,14 +121,14 @@ class SaisieValeur:
            else:  # on n'attend pas un complexe
              listeValeurs=valeurBrute.split(',')
 
-        elif type(valeur) == types.StringType:
+        elif type(valeur) == bytes:
              listeValeurs=valeur.split(',')
         else:
           listeValeurs.append(valeurBrute)
 
         return listeValeurs,1
 
-class SaisieSDCO :
+class SaisieSDCO(object) :
 
   def LESDCOReturnPressed(self):
         """

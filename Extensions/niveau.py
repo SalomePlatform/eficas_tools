@@ -18,11 +18,15 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce module contient la classe NIVEAU qui sert à définir
+    Ce module contient la classe NIVEAU qui sert a definir
     des groupes de commandes dans le catalogue
 """
 
-class NIVEAU:
+try : 
+   from builtins import object
+except : pass
+
+class NIVEAU(object):
   def __init__(self,nom='',label='',niveaux=(),valide_vide=1,actif=1):
     self.nom = nom
     self.label = label

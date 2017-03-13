@@ -20,14 +20,18 @@
 """Ce module contient le plugin generateur de fichier au format  Code_Carmel3D pour EFICAS.
 """
 
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 texte_debut="int main() \n{ \n   init_var();\n"
 texte_debut+='   format="med";\n'
 import traceback
-import types,string,re,os
+import types,re,os
 from Extensions.i18n import tr
-from generator_dicoImbrique import DicoImbriqueGenerator
+from .generator_dicoImbrique import DicoImbriqueGenerator
 import pdb
-from numpy import zeros
 
 def entryPoint():
    """

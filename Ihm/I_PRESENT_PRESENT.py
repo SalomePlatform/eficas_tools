@@ -20,7 +20,8 @@
 """
 """
 
-import I_REGLE
+from __future__ import absolute_import
+from . import I_REGLE
 
 class PRESENT_PRESENT(I_REGLE.REGLE):
   def verif_condition_regle(self,liste,l_mc_presents):

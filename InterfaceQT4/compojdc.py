@@ -18,16 +18,17 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+from __future__ import absolute_import
 from Editeur import Objecttreeitem
-import browser
-import typeNode
+from . import browser
+from . import typeNode
 from Extensions.i18n import tr
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
 
     def getPanel(self):
-        from monChoixCommande import MonChoixCommande
+        from .monChoixCommande import MonChoixCommande
         return MonChoixCommande(self,self.item, self.editor)
         
 
@@ -65,11 +66,11 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     else:
       return "ast-red-square"
 
-  def keys(self):
-      if self.object.etapes_niveaux != []:
-          return range(len(self.object.etapes_niveaux))
-      else:
-          return range(len(self.object.etapes))
+  #def keys(self):
+  #    if self.object.etapes_niveaux != []:
+  #        return range(len(self.object.etapes_niveaux))
+  #    else:
+  #        return range(len(self.object.etapes))
 
   def additem(self,name,pos):
       cmd = self._object.addentite(name,pos)

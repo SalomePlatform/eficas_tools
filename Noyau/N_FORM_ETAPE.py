@@ -18,7 +18,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 
 
-import N_MACRO_ETAPE
+from __future__ import absolute_import
+from . import N_MACRO_ETAPE
 
 
 class FORM_ETAPE(N_MACRO_ETAPE.MACRO_ETAPE):

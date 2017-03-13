@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#i -*- coding: utf-8 -*-
 # Copyright (C) 2007-2013   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -34,12 +34,12 @@
 
      listener(cargs+args)
 """
+from __future__ import absolute_import
+from __future__ import print_function
 import traceback
 from copy import copy
 import weakref
 
-from Extensions.i18n import tr
-from Extensions.eficas_exception import EficasException
 
 class ConnectorError(Exception):
     pass
@@ -50,14 +50,16 @@ class CONNECTOR:
     self.connections={}
 
   def Connect(self, object, channel, function, args):
-    ###print "Connect",object, channel, function, args
+    #print ("Connect",object, channel, function, args)
     idx = id(object)
-    if self.connections.has_key(idx):
+    #if self.connections.has_key(idx):
+    if idx in self.connections :
        channels = self.connections[idx]
     else:
        channels = self.connections[idx] = {}
 
-    if channels.has_key(channel):
+    #if channels.has_key(channel):
+    if channel in channels :
        receivers = channels[channel]
     else:
        receivers = channels[channel] = []
@@ -69,15 +71,14 @@ class CONNECTOR:
            receivers.remove((funct,fargs))
 
     receivers.append((ref(function),args))
-    ###print "Connect",receivers
     
 
   def Disconnect(self, object, channel, function, args):
     try:
        receivers = self.connections[id(object)][channel]
     except KeyError:
-       raise ConnectorError, \
-            'no receivers for channel %s of %s' % (channel, object)
+       raise ConnectorError (
+            'no receivers for channel %s of %s' % (channel, object))
 
     for funct,fargs in receivers[:]:
         if funct() is None:
@@ -95,9 +96,9 @@ class CONNECTOR:
                  del self.connections[id(object)]
            return
 
-    raise ConnectorError,\
+    raise ConnectorError(
           'receiver %s%s is not connected to channel %s of %s' \
-          % (function, args, channel, object)
+          % (function, args, channel, object))
 
 
 
@@ -106,7 +107,6 @@ class CONNECTOR:
     try:
        receivers = self.connections[id(object)][channel]
     except KeyError:
-       #print "ds except"
        return
     #print "Emit",object, channel, receivers
     # Attention : copie pour eviter les pbs lies aux deconnexion reconnexion
@@ -115,7 +115,11 @@ class CONNECTOR:
        try:
           func=rfunc()
           if func:
-             apply(func, args + fargs)
+             #print (func,args,fargs)
+             #rint args + fargs
+             #apply(func, args + fargs)
+             if args + fargs == () : func()
+             else : func ( args + fargs)
           else:
              # Le receveur a disparu
              if (rfunc,fargs) in receivers:receivers.remove((rfunc,fargs))
@@ -123,15 +127,19 @@ class CONNECTOR:
           traceback.print_exc()
 
 def ref(target,callback=None):
-   if hasattr(target,"im_self"):
+   #if hasattr(target,"im_self"):
+   #   return BoundMethodWeakref(target)
+   if hasattr(target,"__self__"):
       return BoundMethodWeakref(target)
    else:
       return weakref.ref(target,callback)
 
 class BoundMethodWeakref(object):
    def __init__(self,callable):
-       self.Self=weakref.ref(callable.im_self)
-       self.Func=weakref.ref(callable.im_func)
+       #self.Self=weakref.ref(callable.im_self)
+       #self.Func=weakref.ref(callable.im_func)
+       self.Self=weakref.ref(callable.__self__)
+       self.Func=weakref.ref(callable.__func__)
 
    def __call__(self):
        target=self.Self()
@@ -148,27 +156,35 @@ Disconnect = _the_connector.Disconnect
 if __name__ == "__main__":
    class A:
      pass
+
    class B:
      def add(self,a):
-       print ("add ", self , a)
+       print(("--------------------------------add ", self , a))
+
      def __del__(self):
-       print ("__del__", self)
+       print(("__del__", self))
 
    def f(a):
-     print (f, a)
+     print((f, a))
+
    a=A()
    b=B()
    c=B()
+
    Connect(a,"add",b.add,())
    Connect(a,"add",b.add,())
    Connect(a,"add",c.add,())
    Connect(a,"add",f,())
+
    Emit(a,"add",1)
+
    print ("del b")
    del b
+
    Emit(a,"add",1)
    print ("del f")
    del f
+
    Emit(a,"add",1)
    Disconnect(a,"add",c.add,())
    Emit(a,"add",1)

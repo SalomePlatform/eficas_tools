@@ -20,14 +20,14 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 from desRechercheCatalogue import Ui_desRechercheCatalogue
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QDialog, QCompleter
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QDialog, QCompleter
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 
@@ -35,9 +35,6 @@ from Extensions.i18n import tr
 
 class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
   """
-  Classe définissant le panel associé aux mots-clés qui demandent
-  à l'utilisateur de choisir une seule valeur parmi une liste de valeurs
-  discrètes
   """
   def __init__(self,parent,editor ):
       QDialog.__init__(self,parent)
@@ -45,17 +42,13 @@ class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
       self.setupUi(self)
       self.editor=editor
       self.CBRecherche.setEditable(True)
-      if monEnvQT5 :
-         self.CBRecherche.lineEdit().returnPressed.connect(self.rechercheCB)
-         self.CBRecherche.currentIndexChanged.connect(self.rechercheCB)
-      else :
-         self.connect(self.CBRecherche.lineEdit(),SIGNAL("returnPressed()"),self.rechercheCB)
-         self.connect(self.CBRecherche,SIGNAL("currentIndexChanged(int)"),self.rechercheCB)
+      self.CBRecherche.lineEdit().returnPressed.connect(self.rechercheCB)
+      self.CBRecherche.currentIndexChanged.connect(self.rechercheCB)
 
       self.initRecherche()
 
   def initRecherche(self):
-      listeChoix=self.editor.readercata.dicoInverse.keys()
+      listeChoix=list(self.editor.readercata.dicoInverse.keys())
       self.CBRecherche.addItem("")
       for choix in listeChoix:
           self.CBRecherche.addItem(choix)
@@ -71,7 +64,7 @@ class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
 
   def recherche(self,motAChercher):
       if str(motAChercher)=="" or str(motAChercher) == None : return
-      if str(motAChercher) not in self.editor.readercata.dicoInverse.keys():return
+      if str(motAChercher) not in self.editor.readercata.dicoInverse:return
       try :
       #if 1  :
         genea= self.editor.readercata.dicoInverse[str(motAChercher)]

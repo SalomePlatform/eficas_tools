@@ -20,33 +20,38 @@
 # ======================================================================
 
 
-class AU_MOINS_UN:
+from __future__ import absolute_import
+try : 
+   from builtins import object
+except : pass
+
+class AU_MOINS_UN(object):
 
     """
-       La règle AU_MOINS_UN vérifie que l'on trouve au moins un des mots-clés
-       de la règle parmi les arguments d'un OBJECT.
+       La regle AU_MOINS_UN verifie que l'on trouve au moins un des mots-cles
+       de la regle parmi les arguments d'un OBJECT.
 
-       Ces arguments sont transmis à la règle pour validation sous la forme
-       d'une liste de noms de mots-clés ou d'un dictionnaire dont
-       les clés sont des noms de mots-clés.
+       Ces arguments sont transmis a la regle pour validation sous la forme
+       d'une liste de noms de mots-cles ou d'un dictionnaire dont
+       les cles sont des noms de mots-cles.
     """
 
     def verif(self, args):
         """
-            La méthode verif vérifie que l'on trouve au moins un des mos-clés
-            de la liste self.mcs parmi les éléments de args
+            La methode verif verifie que l'on trouve au moins un des mos-cles
+            de la liste self.mcs parmi les elements de args
 
-            args peut etre un dictionnaire ou une liste. Les éléments de args
-            sont soit les éléments de la liste soit les clés du dictionnaire.
+            args peut etre un dictionnaire ou une liste. Les elements de args
+            sont soit les elements de la liste soit les cles du dictionnaire.
         """
         #  on compte le nombre de mots cles presents
         text = ''
         count = 0
         args = self.liste_to_dico(args)
         for mc in self.mcs:
-            if args.has_key(mc):
+            if mc in args :
                 count = count + 1
         if count == 0:
-            text = u"- Il faut au moins un mot-clé parmi : " + `self.mcs`+'\n'
+            text = "- Il faut au moins un mot-cle parmi : " + repr(self.mcs)+'\n'
             return text, 0
         return text, 1

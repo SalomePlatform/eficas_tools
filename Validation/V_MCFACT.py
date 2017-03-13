@@ -21,16 +21,16 @@
 
 
 """
-   Ce module contient la classe mixin MCFACT qui porte les méthodes
-   nécessaires pour réaliser la validation d'un objet de type MCFACT
-   dérivé de OBJECT.
+   Ce module contient la classe mixin MCFACT qui porte les methodes
+   necessaires pour realiser la validation d'un objet de type MCFACT
+   derive de OBJECT.
 
    Une classe mixin porte principalement des traitements et est
-   utilisée par héritage multiple pour composer les traitements.
+   utilisee par heritage multiple pour composer les traitements.
 """
+from __future__ import absolute_import
 # Modules EFICAS
-import V_MCCOMPO
-from Noyau.strfunc import ufmt
+from . import V_MCCOMPO
 
 
 class MCFACT(V_MCCOMPO.MCCOMPO):
@@ -38,19 +38,19 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
     """
        Cette classe a un attribut de classe :
 
-       - txt_nat qui sert pour les comptes-rendus liés à cette classe
+       - txt_nat qui sert pour les comptes-rendus lies a cette classe
     """
 
-    txt_nat = u"Mot clé Facteur :"
+    txt_nat = "Mot cle Facteur :"
 
     def isvalid(self, sd='oui', cr='non'):
         """
-           Methode pour verifier la validité du MCFACT. Cette méthode
-           peut etre appelée selon plusieurs modes en fonction de la valeur
+           Methode pour verifier la validite du MCFACT. Cette methode
+           peut etre appelee selon plusieurs modes en fonction de la valeur
            de sd et de cr.
 
-           Si cr vaut oui elle crée en plus un compte-rendu
-           sd est présent pour compatibilité de l'interface mais ne sert pas
+           Si cr vaut oui elle cree en plus un compte-rendu
+           sd est present pour compatibilite de l'interface mais ne sert pas
         """
         if self.state == 'unchanged':
             return self.valid
@@ -64,31 +64,25 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
                 if not child.isvalid():
                     valid = 0
                     break
-            # Après avoir vérifié la validité de tous les sous-objets, on vérifie
-            # la validité des règles
+            # Apres avoir verifie la validite de tous les sous-objets, on verifie
+            # la validite des regles
             text_erreurs, test_regles = self.verif_regles()
             if not test_regles:
                 if cr == 'oui':
-                    self.cr.fatal(
-                        _(u"Règle(s) non respectée(s) : %s"), text_erreurs)
+                    self.cr.fatal("Regle(s) non respectee(s) : %s" % text_erreurs)
                 valid = 0
             #
             # On verifie les validateurs s'il y en a
             #
             if self.definition.validators and not self.definition.validators.verif(self.valeur):
                 if cr == 'oui':
-                    #self.cr.fatal(_(u"Mot-clé : %s devrait avoir %s"),
-                    #              self.nom, self.definition.validators.info())
-                    self.cr.fatal(_(u"Keyword : %s should have %s"),
-                                  self.nom, self.definition.validators.info())
+                    self.cr.fatal("Keyword : %s should have %s" %( self.nom, self.definition.validators.info()))
                 valid = 0
             # fin des validateurs
             #
             if self.reste_val != {}:
                 if cr == 'oui':
-                    self.cr.fatal(
-                        #_(u"Mots clés inconnus : %s"), ','.join(self.reste_val.keys()))
-                        _(u"unknow keyword : %s"), ','.join(self.reste_val.keys()))
+                    self.cr.fatal("unknow keyword : %s" % ','.join(list(self.reste_val.keys())))
                 valid = 0
             self.valid = valid
             self.state = 'unchanged'

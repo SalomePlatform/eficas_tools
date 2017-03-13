@@ -17,6 +17,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
+import six
 _no=0
 
 import Accas
@@ -101,7 +103,7 @@ class ENTITE:
           (self.ang != "" and self.ang != None) ):
                 dico={}
                 if self.get_docu() !=None : dico["docu"]=self.get_docu()
-                if self.fr != None        : dico["fr"]=unicode(self.fr,"iso-8859-1")
+                if self.fr != None        : dico["fr"]=six.text_type(self.fr,"iso-8859-1")
                 if self.ang != None       : dico["ang"]=self.ang
                 doc=ET.SubElement(moi,'doc')
                 doc.attrib=dico
@@ -112,10 +114,10 @@ class ENTITE:
                 # les attributs sont  toujours du texte 
                 dico={}
                 if (self.defaut != None) and (self.defaut != 'None') :
-                    if isinstance(self.defaut,str ) : dico["defaut"]=unicode(self.defaut,"iso-8859-1")
+                    if isinstance(self.defaut,str ) : dico["defaut"]=six.text_type(self.defaut,"iso-8859-1")
                     else :dico["defaut"]=str(self.defaut)
                 if self.get_sug() !=None:
-                    if isinstance(self.get_sug(),str ) : dico["sug"]=unicode(self.get_sug(),"iso-8859-1")
+                    if isinstance(self.get_sug(),str ) : dico["sug"]=six.text_type(self.get_sug(),"iso-8859-1")
                     else :dico["sug"]=str(self.get_sug())
                 
                 doc=ET.SubElement(moi,'ValeurDef')
@@ -150,7 +152,7 @@ class ENTITE:
          typeAttendu=ET.SubElement(moi,'typeAttendu')
          l=[]
          for t in self.type:
-             if type(t) == types.TypeType : l.append(t.__name__)
+             if type(t) == type : l.append(t.__name__)
              else : l.append(t)
          typeAttendu.text=str(l)
 

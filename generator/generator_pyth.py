@@ -22,8 +22,13 @@
 
 
 """
+try :
+   from builtins import str
+   from builtins import object
+except : pass
+
 import traceback
-import types,string
+import types
 
 from Noyau import N_CR
 from Accas import MCSIMP,MCFACT,MCList
@@ -33,35 +38,35 @@ from Extensions.eficas_exception import EficasException
 
 def entryPoint():
    """
-       Retourne les informations nécessaires pour le chargeur de plugins
+       Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournées dans un dictionnaire
+       Ces informations sont retournees dans un dictionnaire
    """
    return {
         # Le nom du plugin
           'name' : 'pyth',
-        # La factory pour créer une instance du plugin
+        # La factory pour creer une instance du plugin
           'factory' : PythGenerator,
           }
 
 
-class PythGenerator:
+class PythGenerator(object):
    """
        Ce generateur parcourt un objet de type MCFACT et produit
        un fichier au format pyth
 
-       L'acquisition et le parcours sont réalisés par la méthode
+       L'acquisition et le parcours sont realises par la methode
        generator.gener(objet_mcfact)
 
-       L'écriture du fichier au format ini par appel de la méthode
+       L'ecriture du fichier au format ini par appel de la methode
        generator.writefile(nom_fichier)
 
-       Ses caractéristiques principales sont exposées dans des attributs 
+       Ses caracteristiques principales sont exposees dans des attributs 
        de classe :
-          - extensions : qui donne une liste d'extensions de fichier préconisées
+          - extensions : qui donne une liste d'extensions de fichier preconisees
 
    """
-   # Les extensions de fichier préconisées
+   # Les extensions de fichier preconisees
    extensions=('.py','.comm')
 
    def __init__(self,cr=None):
@@ -71,7 +76,7 @@ class PythGenerator:
       else:
          self.cr=N_CR.CR(debut='CR generateur format ini',
                          fin='fin CR format ini')
-      # Le texte au format pyth est stocké dans l'attribut text
+      # Le texte au format pyth est stocke dans l'attribut text
       self.text=''
 
    def writefile(self,filename):
@@ -81,11 +86,11 @@ class PythGenerator:
 
    def gener(self,obj,format='standard',config=None):
       """
-         Tous les mots-clés simples du niveau haut sont transformés en variables 
+         Tous les mots-cles simples du niveau haut sont transformes en variables 
 
-         Tous les mots-clés facteurs sont convertis en dictionnaires
+         Tous les mots-cles facteurs sont convertis en dictionnaires
 
-         Les mots-clés multiples ne sont pas traités
+         Les mots-cles multiples ne sont pas traites
       """
       s=''
       if isinstance(obj,MCList):
@@ -108,15 +113,15 @@ class PythGenerator:
           valeur = self.generMCSIMP(mocle)
           s=s+"%s = %s\n" % (mocle.nom,valeur)
         else:
-          self.cr.fatal("Entite inconnue ou interdite : "+`mocle`)
+          self.cr.fatal("Entite inconnue ou interdite : "+repr(mocle))
 
       self.text=s
       return self.text
 
    def generMCFACT(self,obj):
       """
-         Cette méthode convertit un mot-clé facteur 
-         en une chaine de caractères représentative d'un dictionnaire
+         Cette methode convertit un mot-cle facteur 
+         en une chaine de caracteres representative d'un dictionnaire
       """
       s = '{'
       for mocle in obj.mc_liste:
@@ -127,21 +132,21 @@ class PythGenerator:
             valeur=self.generMCFACT(mocle)
             s=s+"'%s' : %s,\n" % (mocle.nom,valeur)
          else:
-            self.cr.fatal(tr("Entite inconnue ou interdite : %s. Elle est ignoree", `mocle`))
+            self.cr.fatal(tr("Entite inconnue ou interdite : %s. Elle est ignoree", repr(mocle)))
 
       s=s+'}'
       return s
 
    def generMCSIMP(self,obj):
       """
-         Cette méthode convertit un mot-clé simple en une chaine de caractères
+         Cette methode convertit un mot-cle simple en une chaine de caracteres
          au format pyth
       """
       try:
          s="%s" % obj.valeur
       except Exception as e :
          self.cr.fatal(tr("Type de valeur non supporte par le format pyth : n %(exception)s", \
-                           {'nom': obj.nom, 'exception': unicode(e)}))
+                           {'nom': obj.nom, 'exception': str(e)}))
 
 
          s="ERREUR"

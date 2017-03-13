@@ -47,7 +47,14 @@
     Ce convertisseur supporte le format de sortie dict
 
 """
-import sys,string,traceback
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import object
+except :
+   pass
+
+import sys,traceback
 
 from Noyau import N_CR
 from Extensions.i18n import tr
@@ -66,7 +73,7 @@ def entryPoint():
           }
 
 
-class PythParser:
+class PythParser(object):
    """
        Ce convertisseur lit un fichier au format pyth avec la 
        methode readfile : convertisseur.readfile(nom_fichier)
@@ -101,11 +108,11 @@ class PythParser:
          return
       self.g={}
       try:
-         exec self.text in self.g
+         exec(self.text, self.g)
       except EficasException as e:
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-         s= string.join(l[2:])
-         s= string.replace(s,'"<string>"','"<%s>"'%self.filename)
+         s= ''.join(l[2:])
+         s= s.replace('"<string>"','"<%s>"'%self.filename)
          self.cr.fatal(tr("Erreur a l'evaluation :\n %s", s))
 
    def convert(self,outformat,appli=None):
@@ -116,6 +123,6 @@ class PythParser:
 
    def getdict(self):
       d={}
-      for k,v in self.g.items():
+      for k,v in list(self.g.items()):
          if k[0] != '_':d[k]=v
       return d

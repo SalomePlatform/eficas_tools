@@ -18,20 +18,16 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,sys
+from __future__ import absolute_import
+import types,os,sys
 
 # Modules Eficas
-from determine import  monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtGui  import QIcon
-   from PyQt5.QtCore import QSize
-else:
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from PyQt5.QtGui  import QIcon
+from PyQt5.QtCore import QSize
 from Extensions.i18n import tr
 
 from desWidgetSimpFichier  import Ui_WidgetSimpFichier 
-from monWidgetSimpBase     import MonWidgetSimpBase
+from .monWidgetSimpBase     import MonWidgetSimpBase
 
 
 class MonWidgetSimpFichier (Ui_WidgetSimpFichier,MonWidgetSimpBase):

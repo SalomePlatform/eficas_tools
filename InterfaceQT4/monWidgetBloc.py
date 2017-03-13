@@ -19,8 +19,9 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
 from desWidgetBloc import Ui_WidgetBloc
-from groupe import Groupe
+from .groupe import Groupe
 from Extensions.i18n import tr
 # Import des panels
 

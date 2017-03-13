@@ -22,11 +22,11 @@
     qui permet de spécifier les caractéristiques des mots clés simples
 """
 
+from __future__ import absolute_import
 import types
 
-import N_ENTITE
-import N_MCSIMP
-from strfunc import ufmt
+from . import N_ENTITE
+from . import N_MCSIMP
 
 
 class SIMP(N_ENTITE.ENTITE):
@@ -48,7 +48,7 @@ class SIMP(N_ENTITE.ENTITE):
 
     def __init__(self, typ,ang="", fr="", statut='f', into=None, defaut=None,
                  min=1, max=1, homo=1, position='local',
-                 val_min='**', val_max='**', docu="", validators=None,
+                 val_min=float('-inf'), val_max=float('inf'), docu="", validators=None,
                  sug=None):
         """
             Un mot-clé simple est caractérisé par les attributs suivants :
@@ -69,7 +69,7 @@ class SIMP(N_ENTITE.ENTITE):
         """
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs
-        if type(typ) == types.TupleType:
+        if type(typ) == tuple:
             self.type = typ
         else:
             self.type = (typ,)
@@ -86,6 +86,10 @@ class SIMP(N_ENTITE.ENTITE):
         self.docu = docu
         self.sug = sug
         self.ang=ang
+        if self.max     == '**' : self.max     = float('inf')
+        if self.val_max == '**' : self.val_max = float('inf')
+        if self.min     == '**' : self.min     = float('-inf')
+        if self.val_min == '**' : self.val_min = float('-inf')
 
     def verif_cata(self):
         """

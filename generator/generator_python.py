@@ -22,16 +22,23 @@
     python pour EFICAS.
 
 """
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import object
+   from builtins import range
+except : pass
+
 import traceback
-import types,string,re
+import types,re
 
 from Noyau import N_CR
 from Noyau.N_utils import repr_float
 import Accas
 import Extensions
 from Extensions.parametre import ITEM_PARAMETRE
-from Formatage import Formatage 
-from Formatage import FormatageLigne
+from .Formatage import Formatage 
+from .Formatage import FormatageLigne
 from Extensions.param2 import Formula
 from Extensions.eficas_exception import EficasException
 from Extensions.i18n import tr
@@ -51,7 +58,7 @@ def entryPoint():
           }
 
 
-class PythonGenerator:
+class PythonGenerator(object):
    """
        Ce generateur parcourt un objet de type JDC et produit
        un fichier au format python 
@@ -100,7 +107,7 @@ class PythonGenerator:
       if format == 'brut':
          self.text=liste
       elif format == 'standard':
-         self.text=string.join(liste)
+         self.text=''.join(liste)
       elif format == 'beautifie':
          jdc_formate = Formatage(liste,mode='.py')
          self.text=jdc_formate.formate_jdc()
@@ -177,9 +184,9 @@ class PythonGenerator:
             l.extend(self.generator(etape_niveau))
       if l != [] :
          # Si au moins une etape, on ajoute le retour chariot sur la derniere etape
-         if type(l[-1])==types.ListType:
+         if type(l[-1])==list:
             l[-1][-1] = l[-1][-1]+'\n'
-         elif type(l[-1])==types.StringType:
+         elif type(l[-1])==bytes:
             l[-1] = l[-1]+'\n'
       return l
 
@@ -201,7 +208,7 @@ class PythonGenerator:
          Cette methode convertit un COMMANDE_COMM
          en une liste de chaines de caracteres a la syntaxe python
       """
-      l_lignes = string.split(obj.valeur,'\n')
+      l_lignes = obj.valeur.split('\n')
       txt=''
       for ligne in l_lignes:
           txt = txt + '##'+ligne+'\n'
@@ -224,7 +231,7 @@ class PythonGenerator:
       # Dans la chaine de caracteres obj.valeur, on supprime le dernier
       # saut de ligne
       sans_saut = re.sub("\n$","",obj.valeur)
-      l_lignes = string.split(sans_saut,'\n')
+      l_lignes = sans_saut.split('\n')
       txt=''
       i=1
       for ligne in l_lignes:
@@ -284,7 +291,7 @@ class PythonGenerator:
       """
       try:
         sdname= self.generator(obj.sd)
-        if  string.find(sdname,'SD_') != -1: sdname='sansnom'
+        if  sdname.find('SD_') != -1: sdname='sansnom'
       except:
         sdname='sansnom'
       l=[]
@@ -380,6 +387,7 @@ class PythonGenerator:
             l.append(mocle)
         elif isinstance(v,Accas.MCSIMP) :
           text=self.generator(v)
+          if text==None : text= ""
           l.append(v.nom+'='+text)
         else:
           # MCFACT ou MCList
@@ -420,6 +428,7 @@ class PythonGenerator:
          else:
            # on est en presence d'un MCSIMP : on recupere une string
            text =self.generator(v)
+           if text== None : text =""
            if v.nom != "Consigne" :  l.append(v.nom+'='+text)
       # il faut etre plus subtil dans l'ajout de la virgule en differenciant 
       # le cas ou elle est obligatoire (si self a des freres cadets 
@@ -469,7 +478,8 @@ class PythonGenerator:
                l.append(mocle)
         else:
           data=self.generator(v)
-          if type(data) == types.ListType:
+          if data==None : data= ""
+          if type(data) == list:
             data[0]=v.nom+'='+data[0]
           else:
             data=v.nom+'='+data
@@ -478,7 +488,7 @@ class PythonGenerator:
 
 
    def format_item(self,valeur,etape,obj,vientDeListe=0):
-      if (type(valeur) == types.FloatType or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
+      if (type(valeur) == float or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
          # Pour un flottant on utilise str ou repr si on vient d une liste
          # ou la notation scientifique
          # On ajoute un . si il n y en a pas dans la valeur
@@ -486,11 +496,11 @@ class PythonGenerator:
          if vientDeListe and repr(valeur) != str(valeur) : s=repr(valeur)
          if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.0'
          clefobj=etape.get_sdname()
-         if self.appli.appliEficas and self.appli.appliEficas.dict_reels.has_key(clefobj):
-           if self.appli.appliEficas.dict_reels[clefobj].has_key(valeur):
+         if self.appli.appliEficas and clefobj in self.appli.appliEficas.dict_reels:
+           if valeur in self.appli.appliEficas.dict_reels[clefobj]:
              s=self.appli.appliEficas.dict_reels[clefobj][valeur]
          
-      elif type(valeur) == types.StringType :
+      elif type(valeur) == bytes :
          if valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr
             s = repr(valeur)
@@ -529,7 +539,7 @@ class PythonGenerator:
           syntaxe python
       """
       waitTuple=0
-      if type(obj.valeur) in (types.TupleType,types.ListType) :
+      if type(obj.valeur) in (tuple,list) :
          s = ''
          for ss_type in obj.definition.type:
           if repr(ss_type).find('Tuple') != -1 :

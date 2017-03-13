@@ -20,19 +20,25 @@
 """Ce module contient le plugin generateur de fichier au format  Code_Carmel3D pour EFICAS.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import str
+except : pass
+
 import traceback
-import types,string,re,os
+import types,re,os
 from Extensions.i18n import tr
-from generator_python import PythonGenerator
+from .generator_python import PythonGenerator
 
 extensions=('.comm',)
 #if 1:
 try :
    from enumDicoTelemac       import TelemacdicoEn
    DicoEnumCasEnInverse={}
-   for motClef in TelemacdicoEn.keys():
+   for motClef in TelemacdicoEn():
      d={}
-     for valTelemac in TelemacdicoEn[motClef].keys():
+     for valTelemac in TelemacdicoEn[motClef]:
         valEficas= TelemacdicoEn[motClef][valTelemac]
         d[valEficas]=valTelemac
      DicoEnumCasEnInverse[motClef]=d
@@ -74,7 +80,7 @@ class TELEMACGenerator(PythonGenerator):
 
       self.dicoCataToCas={}
       self.dicoCasToCata=appli.readercata.dicoCasToCata
-      for motClef in self.dicoCasToCata.keys():
+      for motClef in self.dicoCasToCata:
            self.dicoCataToCas[self.dicoCasToCata[motClef]]=motClef
 
 
@@ -116,7 +122,7 @@ class TELEMACGenerator(PythonGenerator):
        if self.statut == 'Leger' : extension = ".Lcas"
        else                      : extension = ".cas"
        fileDico = fn[:fn.rfind(".")] + extension 
-       f = open( str(fileDico), 'wb')
+       f = open( str(fileDico), 'w')
        f.write( self.texteDico )
        f.close()
 
@@ -138,7 +144,7 @@ class TELEMACGenerator(PythonGenerator):
         self.texteDico += '/\t\t\t'+obj.nom +'\n'
         self.texteDico += '/------------------------------------------------------/\n'
         s=PythonGenerator.generPROC_ETAPE(self,obj)
-        if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
+        if obj.nom in TELEMACGenerator.__dict__ : TELEMACGenerator.__dict__[obj.nom](*(self,obj))
         
         return s
 
@@ -152,7 +158,7 @@ class TELEMACGenerator(PythonGenerator):
         # ajouter le statut ?
         if self.statut == 'Leger' :
           if hasattr(obj.definition,'defaut') and (obj.definition.defaut == obj.valeur) and (obj.nom not in self.listeTelemac) : return s
-          if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == types.TupleType or type(obj.valeur) == types.ListType) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
+          if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == tuple or type(obj.valeur) == list) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
  
 
         #nomMajuscule=obj.nom.upper()
@@ -163,17 +169,17 @@ class TELEMACGenerator(PythonGenerator):
       
        
         sTelemac=s[0:-1]
-        if not( type(obj.valeur) in (types.TupleType,types.ListType) ):
-           if obj.nom in DicoEnumCasEnInverse.keys():  
+        if not( type(obj.valeur) in (tuple,list) ):
+           if obj.nom in DicoEnumCasEnInverse:  
              try : sTelemac=str(DicoEnumCasEnInverse[obj.nom][obj.valeur])
-             except : print ("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur)
-        if type(obj.valeur) in (types.TupleType,types.ListType) :
-           if obj.nom in DicoEnumCasEnInverse.keys():  
+             except : print(("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur))
+        if type(obj.valeur) in (tuple,list) :
+           if obj.nom in DicoEnumCasEnInverse:  
              #sT = "'"
              sT=''
              for v in obj.valeur:
                try : sT +=str(DicoEnumCasEnInverse[obj.nom][v]) +";"
-               except : print ("generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur)
+               except : print(("generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur))
              #sTelemac=sT[0:-1]+"'"
              sTelemac=sT[0:-1]
            else  :
@@ -214,7 +220,7 @@ class TELEMACGenerator(PythonGenerator):
       """
       """
       s=PythonGenerator.generMCFACT(self,obj)
-      if obj.nom in TELEMACGenerator.__dict__.keys() : apply(TELEMACGenerator.__dict__[obj.nom],(self,obj))
+      if obj.nom in TELEMACGenerator.__dict__ : TELEMACGenerator.__dict__[obj.nom],(self,obj)
  
       return s
 
@@ -255,8 +261,8 @@ class TELEMACGenerator(PythonGenerator):
  
 
    def NAME_OF_TRACER(self,obj):
-       print (dir(obj) )
-       print (obj.get_genealogie_precise())
+       print((dir(obj) ))
+       print((obj.get_genealogie_precise()))
 
    def Validation(self,obj):
        self.texteDico += "VALIDATION : True \n"

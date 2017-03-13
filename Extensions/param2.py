@@ -18,17 +18,27 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 from __future__ import division
+from __future__ import absolute_import
+try :
+  from builtins import str
+  from builtins import object
+except : pass
 import math
 import types
+import six
 
 try:
   import Numeric
 except:
-  import numpy
-  Numeric = numpy
+  try:
+    import numpy
+    Numeric = numpy
+  except ImportError:
+    Numeric = None
+
 
 def mkf(value):
-    if type(value) in (type(1), type(1L), type(1.5), type(1j),type("hh")) :
+    if type(value) in (type(1), type(1), type(1.5), type(1j),type("hh")) :
         return Constant(value)
     elif isinstance(value, Formula):
         return value
@@ -36,10 +46,10 @@ def mkf(value):
         return Constant(value)
     else:
 #        return Constant(value)
-        raise TypeError, ("Can't make formula from", value)
+        raise TypeError("Can't make formula from", value)
 
 #class Formula(object):
-class Formula:
+class Formula(object):
     def __len__(self):
         val=self.eval()
         if val is None:return 0
@@ -49,7 +59,7 @@ class Formula:
            return 1
     def __complex__(self): return complex(self.eval())
     def __int__(self): return int(self.eval())
-    def __long__(self): return long(self.eval())
+    def __long__(self): return int(self.eval())
     def __float__(self): return float(self.eval())
     def __pos__(self): return self  # positive
     def __neg__(self): return Unop('-', self)
@@ -81,7 +91,7 @@ class Formula:
     def __hash__(self):return id(self)
 
 def _div(a,b):
-  if isinstance(a,(int,long)) and isinstance(b,(int,long)):
+  if isinstance(a,six.integer_types) and isinstance(b,six.integer_types):
     if a%b:
       return a/b
     else:
@@ -183,9 +193,9 @@ class Variable(Formula):
 def Eval(f):
     if isinstance(f,Formula):
         f=f.eval()
-    elif type(f) in (types.ListType, ):
+    elif type(f) in (list, ):
         f=[Eval(i) for i in f]
-    elif type(f) in (types.TupleType,):
+    elif type(f) in (tuple,):
         f=tuple([Eval(i) for i in f])
     return f
 
@@ -193,8 +203,8 @@ def Eval(f):
 def cos(f): return Unop('ncos', f)
 def sin(f): return Unop('nsin', f)
 def array(f,*tup,**args): 
-    """array de Numeric met en défaut la mécanique des parametres
-       on la supprime dans ce cas. Il faut que la valeur du parametre soit bien définie
+    """array de Numeric met en defaut la mecanique des parametres
+       on la supprime dans ce cas. Il faut que la valeur du parametre soit bien definie
     """
     originalMath=OriginalMath()
     original_narray=originalMath.original_narray
@@ -218,7 +228,9 @@ class  OriginalMath(object):
     def __init__(self):
         if hasattr(self,'pi') :return
         import math
-        self.toSurcharge()
+        try : 
+          self.toSurcharge()
+        except : pass
 
     def toSurcharge(self):
         self.numeric_ncos=Numeric.cos
@@ -278,9 +290,11 @@ class  OriginalMath(object):
           import numpy
           Numeric = numpy
 
-        Numeric.cos=originalMath.numeric_ncos
-        Numeric.sin=originalMath.numeric_nsin
-        Numeric.array=originalMath.numeric_narray
+        try : 
+          Numeric.cos=originalMath.numeric_ncos
+          Numeric.sin=originalMath.numeric_nsin
+          Numeric.array=originalMath.numeric_narray
+        except : pass
         math.sin=originalMath.sin
         math.cos=originalMath.cos
         math.sqrt=originalMath.sqrt

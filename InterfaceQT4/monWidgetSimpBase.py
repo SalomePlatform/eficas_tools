@@ -18,34 +18,39 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os
 
 # Modules Eficas
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtCore import  Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtCore import  Qt
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetSimpBase     import Ui_WidgetSimpBase 
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieValeur
+from .politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieValeur
 
 
 class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-        #print "MonWidgetSimpBase", nom
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
-        if monEnvQT5 : self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
-        else :         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+        self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
+        self.lineEditVal.focusInEvent=self.monFocusInEvent
+
+
+  def monFocusInEvent(self,event):
+      self.editor.nodeEnCours = self
+      QLineEdit.focusInEvent(self.lineEditVal,event)
 
 
   #def showEvent(self, event):
@@ -56,6 +61,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
   #    QWidget.showEvent(self,event)
 
   def setValeurs(self):
+       #print ("dans setValeurs")
        self.politique=PolitiqueUnique(self.node,self.editor)
        valeur=self.node.item.get_valeur()
        valeurTexte=self.politique.GetValeurTexte(valeur)
@@ -87,7 +93,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
                   'Repertoire' : tr(u'Un repertoire est attendu.  '),
                   'Heure' : tr(u'Heure sous la forme HH:MM'),
                   'Date' :  tr(u'Date sous la forme JJ/MM/AA')}
-      if mc.type[0] != types.ClassType:
+      if mc.type[0] != type:
          commentaire = d_aides.get(mc.type[0], tr("Type de base inconnu"))
       else : commentaire=""
       return commentaire

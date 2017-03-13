@@ -17,11 +17,23 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import sys,string,re,tokenize
-import cStringIO
+from __future__ import absolute_import
+from __future__ import print_function
+try : 
+  from future import standard_library
+  standard_library.install_aliases()
+except :
+  pass
+try : 
+  from builtins import str
+except :
+  pass
+from builtins import object
+import sys,re,tokenize
+import io
 
 
-class ENTITE_JDC :
+class ENTITE_JDC(object) :
     def __init__(self):
         self.texte = ''
 
@@ -37,34 +49,34 @@ class COMMENTAIRE(ENTITE_JDC):
 
     def __str__(self):
         """
-        Retourne une chaîne de caractères représentant self
-        sous une forme interprétable par EFICAS
+        Retourne une chaine de caracteres representant self
+        sous une forme interpretable par EFICAS
         """
         t=repr(self.texte)
         return "COMMENTAIRE(u"+t+")\n"
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en enlevant le # initial
+        Ajoute texte a self.texte en enlevant le # initial
         """
         if texte[0] == '#':
             self.texte = self.texte+texte[1:]
         else:
-            # le dièse n'est pas sur le premier caractère
-            amont,aval = string.split(texte,'#',1) # on découpe suivant la première occurrence de #
+            # le diese n'est pas sur le premier caractere
+            amont,aval = texte.split('#',1) # on decoupe suivant la premiere occurrence de #
             self.texte = self.texte +amont + aval
         
 class AFFECTATION(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en enlevant tout retour chariot et tout point virgule
+        Ajoute texte a self.texte en enlevant tout retour chariot et tout point virgule
         """
         self.texte = self.texte+texte
         
     def __str__(self):
         """
-        Retourne une expression de l'affectation compréhensible par ACCAS
+        Retourne une expression de l'affectation comprehensible par ACCAS
         et exploitable par EFICAS
         """
         #t=repr(self.texte)
@@ -75,15 +87,15 @@ class COMMANDE_COMMENTARISEE(ENTITE_JDC):
 
     def append_text(self,texte):
         """
-        Ajoute texte à self.texte en enlevant les doubles commentaires
+        Ajoute texte a self.texte en enlevant les doubles commentaires
         """
-        texte = string.strip(texte)
-        texte = string.strip(texte[2:])
+        texte = texte.strip()
+        texte = texte[2:].strip()
         self.texte = self.texte+(len(self.texte)>0)*'\n'+texte
 
     def __str__(self):
         """
-        Retourne une expression de la commande commentarisée compréhensible par ACCAS
+        Retourne une expression de la commande commentarisee comprehensible par ACCAS
         et exploitable par EFICAS
         """
         return "COMMANDE_COMM(texte="+repr(self.texte)+")\n"
@@ -98,15 +110,15 @@ next['else'] = next['finally'] = next['def'] = next['class'] = 'end'
 next['end'] = ()
 start = 'if', 'while', 'for', 'try', 'def', 'class'
 
-class PARSEUR_PYTHON:
+class PARSEUR_PYTHON(object):
     """
-    Cette classe sert à créer un objet PARSEUR_PYTHON qui réalise l'analyse d'un texte 
-    représentant un JDC Python en distinguant :
+    Cette classe sert a creer un objet PARSEUR_PYTHON qui realise l'analyse d'un texte 
+    representant un JDC Python en distinguant :
       - les commentaires inter commandes
       - les affectations
       - les commandes
     """
-    # au moins 1 caractère non blanc ou non tabulation
+    # au moins 1 caractere non blanc ou non tabulation
     #pattern_ligne_non_blanche = re.compile(r'^[\w\t]+')
     pattern_ligne_non_blanche = re.compile(r'[^ \t]+')
     kwprog = re.compile(
@@ -123,7 +135,7 @@ class PARSEUR_PYTHON:
     def __init__(self,texte):
         # on verifie que le texte fourni se compile correctement
         compile(texte,"<string>",'exec')
-        self.texte = cStringIO.StringIO(texte)
+        self.texte = io.StringIO(texte)
         self.line=''
         self.out=""
         self.lastcol = 0
@@ -240,7 +252,7 @@ class PARSEUR_PYTHON:
     def NL(self, tstring):
         if self.affectation:
            if self.paren_level == 0:
-              # affectation en cours mais complète
+              # affectation en cours mais complete
               self.out= self.out+ str(self.affectation_courante)
               self.affectation_courante=None
               self.please_indent=1
@@ -270,7 +282,7 @@ class PARSEUR_PYTHON:
            elif self.paren_level > 0:
               self.output(tstring)
            elif self.comment_flag and not self.pattern_ligne_non_blanche.search(before):
-              # il s'agit d'une commande commentarisée
+              # il s'agit d'une commande commentarisee
               if self.objet_courant == None:
                  if not self.buffer:self.buffer_indent=self.indent_list[-1]
                  self.objet_courant=COMMANDE_COMMENTARISEE()
@@ -293,14 +305,14 @@ class PARSEUR_PYTHON:
 
         else:
            # On a un commentaire simple
-           new_line = string.split(self.line,'#')[0]
+           new_line = self.line.split('#')[0]
            if self.affectation:
               # affectation en cours, on ignore
               pass
            elif self.paren_level > 0:
               self.output(tstring)
            elif self.comment_flag and not self.pattern_ligne_non_blanche.search(new_line):
-              # commentaire précédé de blancs
+              # commentaire precede de blancs
               if self.objet_courant == None:
                  if not self.buffer:self.buffer_indent=self.indent_list[-1]
                  self.objet_courant=COMMENTAIRE()
@@ -322,7 +334,7 @@ class PARSEUR_PYTHON:
            return
 
     def ERRORTOKEN(self, tstring):
-        print ("ERRORTOKEN", tstring)
+        print("ERRORTOKEN", tstring)
 
     def NAME(self, tstring):
         if self.buffer:
@@ -462,7 +474,7 @@ class PARSEUR_PYTHON:
 
 if __name__ == "__main__" :
     import sys
-    import cStringIO
+    import io
     text="""
 #
 #   comment

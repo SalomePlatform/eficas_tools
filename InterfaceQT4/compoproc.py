@@ -17,17 +17,18 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Editeur     import Objecttreeitem
-import compooper
-import browser
-import typeNode
+from . import compooper
+from . import browser
+from . import typeNode
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNode):
 
     def getPanel(self):
         #print "getPanel de compoproc"
-        from monWidgetCommande import MonWidgetCommande
+        from .monWidgetCommande import MonWidgetCommande
         return MonWidgetCommande(self,self.editor,self.item.object)
 
     def createPopUpMenu(self):

@@ -17,9 +17,10 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Noyau import N_MACRO
 from Ihm import I_ENTITE
-import A_MACRO_ETAPE 
+from . import A_MACRO_ETAPE 
 
 class MACRO(N_MACRO.MACRO,I_ENTITE.ENTITE):
    class_instance=A_MACRO_ETAPE.MACRO_ETAPE

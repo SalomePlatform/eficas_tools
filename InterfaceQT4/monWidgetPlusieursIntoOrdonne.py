@@ -18,27 +18,29 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os,sys
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+except : pass
+
+import types,os,sys
 
 # Modules Eficas
-from feuille                import Feuille
+from .feuille                import Feuille
 from desWidgetPlusieursIntoOrdonne import Ui_WidgetPlusieursIntoOrdonne 
-from politiquesValidation   import PolitiquePlusieurs
-from qtSaisie               import SaisieValeur
-from gereListe              import GereListe
-from gereListe              import GerePlie
-from gereListe              import LECustom
-from gereListe              import MonLabelListeClic
+from .politiquesValidation   import PolitiquePlusieurs
+from .qtSaisie               import SaisieValeur
+from .gereListe              import GereListe
+from .gereListe              import GerePlie
+from .gereListe              import LECustom
+from .gereListe              import MonLabelListeClic
 from Extensions.i18n import tr
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets  import   QFrame, QApplication, QScrollBar
-    from PyQt5.QtCore import QTimer, QSize, Qt
-    from PyQt5.QtGui  import QIcon
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from six.moves import range
+from PyQt5.QtWidgets  import   QFrame, QApplication, QScrollBar
+from PyQt5.QtCore import QTimer, QSize, Qt
+from PyQt5.QtGui  import QIcon
 
 
 class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe,GerePlie):
@@ -112,7 +114,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       
   def setValeurs(self):
        self.listeValeursCourantes=self.node.item.GetListeValeurs()
-       if self.monSimpDef.max == "**" : aConstruire=7
+       if self.monSimpDef.max == "**" or self.monSimpDef.max == float('inf') : aConstruire=7
        else                           : aConstruire=self.monSimpDef.max
        if len(self.listeValeursCourantes) > aConstruire : aConstruire=len(self.listeValeursCourantes)
        for i in range(1,aConstruire+1): self.ajoutLEResultat(i)

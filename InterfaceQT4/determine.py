@@ -1,3 +1,9 @@
+from __future__ import absolute_import
+from __future__ import print_function
+try :
+   from builtins import object
+except : pass
+
 import os
 
 class envQT(object):
@@ -11,7 +17,7 @@ class envQT(object):
 
     def __init__(self):
         if hasattr(self,'inQt5') : return
-        if 'PYQT_ROOT_DIR' in os.environ.keys(): qt=os.environ['PYQT_ROOT_DIR']
+        if 'PYQT_ROOT_DIR' in os.environ: qt=os.environ['PYQT_ROOT_DIR']
         else : qt="Pyqt4"
         if 'Pyqt-5' in qt : self.inQt5=True
         else              : self.inQt5=False

@@ -18,25 +18,24 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os
 
 
-# Modules Eficas
-from determine import monEnvQT5
 
-if monEnvQT5:
-    from PyQt5.QtWidgets import QLineEdit
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetSimpSalome   import Ui_WidgetSimpSalome 
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieValeur
+from .politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieValeur
 
 
 class MonWidgetSimpSalome (Ui_WidgetSimpSalome,Feuille):
@@ -46,8 +45,7 @@ class MonWidgetSimpSalome (Ui_WidgetSimpSalome,Feuille):
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
         self.politique=PolitiqueUnique(self.node,self.editor)
-        if monEnvQT5: self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
-        else : self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
+        self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 

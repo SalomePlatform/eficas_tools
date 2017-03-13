@@ -17,17 +17,17 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 from Extensions.i18n import tr
-import CONNECTOR
-import I_MCCOMPO
+from . import CONNECTOR
+from . import I_MCCOMPO
 import Noyau
-import string
 
 class MCFACT(I_MCCOMPO.MCCOMPO):
   def isrepetable(self):
      """ 
-         Indique si l'objet est répétable.
-         Retourne 1 si le mot-clé facteur self peut être répété
+         Indique si l'objet est repetable.
+         Retourne 1 si le mot-cle facteur self peut etre repete
          Retourne 0 dans le cas contraire
      """
      if self.definition.max > 1:
@@ -55,8 +55,8 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
 
     try:
       if len(objet) > 1 :
-        index = objet.get_index(self)+1 # + 1 à cause de la numérotation qui commence à 0
-        return self.nom +'_'+`index`+':'
+        index = objet.get_index(self)+1 # + 1 a cause de la numerotation qui commence a 0
+        return self.nom +'_'+repr(index)+':'
       else:
         return self.nom
     except:
@@ -67,15 +67,15 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     if nom[-1]==':' : nom=nom[0:-1]
     if self.parent:
        l=self.parent.get_genealogie_precise()
-       l.append(string.strip(nom))
+       l.append(nom.strip())
        return l
     else:
-       return [string.strip(nom)]
+       return [nom.strip()]
 
 
   def init_modif(self):
     """
-       Met l'état de l'objet à modified et propage au parent
+       Met l'etat de l'objet a modified et propage au parent
        qui vaut None s'il n'existe pas
     """
     self.state = 'modified'
@@ -85,11 +85,11 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
 
   def fin_modif(self):
     """
-      Méthode appelée après qu'une modification a été faite afin de déclencher
-      d'éventuels traitements post-modification
+      Methode appelee apres qu'une modification a ete faite afin de declencher
+      d'eventuels traitements post-modification
     """
     #print "fin_modif",self
-    # pour les objets autres que les commandes, aucun traitement spécifique
+    # pour les objets autres que les commandes, aucun traitement specifique
     # on remonte l'info de fin de modif au parent
     CONNECTOR.Emit(self,"valid")
     parent= hasattr(self,"alt_parent") and self.alt_parent or self.parent
@@ -97,7 +97,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
        parent.fin_modif()
 
   def normalize(self):
-    """ Retourne le MCFACT normalisé. Pour un MCFACT isolé, l'objet normalisé
+    """ Retourne le MCFACT normalise. Pour un MCFACT isole, l'objet normalise
         est une MCLIST de longueur 1 qui contient ce MCFACT
     """
     new_obj = self.definition.list_instance()

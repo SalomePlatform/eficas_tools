@@ -17,11 +17,21 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-from string import split,strip,lowercase,uppercase
-import re,string,cPickle,os
+from __future__ import absolute_import
+from __future__ import print_function
+try : 
+   from builtins import str
+   from builtins import range
+   from builtins import object
+except :
+   pass
+
+import re,six.moves.cPickle,os
 
 from Extensions.i18n import tr
 from Noyau.N_CR import CR
+
+from six.moves import range
 
 #
 __Id__="$Id: analyse_catalogue.py,v 1.9.8.1.2.1.2.6 2014-01-23 09:14:44 pnoyret Exp $"
@@ -46,7 +56,7 @@ def cherche_nom(text):
         return a.group(1)
 
 def cherche_args(text):
-        text = strip(text)
+        text = text.strip()
         longueur = len(text)
         if text[0] != '(u':
                 return 'erreur !'
@@ -69,15 +79,15 @@ def cherche_args(text):
                         except :
                                 return text[1:i],''
 
-class ENTITE:
+class ENTITE(object):
         def cherche_enfants(self):
                 try :
-                        self.text = strip(self.text)
+                        self.text = self.text.strip()
                         liste = re.split(u'=',self.text,1)
                         if len(liste)>1 :
                                 arg1=liste[0]
                                 reste=liste[1]
-                                reste = strip(reste)
+                                reste = reste.strip()
                                 if reste[0:4] in l_noms :
                                         nom_mc = cherche_nom(arg1+'=')
                                         arg_mc, self.text = cherche_args(reste[4:])
@@ -99,7 +109,7 @@ class ENTITE:
                         mc = SIMP_CATA(nom_mc,self)
                         self.children.append(mc)
                 else :
-                        print (tr("Erreur dans la creation du mot-cle : %s", nom_mc))
+                        print (tr("Erreur dans la creation du mot-cle : %s", nom_mc) )
 
         def construit_liste_dico(self):
                 l=[]
@@ -137,7 +147,7 @@ class COMMANDE_CATA(ENTITE) :
                         texte_cmd = texte_cmd + child.affiche(1)
                 return texte_cmd
 
-class SIMP_CATA :
+class SIMP_CATA(object) :
         def __init__(self,nom,parent):
                 self.nom = nom
                 self.cr = CR()
@@ -170,7 +180,7 @@ class FACT_CATA(ENTITE) :
                         text = text + child.affiche(ind+1)
                 return text
                 
-class CATALOGUE_CATA:
+class CATALOGUE_CATA(object):
         def __init__(self,parent,fichier):
                 self.parent = parent
                 self.fichier=fichier
@@ -187,7 +197,7 @@ class CATALOGUE_CATA:
                         self.texte_complet=f.read()
                         f.close()
                 except :
-                        print (tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier)))
+                        print((tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier))))
                         self.cr.fatal(tr("Impossible d'ouvrir le fichier : %s ", str(self.fichier)))
 
         def constr_list_txt_cmd(self,text):
@@ -198,7 +208,6 @@ class CATALOGUE_CATA:
                         self.liste_textes_commandes.append(liste[i]+')')
 
         def analyse_commande_old(self,text):
-                #if strip(text) == '' or strip(text) ==')': return
                 liste = re.split(u'OPER *\(u',text,1)
                 if len(liste) < 2 :
                         liste = re.split(u'PROC *\(u',text,1)
@@ -213,21 +222,20 @@ class CATALOGUE_CATA:
                 fin = liste[1]
                 nom_cmd = cherche_nom(debut)
                 if nom_cmd == 'erreur !':
-                        print (tr("Erreur dans la recherche  du nom de la commande : "), debut)
+                        print((tr("Erreur dans la recherche  du nom de la commande : "), debut))
                 args_cmd,toto = cherche_args(u'(u'+fin)
                 if args_cmd == 'erreur !':
-                        print (tr("Erreur dans la recherche des  args de la commande :") , debut)
+                        print((tr("Erreur dans la recherche des  args de la commande :") , debut))
                 cmd=COMMANDE_CATA(nom_cmd,args_cmd,self)
                 self.liste_commandes.append(cmd)
 
         def analyse_commande(self,text):
-                #if strip(text) == '' or strip(text) ==')': return
                 for nom_cmd in l_noms_commandes:
                         liste = re.split(nom_cmd+' *\(u',text,1)
                         if len(liste) == 2 : break
                 if len(liste) < 2 :
-                        print (tr("le texte a analyser n'est pas celui d'une commande connue : \
-                                        %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text}))
+                        print((tr("le texte a analyser n'est pas celui d'une commande connue : \
+                                        %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text})))
                         self.cr.fatal(tr("le texte a analyser n'est pas celui d'une commande connue : \
                                          %(v_1)s %(v_2)s", {'v_1': str(l_noms_commandes), 'v_2': text}))
                         return
@@ -235,11 +243,11 @@ class CATALOGUE_CATA:
                 fin = liste[1]
                 nom_cmd = cherche_nom(debut)
                 if nom_cmd == 'erreur !':
-                        print ( tr("Erreur dans la recherche du  nom de la commande : "), debut)
+                        print(( tr("Erreur dans la recherche du  nom de la commande : "), debut))
                 args_cmd,toto = cherche_args(u'(u'+fin)
                 if args_cmd == 'erreur !':
-                        print ( tr("Erreur dans la recherche des args de la commande : "), debut)
-                        print (tr(fin))
+                        print(( tr("Erreur dans la recherche des args de la commande : "), debut))
+                        print((tr(fin)))
                 cmd=COMMANDE_CATA(nom_cmd,args_cmd,self)
                 self.liste_commandes.append(cmd)
                 
@@ -297,7 +305,7 @@ def make_cata_pickle(fic_cata):
         fic_cata_p = os.path.splitext(fic_cata)[0]+'_pickled.py'
         cata_ordonne = analyse_catalogue(None,fic_cata)
         f = open(fic_cata_p,'w+')
-        p = cPickle.Pickler(f)
+        p = six.moves.cPickle.Pickler(f)
         p.dump(cata_ordonne.entites)
         f.close()
         

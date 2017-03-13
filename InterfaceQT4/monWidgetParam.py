@@ -19,20 +19,21 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 from desWidgetParam import Ui_WidgetParam
-from gereIcones import FacultatifOuOptionnel
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QWidget, QMessageBox
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from InterfaceQT4.gereIcones import FacultatifOuOptionnel
+import six
+from PyQt5.QtWidgets import QWidget, QMessageBox
+from PyQt5.QtGui import QIcon
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 import Accas 
 import os, re
-import string
 import types
 
 pattern_name       = re.compile(r'^[^\d\W]\w*\Z')
@@ -53,25 +54,20 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       self.repIcon=self.appliEficas.repIcon
 
       self.setIconePoubelle()
+      if not(self.node.item.object.isvalid()) :
+         icon=QIcon(self.repIcon+"/ast-red-ball.png")
+         self.RBValide.setIcon(icon)
+
       self.remplit()
       #if self.editor.code in ['MAP','CARMELCND','CF'] : self.bCatalogue.close()
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-      elif monEnvQT5 : self.bCatalogue.clicked.connect(self.afficheCatalogue)
-      else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+      else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
 
-      if monEnvQT5 :
-        self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
-        self.lineEditNom.returnPressed.connect(self.LENomPressed)
-        self.bAvant.clicked.connect(self.afficheAvant)
-        self.bApres.clicked.connect(self.afficheApres)
-        self.bVerifie.clicked.connect(self.verifiePressed)
-      else :
-        self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.LEValeurPressed)
-        self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.LENomPressed)
-        self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-        self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
-        self.connect(self.bVerifie,SIGNAL("clicked()"), self.verifiePressed)
-        self.editor.affiche_infos("")
+      self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
+      self.lineEditNom.returnPressed.connect(self.LENomPressed)
+      self.bAvant.clicked.connect(self.afficheAvant)
+      self.bApres.clicked.connect(self.afficheApres)
+      self.bVerifie.clicked.connect(self.verifiePressed)
 
       self.editor.fermeOptionnel()
 
@@ -88,7 +84,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       valeur=self.node.item.get_valeur()
       if valeur == None : 
          self.lineEditVal.clear()
-      elif type(valeur) == types.ListType :
+      elif type(valeur) == list :
          texte="["
          for l in valeur :
            texte=texte+str(l) +","
@@ -109,7 +105,6 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       self.node.item.set_nom(nom)
       self.node.item.set_valeur(val)
       self.node.update_texte()
-      self.node.update_node_valid()
 
   def LENomPressed(self):
       self.LEValeurPressed()
@@ -123,20 +118,20 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
         valString=str(self.lineEditVal.text())
 
         contexte={}
-        exec "from math import *" in contexte
+        exec("from math import *", contexte)
         jdc=self.node.item.get_jdc()
         for p in jdc.params :
            try:
               tp=p.nom+'='+str(repr(p.valeur))
-              exec tp  in contexte
+              exec(tp, contexte)
            except exc :
               pass
 
         monTexte=nomString+"="+valString
         try :
-          exec monTexte in contexte
+          exec(monTexte, contexte)
         except (ValueError,TypeError, NameError,RuntimeError,ZeroDivisionError) as  exc:
-          self.LECommentaire.setText(tr("Valeur incorrecte: ")+unicode (exc))
+          self.LECommentaire.setText(tr("Valeur incorrecte: ")+six.text_type (exc))
           return False
         except :
           self.LECommentaire.setText(tr("Valeur incorrecte "))

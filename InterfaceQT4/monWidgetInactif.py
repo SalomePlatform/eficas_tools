@@ -19,18 +19,13 @@
 # Modules Python
 # Modules Eficas
 
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QWidget
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from __future__ import absolute_import
+from PyQt5.QtWidgets import QWidget
 
 from Extensions.i18n import tr
 from desWidgetInactif import Ui_WidgetInactif
 import Accas 
 import os
-import string
 
     
 # Import des panels
@@ -43,7 +38,7 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
        self.node=node
        self.editor=editor
        self.setupUi(self)
-       from monWidgetOptionnel import MonWidgetOptionnel
+       from .monWidgetOptionnel import MonWidgetOptionnel
        if self.editor.widgetOptionnel!= None :
           self.monOptionnel=self.editor.widgetOptionnel
        else :
@@ -52,14 +47,9 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
           self.editor.splitter.addWidget(self.monOptionnel)
           self.editor.restoreSplitterSizes()
        self.afficheOptionnel()
-       if monEnvQT5 :
-          self.bAvant.clicked.connect(self.afficheAvant)
-          self.bApres.clicked.connect(self.afficheApres)
-          self.bCatalogue.clicked.connect(self.afficheCatalogue)
-       else :
-          self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-          self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
-          self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
+       self.bAvant.clicked.connect(self.afficheAvant)
+       self.bApres.clicked.connect(self.afficheApres)
+       self.bCatalogue.clicked.connect(self.afficheCatalogue)
        self.labelNomCommande.setText(tr(self.node.item.nom))
        self.labelNomCommande.setEnabled(False)
 

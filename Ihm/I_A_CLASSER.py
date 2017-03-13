@@ -20,20 +20,21 @@
 """
 """
 
-import string
+from __future__ import absolute_import
 
-import I_REGLE
+from . import I_REGLE
+import six
 
 class A_CLASSER(I_REGLE.REGLE):
   def gettext(self):
     text = 'Regle ' + self.__class__.__name__+ ' :\n'
     t="  D'abord :\n"+' '*8
     for arg in self.args0:
-      t=t+string.strip(arg)+' ou '
+      t=t+arg.strip()+' ou '
     text = text + t[0:-4] +'\n'
     t = "  Ensuite :\n"+' '*8
     for arg in self.args1:
-      t=t+string.strip(arg)+' ou '
+      t=t+arg.strip()+' ou '
     text = text + t[0:-4] +'\n'
-    return unicode(text)
+    return six.text_type(text)
 

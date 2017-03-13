@@ -18,12 +18,13 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce package contient tous les générateurs de formats de sortie
-   à partir des objets d' EFICAS.
+   Ce package contient tous les generateurs de formats de sortie
+   a partir des objets d' EFICAS.
 
-   Ces générateurs sont implémentés sous forme de plugins
+   Ces generateurs sont implementes sous forme de plugins
 """
 
+from __future__ import absolute_import
 from Extensions import pluginloader
 
 import generator

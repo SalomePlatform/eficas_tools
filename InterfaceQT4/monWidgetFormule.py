@@ -19,23 +19,22 @@
 # Modules Python
 # Modules Eficas
 
-from desWidgetFormule import Ui_WidgetFormule
-from gereIcones import FacultatifOuOptionnel
-from determine import monEnvQT5
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
 
-if monEnvQT5:
-   from PyQt5.QtWidgets  import QWidget
-   from PyQt5.QtGui import QIcon
-   from PyQt5.QtCore import Qt
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from desWidgetFormule import Ui_WidgetFormule
+from .gereIcones import FacultatifOuOptionnel
+
+from PyQt5.QtWidgets  import QWidget
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
 
 
 from Extensions.i18n import tr
 import Accas 
 import os
-import string
 
     
 # Import des panels
@@ -60,34 +59,18 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
       self.setValide()
 
      
-      if monEnvQT5 :
-         #if self.editor.code in ['MAP','CARMELCND','CF'] : self.bCatalogue.close()
-         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-         else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
-         #if self.editor.code in ['Adao','MAP','CF'] : 
-         if self.editor.code in ['Adao','MAP','ADAO'] : 
-               self.bAvant.close()
-               self.bApres.close()
-         else : 
-               self.bAvant.clicked.connect(self.afficheAvant)
-               self.bApres.clicked.connect(self.afficheApres)
-         self.LENom.returnPressed.connect(self.nomChange)
-         self.LENomFormule.returnPressed.connect(self.NomFormuleSaisi)
-         self.LENomsArgs.returnPressed.connect(self.argsSaisis)
-         self.LECorpsFormule.returnPressed.connect(self.FormuleSaisie)
+      if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
+      else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
+      if self.editor.code in ['Adao','MAP','ADAO'] : 
+          self.bAvant.close()
+          self.bApres.close()
       else : 
-         if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
-         else : self.connect(self.bCatalogue,SIGNAL("clicked()"), self.afficheCatalogue)
-         if self.editor.code in ['Adao','MAP'] : 
-               self.bAvant.close()
-               self.bApres.close()
-         else : 
-               self.connect(self.bAvant,SIGNAL("clicked()"), self.afficheAvant)
-               self.connect(self.bApres,SIGNAL("clicked()"), self.afficheApres)
-         self.connect(self.LENom,SIGNAL("returnPressed()"),self.nomChange)
-         self.connect(self.LENomFormule,SIGNAL("returnPressed()"),self.NomFormuleSaisi)
-         self.connect(self.LENomsArgs,SIGNAL("returnPressed()"),self.argsSaisis)
-         self.connect(self.LECorpsFormule,SIGNAL("returnPressed()"),self.FormuleSaisie)
+          self.bAvant.clicked.connect(self.afficheAvant)
+          self.bApres.clicked.connect(self.afficheApres)
+      self.LENom.returnPressed.connect(self.nomChange)
+      self.LENomFormule.returnPressed.connect(self.NomFormuleSaisi)
+      self.LENomsArgs.returnPressed.connect(self.argsSaisis)
+      self.LECorpsFormule.returnPressed.connect(self.FormuleSaisie)
 
 
    

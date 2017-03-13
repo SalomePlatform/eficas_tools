@@ -18,18 +18,19 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os
 import traceback
 
 from Extensions.i18n import tr
+import six
 
-from determine import monEnvQT5
-if monEnvQT5 :
-   from PyQt5.QtWidgets import QDialog, QMessageBox, QFileDialog
-   from PyQt5.QtCore import QSize
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QDialog, QMessageBox, QFileDialog
+from PyQt5.QtCore import QSize
 from desViewTexte import Ui_dView
 
 # ------------------------------- #
@@ -44,12 +45,9 @@ class ViewText(Ui_dView,QDialog):
         self.setupUi(self)
 
         self.resize( QSize(largeur,hauteur).expandedTo(self.minimumSizeHint()) )
-        if monEnvQT5 :
-           self.bclose.clicked.connect(self.close)
-           self.bsave.clicked.connect(self.saveFile )
-        else :
-           self.connect( self.bclose,SIGNAL("clicked()"), self, SLOT("close()") )
-           self.connect( self.bsave,SIGNAL("clicked()"), self.saveFile )
+        self.bclose.clicked.connect(self.close)
+        self.bsave.clicked.connect(self.saveFile )
+
         if entete != None : self.setWindowTitle (entete)
         if entete != None : self.setText (texte)
 
@@ -66,15 +64,15 @@ class ViewText(Ui_dView,QDialog):
         fn = QFileDialog.getSaveFileName(None,
                 tr("Sauvegarder le fichier"),
                 dir)
-        if monEnvQT5 :  fn=fn[0]
+        fn=fn[0]
         if fn == ""  : return
         if fn == None : return (0, None)
 
-        ulfile = os.path.abspath(unicode(fn))
+        ulfile = os.path.abspath(six.text_type(fn))
         if self.editor != None :
            self.editor.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
         try:
-           f = open(fn, 'wb')
+           f = open(fn, 'w')
            f.write(str(self.view.toPlainText()))
            f.close()
            return 1
@@ -84,4 +82,3 @@ class ViewText(Ui_dView,QDialog):
            return
 
 
-       

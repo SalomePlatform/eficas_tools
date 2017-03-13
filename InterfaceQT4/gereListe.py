@@ -18,20 +18,26 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+
+from __future__ import absolute_import
+try :
+   from builtins import str
+   from builtins import range
+   from builtins import object
+except : pass
+
+import types,os
 import traceback
 
-from determine import monEnvQT5
-if monEnvQT5:
-   from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog
-   from PyQt5.QtCore    import QEvent, Qt
-   from PyQt5.QtGui     import QIcon, QPalette
-else :
-   from PyQt4.QtGui import *
-   from PyQt4.QtCore import *
+
+import six
+from six.moves import range
+from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog
+from PyQt5.QtCore    import QEvent, Qt
+from PyQt5.QtGui     import QIcon, QPalette
 
 from Extensions.i18n import tr
-from monViewTexte   import ViewText
+from InterfaceQT4.monViewTexte   import ViewText
 
 
 # ---------------------- #
@@ -98,12 +104,11 @@ class MonLabelListeClic(QLabel):
 
 
 # ------------- #
-class GereListe:
+class GereListe(object):
 # ------------- #
 
    def __init__(self):
-       if monEnvQT5 :self.connecterSignaux()
-       else : self.connecterSignauxQT4()
+       self.connecterSignaux()
 
    def connecterSignauxQT4(self):
        if hasattr(self,'RBHaut'):
@@ -259,13 +264,13 @@ class GereListe:
                                          tr("Fichier de donnees"),
                                          init,
                                          tr('Tous les  Fichiers (*)',))
-       if monEnvQT5 : fn=fn[0]
+       fn=fn[0]
        if fn == None : return
        if fn == "" : return
-       ulfile = os.path.abspath(unicode(fn))
+       ulfile = os.path.abspath(six.text_type(fn))
        self.editor.CONFIGURATION.savedir=os.path.split(ulfile)[0]
 
-       from monSelectVal import MonSelectVal
+       from .monSelectVal import MonSelectVal
        MonSelectVal(file=fn,parent=self).show()
 
    def noircirResultatFiltre(self):
@@ -281,7 +286,7 @@ class GereListe:
 
   
 # ----------- #
-class GerePlie:
+class GerePlie(object):
 # ----------- #
 
    def gereIconePlier(self):
@@ -296,8 +301,7 @@ class GerePlie:
       fichier=os.path.join(repIcon, 'minusnode.png')
       icon = QIcon(fichier)
       self.BFermeListe.setIcon(icon)
-      if monEnvQT5 : self.BFermeListe.clicked.connect( self.selectWidgetPlie)
-      else : self.connect(self.BFermeListe,SIGNAL("clicked()"), self.selectWidgetPlie)
+      self.BFermeListe.clicked.connect( self.selectWidgetPlie)
 
    def selectWidgetPlie(self):
       self.editor.listeDesListesOuvertes.remove(self.node.item)

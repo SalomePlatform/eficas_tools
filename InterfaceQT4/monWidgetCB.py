@@ -18,23 +18,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Modules Python
-import string,types,os
+from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
+import types,os
 
 # Modules Eficas
 from Extensions.i18n import tr
 
-from feuille               import Feuille
+from .feuille               import Feuille
 from desWidgetCB           import Ui_WidgetCB 
-from politiquesValidation  import PolitiqueUnique
-from qtSaisie              import SaisieValeur
+from .politiquesValidation  import PolitiqueUnique
+from .qtSaisie              import SaisieValeur
 
-from determine import monEnvQT5
-if monEnvQT5:
-    from PyQt5.QtWidgets import QComboBox, QCompleter
-    from PyQt5.QtCore import Qt
-else :
-    from PyQt4.QtGui  import *
-    from PyQt4.QtCore import *
+from PyQt5.QtWidgets import QComboBox, QCompleter
+from PyQt5.QtCore import Qt
 
 
 class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
@@ -44,13 +44,11 @@ class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.determineChoix()
         self.setValeursApresBouton()
-        if monEnvQT5:
-           self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
-        else :
-           self.connect(self.CBChoix,SIGNAL("currentIndexChanged(int)"),self.ChoixSaisi)
+        self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
         #self.CBChoix.lineEdit().setText(tr("Select"))
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.CBChoix)
+        self.AAfficher=self.CBChoix
 
 
   def setValeursApresBouton(self):
@@ -60,16 +58,14 @@ class MonWidgetCBCommun (Ui_WidgetCB,Feuille):
          self.CBChoix.lineEdit().setText(tr("Select"))
          return
       valeur=self.objSimp.get_valeur()
-      if not(type(valeur) in types.StringTypes) : valeur=str(valeur)
+      if not(type(valeur) == str) : valeur=str(valeur)
       self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
       
   def determineChoix(self):
-      if monEnvQT5: listeChoix=[]
-      else : listeChoix=QStringList()
+      listeChoix=[]
       for choix in self.maListeDeValeur:
-          if not(type(choix) in types.StringTypes) : choix=str(choix)
-          if monEnvQT5: listeChoix.append(choix)
-          else : listeChoix<<choix
+          if not(type(choix) == str) : choix=str(choix)
+          listeChoix.append(choix)
           self.CBChoix.addItem(choix)
       self.CBChoix.setEditable(True)
       monCompleteur=QCompleter(listeChoix,self) 

@@ -17,12 +17,12 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 import traceback
-import string
 
 from Editeur import Objecttreeitem
 from Extensions.eficas_exception import EficasException
-import compocomm
+from . import compocomm
 
 class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     itemNode=compocomm.Node
@@ -32,9 +32,9 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def GetIconName(self):
       """
-      Retourne le nom de l'icône associée au noeud qui porte self,
-      dépendant de la validité de l'objet
-      NB : une commande commentarisée est toujours valide ...
+      Retourne le nom de l'icone associee au noeud qui porte self,
+      dependant de la validite de l'objet
+      NB : une commande commentarisee est toujours valide ...
       """
       if self.isvalid():
           return "ast-green-percent"
@@ -43,7 +43,7 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def GetLabelText(self):
         """ Retourne 3 valeurs :
-        - le texte à afficher dans le noeud représentant l'item
+        - le texte a afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
         - la couleur du texte
         """
@@ -51,13 +51,13 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def get_valeur(self):
       """
-      Retourne la valeur de la commande commentarisée cad son texte
+      Retourne la valeur de la commande commentarisee cad son texte
       """
       return self.object.get_valeur() or ''
     
     def GetText(self):
         texte = self.object.valeur
-        texte = string.split(texte,'\n')[0]
+        texte = texte.split('\n')[0]
         if len(texte) < 25 :
             return texte
         else :
@@ -65,7 +65,7 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def set_valeur(self,valeur):
       """
-      Afefcte valeur à l'objet commande commentarisée
+      Afefcte valeur a l'objet commande commentarisee
       """
       self.object.set_valeur(valeur)
       
@@ -77,9 +77,9 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
 
     def uncomment(self):
       """
-      Demande à l'objet commande commentarisée de se décommentariser.
-      Si l'opération s'effectue correctement, retourne l'objet commande
-      et éventuellement le nom de la sd produite, sinon lève une exception
+      Demande a l'objet commande commentarisee de se decommentariser.
+      Si l'operation s'effectue correctement, retourne l'objet commande
+      et eventuellement le nom de la sd produite, sinon leve une exception
       """
       try:
         commande,nom = self.object.uncomment()

@@ -24,7 +24,9 @@
 """
 
 # Modules EFICAS
-from strfunc import get_encoding, to_unicode
+from __future__ import absolute_import
+from .strfunc import get_encoding, to_unicode
+import six
 
 
 class AsException(Exception):
@@ -33,13 +35,13 @@ class AsException(Exception):
         args = []
         for x in self.args:
             ustr = to_unicode(x)
-            if type(ustr) is not unicode:
-                ustr = unicode( repr(x) )
+            if type(ustr) is not six.text_type:
+                ustr = six.text_type( repr(x) )
             args.append(ustr)
         return " ".join(args)
 
     def __str__(self):
-        return unicode(self).encode(get_encoding())
+        return six.text_type(self).encode(get_encoding())
 
 
 class InterruptParsingError(Exception):

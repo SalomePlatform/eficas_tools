@@ -19,30 +19,26 @@
 #
 
 # Modules Python
-import os,sys,string
+from __future__ import absolute_import
+import os,sys
 import types
 import traceback
 
 # Modules Eficas
 from Editeur import Objecttreeitem
 from Extensions.i18n import tr
-import compooper
-import browser
-import typeNode
-from determine import monEnvQT5
-if monEnvQT5:
-   from PyQt5.QtWidgets import QAction
-   from PyQt5.QtCore import Qt
-else :
-   from PyQt4.QtGui  import *
-   from PyQt4.QtCore import *
+from . import compooper
+from . import browser
+from . import typeNode
+from PyQt5.QtWidgets import QAction
+from PyQt5.QtCore import Qt
 
 
 
 class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):         
     
     def getPanel(self):
-      from   monWidgetCommande import MonWidgetCommande
+      from   .monWidgetCommande import MonWidgetCommande
       return MonWidgetCommande (self,self.editor ,self.item.object)
 
 
@@ -50,10 +46,7 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
       if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome:
            self.ViewElt = QAction(tr('View3D'),self.tree)
-           if monEnvQT5:
-              self.ViewElt.triggered.connect(self.view3D)
-           else :
-              self.tree.connect(self.ViewElt,SIGNAL("triggered()"),self.view3D)
+           self.ViewElt.triggered.connect(self.view3D)
            self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
            if self.item.isvalid() :
@@ -69,7 +62,7 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
         
     
 class MACROTreeItem(compooper.EtapeTreeItem):
-#  """ Cette classe hérite d'une grande partie des comportements
+#  """ Cette classe herite d'une grande partie des comportements
 #      de la classe compooper.EtapeTreeItem
 #  """
     itemNode=MACRONode
@@ -90,7 +83,7 @@ class INCLUDETreeItemBase(MACROTreeItem):
 class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):    
 
     def getPanel(self):
-      from   monWidgetCommande import MonWidgetCommande
+      from   .monWidgetCommande import MonWidgetCommande
       return MonWidgetCommande (self,self.editor ,self.item.object)
 
     def createPopUpMenu(self):
@@ -116,13 +109,13 @@ class INCLUDETreeItem(INCLUDETreeItemBase):
     
 
 # ------------------------------------
-#  Classes necessaires à POURSUITE
+#  Classes necessaires a POURSUITE
 # ------------------------------------
     
 class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):    
 
     def getPanel(self):
-      from   monWidgetCommande import MonWidgetCommande
+      from   .monWidgetCommande import MonWidgetCommande
       return MonWidgetCommande (self,self.editor ,self.item.object)
 
     def createPopUpMenu(self):
@@ -154,7 +147,7 @@ class POURSUITETreeItem(INCLUDETreeItemBase):
 class MATERIAUNode(MACRONode):
 
     def getPanel(self):
-      from   monWidgetCommande import MonWidgetCommande
+      from   .monWidgetCommande import MonWidgetCommande
       return MonWidgetCommande (self,self.editor ,self.item.object)
 
     def createPopUpMenu(self):
