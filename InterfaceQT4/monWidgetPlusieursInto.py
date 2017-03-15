@@ -218,13 +218,12 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
       elif len(self.listeValeursCourantes) > max : 
          self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
 
-      if self.listeValeursCourantes== [] :  self.node.item.set_valeur(None)
+      if self.listeValeursCourantes== [] :  self.node.item.set_valeur([])
       else : self.node.item.set_valeur(self.listeValeursCourantes)
 
       # Exception pour PSEN
       if min==0 and self.listeValeursCourantes== []: self.node.item.set_valeur([])
       self.setValide()
-      self.reaffiche()
 
 
   def prepareListeResultatFiltre(self):
