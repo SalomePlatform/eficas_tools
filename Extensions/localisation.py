@@ -57,7 +57,7 @@ def localise(application, locale=None,file=None,translatorFichier=None ):
        elif (code_translator.load(translatorFichier+'_'+locale)):
            print(translatorFichier+'_'+locale+ ' loaded')
        else : 
-           print ("Unable to load Code translator!" + translatorFichier)
+           print ("Unable to load Code translator! No file or No translation" + translatorFichier)
        print (QApplication.installTranslator(code_translator))
        
 
