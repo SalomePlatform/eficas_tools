@@ -525,8 +525,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------#
     def generDico(self):
     #-----------------------#
-       print ('jkljlkjklj')
-       if 'dicoImbrique' in generator.plugins:
+       if 'dico' in generator.plugins:
          self.generator=generator.plugins['dico']()
          jdc_formate=self.generator.gener(self.jdc)
          dico=self.generator.Dico
