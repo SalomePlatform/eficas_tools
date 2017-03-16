@@ -70,6 +70,7 @@ class DicoGenerator(PythonGenerator):
    
    def initDico(self) :
  
+      self.Dico={}
       self.texteDico = ""
 
 
@@ -91,6 +92,11 @@ class DicoGenerator(PythonGenerator):
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
+        courant=self.Dico
+        for p in obj.get_genealogie_precise()[0:-1]:
+            if not (p in courant.keys()) : courant[p]={}
+            courant=courant[p]
+        courant[obj.nom]=obj.val
         self.texteDico+=obj.nom+ "=" + s[0:-1]+ "\n"
         return s
 

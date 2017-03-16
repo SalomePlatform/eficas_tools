@@ -522,7 +522,15 @@ class JDCEditor(Ui_baseWidget,QWidget):
         a=self.monExe.readAllStandardOutput()
         self.w.view.append(QString.fromUtf8(a.data(),len(a))) ;
         
-
+    #-----------------------#
+    def generDico(self):
+    #-----------------------#
+       print ('jkljlkjklj')
+       if 'dicoImbrique' in generator.plugins:
+         self.generator=generator.plugins['dico']()
+         jdc_formate=self.generator.gener(self.jdc)
+         dico=self.generator.Dico
+         return dico
 
     #-----------------------#
     def gestionParam(self):
@@ -1221,6 +1229,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             the name of the saved file
         """
 
+        print (self.generDico())
         self.modified=1
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
