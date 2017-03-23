@@ -19,18 +19,12 @@
 #
 # ======================================================================
 
-install ( FILES __init__.py parseur_python.py convert_python.py
-                convert_file_from_template.py
+install ( FILES __init__.py parseur_python.py convert_python.py convert_TELEMAC.py
+                convert_file_from_template.py convert_map.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
         )
 
 
-# Installation des fichiers : MAP
-if (WITH_MAP)
-  install ( FILES convert_map.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
-          )
-endif (WITH_MAP)
 
 
 ### Local Variables:

@@ -19,20 +19,14 @@
 #
 # ======================================================================
 
-install ( FILES __init__.py generator_python.py Formatage.py generator_aplat.py
-                generator_file_from_template.py
+install ( FILES __init__.py generator_python.py Formatage.py generator_aplat.py generator_TELEMAC.py
+                generator_file_from_template.py generator_map.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
         )
 
 
 
 
-# Installation des fichiers : MAP
-if (WITH_MAP)
-  install ( FILES generator_map.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_MAP)
 
 # Installation des fichiers : CARMEL
 if (WITH_CARMEL)
@@ -42,12 +36,6 @@ if (WITH_CARMEL)
 endif (WITH_CARMEL)
 
 
-# Installation des fichiers : SEP
-if (WITH_SEP)
-  install ( FILES generator_SEP.py tube.py
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
-          )
-endif (WITH_SEP)
 
 
 ### Local Variables:

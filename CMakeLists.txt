@@ -81,7 +81,6 @@ endif (NOT PYUIC5)
 
 # Definition des options de CMake
 option ( WITH_ALL_PACKAGES "Install all package files" OFF )
-option ( WITH_MAP          "Install MAP files"         OFF )
 option ( WITH_CARMEL       "Install CARMEL files"      OFF )
 option ( WITH_SEP          "Install SEP files"         OFF )
 option ( WITH_ZCRACKS      "Install ZCRACKS files"     OFF )
@@ -89,7 +88,6 @@ option ( WITH_TELEMAC_CATA "Install TELEMAC files"     OFF )
 option ( IN_SALOME_CONTEXT "Configure Eficas for use in Salome" OFF )
 
 set ( _OPTIONLIST
-  WITH_MAP
   WITH_CARMEL
   WITH_TELEMAC_CATA
   )
@@ -114,11 +112,6 @@ if ( NOT ${_VALIDOPT} )
   message ( FATAL_ERROR "At least one option within ${_OPTIONLIST} must be selected" )
 endif ( NOT ${_VALIDOPT} )
 
-if (WITH_MAP)
-  find_package ( MAP REQUIRED )
-endif (WITH_MAP)
-
-
 
 
 # Parcours recursif des sous-repertoires
@@ -136,11 +129,6 @@ add_subdirectory ( generator )
 add_subdirectory ( Traducteur )
 
 
-# Installation des fichiers : MAP
-if (WITH_MAP)
-  add_subdirectory ( MAP )
-endif (WITH_MAP)
-
 # Installation des fichiers : CARMEL
 if (WITH_CARMEL)
   add_subdirectory ( Carmel3D )
@@ -148,10 +136,6 @@ if (WITH_CARMEL)
   add_subdirectory ( CarmelCS )
 endif (WITH_CARMEL)
 
-# Installation des fichiers : Sep
-if (WITH_SEP)
-  add_subdirectory ( Sep )
-endif (WITH_SEP)
 
 # Installation des fichiers : ZCracks
 if (WITH_ZCRACKS)
