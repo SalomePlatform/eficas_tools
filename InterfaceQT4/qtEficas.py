@@ -212,7 +212,7 @@ class Appli(Ui_Eficas,QMainWindow):
               action=getattr(self,intituleAction)
               self.toolBar.removeAction(action)
         if self.code.upper() in Appli.__dict__:
-          listeTexte=Appli.__dict__[self.code.upper()],(self,)
+          Appli.__dict__[self.code.upper()](self,)
         if self.suiteTelemac : self.lookSuiteTelemac()
 
     def initAides(self):
