@@ -67,6 +67,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
         - la couleur du texte
       """
       # None --> fonte et couleur par defaut
+      if not(hasattr(self.object,'getlabeltext')): return self.object.nom,None,None
       return self.object.getlabeltext(),None,None
 
   def isvalid(self):

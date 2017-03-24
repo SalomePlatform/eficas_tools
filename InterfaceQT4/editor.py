@@ -106,6 +106,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.closeArbre=self.appliEficas.CONFIGURATION.closeArbre
         self.affiche=self.appliEficas.CONFIGURATION.affiche
         self.nombreDeBoutonParLigne = self.appliEficas.CONFIGURATION.nombreDeBoutonParLigne
+        self.dicoImages = self.appliEficas.CONFIGURATION.dicoImages
+        self.simpleClic = self.appliEficas.CONFIGURATION.simpleClic
         #self.taille = self.appliEficas.taille
 
         #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
@@ -508,11 +510,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
     def readFromStdErr(self):
         a=self.monExe.readAllStandardError()
-        self.w.view.append(str(a.data(),len(a)))
+        self.w.view.append(str(a.data()))
 
-    def readFromStdErr(self) :
+    def readFromStdOut(self) :
         a=self.monExe.readAllStandardOutput()
-        self.w.view.append(str(a.data(),len(a)))
+        self.w.view.append(str(a.data()))
 
     def readFromStdErrQT4(self):
         a=self.monExe.readAllStandardError()

@@ -659,8 +659,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def update_node_label(self):
         """ Met a jour le label du noeud """
+        pass
         #print "NODE update_node_label", self.item.GetLabelText()
-        labeltext,fonte,couleur = self.item.GetLabelText()
+        #labeltext,fonte,couleur = self.item.GetLabelText()
         # PNPN a reflechir
         #self.setText(0, labeltext)        
     

@@ -133,7 +133,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
            if mc.min == mc.max:
                commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])+'\n'
            else :
-               commentaire=tr("Entrez entre ")+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
+               commentaire=tr("Entrez entre ")+"\n"+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
         aideval=self.node.item.aide()
         commentaire=commentaire +  tr(aideval)
         self.monCommentaireLabel.setText(str(commentaire))
@@ -151,8 +151,10 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
       self.aide=c
       if self.objSimp.get_fr() != None and self.objSimp.get_fr() != "":
           c2 = '<html><head/><body><p>'+c+self.objSimp.get_fr().decode('latin-1','replace')+"</p></body></html>"
+          #c2 = '<html><head/><body><p>'+c+self.objSimp.get_fr()+"</p></body></html>"
           self.label.setToolTip(c2)
           self.aide=self.objSimp.get_fr().decode('latin-1','ignore')+" "+c
+          #self.aide=self.objSimp.get_fr()+" "+c
       else :
          c+=self.finCommentaire()
          if c != "" and c != None :

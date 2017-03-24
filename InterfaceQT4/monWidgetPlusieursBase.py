@@ -43,7 +43,7 @@ from .gereListe              import GereListe
 from .gereListe              import GerePlie
 from .gereListe              import LECustom
 
-dicoLongueur={2:95,3:125,4:154,5:183,6:210}
+dicoLongueur={2:95,3:125,4:154,5:183,6:210,float('inf'):210}
 hauteurMax=253
 
 class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie):
@@ -75,14 +75,16 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           self.BSelectFichier.setIconSize(QSize(32, 32))
 
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
-        if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
-           hauteur=dicoLongueur[self.monSimpDef.max]
-           self.resize(self.width(),hauteur)
-           self.setMinimumHeight(hauteur)
-           if self.monSimpDef.max == self.monSimpDef.min : self.setMaximumHeight(hauteur)
-        else :
-           self.resize(self.width(),hauteurMax)
-           self.setMinimumHeight(hauteurMax)
+        #if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
+        #   hauteur=dicoLongueur[self.monSimpDef.max]
+        #   hauteur=dicoLongueur[2]
+        #   print ('hauteur', hauteur)
+        #   self.resize(self.width(),hauteur)
+        #   self.setMinimumHeight(hauteur)
+        #   if self.monSimpDef.max == self.monSimpDef.min : self.setMaximumHeight(hauteur)
+        #else :
+        #   self.resize(self.width(),hauteurMax)
+        #   self.setMinimumHeight(hauteurMax)
         self.finCommentaireListe()
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
@@ -94,10 +96,10 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        # construction du min de valeur a entrer
-       if self.monSimpDef.max == "**" : aConstruire=7
-       else                           : aConstruire=self.monSimpDef.max
-       #for i in range(1,aConstruire):
-       for i in range(1,7):
+       if self.monSimpDef.max == "**"  : aConstruire=7
+       elif self.monSimpDef.max == float('inf'): aConstruire=7
+       else                            : aConstruire=self.monSimpDef.max
+       for i in range(1,aConstruire):
            self.ajoutLineEdit()
        QApplication.processEvents()
        self.scrollArea.ensureWidgetVisible(self.lineEditVal1)
@@ -116,6 +118,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
        # ajout d'une ligne vide ou affichage commentaire
        if self.indexDernierLabel < self.monSimpDef.max  : self.ajoutLineEdit()
        else : self.scrollArea.setToolTip('nb max de valeurs atteint')
+       #self.adjustSize()
        #self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
        
 

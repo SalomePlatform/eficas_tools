@@ -194,8 +194,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            self.dicoCmd[tr(cmd)]=cmd
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
-           rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
            self.commandesLayout.addWidget(rbcmd)
+           if self.editor.simpleClic :  rbcmd.mouseReleaseEvent=self.insereNoeudApresClick
+           else : rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
            self.buttonGroup.buttonClicked.connect(self.rbClique) 
       elif  self.affiche_groupe==1 :
          listeGroupes,dictGroupes=self.jdc.get_groups()
@@ -217,7 +218,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
               rbcmd=(QRadioButton(tr(cmd)))
               self.buttonGroup.addButton(rbcmd)
               self.commandesLayout.addWidget(rbcmd)
-              rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
+              if self.editor.simpleClic :  rbcmd.mouseReleaseEvent=self.insereNoeudApresClick
+              else : rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
               self.buttonGroup.buttonClicked.connect(self.rbClique) 
            label2=QLabel(self)
            label2.setText(" ")
@@ -236,7 +238,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
-           rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
+           if self.editor.simpleClic :  rbcmd.mouseReleaseEvent=self.insereNoeudApresClick
+           else : rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
            self.buttonGroup.buttonClicked.connect(self.rbClique) 
 
      
@@ -272,16 +275,18 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            rbcmd=QPushButton(tr(cmd))
            rbcmd.setGeometry(QRect(40, 20, 211, 71))
            rbcmd.setMaximumSize(QSize(250, 81))
-           rbcmd.setStyleSheet("background-color : rgb(168, 227, 142);\n"
+           rbcmd.setStyleSheet("background-color : rgb(66, 165, 238);\n"
 "/*border-style : outset;*/\n"
 "border-radius : 20px;\n"
 "border-width : 30 px;\n"
 "border-color : beige;\n"
-"text-align : left")
-           icon = QIcon()
-           icon.addPixmap(QPixmap("../monCode/images/essaiAster.png"), QIcon.Normal, QIcon.Off)
-           rbcmd.setIcon(icon)
-           rbcmd.setIconSize(QSize(48, 48))
+"text-align : center")
+           if cmd in self.editor.dicoImages :
+              fichier=self.editor.dicoImages[cmd]
+              icon = QIcon()
+              icon.addPixmap(QPixmap(fichier), QIcon.Normal, QIcon.Off)
+              rbcmd.setIcon(icon)
+              rbcmd.setIconSize(QSize(48, 48))
 
            self.buttonGroup.addButton(rbcmd)
            self.maGrilleBouton.addWidget(rbcmd,ligne,col)
@@ -295,7 +300,6 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.insereNoeudApresClick(None)
 
   def rbClique(self,id):
-      #print ('ds rbClique')
       self.name=self.dicoCmd[str(id.text())]
       definitionEtape=getattr(self.jdc.cata[0],self.name)
       commentaire=getattr(definitionEtape,self.jdc.lang)

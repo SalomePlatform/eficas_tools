@@ -124,7 +124,8 @@ class SaisieValeur(object):
         elif type(valeur) == bytes:
              listeValeurs=valeur.split(',')
         else:
-          listeValeurs.append(valeurBrute)
+          #listeValeurs.append(valeurBrute)
+          listeValeurs.append(valeur)
 
         return listeValeurs,1
 

@@ -107,6 +107,8 @@ class CONFIG_BASE(object):
       self.suiteTelemac=False
       self.nombreDeBoutonParLigne=0
       self.translatorFichier=None
+      self.dicoImages= {}
+      self.simpleClic= False
 
  
   #--------------------------------------
