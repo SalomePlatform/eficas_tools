@@ -188,6 +188,13 @@ class TypeProtocol(PProtocol):
                   else: raise ValError( "%s n'est pas un repertoire valide" % repr(obj))
                 except :
                   raise ValError( "%s n'est pas un repertoire valide" % repr(obj))
+            elif type_permis == 'FichierOuRepertoire':
+                import os
+                try : 
+                  if os.path.isdir(obj) or os.path.isfile(obj): return obj
+                  else: raise ValError( "%s n'est pas un fichier ou un repertoire valide" % repr(obj))
+                except :
+                  raise ValError( "%s n'est pas un fichier ou un repertoire valide" % repr(obj))
             elif type(type_permis) == type or isinstance(type_permis, type):
                 try:
                     if self.is_object_from(obj, type_permis):
@@ -279,6 +286,9 @@ class IntoProtocol(PProtocol):
         self.val_max = val_max
 
     def default(self, obj, into, val_min, val_max):
+        if type(into)  ==types.FunctionType : 
+               maListeDeValeur=into()
+               into=maListeDeValeur
         if into:
             if obj not in into:
                 raise ValError(
@@ -1466,6 +1476,9 @@ CoercableFuncs = {int:     int,
                   complex: complex,
                   str: six.text_type}
 
+
+#class FunctionValObjet(FunctionVal):
+#OOOOOOOOOOOOOOo
 
 class TypeVal(ListVal):
 

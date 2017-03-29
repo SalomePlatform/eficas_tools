@@ -29,7 +29,7 @@ import types,os,re,sys
 import traceback
 import six
 
-from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu, QPushButton
+from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu, QPushButton, QTreeView ,QListView, QAbstractItemView
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import  QFileInfo,  Qt, QSize, QVariant
 
@@ -134,7 +134,11 @@ class FacultatifOuOptionnel(object):
        if not ( hasattr(self,"BFichier")): return
        mc = self.node.item.get_definition()
        mctype = mc.type[0]
-       if mctype == "Repertoire":
+       if mctype == "FichierOuRepertoire":
+          self.BFichierOuRepertoire=self.BFichier
+          self.BFichierOuRepertoire.clicked.connect(self.BFichierOuRepertoirePressed)
+          self.BVisuFichier.close()
+       elif mctype == "Repertoire":
           self.BRepertoire=self.BFichier
           self.BRepertoire.clicked.connect(self.BRepertoirePressed)
           self.BVisuFichier.close()
@@ -295,6 +299,50 @@ class ContientIcones(object):
                
          elif hasattr(self, "BSelectInFile"):
              self.BSelectInFile.setVisible(0)
+
+  def BFichierOuRepertoirePressed(self):
+      self.fileName=""
+      print (0)
+      self.file_dialog=QFileDialog()
+      print (1)
+      self.file_dialog.setFileMode(QFileDialog.Directory);
+      print (2)
+      self.file_dialog.setFileMode(QFileDialog.Directory|QFileDialog.ExistingFiles)
+      print (3)
+      self.file_dialog.setOption(QFileDialog.DontUseNativeDialog,True);
+      self.file_dialog.setWindowTitle('Choose File or Directory')
+      self.explore(self.file_dialog)
+      self.file_dialog.exec_()
+      if self.fileName == "" : return
+      self.lineEditVal.setText(self.fileName)
+      self.LEValeurPressed()
+     
+
+  def explore(self,widget):
+      for c in widget.children() :
+          if isinstance(c, QTreeView) :
+             c.clicked.connect (self.changeBoutonOpen)
+             self.monTreeView=c
+          try :
+             if c.text() == "&Open" : self.monBoutonOpen=c
+          except : pass
+          self.explore(c) 
+
+
+  def changeBoutonOpen(self):
+      self.monBoutonOpen.setEnabled(True)
+      self.monBoutonOpen.setText("Choose")
+      self.monBoutonOpen.clicked.connect(self.monBoutonOpenClicked)
+      index = self.monTreeView.currentIndex();
+      self.fileName2 = self.monTreeView.model().data(index)
+
+  def monBoutonOpenClicked(self):
+      try :
+        self.fileName=self.file_dialog.selectedFiles()[0]
+      except :
+         self.fileName=self.file_dialog.directory().absolutePath()
+      self.file_dialog.close()
+      self.file_dialog=None
 
   def BRepertoirePressed(self):
       directory = QFileDialog.getExistingDirectory(self.appliEficas,
