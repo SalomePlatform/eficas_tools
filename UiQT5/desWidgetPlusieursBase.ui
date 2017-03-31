@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>764</width>
-    <height>202</height>
+    <height>86</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -192,7 +192,7 @@ border: 1px solid gray;
      <item>
       <widget class="QScrollArea" name="scrollArea_2">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -211,12 +211,12 @@ border: 1px solid gray;
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>112</width>
-          <height>138</height>
+          <width>300</width>
+          <height>57</height>
          </rect>
         </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -225,7 +225,7 @@ border: 1px solid gray;
          <item>
           <widget class="QLabel" name="monCommentaireLabel">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+            <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -249,7 +249,7 @@ border: 1px solid gray;
      <item>
       <widget class="QScrollArea" name="scrollArea">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -278,6 +278,9 @@ border: 1px solid gray;
        <property name="lineWidth">
         <number>1</number>
        </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+       </property>
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
@@ -290,11 +293,11 @@ border: 1px solid gray;
           <x>0</x>
           <y>0</y>
           <width>398</width>
-          <height>161</height>
+          <height>48</height>
          </rect>
         </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -338,7 +341,16 @@ border: 1px solid gray;
         <enum>QFrame::Box</enum>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -393,8 +405,7 @@ border: 1px solid gray;
             </property>
             <property name="icon">
              <iconset theme="go-up">
-              <normaloff/>
-             </iconset>
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -432,8 +443,7 @@ border: 1px solid gray;
             </property>
             <property name="icon">
              <iconset theme="go-down">
-              <normaloff/>
-             </iconset>
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -471,8 +481,7 @@ border: 1px solid gray;
             </property>
             <property name="icon">
              <iconset>
-              <normalon>../Editeur/icons/MoinsBleu2.png</normalon>
-             </iconset>
+              <normaloff>../Editeur/icons/MoinsBleu.png</normaloff>../Editeur/icons/MoinsBleu.png</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -724,8 +733,7 @@ border: 1px solid gray;
          </property>
          <property name="icon">
           <iconset theme="text-x-generic">
-           <normaloff/>
-          </iconset>
+           <normaloff>.</normaloff>.</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -808,11 +816,6 @@ border: 1px solid gray;
    </item>
   </layout>
   <zorder></zorder>
-  <zorder>label</zorder>
-  <zorder>monCommentaireLabel</zorder>
-  <zorder>scrollArea_2</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>verticalSpacer_6</zorder>
  </widget>
  <customwidgets>
   <customwidget>
