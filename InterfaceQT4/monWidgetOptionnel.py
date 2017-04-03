@@ -38,7 +38,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.parentQt=parentQt
 
   def afficheOptionnel(self,liste,MC):
-     print ('afficheOptionnel MonWidgetOptionnel', self,liste,MC)
+     #print ('afficheOptionnel MonWidgetOptionnel', self,liste,MC)
      #import traceback
      #traceback.print_stack()
      self.vireLesAutres(MC)

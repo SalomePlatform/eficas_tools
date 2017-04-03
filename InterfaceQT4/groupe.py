@@ -104,7 +104,7 @@ class Groupe(QWidget,FacultatifOuOptionnel):
            
 
   def ajouteMCOptionnelDesBlocs(self):
-      #print "Je passe dans ajouteMCOptionnelDesBlocs pour", self.node.item.nom
+       #print ("Je passe dans ajouteMCOptionnelDesBlocs pour", self.node.item.nom)
       self.dictMCVenantDesBlocs={}
       i=0
       self.calculOptionnel()
