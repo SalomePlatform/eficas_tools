@@ -252,7 +252,7 @@ class ENTITE(object):
     def check_into(self):
         """Vérifie l'attribut into."""
         if self.into != None:
-            if type(self.into) not in (list, tuple):
+            if (type(self.into) not in (list, tuple)) and (type(self.into) != types.FunctionType) :
                 self.cr.fatal(
                     _(u"L'attribut 'into' doit être un tuple : %r"), self.into)
 

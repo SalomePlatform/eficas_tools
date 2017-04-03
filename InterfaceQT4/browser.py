@@ -324,6 +324,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         # posera des pb si un code decide d appeler FIN un mot clef
         # on resoudera a ce moment la
         # pour l instant pas de poussiere sous le tapis
+        #print( 'debut affichePanneau pour', self.item.nom)
         if  not(self.item.isactif()) : 
             from .monWidgetInactif import MonWidgetInactif
             self.fenetre = MonWidgetInactif(self,self.editor)
@@ -357,8 +358,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.tree.inhibeExpand=True
         self.tree.expandItem(self)
         self.tree.inhibeExpand=False
-        #print "fin de affichePanneau", self.item.nom
-        #print "______________________________"
+        #print( 'fin affichePanneau pour', self.item.nom)
           
 
     def createPopUpMenu(self):

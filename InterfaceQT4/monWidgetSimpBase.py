@@ -91,6 +91,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
                   'Fichier' : tr(u'Un fichier est attendu.  '),
                   'FichierNoAbs' : tr(u'Un fichier est attendu.  '),
                   'Repertoire' : tr(u'Un repertoire est attendu.  '),
+                  'FichierOuRepertoire' : tr(u'Un repertoire ou un fichier est attendu.  '),
                   'Heure' : tr(u'Heure sous la forme HH:MM'),
                   'Date' :  tr(u'Date sous la forme JJ/MM/AA')}
       if mc.type[0] != type:

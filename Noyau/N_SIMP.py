@@ -46,7 +46,7 @@ class SIMP(N_ENTITE.ENTITE):
     class_instance = N_MCSIMP.MCSIMP
     label = 'SIMP'
 
-    def __init__(self, typ,ang="", fr="", statut='f', into=None, defaut=None,
+    def __init__(self, typ,ang="", fr="", statut='f', into=None, siValide = None, defaut=None,
                  min=1, max=1, homo=1, position='local',
                  val_min=float('-inf'), val_max=float('inf'), docu="", validators=None,
                  sug=None):
@@ -76,6 +76,7 @@ class SIMP(N_ENTITE.ENTITE):
         self.fr = fr
         self.statut = statut
         self.into = into
+        self.siValide = siValide
         self.defaut = defaut
         self.min = min
         self.max = max

@@ -68,14 +68,27 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         #print "____________________________", monNom, self.item.wait_co() 
         #print "____________________________", monNom, self.item.wait_assd() 
         # Gestion d'une seule valeur (eventuellement un tuple ou un complexe)
+        if maDefinition.into != [] and maDefinition.into != None:
+            if type(maDefinition.into) ==types.FunctionType : monInto=maDefinition.into() 
+            else : monInto = maDefinition.into
+
+        # a faire ailleurs
+        #if maDefinition.intoExe != None :
+        #    print (self.item)
+        #    monInto = maDefinition.intoExe(self.item)
+        #    maDefinition.into = monInto
+        #    from Noyau.N_VALIDATOR import  IntoProtocol
+        #    monObjet.intoProto = IntoProtocol("into", into=maDefinition.into, val_min=maDefinition.val_min, val_max=maDefinition.val_max)
+
+
         if maDefinition.max == 1 :
 
         # A verifier
           if maDefinition.into != [] and maDefinition.into != None:
-            if len(maDefinition.into) < 4 :
+            if len(monInto) < 4 :
               from .monWidgetRadioButton import MonWidgetRadioButton
               widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif len(maDefinition.into) < 7 :
+            elif len(monInto) < 7 :
               from .monWidget4a6RadioButton import MonWidget4a6RadioButton
               widget=MonWidget4a6RadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :

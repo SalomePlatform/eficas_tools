@@ -197,6 +197,7 @@ class GereListe(object):
 
    def moinsPushed(self):
        # on supprime le dernier
+       if self.NumLineEditEnCours == 0 : return
        if self.NumLineEditEnCours==self.indexDernierLabel : 
           nomLineEdit=self.nomLine+str(self.indexDernierLabel)
           courant=getattr(self,nomLineEdit)

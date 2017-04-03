@@ -109,6 +109,7 @@ class CONFIG_BASE(object):
       self.translatorFichier=None
       self.dicoImages= {}
       self.simpleClic= False
+      self.afficheOptionnelVide=False
 
  
   #--------------------------------------

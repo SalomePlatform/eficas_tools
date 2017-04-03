@@ -133,7 +133,9 @@ class MonWidgetRadioButtonCommun (Feuille):
 class MonWidgetRadioButton (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetRadioButton ", self
-        self.maListeDeValeur=monSimpDef.into
+        if type(monSimpDef.into) ==types.FunctionType : self.maListeDeValeur=monSimpDef.into()
+        else : self.maListeDeValeur=monSimpDef.into
+
         MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         
   def setMaxI(self):

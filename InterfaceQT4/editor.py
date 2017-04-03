@@ -105,6 +105,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.closeFrameRechercheCommande=self.appliEficas.CONFIGURATION.closeFrameRechercheCommande
         self.closeArbre=self.appliEficas.CONFIGURATION.closeArbre
         self.affiche=self.appliEficas.CONFIGURATION.affiche
+        self.afficheOptionnelVide=self.appliEficas.CONFIGURATION.afficheOptionnelVide
         self.nombreDeBoutonParLigne = self.appliEficas.CONFIGURATION.nombreDeBoutonParLigne
         self.dicoImages = self.appliEficas.CONFIGURATION.dicoImages
         self.simpleClic = self.appliEficas.CONFIGURATION.simpleClic
@@ -1395,9 +1396,39 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if ouChercher ==None : print ('SOUCI'); return
         monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= ouChercher.addentite(MCFils)
+
         monMC.definition.into=valeurs
+        from Noyau.N_VALIDATOR import  IntoProtocol
+        monMC.definition.intoProto = IntoProtocol("into", into=monMC.definition.into, val_min=monMC.definition.val_min, val_max=monMC.definition.val_max)
         monMC.state='changed'
         monMC.isvalid()
+
+    #----------------------------------------------------#
+    def reCalculeValiditeMCApresChgtInto(self,nomEtape,MCFils,listeAvant=()):
+    #----------------------------------------------------#
+        for e in self.jdc.etapes:
+            if e.nom == nomEtape : ouChercher=e; break
+        
+        for mot in listeAvant :
+            try :
+              ouChercher=ouChercher.get_child(mot,restreint="oui")
+            # Le mot clef n est pas la
+            except : return 0
+        try :
+           monMC=ouChercher.get_child(MCFils,restreint="oui")
+        # Le mot clef n est pas la
+        except : return 0
+
+        #print ('________',monMC)
+        if hasattr(monMC.definition,'into') :
+           if type(monMC.definition.into) ==types.FunctionType : maListeDeValeur=monMC.definition.into()
+           else : maListeDeValeur=monMC.definition.into
+        else :
+           return 0
+        
+        monMC.state='changed'
+        return 1
+
 
     #-------------------------------------#
     def changeIntoDefMC(self,etape,listeMC,valeurs):
@@ -1405,12 +1436,21 @@ class JDCEditor(Ui_baseWidget,QWidget):
         definitionEtape=getattr(self.jdc.cata[0],etape)
         ouChercher=definitionEtape
         if len(listeMC) > 1 :
+
            for mc in listeMC[0:-1]:
              mcfact=ouChercher.entites[mc]
              ouChercher=mcfact
            
         mcAccas=ouChercher.entites[listeMC[-1]]
+
+        if hasattr(mcAccas,'into') : oldValeurs=mcAccas.into
+        else : oldValeurs=None
+        if oldValeurs==valeurs : return 0
+
         mcAccas.into=valeurs
+        from Noyau.N_VALIDATOR import  IntoProtocol
+        mcAccas.intoProto = IntoProtocol("into", into=valeurs, val_min=mcAccas.val_min, val_max=mcAccas.val_max)
+        return 1
 
     #-------------------------------------------------------------#
     def deleteDefinitionMC(self,etape,listeAvant,nomDuMC):

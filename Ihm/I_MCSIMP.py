@@ -64,6 +64,8 @@ class MCSIMP(I_OBJECT.OBJECT):
           if hasattr(type_permis, "__class__") and type_permis.__class__.__name__ == 'Matrice':
              self.monType=type_permis
              return self.valideMatrice(cr=cr)
+      if self.definition.siValide != None :
+            self.definition.siValide(self)
       return Validation.V_MCSIMP.MCSIMP.isvalid(self,cr=cr)
 
   def GetNomConcept(self):

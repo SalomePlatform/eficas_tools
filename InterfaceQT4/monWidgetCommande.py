@@ -222,10 +222,10 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.monGroupe=self.monOptionnel.afficheOptionnel(liste,self)
       
 
-  #def focusInEvent(self,event):
+  def focusInEvent(self,event):
       #print "je mets a jour dans focusInEvent de monWidget Commande "
-  #    if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
-  #    self.afficheOptionnel()
+      if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
+      self.afficheOptionnel()
 
 
   def reaffiche(self,nodeAVoir=None):

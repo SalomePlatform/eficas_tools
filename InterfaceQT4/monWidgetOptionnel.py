@@ -31,33 +31,36 @@ from .monGroupeOptionnel import MonGroupeOptionnel
 # Import des panels
 class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   def __init__(self,parentQt):
-     #print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
+     #print ("dans init de monWidgetOptionnel ", parentQt )
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.dicoMCWidgetOptionnel={}
      self.parentQt=parentQt
 
   def afficheOptionnel(self,liste,MC):
-     #print "dans Optionnel ____ affiche", liste 
+     print ('afficheOptionnel MonWidgetOptionnel', self,liste,MC)
+     #import traceback
+     #traceback.print_stack()
      self.vireLesAutres(MC)
      if MC.node.item.nom in self.dicoMCWidgetOptionnel :
-        self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
+        self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
+        self.dicoMCWidgetOptionnel[MC.node.item.nom].deleteLater()
      groupe = MonGroupeOptionnel(liste,self,MC)
      self.groupesOptionnelsLayout.insertWidget(0,groupe)
      self.dicoMCWidgetOptionnel[MC.node.item.nom]=groupe
      return groupe
 
   def vireLesAutres(self,MC):
-      #print "je passe dans vireLesAutres"
+      #print( "je passe dans vireLesAutres")
       genea =MC.obj.get_genealogie()
-      #print genea
+      #print (genea)
       for k in list(self.dicoMCWidgetOptionnel.keys()):
+          #if k not in genea :  print ( k)
           if k not in genea :  
              self.dicoMCWidgetOptionnel[k].close()
              del self.dicoMCWidgetOptionnel[k]
-          #if k not in genea :  print k
-      #print "________"
+      #print( "fin vireLesAutres")
       
   def afficheOptionnelVide(self):
       self.GeneaLabel.setText("")

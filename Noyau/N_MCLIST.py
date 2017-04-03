@@ -90,7 +90,7 @@ class MCList(UserList):
         for child in self.data:
             child.supprime()
 
-    def get_child(self, name):
+    def get_child(self, name,restreint='non'):
         """
             Retourne le fils de nom name s'il est contenu dans self
             Par défaut retourne le fils du premier de la liste

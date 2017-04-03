@@ -78,7 +78,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
   """
   """
   def __init__(self,liste,parentQt,parentMC):
-     #print "dans init de monWidgetOptionnel ", parentQt, parentQt.node.item.nom
+     #print "dans init de monWidgetOptionnel ", parentQt, liste,parentMC
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.listeChecked=[]
@@ -88,14 +88,20 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      self.cb=None
      self.parentQt=parentQt
      self.parentMC=parentMC
-     self.afficheTitre()
-     if liste != [] : self.affiche(liste)
-     else : self.MCOptionnelLayout.insertWidget(0,QLabel(tr('Pas de MC Optionnel')))
+     if liste != [] : 
+        self.affiche(liste)
+        self.afficheTitre()
+     elif self.parentQt.parentQt.afficheOptionnelVide != False : 
+        self.afficheTitre()
+        self.MCOptionnelLayout.insertWidget(0,QLabel(tr('Pas de MC Optionnel')))
+     else :
+        self.frameLabelMC.close()
+     #print "dans fin de monWidgetOptionnel ", parentQt
 
 
   def afficheTitre(self):
      labeltext,fonte,couleur = self.parentMC.node.item.GetLabelText()
-     print (labeltext)
+     #print (labeltext)
      l=tr(labeltext)
      li=[]
      while len(l) > 25:
@@ -117,7 +123,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
          self.MCOptionnelLayout.insertWidget(0,cb)
          self.dicoCb[cb]=mot
      self.scrollAreaCommandesOptionnelles.horizontalScrollBar().setSliderPosition(0)
-     #print "Fin Optionnel ____ affiche", liste
+     print "Fin Optionnel ____ affiche", liste
 
       
 

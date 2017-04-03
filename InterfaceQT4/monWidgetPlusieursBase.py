@@ -75,16 +75,14 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           self.BSelectFichier.setIconSize(QSize(32, 32))
 
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
-        #if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
-        #   hauteur=dicoLongueur[self.monSimpDef.max]
-        #   hauteur=dicoLongueur[2]
-        #   print ('hauteur', hauteur)
-        #   self.resize(self.width(),hauteur)
-        #   self.setMinimumHeight(hauteur)
+        self.monSimpDef.max = 3
+        if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
+           hauteurMax=dicoLongueur[self.monSimpDef.max]
+        else :
+           hauteurMax=220
         #   if self.monSimpDef.max == self.monSimpDef.min : self.setMaximumHeight(hauteur)
-        #else :
-        #   self.resize(self.width(),hauteurMax)
-        #   self.setMinimumHeight(hauteurMax)
+        self.resize(self.width(),hauteurMax)
+        self.setMinimumHeight(hauteurMax)
         self.finCommentaireListe()
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
@@ -96,9 +94,12 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        # construction du min de valeur a entrer
+       self.monSimpDef.max = 3
        if self.monSimpDef.max == "**"  : aConstruire=7
        elif self.monSimpDef.max == float('inf'): aConstruire=7
        else                            : aConstruire=self.monSimpDef.max
+       print ('1,aConstruire', aConstruire)
+
        for i in range(1,aConstruire):
            self.ajoutLineEdit()
        QApplication.processEvents()
@@ -237,6 +238,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
              else :
                  self.editor.affiche_infos("")
           elif donneFocus==None : donneFocus=courant
+
       nomDernierLineEdit="lineEditVal"+str(self.indexDernierLabel)
       dernier=getattr(self,nomDernierLineEdit)
       derniereValeur=dernier.text()

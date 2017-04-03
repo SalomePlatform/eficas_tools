@@ -32,7 +32,8 @@ class MonWidget4a6RadioButton (Ui_Widget4a6RadioButton,MonWidgetRadioButtonCommu
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "dans le init de MonWidget4a6RadioButton",self
-        self.maListeDeValeur=monSimpDef.into
+        if type(monSimpDef.into) ==types.FunctionType : self.maListeDeValeur=monSimpDef.into()
+        else : self.maListeDeValeur=monSimpDef.into
         MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 
   def setMaxI(self):
