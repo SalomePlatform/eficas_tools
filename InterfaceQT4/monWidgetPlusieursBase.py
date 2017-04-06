@@ -29,7 +29,7 @@ import types,os,sys
 
 from six.moves import range
 from PyQt5.QtGui     import QIcon 
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtCore    import QTimer, QSize, Qt
 
 # Modules Eficas
@@ -219,6 +219,15 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           valeur=courant.text()
           lval=valeur.split(',')
           if len (lval) > 1 : 
+             msgBox=QMessageBox()
+             msgBox.setText("separator ',' ")
+             msgBox.setInformativeText("Do you want to enter " + str (lval) + "?")
+             msgBox.setStandardButtons( QMessageBox.Ok | QMessageBox.Cancel)
+             msgBox.setDefaultButton(QMessageBox.Ok)
+             ret = msgBox.exec_()
+             if ret != 1024 : 
+                courant.setText("") 
+                return
              courant.setText(lval[0])
              self.ajoutNValeur(lval[1:])
              self.listeValeursCourantes = []
@@ -261,7 +270,5 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       self.reaffiche()
 
           
-  def entreListe(self,listeDeValeur,index):
-             self.entreListe(lval, i)
 
 # Avertissement quand on quitte le widget
