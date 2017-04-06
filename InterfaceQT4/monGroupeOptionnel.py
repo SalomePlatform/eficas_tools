@@ -20,16 +20,17 @@
 # Modules Eficas
 
 from __future__ import absolute_import
-from PyQt5.QtWidgets import QCheckBox, QWidget, QLabel
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QCheckBox, QWidget, QLabel, QPushButton
+from PyQt5.QtCore import Qt, QRect
 
 from Extensions.i18n import tr
 from desGroupeOptionnel import Ui_groupeOptionnel
+from desPBOptionnelMT import Ui_customPB
 
     
 # Import des panels
 
-class monButtonCustom(QCheckBox):
+class monRBButtonCustom(QCheckBox):
 
    def __init__(self,texte,monOptionnel,parent=None):
       QCheckBox.__init__(self,tr(texte),parent)
@@ -73,7 +74,32 @@ class monButtonCustom(QCheckBox):
           monAide = ""
       self.monOptionnel.parentMC.editor.affiche_commentaire(monAide)
   
+class monPBButtonCustom(QWidget,Ui_customPB):
 
+   def __init__(self,texte,monOptionnel,parent=None):
+      QWidget.__init__(self)
+      self.setupUi(self)
+      self.monPb.setText(texte)
+      self.monPb.clicked.connect(self.ajoutMC)
+
+      self.texte=texte
+      self.monOptionnel=monOptionnel
+      self.definitAideMC()
+      self.setToolTip(self.monAide)
+
+   def ajoutMC (self) :
+      listeCheckedMC="+"+self.monOptionnel.dicoCb[self]
+      self.monOptionnel.parentMC.ajoutMC(listeCheckedMC)
+
+   def definitAideMC(self):
+      try :
+        maDefinition = self.monOptionnel.parentMC.definition.entites[self.texte]
+        maLangue =  self.monOptionnel.parentMC.jdc.lang
+        if hasattr(maDefinition,maLangue): 
+          self.monAide = getattr(maDefinition,self.monOptionnel.parentMC.jdc.lang)
+      except :
+          self.monAide = ""
+        
 class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
   """
   """
@@ -118,12 +144,15 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      self.dicoCb={}
      liste.reverse()
      for mot in liste :
-         cb = monButtonCustom(mot,self)
-         cb.clicked.connect(cb.ajoutAideMC)
+         if self.parentQt.parentQt.simpleClic == False :
+            cb = monRBButtonCustom(mot,self)
+            cb.clicked.connect(cb.ajoutAideMC)
+         else :
+            cb = monPBButtonCustom(mot,self)
+
          self.MCOptionnelLayout.insertWidget(0,cb)
          self.dicoCb[cb]=mot
      self.scrollAreaCommandesOptionnelles.horizontalScrollBar().setSliderPosition(0)
-     print "Fin Optionnel ____ affiche", liste
 
       
 

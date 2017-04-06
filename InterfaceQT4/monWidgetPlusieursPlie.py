@@ -43,7 +43,7 @@ pattern_blanc = re.compile(r"^\s*$")
 class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        print "MonWidgetPlusieursBase", nom
+        #print ("MonWidgetPlusieursBase", nom)
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.AAfficher=self.lineEditVal

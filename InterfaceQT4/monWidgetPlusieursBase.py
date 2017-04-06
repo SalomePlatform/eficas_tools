@@ -98,7 +98,6 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
        if self.monSimpDef.max == "**"  : aConstruire=7
        elif self.monSimpDef.max == float('inf'): aConstruire=7
        else                            : aConstruire=self.monSimpDef.max
-       print ('1,aConstruire', aConstruire)
 
        for i in range(1,aConstruire):
            self.ajoutLineEdit()
