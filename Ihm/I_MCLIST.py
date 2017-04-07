@@ -262,7 +262,7 @@ class MCList:
          en tenant compte de la langue
      """
      try :
-        return self.data[0].get_fr().decode('latin-1')
+        return self.data[0].get_fr()
      except:
         return ''
 

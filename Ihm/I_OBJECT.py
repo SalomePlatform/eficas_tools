@@ -134,12 +134,12 @@ class OBJECT:
      """
      try:
      #if 1 :
-        c=getattr(self.definition,self.jdc.lang).decode('latin-1','ignore')
+        c=getattr(self.definition,self.jdc.lang)
         return c
      except:
      #else:
         try :
-            c=getattr(self.definition,"fr").decode('latin-1','ignore')
+            c=getattr(self.definition,"fr")
             return c
         except :
             return ''
