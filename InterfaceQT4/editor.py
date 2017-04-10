@@ -319,6 +319,18 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         #return self.get_Dico()
 
+    #--------------------------------#
+    def ajoutCommentaire(self):
+    #--------------------------------#
+        if self.tree.selectedItems()==[] :
+          QMessageBox.warning( self, tr("Pas de noeud selectionne"),tr("Selectionnez un Noeud \nLe commentaire sera place apres le noeud selectionne"))
+          return 
+        noeudAvantCommentaire=self.tree.selectedItems()[0]
+        if noeudAvantCommentaire ==self.tree.racine : 
+            self.tree.racine.append_child("COMMENTAIRE",pos=0)
+            return
+        noeudAvantCommentaire.addComment(True)
+        
 
 
     #--------------------------------#
@@ -1231,7 +1243,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
             the name of the saved file
         """
 
-        print (self.generDico())
         self.modified=1
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed

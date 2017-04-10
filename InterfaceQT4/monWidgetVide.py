@@ -26,14 +26,15 @@ from Extensions.i18n import tr
 
 from .feuille               import Feuille
 from desWidgetVide         import Ui_WidgetVide 
-from .politiquesValidation  import PolitiqueUnique
 
 
 
 class MonWidgetVide (Ui_WidgetVide,Feuille):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-        self.politique=PolitiqueUnique(self.node,self.editor)
-
+        t=self.node.item.object.definition.type[0].__name__
+        self.lineEditVal.setText('Attend un objet de type '+t+'. Il faut en créer')
+        self.parentQt.commandesLayout.insertWidget(-1,self)
         #PN il faut remplir le type

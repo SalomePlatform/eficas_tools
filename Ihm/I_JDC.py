@@ -35,7 +35,7 @@ from Noyau.N_ASSD import ASSD
 #from Noyau.N_LASSD import LASSD
 from Noyau.N_ETAPE import ETAPE
 from Noyau.N_Exception import AsException
-from Extensions import commentaire,parametre,parametre_eval
+from Extensions import commentaire ,parametre ,parametre_eval
 from . import CONNECTOR
 import Validation
 
@@ -213,11 +213,11 @@ class JDC(I_OBJECT.OBJECT):
       self.init_modif()
       self.editmode=1
       if name == "COMMENTAIRE" :
+        from Extensions import commentaire
         # ajout d'un commentaire
         self.set_current_step()
         ind = 1
         for child in self.etapes :
-          from Extensions import commentaire
           if isinstance(child,commentaire.COMMENTAIRE):
             ind = ind+1
         objet = commentaire.COMMENTAIRE('',parent=self)

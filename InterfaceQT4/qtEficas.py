@@ -557,6 +557,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionEficas.triggered.connect(self.aidePPal)
         self.actionVersion.triggered.connect(self.version)
         self.actionParametres.triggered.connect(self.gestionParam)
+        self.actionCommentaire.triggered.connect(self.ajoutCommentaire)
 
         self.actionCouper.triggered.connect(self.editCut)
         self.actionCopier.triggered.connect(self.editCopy)
@@ -609,6 +610,9 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def Deplier(self):
         self.viewmanager.handleDeplier()
+
+    def ajoutCommentaire(self):
+        self.viewmanager.ajoutCommentaire()
 
     def ouvreFichiers(self) :
     # Ouverture des fichiers de commandes donnes sur la ligne de commande

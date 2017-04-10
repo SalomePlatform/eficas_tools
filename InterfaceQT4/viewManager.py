@@ -199,6 +199,12 @@ class MyTabview(object):
        if index < 0 : return
        self.dict_editors[index].fermeArbre()
 
+   def ajoutCommentaire(self):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       editor.ajoutCommentaire()
+
    def handleViewJdcRegles(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return

@@ -72,14 +72,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             if type(maDefinition.into) ==types.FunctionType : monInto=maDefinition.into() 
             else : monInto = maDefinition.into
 
-        # a faire ailleurs
-        #if maDefinition.intoExe != None :
-        #    print (self.item)
-        #    monInto = maDefinition.intoExe(self.item)
-        #    maDefinition.into = monInto
-        #    from Noyau.N_VALIDATOR import  IntoProtocol
-        #    monObjet.intoProto = IntoProtocol("into", into=maDefinition.into, val_min=maDefinition.val_min, val_max=maDefinition.val_max)
-
 
         if maDefinition.max == 1 :
 
@@ -136,7 +128,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             if len(self.item.get_sd_avant_du_bon_type()) == 0 :
                from .monWidgetVide import MonWidgetVide
                widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            if len(self.item.get_sd_avant_du_bon_type()) < 4 :
+            elif len(self.item.get_sd_avant_du_bon_type()) < 4 :
               from .monWidgetRadioButton import MonWidgetRadioButtonSD
               widget=MonWidgetRadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(self.item.get_sd_avant_du_bon_type()) < 7 :
@@ -167,11 +159,21 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                 #widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                 # pass
                #else :
-               from .monWidgetPlusieursInto import MonWidgetPlusieursInto
-               widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               listeAAfficher = self.item.get_sd_avant_du_bon_type()
+               if len(listeAAfficher) == 0:
+                 from .monWidgetVide import MonWidgetVide
+                 widget = MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               else :
+                 from .monWidgetPlusieursInto import MonWidgetPlusieursInto
+                 widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_assd() :
-               from .monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
-               widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               listeAAfficher = self.item.get_sd_avant_du_bon_type()
+               if len(listeAAfficher) == 0:
+                 from .monWidgetVide import MonWidgetVide
+                 widget = MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               else :
+                 from .monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
+                 widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_tuple() :
             if self.item.object.definition.type[0].ntuple == 2:
                from .monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
