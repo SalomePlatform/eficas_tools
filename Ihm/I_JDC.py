@@ -256,7 +256,9 @@ class JDC(I_OBJECT.OBJECT):
         CONNECTOR.Emit(self,"add",objet)
         self.fin_modif()
         return objet
-      elif type(name)==types.InstanceType:
+      elif not( isinstance(name, basestring)):
+      #elif type(name)==types.InstanceType:
+      #elif isinstance(name,object):
         # on est dans le cas ou on veut ajouter une commande deja 
         # existante (par copie donc)
         # on est donc necessairement en mode editeur ...
