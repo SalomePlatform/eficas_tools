@@ -75,7 +75,6 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           self.BSelectFichier.setIconSize(QSize(32, 32))
 
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
-        self.monSimpDef.max = 3
         if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
            hauteurMax=dicoLongueur[self.monSimpDef.max]
         else :
@@ -94,7 +93,6 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
        self.vScrollBar = self.scrollArea.verticalScrollBar()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        # construction du min de valeur a entrer
-       self.monSimpDef.max = 3
        if self.monSimpDef.max == "**"  : aConstruire=7
        elif self.monSimpDef.max == float('inf'): aConstruire=7
        else                            : aConstruire=self.monSimpDef.max
