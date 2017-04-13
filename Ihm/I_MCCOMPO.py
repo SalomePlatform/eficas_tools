@@ -273,7 +273,8 @@ class MCCOMPO(I_OBJECT.OBJECT):
         return 1
       else :
         return 0
-    elif type(fils) == types.InstanceType:
+    #elif type(fils) == types.InstanceType:
+    elif isinstance(fils,object):
       # fils est un objet (commande,mcf,mclist)
       # on est dans le cas d'une tentative de copie de l'objet
       # on veut savoir si l'objet peut bien etre un fils de self :

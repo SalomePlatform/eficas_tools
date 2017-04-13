@@ -444,7 +444,8 @@ class MCSIMP(I_OBJECT.OBJECT):
     # Glut Horrible pour les matrices ???
     if sd.__class__.__name__== "variable":
        for type_permis in self.definition.type:
-            if type(type_permis) == types.InstanceType:
+            #if type(type_permis) == types.InstanceType:
+            # a voir en python 3
                if type_permis.__class__.__name__ == 'Matrice' :
                    self.state="changed"
                    self.isvalid()
