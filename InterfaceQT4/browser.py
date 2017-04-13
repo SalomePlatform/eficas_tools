@@ -214,7 +214,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         from InterfaceQT4 import composimp
         if   (isinstance(self.item,compocomm.COMMTreeItem)) : name=tr("Commentaire")
         elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=tr(str(item.GetLabelText()[0]))
-        else:   name  = tr(str(tr( item.nom))+" :")
+        else:   name  = tr(str(tr(item.GetLabelText()[0]))+" :")
+        if item.GetLabelText()  != item.nom and item.nom != tr(item.nom) : name = str(tr(item.nom))
         value = tr(str( item.GetText() ) )
  
 
@@ -494,7 +495,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
            ou en position intermediaire.
            Si pos vaut None, on le place a la position du catalogue.
         """
-        #print "************** append_child ",self.item.GetLabelText(), plier
+        #print ("************** append_child ",self.item.GetLabelText(), plier)
+        #import traceback
+        #traceback.print_stack()
 
          
         self.editor.init_modif()
@@ -659,12 +662,15 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def update_node_label(self):
         """ Met a jour le label du noeud """
-        pass
         #print "NODE update_node_label", self.item.GetLabelText()
-        #labeltext,fonte,couleur = self.item.GetLabelText()
+        labeltext,fonte,couleur = self.item.GetLabelText()
         # PNPN a reflechir
-        #self.setText(0, labeltext)        
+        self.setText(0, labeltext)        
     
+    def update_node_label_in_black(self):
+        if hasattr(self.appliEficas,'noeudColore'): 
+            self.appliEficas.noeudColore.setForeground(0,Qt.black)
+            self.appliEficas.noeudColore.update_node_label
     
     def update_node_label_in_blue(self):
         if hasattr(self.appliEficas,'noeudColore'): self.appliEficas.noeudColore.setForeground(0,Qt.black)
@@ -743,15 +749,16 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             Declenche la copie de l'objet item avec pour cible
             l'objet passe en argument : node_selected
         """
-        #print 'je passe dans doPaste'
         objet_a_copier = self.item.get_copie_objet()
         child=node_selected.doPasteCommande(objet_a_copier,pos)
+        if self.editor.fenetreCentraleAffichee : self.editor.fenetreCentraleAffichee.node.affichePanneau()
+        self.update_node_label_in_black()
         return child
 
     def doPasteCommande(self,objet_a_copier,pos='after'):
         """
           Realise la copie de l'objet passe en argument qui est necessairement
-          une commande
+          un onjet
         """
         child=None
         try :
