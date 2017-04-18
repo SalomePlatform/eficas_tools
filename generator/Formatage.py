@@ -234,8 +234,11 @@ class Formatage (object):
        texte est une string qui peut contenir des retours chariots
        Cette méthode retourne la longueur de la dernière ligne de texte 
     """
-    liste = texte.split('\n')
-    return len(liste[-1])
+    #liste = texte.split('\n')
+    #return len(liste[-1])
+    if texte [-1] == '\n' : return 0 
+    return len(texte[texte.rfind('\n'):-1])
+    
 
   def creer_chaine(self,nom,valeur,increment,ind):
     """
