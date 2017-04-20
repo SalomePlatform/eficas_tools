@@ -1,0 +1,123 @@
+# coding: utf-8
+import types
+from Accas import *
+
+
+class Tuple:
+  def __init__(self,ntuple):
+    self.ntuple=ntuple
+
+  def __convert__(self,valeur):
+    if type(valeur) == types.StringType: return None
+    if len(valeur) != self.ntuple: return None
+    return valeur
+
+  def info(self):
+    return "Tuple de %s elements" % self.ntuple
+
+  __repr__=info
+  __str__=info
+
+#class ObjetUtilisateur(ASSD): pass
+
+def maFunc():
+    return ('a1','a2','a3')
+     
+def maFuncWithArg(monMC):
+    if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
+    monMC.dsMaFunct = True
+
+    editor=monMC.jdc.editor
+    if monMC.valeur == 'POOH->P' : monInto=('a1','a2','a3')
+    else : monInto=('b1','b2','b3')
+
+    change=editor.changeIntoDefMC('AGING', ('Equation', 'b_approved','b_type_creation','Equation_Modification','Type2'), monInto )
+    if change :
+       print ('j ai change le into')
+       editor.reCalculeValiditeMCApresChgtInto('AGING', 'Type2', ('Equation', 'b_approved','b_type_creation','Equation_Modification')) 
+       if editor.fenetreCentraleAffichee : editor.fenetreCentraleAffichee.node.affichePanneau()
+
+    monMC.dsMaFunct = False
+
+
+
+monDico= { 'Equation_Liste' : ('initiation', 'propagation', 'termination', 'stabilization')}
+
+JdC = JDC_CATA(code='VP',
+               execmodul=None,
+                )
+
+
+AGING = PROC (nom="AGING",
+    op=None,
+  
+#---------------------------------
+    Equation  = FACT(statut= 'o',
+#---------------------------------
+      Equation_DB=SIMP(statut= 'o',typ= 'TXM', into=("Approved data base", "My data base") ),
+      Equation_Type = SIMP(statut= 'o',typ= 'TXM', into=("Show equation database", "Equation creation"),),
+
+#     ---------------------------------------------------------------------------
+       b_type_show = BLOC(condition = " Equation_Type == 'Show equation database'",
+#      ---------------------------------------------------------------------------
+        Equation_Liste=SIMP(statut= 'o',typ= 'TXM', into=('reaction_type','aging_type')),
+
+         b_reaction_type =  BLOC(condition = " Equation_Liste  == 'reaction_type'",
+           Equation_reaction=SIMP(statut= 'o',typ= 'TXM', into=monDico['Equation_Liste'],),
+         ), # Fin b_reaction_type
+
+         b_aging_type =  BLOC(condition = " Equation_Liste  == 'aging_type'",
+              Equation_reaction=SIMP(statut= 'o',typ= 'TXM', into=('All', 'thermo', 'radio'),),
+         ), # Fin b_reaction_type
+
+         ), # Fin b_type_show
+
+#     ---------------------------------------------------------------------------
+      b_type_creation = BLOC(condition = " Equation_Type == 'Equation creation'",
+#         ---------------------------------------------------------------------------
+         Equation_Modification = FACT ( statut = 'o',
+            Chemical_Formulation =  SIMP(statut= 'o',typ= 'TXM', defaut = 'POOH->P'),
+            Equation_reaction1=SIMP(statut= 'o',typ= 'TXM', min=1,into=monDico['Equation_Liste'],),
+            Equation_reaction2=SIMP(statut= 'o',typ= 'TXM', min=1,max='**', homo='SansOrdreNiDoublon', into=('All', 'thermo', 'radio'),),
+
+            Constituants = FACT ( statut = 'o',
+               ConstituantPOOH = SIMP (statut = 'f', typ = 'TXM', into = ('POOH',), defaut= 'POOH'),
+               b_pooh =  BLOC(condition = " ConstituantPOOH == 'POOH'" ,
+                  Differential_Equation =  SIMP(statut= 'o',typ= 'TXM', defaut = '-ku1*POOH'),
+               ), # Fin b_pooh
+               ConstituantP = SIMP (statut = 'f', typ = 'TXM', into = ('P',),defaut='P'),
+               b_p =  BLOC(condition = " ConstituantP == 'P'" ,
+                 Differential_Equation =  SIMP(statut= 'o',typ= 'TXM', defaut = '2*ku1*POOH'),
+               ), # Fin b_p
+            OptionnelConstituant =  FACT ( statut = 'f',max = '**',
+                Constituant = SIMP (statut = 'o', typ = 'TXM'),
+                Differential_Equation =  SIMP(statut= 'o',typ= 'TXM'),
+               ), # fin Const_Equa
+            ),# Fin Constituants
+
+            Constante = FACT ( statut = 'o',
+               Constanteku1 = SIMP (statut = 'f', typ = 'TXM', into = ('ku1',), defaut= 'ku1'),
+               b_cku1 =  BLOC(condition = "Constanteku1 == 'ku1'" ,
+                  ConstanteType =  SIMP(statut= 'o',typ= 'TXM', into=('Arrhenius type','non Arrhenius type'),defaut='Arrhenius type'),
+                  ),
+               ConstanteOptionnelle  = FACT (statut = 'f', max = '**',
+                  ConstanteName= SIMP (statut = 'o', typ = 'TXM',),
+                  ConstanteType =  SIMP(statut= 'o',typ= 'TXM', min=1,into=('Arrhenius type','non Arrhenius type'),defaut='Arrhenius type'),
+                  ),# fin ConstanteOptionnelle
+            ), # fin constante
+            Commentaire =  SIMP (statut = 'f', typ = 'TXM'),
+                  
+         ), # Fin Equation_Modification
+
+
+                 #Chemical_Formulation =  SIMP(statut= 'o',typ= 'TXM', defaut = 'POOH->P',siValide=maFuncWithArg),
+                 #Type1 = SIMP(statut='o', typ = 'TXM', into=maFunc),
+                 #Type2 = SIMP(statut='o', typ = 'TXM'),
+
+        ),  # fin b_type_creation
+                 
+      
+    ), # Fin Equation
+)
+
+TEXTE_NEW_JDC="AGING()"
