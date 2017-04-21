@@ -214,8 +214,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         from InterfaceQT4 import composimp
         if   (isinstance(self.item,compocomm.COMMTreeItem)) : name=tr("Commentaire")
         elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=tr(str(item.GetLabelText()[0]))
-        else:   name  = tr(str(tr(item.GetLabelText()[0]))+" :")
-        if item.GetLabelText()  != item.nom and item.nom != tr(item.nom) : name = str(tr(item.nom))
+        #else:   name  = tr(str(tr(item.GetLabelText()[0]))+" :")
+        else:   name  = tr(str(tr(item.GetLabelText()[0])))
+        if item.nom != tr(item.nom) : name = str(tr(item.nom)+" :")
         value = tr(str( item.GetText() ) )
  
 
