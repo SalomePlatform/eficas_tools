@@ -328,11 +328,11 @@ Equation = PROC (nom="Equation",
             Constituants = FACT ( statut = 'o',
                ConstituantPOOH = SIMP (statut = 'f', typ = 'TXM', into = ('POOH',), defaut= 'POOH'),
                b_pooh =  BLOC(condition = " ConstituantPOOH == 'POOH'" ,
-                  Differential_Equation =  SIMP(statut= 'o',typ= 'TXM', defaut = '-ku1*POOH'),
+                  Differential_Equation_POOH =  SIMP(statut= 'o',typ= 'TXM', defaut = '-ku1*POOH'),
                ), # Fin b_pooh
                ConstituantP = SIMP (statut = 'f', typ = 'TXM', into = ('P',),defaut='P'),
                b_p =  BLOC(condition = " ConstituantP == 'P'" ,
-                 Differential_Equation =  SIMP(statut= 'o',typ= 'TXM', defaut = '2*ku1*POOH'),
+                 Differential_Equation_P =  SIMP(statut= 'o',typ= 'TXM', defaut = '2*ku1*POOH'),
                ), # Fin b_p
             OptionnelConstituant =  FACT ( statut = 'f',max = '**',
                 Constituant = SIMP (statut = 'o', typ = 'TXM'),

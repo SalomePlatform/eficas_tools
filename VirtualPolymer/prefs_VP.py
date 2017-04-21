@@ -35,7 +35,7 @@ encoding='iso-8859-1'
 
 #
 catalogues=(
-   ('VP','V1',os.path.join(repIni,'VP_Cata_V1.py'),'python','python'),
+   ('VP','V1',os.path.join(repIni,'VP_Cata_V2.py'),'python','python'),
 )
 nombreDeBoutonParLigne=2
 closeFrameRechercheCommande = True
