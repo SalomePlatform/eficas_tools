@@ -46,7 +46,7 @@ class SIMP(N_ENTITE.ENTITE):
     class_instance = N_MCSIMP.MCSIMP
     label = 'SIMP'
 
-    def __init__(self, typ,ang="", fr="", statut='f', into=None, siValide = None, defaut=None,
+    def __init__(self, typ,ang="", fr="", statut='f', into=None, intoSug = None,siValide = None, defaut=None,
                  min=1, max=1, homo=1, position='local',
                  val_min=float('-inf'), val_max=float('inf'), docu="", validators=None,
                  sug=None):
@@ -56,6 +56,7 @@ class SIMP(N_ENTITE.ENTITE):
             - fr : chaîne documentaire en français
             - statut : obligatoire ou facultatif ou caché
             - into : valeurs autorisées
+            - intoSug : valeurs possibles mais des valeurs autres du bon type peuvent etre entrees par l utilsateur
             - defaut : valeur par défaut
             - min : nombre minimal de valeurs
             - max : nombre maximal de valeurs
@@ -76,6 +77,7 @@ class SIMP(N_ENTITE.ENTITE):
         self.fr = fr
         self.statut = statut
         self.into = into
+        self.intoSug = intoSug
         self.siValide = siValide
         self.defaut = defaut
         self.min = min
