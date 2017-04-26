@@ -114,7 +114,6 @@ class PythonParser(object):
    def convert(self,outformat,appli=None):
       if outformat == 'exec':
          try:
-            #return parseur_python.PARSEUR_PYTHON(self.text).get_texte(appli)
             return PARSEUR_PYTHON(self.text).get_texte(appli)
          except EficasException:
             # Erreur lors de la conversion

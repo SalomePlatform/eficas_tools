@@ -10,11 +10,11 @@ PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCo
 	desWidgetOptionnel.py desWidgetOptionnelMC.py Tuple2.py Tuple3.py  \
 	desWidgetBloc.py desWidgetCB.py desWidgetCommentaire.py desWidgetDate.py \
 	desWidgetFact.py desWidgetFactPlie.py desWidgetFormule.py desGroupeOptionnel.py \
-	desWidgetHeure.py  desWidgetInformation.py desWidgetInactif.py \
+	desWidgetHeure.py  desWidgetInformation.py desWidgetIntoSug.py desWidgetInactif.py \
 	desWidgetMatrice.py desWidgetParam.py desWidgetPlusieursBase.py desWidgetPlusieursInto.py \
 	desWidgetPlusieursIntoOrdonne.py desWidgetPlusieursTuple.py desWidgetRadioButton.py \
 	desWidget4a6RadioButton.py desWidgetSimpBase.py desWidgetSDCOInto.py desWidgetSimpBool.py \
-        desWidgetSimpSalome.py  desPBMT.py\
+        desWidgetSimpSalome.py  desPBMT.py desPBOptionnelMT.py\
 	desWidgetSimpComplexe.py desWidgetSimpFichier.py desWidgetSimpTxt.py desWidgetTuple2.py \
 	desWidgetTuple3.py desWidgetVide.py desWidgetUniqueSDCO.py desWidgetPlusieursPlie.py
 

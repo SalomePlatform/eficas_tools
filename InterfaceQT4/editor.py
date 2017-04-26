@@ -191,10 +191,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
             if jdc==None :
-               #try :
+               try :
                    self.jdc = self.readFile(self.fichier)
-               #except :
-               #    print ("mauvaise lecture")
+               except :
+                   print ("mauvaise lecture")
             else :
                self.jdc=jdc
             if self.jdc is not None and units is not None:
@@ -319,6 +319,16 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         #return self.get_Dico()
 
+    #-------------------#  Pour execution avec output et error dans le bash
+    def process_VP(self):
+    #-------------------#
+      if 'dicoImbrique' in generator.plugins:
+         self.generator=generator.plugins['dicoImbrique']()
+         jdc_formate=self.generator.gener(self.jdc)
+         dico=self.get_Dico() #generator.Dico
+         return dico
+
+   
     #--------------------------------#
     def ajoutCommentaire(self):
     #--------------------------------#
@@ -725,34 +735,23 @@ class JDCEditor(Ui_baseWidget,QWidget):
                       tr("Copie impossible"),
                       tr("Veuillez selectionner un seul objet : la copie se fera apres le noeud selectionne"))
           return
+      noeudOuColler=self.node_selected[0]
 
       if len(self.QWParent.noeud_a_editer)!=1:
-         self.handleEditPasteMultiple()
+         #self.handleEditPasteMultiple()
+         QMessageBox.information( self, tr("Copie impossible"), tr("Aucun Objet n a ete copie ou coupe"))
          return
 
-      noeudOuColler=self.node_selected[0]
-      pos='after'
-      if noeudOuColler == self.tree.racine:
-         indexNoeudOuColler=0
-         pos='before'
-      else :
-         indexNoeudOuColler=noeudOuColler.treeParent.children.index(noeudOuColler)
-         indexNoeudOuColler=self.getTreeIndex(noeudOuColler)
-
-      try :
-       noeudACopier=self.QWParent.noeud_a_editer[0]
-       indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
-       indexNoeudACopier=self.getTreeIndex(noeudACopier)
-      except :
-       QMessageBox.information( self, tr("Copie impossible"), tr("Aucun Objet n a ete copie ou coupe"))
-       return
+      noeudACopier=self.QWParent.noeud_a_editer[0]
 
       if (self.QWParent.edit != "couper"):
+        #print   (noeudOuColler.item.parent.get_child(noeudOuColler.item.nom)) 
         try:
            if noeudOuColler == self.tree.racine :
                child=noeudOuColler.doPastePremier(noeudACopier)
            else :
-               child=noeudACopier.doPaste(noeudOuColler,pos)
+               child=noeudACopier.doPaste(noeudOuColler,'after')
+
            if child==None or child==0:
                QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas reussi a copier l objet'))
                self.message = ''
@@ -778,6 +777,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       # si possible on renomme l objet comme le noeud couper
 
       if (self.QWParent.edit == "couper"):
+         print ('je pass la')
          if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
            QMessageBox.critical( self, tr("Deplacement refuse"),tr('Deplacement refuse entre 2 fichiers. Seule la copie est autorisee '))
 
@@ -935,6 +935,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          try :
             jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
             if pourRun : jdc_formate=self.generator.textePourRun
+            if self.code == 'TELEMAC' : jdc_formate=self.generator.texteDico
          except ValueError as e:
             QMessageBox.critical(self, tr("Erreur a la generation"),str(e))
             return
@@ -1398,13 +1399,35 @@ class JDCEditor(Ui_baseWidget,QWidget):
         monMC.state='changed'
         monMC.isvalid()
 
+    #-------------------------------------#
+    def getValeur(self,nomEtape,MCFils,listeAvant=()):
+    #-------------------------------------#
+
+        ouChercher=None
+        for e in self.jdc.etapes:
+            if e.nom == nomEtape : ouChercher=e; break
+        if ouChercher==None : return None
+        for mot in listeAvant :
+              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              if ouChercher==None : return None
+        print ('apres', ouChercher)
+        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        if monMC== None : return None
+        return monMC.valeur
+
     #-----------------------------------------------------------#
     def changeIntoMC(self,etape,MCFils,valeurs, listeAvant=()):
     #-----------------------------------------------------------#
         ouChercher=etape
+        if isinstance (etape, str):
+           ouChercher=None
+           for e in self.jdc.etapes:
+              if e.nom == etape : ouChercher=e; break
+        if ouChercher==None : return
+ 
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
-        if ouChercher ==None : print ('SOUCI'); return
+              if ouChercher==None : return 
         monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= ouChercher.addentite(MCFils)
 
@@ -1440,10 +1463,14 @@ class JDCEditor(Ui_baseWidget,QWidget):
         monMC.state='changed'
         return 1
 
+    #-------------------------------------#
+    def changeDefautDefMC(self,nomEtape,listeMC,valeurs):
+    #-------------------------------------#
 
-    #-------------------------------------#
-    def changeIntoDefMC(self,etape,listeMC,valeurs):
-    #-------------------------------------#
+        #if isinstance (etape, str):
+        #  for e in self.jdc.etapes:
+        #    if e.nom == etape : etape=e; break
+        #if etape == None : return
         definitionEtape=getattr(self.jdc.cata[0],etape)
         ouChercher=definitionEtape
         if len(listeMC) > 1 :
@@ -1452,6 +1479,22 @@ class JDCEditor(Ui_baseWidget,QWidget):
              mcfact=ouChercher.entites[mc]
              ouChercher=mcfact
            
+        print (ouChercher)
+        mcAccas=ouChercher.entites[listeMC[-1]]
+        mcAccas.defaut=valeurs
+        print (mcAccas.defaut)
+        return 1
+
+    #------------------------------------------------#
+    def changeIntoDefMC(self,nomEtape,listeMC,valeurs):
+    #------------------------------------------------#
+        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        ouChercher=definitionEtape
+
+        if len(listeMC) > 1 :
+           for mc in listeMC[0:-1]:
+             mcfact=ouChercher.entites[mc]
+             ouChercher=mcfact
         mcAccas=ouChercher.entites[listeMC[-1]]
 
         if hasattr(mcAccas,'into') : oldValeurs=mcAccas.into
@@ -1467,6 +1510,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def deleteDefinitionMC(self,etape,listeAvant,nomDuMC):
     #-------------------------------------------------------------#
         #print 'in deleteDefinitionMC', etape,listeAvant,nomDuMC
+        if isinstance (etape, str):
+          for e in self.jdc.etapes:
+            if e.nom == etape : etape=e; break
+        if etape == None : return
         definitionEtape=getattr(self.jdc.cata[0],etape)
         ouChercher=definitionEtape
         for k in listeAvant : 
@@ -1480,6 +1527,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------------------------------------------------#
     def ajoutDefinitionMC(self,etape,listeAvant,nomDuMC,typ,**args):
     #-------------------------------------------------------------#
+        if isinstance (etape, str):
+          for e in self.jdc.etapes:
+            if e.nom == etape : etape=e; break
+        if etape == None : return
         definitionEtape=getattr(self.jdc.cata[0],etape)
         ouChercher=definitionEtape
         for k in listeAvant : 
@@ -1495,10 +1546,26 @@ class JDCEditor(Ui_baseWidget,QWidget):
         #print self.dicoNouveauxMC
 
     #----------------------------------------------------#
-    def changeIntoMCandSet(self,etape,MCFils,into,valeurs):
+    def changeIntoMCandSet(self,etape,listeMC,into,valeurs):
     #----------------------------------------------------#
-        monMC=etape.get_child(MCFils,restreint="oui")
+
+        self.changeIntoDefMC(etape,listeMC,into)
+
+        if isinstance (etape, str):
+          for e in self.jdc.etapes:
+            if e.nom == etape : etape=e; break
+        if etape == None : return
+
+        ouChercher = etape
+        for mot in listeMC[:-1] :
+            ouChercher=ouChercher.get_child(mot,restreint="oui")
+            if ouChercher==None : return 
+        MCFils=listeMC[-1]
+        print (MCFils)
+        monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= etape.addentite(MCFils)
+        print (monMC)
+
         monMC.definition.into=into
         monMC.valeur=valeurs
         monMC.val=valeurs

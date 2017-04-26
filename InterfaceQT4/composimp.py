@@ -151,9 +151,12 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
         # Gestion des listes
         else :
+          if maDefinition.intoSug != [] and maDefinition.intoSug != None:
+               from .monWidgetIntoSug import MonWidgetIntoSug
+               widget=MonWidgetIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           #if maDefinition.into != [] and maDefinition.into != None:
           # Attention pas fini --> on attend une liste de ASSD avec ordre
-          if self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():
+          elif self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():
                #if self.item.is_list_Chargement():
                 #from monWidgetPlusieursTuple2AvecChargement import MonWidgetPlusieursTuple2AvecChargement
                 #widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -290,6 +293,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          has_an_into= self.definition.validators.has_into()
       return has_an_into
 
+  def has_intoSug(self):
+      if self.definition.intoSug: return 1
+      return 0
+
 
   def GetMinMax(self):
       """ Retourne les valeurs min et max de la definition de object """
@@ -357,6 +364,34 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           if encorevalide :
               listevalideliste.append(item)
       #print listevalideliste
+      return listevalideliste
+
+  def get_liste_possible_avecSug(self,listeActuelle=[]):
+      if hasattr(self.definition,'intoSug'):
+         valeurspossibles = self.definition.intoSug 
+      else:
+         return listeActuelle
+
+      if listeActuelle==[] :  return valeurspossibles
+      valeurspossibles = valeurspossibles+listeActuelle
+
+      #On ne garde que les items valides
+      listevalideitem=[]
+      if type(valeurspossibles) in (list,tuple) :
+         pass
+      else :
+         valeurspossibles=(valeurspossibles,)
+      for item in valeurspossibles:
+          encorevalide=self.valide_item(item)
+          if encorevalide :
+             listevalideitem.append(item)
+
+      #on ne garde que les choix possibles qui passent le test de valide_liste_partielle
+      listevalideliste=[]
+      for item in listevalideitem:
+          encorevalide=self.valide_liste_partielle(item,listeActuelle)
+          if encorevalide :
+              listevalideliste.append(item)
       return listevalideliste
 
   def get_liste_param_possible(self):

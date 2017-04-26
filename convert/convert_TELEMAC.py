@@ -31,7 +31,8 @@ try:
 except NameError:
   basestring = str
 
-pattern_comment_slash   = re.compile(r"^\s*/")
+pattern_comment_slash        = re.compile(r"^\s*/")
+pattern_comment_slash_vide   = re.compile(r"^\s*/\s*$")
 pattern_eta   = re.compile(r".*&ETA.*")
 pattern_fin   = re.compile(r".*&FIN.*")
 pattern_oui   = re.compile(r"^\s*(oui|OUI|YES|yes|TRUE|VRAI)\s*$")
@@ -109,8 +110,34 @@ class TELEMACParser(PythonParser):
 
       l_lignes_texte_all = self.text.split('\n')
       l_lignes_texte = []
+      listeComment = []
+      dicoComment={}
+      dicoCommentSimp={}
+      dicoCommentMC={}
+      texteComment=""
+      debut=True
       for l  in l_lignes_texte_all :
-        if not(pattern_comment_slash.match(l)): l_lignes_texte.append(l)
+        if pattern_eta.match(l) : continue
+        if pattern_fin.match(l) : continue
+        if pattern_blanc.match(l) : continue
+
+        if not(pattern_comment_slash.match(l)): 
+              l_lignes_texte.append(l)
+              if trouveComment :
+                 if debut:  dicoComment['debut']=texteComment
+                 else : dicoComment[l]=texteComment
+                 trouveComment = 0
+                 texteComment=""
+              if debut : debut = False
+                 
+        if pattern_comment_slash.match(l):
+             if pattern_comment_slash_vide.match(l) : continue
+             texteComment+=l.replace ('/','#',1)
+             texteComment+='\n'
+             trouveComment=1
+  
+      if texteComment != "" : dicoComment['fin']= texteComment
+
 
       l_lignes=[]
       i=0
@@ -132,9 +159,10 @@ class TELEMACParser(PythonParser):
 
       for ligne in l_lignes :
           if pattern_comment_slash.match(ligne) : continue
-          if pattern_eta.match(ligne) : continue
-          if pattern_fin.match(ligne) : continue
-          if pattern_blanc.match(ligne) : continue
+          #PN : deja teste
+          #if pattern_eta.match(ligne) : continue
+          #if pattern_fin.match(ligne) : continue
+          #if pattern_blanc.match(ligne) : continue
  
 
           finLigne=ligne
@@ -197,11 +225,15 @@ class TELEMACParser(PythonParser):
 
               finLigne=m.group('reste')
               self.dictSimp[simpCas]=valeur
+
+              if ligne in dicoComment.keys():
+                 dicoCommentSimp[simpCas]=dicoComment[ligne]
       
       if 'TITLE' not in self.dictSimp :
           import os
           #self.dictSimp['TITLE']=os.path.basename(self.filename)
       
+
       dicoParMC={}
       for simp in self.dictSimp:
           if simp in TELEMACParser.__dict__ : TELEMACParser.__dict__[simp],(self,)
@@ -221,6 +253,10 @@ class TELEMACParser(PythonParser):
           listeGeneaReverse.reverse()
           dicoTravail=dicoParMC
           i=0
+          if simp in dicoCommentSimp :
+             MC=listeGeneaReverse[0]
+             if MC in dicoCommentMC : dicoCommentMC[MC]+dicoCommentSimp[simp]
+             else                   : dicoCommentMC[MC]=dicoCommentSimp[simp]
           while i < len(listeGeneaReverse[0:-1]) : 
             mot=listeGeneaReverse[i]
             i=i+1
@@ -231,12 +267,22 @@ class TELEMACParser(PythonParser):
       self.textePy=""
       listeMC=self.tri(list(dicoParMC.keys()))
       for k in listeMC :
+          if k in dicoCommentMC : 
+                commentaire="COMMENTAIRE("+repr(dicoCommentMC[k])+")\n"
+                self.textePy+=commentaire
           self.textePy += str(k )+ "("
           self.traiteMC(dicoParMC[k])
           self.textePy += ");\n"
            
               
       appli.listeTelemac=self.dictSimp  
+      if 'debut' in dicoComment : 
+          commentaire="COMMENTAIRE("+repr(dicoComment['debut'])+")\n"
+          self.textePy=commentaire+self.textePy
+      if 'fin' in dicoComment : 
+          commentaire="COMMENTAIRE("+repr(dicoComment['fin'])+")\n"
+          self.textePy=self.textePy+commentaire
+
       return self.textePy
 
 

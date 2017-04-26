@@ -35,12 +35,12 @@ from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 
-from .feuille                import Feuille
-from desWidgetPlusieursInto import Ui_WidgetPlusieursInto 
-from .politiquesValidation   import PolitiquePlusieurs
-from .qtSaisie               import SaisieValeur
-from .gereListe              import GerePlie
-from .gereListe              import GereListe
+from InterfaceQT4.feuille                import Feuille
+from desWidgetPlusieursInto              import Ui_WidgetPlusieursInto 
+from InterfaceQT4.politiquesValidation   import PolitiquePlusieurs
+from InterfaceQT4.qtSaisie               import SaisieValeur
+from InterfaceQT4.gereListe              import GerePlie
+from InterfaceQT4.gereListe              import GereListe
 
 class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe):
 
@@ -130,6 +130,9 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
        else :
                self.listeAAfficher=self.node.item.get_liste_possible([])
 
+       if self.node.item.has_intoSug() : self.listeAAfficher=self.node.item.get_liste_possible_avecSug([])
+               
+
        if self.objSimp.wait_assd() : 
           self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
        if self.listeAAfficher== None or self.listeAAfficher==[] : self.listeAAfficher=[]
@@ -196,7 +199,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
   def changeValeur(self):
       if self.inhibe == True: return
-      self.noircirResultatFiltre()
+      if hasattr(self,'LEFiltre') :self.noircirResultatFiltre()
       self.listeValeursCourantesAvant=self.listeValeursCourantes
       self.listeValeursCourantes = []
 
