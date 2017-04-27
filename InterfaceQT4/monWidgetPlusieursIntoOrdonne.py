@@ -74,6 +74,14 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           fichier2=os.path.join(repIcon, 'arrow_down.png')
           icon2 = QIcon(fichier2)
           self.RBBas.setIcon(icon2)
+        if self.editor.salome :
+          icon=QIcon(self.repIcon+"/MoinsBleu.png")
+          self.RBMoins.setIcon(icon)
+          icon=QIcon(self.repIcon+"/PlusBleu.png")
+          self.RBPlus.setIcon(icon)
+          icon=QIcon(self.repIcon+"/verre-loupe-icone-6087-64.png")
+          self.RBVoisListe.setIcon(icon)
+
         self.parentQt.commandesLayout.insertWidget(-1,self)
 
        
