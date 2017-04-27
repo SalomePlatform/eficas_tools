@@ -288,7 +288,7 @@ class PARSEUR_PYTHON(object):
       - les affectations
       - les commandes
     """
-    pattern_commande   = re.compile(r'^([A-Z][A-Z0-9_]+)([ \t\r\f\v]*)\(([\w\W]*)')
+    pattern_commande   = re.compile(r'^([A-Z][a-zA-Z0-9_]+)([ \t\r\f\v]*)\(([\w\W]*)')
     pattern_eval       = re.compile(r'^(EVAL)([ \t\r\f\v]*)\(([\w\W]*)')
     pattern_ligne_vide = re.compile(r'^[\t\r\f\v\n]+')
     pattern_name       = re.compile(r'[a-zA-Z_]\w*')
@@ -531,7 +531,6 @@ class PARSEUR_PYTHON(object):
 
             if self.is_commande(ligne):
                 # --> nouvelle commande
-                #print ('nouvelle commande')
                 affectation_courante = None
                 commande_courante = COMMANDE(self)
                 commande_courante.append_text(ligne)

@@ -101,16 +101,28 @@ class PythonGenerator(object):
           Si format vaut 'standard', retourne un texte obtenu par concatenation de la liste
           Si format vaut 'beautifie', retourne le meme texte beautifie
       """
+      import logging
       self.appli=obj.get_jdc_root().appli
       #self.appli=obj.appli
       liste= self.generator(obj)
+      #format='standard'
       if format == 'brut':
          self.text=liste
       elif format == 'standard':
          self.text=''.join(liste)
       elif format == 'beautifie':
          jdc_formate = Formatage(liste,mode='.py')
+         #import cProfile, pstats, StringIO
+         #pr = cProfile.Profile()
+         #pr.enable()
          self.text=jdc_formate.formate_jdc()
+         #pr.disable()
+         #s = StringIO.StringIO()
+         #sortby = 'cumulative'
+         #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+         #ps.print_stats()
+         #print (s.getvalue())
+
       elif format == 'Ligne':
          jdc_formate = FormatageLigne(liste,mode='.py')
          self.text=jdc_formate.formate_jdc()

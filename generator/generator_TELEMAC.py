@@ -36,7 +36,7 @@ extensions=('.comm',)
 try :
    from enumDicoTelemac       import TelemacdicoEn
    DicoEnumCasEnInverse={}
-   for motClef in TelemacdicoEn():
+   for motClef in TelemacdicoEn:
      d={}
      for valTelemac in TelemacdicoEn[motClef]:
         valEficas= TelemacdicoEn[motClef][valTelemac]
@@ -44,7 +44,9 @@ try :
      DicoEnumCasEnInverse[motClef]=d
 
 except :
- pass
+   pass
+
+
 
 
 def entryPoint():
@@ -99,6 +101,8 @@ class TELEMACGenerator(PythonGenerator):
       self.PE=False
       self.FE=False
       self.VE=False
+      self.commentaireAvant = False
+      self.texteCom=''
       if self.langue == "fr" :
         self.textPE = 'COTES IMPOSEES :'
         self.textFE = 'DEBITS IMPOSES :'
@@ -140,9 +144,12 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def generPROC_ETAPE(self,obj):
-        self.texteDico += '/------------------------------------------------------/\n'
-        self.texteDico += '/\t\t\t'+obj.nom +'\n'
-        self.texteDico += '/------------------------------------------------------/\n'
+        if  not self.commentaireAvant or self.texteCom.find(obj.nom) < 0: 
+            self.texteDico += '/------------------------------------------------------------------/\n'
+            self.texteDico += '/\t\t\t'+obj.nom +'\n'
+            self.texteDico += '/------------------------------------------------------------------/\n'
+        self.commentaireAvant = False
+        self.texteCom=''
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         if obj.nom in TELEMACGenerator.__dict__ : TELEMACGenerator.__dict__[obj.nom](*(self,obj))
         
@@ -167,19 +174,23 @@ class TELEMACGenerator(PythonGenerator):
         if s == "" : return s
 
       
-       
+
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (tuple,list) ):
            if obj.nom in DicoEnumCasEnInverse:  
              try : sTelemac=str(DicoEnumCasEnInverse[obj.nom][obj.valeur])
-             except : print(("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur))
+             except : 
+               if obj.valeur==None :  sTelemac=obj.valeur
+               else : print(("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur))
         if type(obj.valeur) in (tuple,list) :
            if obj.nom in DicoEnumCasEnInverse:  
              #sT = "'"
              sT=''
              for v in obj.valeur:
                try : sT +=str(DicoEnumCasEnInverse[obj.nom][v]) +";"
-               except : print(("generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur))
+               except : 
+                 if obj.definition.intoSug != [] : sT +=str(v) + ";"
+                 else : print(("generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur))
              #sTelemac=sT[0:-1]+"'"
              sTelemac=sT[0:-1]
            else  :
@@ -328,3 +339,18 @@ class TELEMACGenerator(PythonGenerator):
               ligne="   "+str(v)+'; '
          text+= ligne[0:-2]+'\n'
        return text
+
+   def generCOMMENTAIRE(self,obj):
+       sans_saut = re.sub("\n$","",obj.valeur)
+       l_lignes = sans_saut.split('\n')
+       txt='/'+66*'-'+'/'+'\n'
+       i=1
+       for ligne in l_lignes:
+         self.texteCom+=ligne+'\n'
+         txt = txt + '/'+ligne+'\n'
+       txt= txt + '/'+66*'-'+'/'+'\n'
+       self.texteDico += txt
+       self.commentaireAvant= True
+       return PythonGenerator.generCOMMENTAIRE(self,obj)
+
+

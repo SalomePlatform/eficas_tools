@@ -179,7 +179,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QRadioButton" name="radioButton_2">
+        <widget class="QRadioButton" name="radioButton_1">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -192,7 +192,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_1">
+        <widget class="QRadioButton" name="radioButton_2">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -229,7 +229,7 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::Fixed</enum>
+          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -296,9 +296,6 @@
    </item>
   </layout>
   <zorder>label</zorder>
-  <zorder>radioButton_1</zorder>
-  <zorder>radioButton_3</zorder>
-  <zorder>radioButton_2</zorder>
   <zorder></zorder>
  </widget>
  <customwidgets>

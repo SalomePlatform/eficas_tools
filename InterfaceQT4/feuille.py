@@ -43,7 +43,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
 
    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-       #print "Feuille", monSimpDef,nom,objSimp
+       #print ("Feuille", monSimpDef,nom,objSimp)
        QWidget.__init__(self,None)
        self.node=node
        self.node.fenetre=self

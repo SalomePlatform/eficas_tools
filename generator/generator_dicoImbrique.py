@@ -60,7 +60,9 @@ class DicoImbriqueGenerator(PythonGenerator):
       
       # Cette instruction genere le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
+      #print (self.text)
       return self.text
+
 
 
 #----------------------------------------------------------------------------------------

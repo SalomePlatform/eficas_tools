@@ -33,6 +33,7 @@ except NameError:
 
 pattern_comment_slash        = re.compile(r"^\s*/")
 pattern_comment_slash_vide   = re.compile(r"^\s*/\s*$")
+pattern_comment_tiret        = re.compile(r"^\s*/-*/$")
 pattern_eta   = re.compile(r".*&ETA.*")
 pattern_fin   = re.compile(r".*&FIN.*")
 pattern_oui   = re.compile(r"^\s*(oui|OUI|YES|yes|TRUE|VRAI)\s*$")
@@ -131,8 +132,9 @@ class TELEMACParser(PythonParser):
               if debut : debut = False
                  
         if pattern_comment_slash.match(l):
-             if pattern_comment_slash_vide.match(l) : continue
-             texteComment+=l.replace ('/','#',1)
+             #if pattern_comment_slash_vide.match(l) : continue
+             if pattern_comment_tiret.match(l) : continue
+             texteComment+=l.replace ('/','',1)
              texteComment+='\n'
              trouveComment=1
   
