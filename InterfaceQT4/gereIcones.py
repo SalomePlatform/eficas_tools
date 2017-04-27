@@ -28,6 +28,7 @@ except : pass
 import types,os,re,sys
 import traceback
 import six
+import inspect
 
 from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu, QPushButton, QTreeView ,QListView, QAbstractItemView
 from PyQt5.QtGui import QIcon
@@ -392,7 +393,7 @@ class ContientIcones(object):
                   return
 
         from Accas import SalomeEntry
-        if isinstance(kwType, type) and issubclass(kwType, SalomeEntry):
+        if inspect.isclass(kwType) and issubclass(kwType, SalomeEntry):
            selection, commentaire = self.appliEficas.selectEntryFromSalome(kwType,editor=self.editor)
 
         if commentaire !="" :
