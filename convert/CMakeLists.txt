@@ -20,7 +20,7 @@
 # ======================================================================
 
 install ( FILES __init__.py parseur_python.py convert_python.py convert_TELEMAC.py
-                convert_file_from_template.py convert_map.py
+                convert_map.py
           DESTINATION ${CMAKE_INSTALL_PREFIX}/convert
         )
 
