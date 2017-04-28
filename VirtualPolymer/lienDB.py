@@ -74,6 +74,7 @@ def afficheValeurEquation(monMC):
               
 
 def instancieChemicalFormulation(monMC):
+    print ('instancieChemicalFormulation pour ', monMC.nom)
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
     if monMC.valeur == False : return
 
@@ -88,13 +89,18 @@ def instancieChemicalFormulation(monMC):
     type_vieil=monEquation.type_vieil
 
     editor.changeIntoMCandSet('Equation', ('b_type_show','b_modification','b_modif','ChemicalFormulation'),( v,),v )
-    return
-    #change=editor.changeDefautDefMC('Equation', ('b_type_show','b_modification','b_modif','Reaction_Type'),type_react )
+    print ("je passe la")
+    change=editor.changeDefautDefMC('Equation', ('b_type_show','b_modification','b_modif','Reaction_Type'),type_react )
     change=editor.changeDefautDefMC('Equation', ('b_type_show','b_modification','b_modif','Aging_Type'), type_vieil )
 
     for index,valeurConstituant in enumerate(monEquation.constituants):
         valeurEquation=monEquation.equation[index] 
-        editor.ajoutMC(monMC.etape,'OptionnelConstituant',None,('b_type_show','b_modification','b_modif',))
+        
+        #PNPNPN --> decider des noms SVP ave un nom python
+        monMcl1=('Constituant','TXM',{'statut':'o','defaut':valeurConstituant})
+        monMcl2=('Differential_Equation','TXM',{'statut':'o','defaut':valeurEquation})
+        listeMC=(monMcl1,monMcl2)
+        editor.ajoutDefinitionMCFact ('Equation',('b_type_show','b_modification','b_modif',),valeurConstituant,listeMC,statut='f')
         print (index,valeurConstituant,valeurEquation)
 
             #OptionnelConstituant =  FACT ( statut = 'f',max = '**',
@@ -105,10 +111,11 @@ def instancieChemicalFormulation(monMC):
          valeurArrhe=monEquation.arrhenius[index] 
          if valeurArrhe : valeurConstanteType='Arrhenius type'
          else           : valeurConstanteType='non Arrhenius type'
+         monMcl1=('ConstanteName','TXM',{'statut':'o','defaut':valeurConstituant})
+         monMcl2=('ConstanteType','TXM',{'statut':'o','defaut':valeurConstanteType,'into': ('Arrhenius type','non Arrhenius type') })
+         listeMC=(monMcl1,monMcl2)
+         editor.ajoutDefinitionMCFact ('Equation',('b_type_show','b_modification','b_modif',),valeurConstituant,listeMC,statut='f')
          print (index,valeurConstituant,valeurConstanteType)
-            #OptionnelleConstante  = FACT (statut = 'f', max = '**',
-            #     ConstanteName= SIMP (statut = 'o', typ = 'TXM',),
-            #    ConstanteType =  SIMP(statut= 'o',typ= 'TXM', min=1,into=('Arrhenius type','non Arrhenius type'),defaut='Arrhenius type'),
 
     change=editor.changeDefautDefMC('Equation', ('b_type_show','b_modification','b_modif','Commentaire'),monEquation.comment )
     print (monEquation.comment )

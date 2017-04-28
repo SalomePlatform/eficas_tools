@@ -15,7 +15,6 @@ JdC = JDC_CATA(code='VP',
                execmodul=None,
                 )
 
-
   
 #---------------------------------
 Equation = PROC (nom="Equation",
@@ -23,7 +22,6 @@ Equation = PROC (nom="Equation",
 #---------------------------------
       Equation_DB=SIMP(statut= 'o',typ= 'TXM', into=("Approved data base", "My data base") ),
       Equation_Type = SIMP(statut= 'o',typ= 'TXM', into=("Show equation database", "Equation creation"),),
-
       
 #     ---------------------------------------------------------------------------
        b_type_show = BLOC(condition = " Equation_Type == 'Show equation database'",
