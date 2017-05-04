@@ -117,6 +117,7 @@ class TELEMACParser(PythonParser):
       dicoCommentMC={}
       texteComment=""
       debut=True
+      trouveComment = 0
       for l  in l_lignes_texte_all :
         if pattern_eta.match(l) : continue
         if pattern_fin.match(l) : continue
