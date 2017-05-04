@@ -197,6 +197,9 @@ class TELEMACGenerator(PythonGenerator):
              sTelemac=sTelemac[0:-1]
              if sTelemac.find("'") > 0 :
                 sTelemac= sTelemac.replace (',',';\n	') 
+                # on enleve le dernier  ';'
+                index=(sTelemac.rfind(";"))
+                sTelemac=sTelemac[:index]+' '+sTelemac[index+1:]
 
 
         if self.langue=='fr' :
