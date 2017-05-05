@@ -138,6 +138,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.liste_simp_reel=[]
         self.ihm="QT"
         self.dicoNouveauxMC={}
+        self.dicoNouveauxFact={}
 
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
@@ -1204,6 +1205,14 @@ class JDCEditor(Ui_baseWidget,QWidget):
            pass
 
     #-----------------------------------------------------------------#
+    def saveFileLegerAs(self, fileName = None) :
+    #-----------------------------------------------------------------#
+        if fileName != None :
+           self.fichier = fileName
+           return self.saveFileLeger()
+        return self.saveFileLeger()
+
+    #-----------------------------------------------------------------#
     def saveFileLeger(self, path = None, saveas= 0,formatLigne="beautifie"):
     #-----------------------------------------------------------------#
         extension='.casR'
@@ -1224,6 +1233,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.fichier = os.path.splitext(fn)[0]+extension
 
         if hasattr(self.generator, "writeLeger"):
+            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
+            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
+            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
+            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
             self.generator.writeLeger(self.fichier,self.jdc,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
 
         if self.salome : self.appliEficas.addJdcInSalome( self.fichier)
@@ -1363,6 +1376,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------------------#
     def updateJdc(self, itemApres,texte):
     #--------------------------------#
+    # ajoute un morceau de JdC a partir d un tecte
         monItem=itemApres
         etape=monItem.item.object
 
@@ -1373,11 +1387,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------------------------#
     def deleteEtape(self,etape):
     #-------------------------------------#
+    # dans le JDC
         self.jdc.suppentite(etape)
 
     #-------------------------------------#
     def deleteMC(self,etape,MCFils,listeAvant=()):
     #-------------------------------------#
+    # dans le JDC
         ouChercher=etape
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
@@ -1389,6 +1405,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------------------------#
     def ajoutMC(self,etape,MCFils,valeurs,listeAvant=()):
     #-------------------------------------#
+    # dans le JDC
         ouChercher=etape
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
@@ -1399,9 +1416,25 @@ class JDCEditor(Ui_baseWidget,QWidget):
         monMC.state='changed'
         monMC.isvalid()
 
+    #----------------------------------------------#
+    def ajoutMCFact(self,etape,MCFils,listeAvant=()):
+    #----------------------------------------------#
+    # dans le JDC
+        print ('ajoutMCFact')
+        ouChercher=etape
+        print (ouChercher)
+        for mot in listeAvant :
+              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              print (mot)
+              print (ouChercher)
+        monMC=etape.get_child(ouChercher,restreint="oui")
+        if monMC== None : monMC= ouChercher.addentite(MCFils)
+        monMC.isvalid()
+
     #-------------------------------------#
     def getValeur(self,nomEtape,MCFils,listeAvant=()):
     #-------------------------------------#
+    # dans le JDC
 
         ouChercher=None
         for e in self.jdc.etapes:
@@ -1409,15 +1442,33 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if ouChercher==None : return None
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
+              #print (mot, ouChercher)
               if ouChercher==None : return None
-        print ('apres', ouChercher)
         monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : return None
         return monMC.valeur
 
     #-----------------------------------------------------------#
+    def setValeur(self,nomEtape,MCFils,valeur,listeAvant=()):
+    #--------------------------------------------------------#
+    # dans le JDC
+
+        ouChercher=None
+        for e in self.jdc.etapes:
+            if e.nom == nomEtape : ouChercher=e; break
+        if ouChercher==None : return None
+        for mot in listeAvant :
+              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              #print (mot, ouChercher)
+              if ouChercher==None : return None
+        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        monMC.set_valeur(valeur)
+        monMC.isvalid()
+
+    #-----------------------------------------------------------#
     def changeIntoMC(self,etape,MCFils,valeurs, listeAvant=()):
     #-----------------------------------------------------------#
+    # dans le JDC
         ouChercher=etape
         if isinstance (etape, str):
            ouChercher=None
@@ -1437,9 +1488,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
         monMC.state='changed'
         monMC.isvalid()
 
-    #----------------------------------------------------#
+    #-------------------------------------------------------------------#
     def reCalculeValiditeMCApresChgtInto(self,nomEtape,MCFils,listeAvant=()):
-    #----------------------------------------------------#
+    #-------------------------------------------------------------------#
+    # dans le JDC
         for e in self.jdc.etapes:
             if e.nom == nomEtape : ouChercher=e; break
         
@@ -1452,8 +1504,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
            monMC=ouChercher.get_child(MCFils,restreint="oui")
         # Le mot clef n est pas la
         except : return 0
+        if monMC == None : return 0
 
-        #print ('________',monMC)
         if hasattr(monMC.definition,'into') :
            if type(monMC.definition.into) ==types.FunctionType : maListeDeValeur=monMC.definition.into()
            else : maListeDeValeur=monMC.definition.into
@@ -1466,12 +1518,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------------------------#
     def changeDefautDefMC(self,nomEtape,listeMC,valeurs):
     #-------------------------------------#
+    # dans le MDD
 
         #if isinstance (etape, str):
         #  for e in self.jdc.etapes:
         #    if e.nom == etape : etape=e; break
         #if etape == None : return
-        definitionEtape=getattr(self.jdc.cata[0],etape)
+        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
         ouChercher=definitionEtape
         if len(listeMC) > 1 :
 
@@ -1479,15 +1532,14 @@ class JDCEditor(Ui_baseWidget,QWidget):
              mcfact=ouChercher.entites[mc]
              ouChercher=mcfact
            
-        print (ouChercher)
         mcAccas=ouChercher.entites[listeMC[-1]]
         mcAccas.defaut=valeurs
-        print (mcAccas.defaut)
         return 1
 
     #------------------------------------------------#
     def changeIntoDefMC(self,nomEtape,listeMC,valeurs):
     #------------------------------------------------#
+    # dans le MDD
         definitionEtape=getattr(self.jdc.cata[0],nomEtape)
         ouChercher=definitionEtape
 
@@ -1509,6 +1561,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------------------------------------------------#
     def deleteDefinitionMC(self,etape,listeAvant,nomDuMC):
     #-------------------------------------------------------------#
+    # dans le MDD
         #print 'in deleteDefinitionMC', etape,listeAvant,nomDuMC
         if isinstance (etape, str):
           for e in self.jdc.etapes:
@@ -1525,13 +1578,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
     #-------------------------------------------------------------#
-    def ajoutDefinitionMC(self,etape,listeAvant,nomDuMC,typ,**args):
+    def ajoutDefinitionMC(self,nomEtape,listeAvant,nomDuMC,typ,**args):
     #-------------------------------------------------------------#
-        if isinstance (etape, str):
-          for e in self.jdc.etapes:
-            if e.nom == etape : etape=e; break
-        if etape == None : return
-        definitionEtape=getattr(self.jdc.cata[0],etape)
+    # dans le MDD
+        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
         ouChercher=definitionEtape
         for k in listeAvant : 
             ouChercher=ouChercher.entites[k]
@@ -1539,15 +1589,46 @@ class JDCEditor(Ui_baseWidget,QWidget):
         Nouveau=A_SIMP.SIMP(typ,**args)
         Nouveau.pere=ouChercher
         Nouveau.nom=nomDuMC
-        Nouveau.ordre_mc=[]
+        #Nouveau.ordre_mc=[]
         ouChercher.entites[nomDuMC]=Nouveau
         ouChercher.ordre_mc.append(nomDuMC)
-        self.dicoNouveauxMC[nomDuMC]=('ajoutDefinitionMC',etape,listeAvant,nomDuMC,typ,args)
+        self.dicoNouveauxMC[nomDuMC]=('ajoutDefinitionMC',nomEtape,listeAvant,nomDuMC,typ,args)
         #print self.dicoNouveauxMC
+
+    #---------------------------------------------------------------------#
+    def ajoutDefinitionMCFact(self,nomEtape,listeAvant,nomDuMC,listeMC,**args):
+    #---------------------------------------------------------------------#
+    # dans le MDD
+        print ('ajoutDefinitionMCFact', nomDuMC)
+        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        ouChercher=definitionEtape
+        for k in listeAvant : 
+            ouChercher=ouChercher.entites[k]
+        from Accas import A_SIMP
+        for mc in listeMC :
+            nomMC=mc[0]
+            typMC=mc[1]
+            argsMC=mc[2]
+            nouveauMC=A_SIMP.SIMP(typMC,**argsMC)
+            nouveauMC.nom=nomMC
+            args[nomMC]=nouveauMC
+        from Accas import A_FACT
+        nouveauFact=A_FACT.FACT(**args)
+        nouveauFact.pere=ouChercher
+        nouveauFact.nom=nomDuMC
+        from Editeur.autre_analyse_cata import traite_entite
+        traite_entite(nouveauFact,[])
+        ouChercher.entites[nomDuMC]=nouveauFact
+        ouChercher.ordre_mc.append(nomDuMC)
+        self.dicoNouveauxFact[nomDuMC]=('ajoutDefinitionMC',nomEtape,listeAvant,nomDuMC,listeMC,args)
+        #print self.dicoNouveauxMC
+
+    #----------------------------------------------------#
 
     #----------------------------------------------------#
     def changeIntoMCandSet(self,etape,listeMC,into,valeurs):
     #----------------------------------------------------#
+    # dans le MDD et le JDC
 
         self.changeIntoDefMC(etape,listeMC,into)
 
@@ -1561,10 +1642,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
             ouChercher=ouChercher.get_child(mot,restreint="oui")
             if ouChercher==None : return 
         MCFils=listeMC[-1]
-        print (MCFils)
         monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= etape.addentite(MCFils)
-        print (monMC)
 
         monMC.definition.into=into
         monMC.valeur=valeurs

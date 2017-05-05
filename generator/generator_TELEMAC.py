@@ -224,8 +224,10 @@ class TELEMACGenerator(PythonGenerator):
 
         nom=self.dicoCataToCas[obj.nom]
         if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
-              s3=s3.replace(';',',')
-              s3="'"+ s3 +"'"
+              if s3 != 'None' :
+                s3=s3.replace(';',',')
+                s3="'"+ s3 +"'"
+              print (s3)
         if s3 == "" or s3 == " " : s3 = "None"
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3) 

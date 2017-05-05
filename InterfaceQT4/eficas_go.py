@@ -58,7 +58,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     sys.exit(res)
 
 
-def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None):
+def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=False):
     """
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
@@ -92,7 +92,7 @@ def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=Non
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
     print((monEditeur.jdc.cr))
 
-def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False):
+def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False,debug=False,leger=False):
     #print 'lance_eficas_ssIhm_reecrit', fichier
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
     if ou == None : 
@@ -105,7 +105,21 @@ def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,o
        f2=os.path.basename(fn)
        fileName=os.path.join(ou,f1)
        fileCr=os.path.join(ou,f2)
-    monEditeur.saveFileAs(fileName=fileName)
+    debut=False
+    if debug :
+         import cProfile, pstats, StringIO
+         pr = cProfile.Profile()
+         pr.enable()
+         monEditeur.saveFileAs(fileName=fileName)
+         pr.disable()
+         s = StringIO.StringIO()
+         sortby = 'cumulative'
+         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+         ps.print_stats()
+         print (s.getvalue())
+
+    elif not leger : monEditeur.saveFileAs(fileName=fileName)
+    else : monEditeur.saveFileLegerAs(fileName=fileName)
     if cr:
        f = open(fileCr, 'w')
        f.write(str(monEditeur.jdc.report()))
