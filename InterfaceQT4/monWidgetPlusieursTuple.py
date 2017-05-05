@@ -30,7 +30,7 @@ import types,os,sys
 from six.moves import range
 from PyQt5.QtWidgets  import QFrame,QApplication, QFrame, QWidget
 from PyQt5.QtGui  import QIcon
-from PyQt5.QtCore  import QSize, Qt
+from PyQt5.QtCore  import QSize, Qt, QTimer
 
 from Extensions.i18n import tr
 
@@ -299,6 +299,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
   def RBListePush(self):
   # PN a rendre generique avec un truc tel prerempli
+      if self.editor.code == 'VP' : return
       if self.objSimp.valeur != None and self.objSimp.valeur != [] : return
       if not hasattr(self.editor.readercata.cata[0],'sd_ligne') : self.editor.readercata.cata[0].sd_ligne=None
       if not hasattr(self.editor.readercata.cata[0],'sd_generateur') : self.editor.readercata.cata[0].sd_generateur=None
