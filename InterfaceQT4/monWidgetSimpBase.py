@@ -46,12 +46,18 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
         self.lineEditVal.focusInEvent=self.monFocusInEvent
+        self.lineEditVal.focusOutEvent=self.monFocusOutEvent
 
 
   def monFocusInEvent(self,event):
       self.editor.nodeEnCours = self
       QLineEdit.focusInEvent(self.lineEditVal,event)
 
+  def monFocusOutEvent(self,event):
+      if self.oldValeurTexte != self.lineEditVal.text():
+         self.LEValeurPressed()
+         self.oldValeurTexte= self.lineEditVal.text()
+      QLineEdit.focusOutEvent(self.lineEditVal,event)
 
   #def showEvent(self, event):
   #    if self.prendLeFocus==1 :
@@ -79,6 +85,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
              #  chaine=QString("").setNum(valeurTexte)
              #except :
              chaine=str(valeurTexte)
+       self.oldValeurTexte=chaine
        self.lineEditVal.setText(chaine)
 
 
