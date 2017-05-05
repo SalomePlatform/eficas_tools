@@ -1233,10 +1233,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.fichier = os.path.splitext(fn)[0]+extension
 
         if hasattr(self.generator, "writeLeger"):
-            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
-            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
-            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
-            print ('jjjjjjjjjjjjjjjjjjjjjjjjj')
             self.generator.writeLeger(self.fichier,self.jdc,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
 
         if self.salome : self.appliEficas.addJdcInSalome( self.fichier)
