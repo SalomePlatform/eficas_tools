@@ -75,6 +75,10 @@ class PopUpMenuNodeMinimal(object) :
             if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
             else : return
+
+        from Extensions import jdc_include
+        if isinstance(self.item.jdc,jdc_include.JDC_INCLUDE) : return
+
         listeCommandes=self.dict_commandes_mesScripts[self.tree.currentItem().item.get_nom()]
         if type(listeCommandes) != tuple: listeCommandes=(listeCommandes,)
         numero=0
@@ -119,6 +123,8 @@ class PopUpMenuNodeMinimal(object) :
         listeCommandes=self.dict_commandes_mesScripts[nomCmd]
         commande=listeCommandes[numero]
         conditionValid=commande[4]
+
+
         if (nodeTraite.item.isvalid() == 0 and conditionValid == True):
                  QMessageBox.warning( None, 
                              tr("item invalide"),
