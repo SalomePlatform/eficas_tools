@@ -76,6 +76,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.listeCode=['Adao','ADAO','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
         self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
 
+        if langue=='fr': self.langue=langue
+        else           : self.langue="ang"
 
         if self.salome:
           import Accas
@@ -94,8 +96,6 @@ class Appli(Ui_Eficas,QMainWindow):
       
         if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
 
-        if langue=='fr': self.langue=langue
-        else           : self.langue="ang"
 
         self.suiteTelemac=False 
         if hasattr (self, 'CONFIGURATION') :
@@ -108,7 +108,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         from Extensions import localisation
         app=QApplication
-        localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
+        if hasattr (self, 'CONFIGURATION') : localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
 
 
 
@@ -190,6 +190,9 @@ class Appli(Ui_Eficas,QMainWindow):
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
            self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
+        from Extensions import localisation
+        app=QApplication
+        if hasattr (self, 'CONFIGURATION') : localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
         #PN --> pb d exception qui font planter salome
         # plus supporte en python 3
         #if hasattr(prefsCode,'encoding'):
