@@ -210,7 +210,7 @@ class Appli(Ui_Eficas,QMainWindow):
                  menu.setAttribute(Qt.WA_DeleteOnClose)
                  menu.close()
                  delattr(self,intituleMenu)
-        for intituleAction in ("actionExecution","actionSaveRun",):
+        for intituleAction in ("actionExecution","actionSaveRun"):
             if hasattr(self,intituleAction):
               action=getattr(self,intituleAction)
               self.toolBar.removeAction(action)
@@ -331,6 +331,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionRechercherDsCatalogue.setVisible(False)
 
     def connectRechercherDsCatalogue(self):
+        if hasattr(self,'rechercherDejaLa') : return
+        self.rechercherDejaLa=True
         self.actionRechercherDsCatalogue.triggered.connect(self.handleRechercherDsCatalogue)
 
     def ajoutSortieLegere(self):
