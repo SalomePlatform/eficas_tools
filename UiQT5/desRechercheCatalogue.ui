@@ -31,7 +31,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Mot à charcher</string>
+        <string>Mot à chercher</string>
        </property>
       </widget>
      </item>
