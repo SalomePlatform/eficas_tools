@@ -236,12 +236,13 @@ class TELEMACGenerator(PythonGenerator):
       """
       """
       s=PythonGenerator.generMCFACT(self,obj)
-      if obj.nom in TELEMACGenerator.__dict__ : TELEMACGenerator.__dict__[obj.nom],(self,obj)
+      if obj.nom in TELEMACGenerator.__dict__ : TELEMACGenerator.__dict__[obj.nom](self,obj)
  
       return s
 
   
    def LIQUID_BOUNDARIES(self,obj):
+      print ('jkljklj')
       if 'BOUNDARY_TYPE' in  obj.liste_mc_presents() :
           objForme=obj.get_child('BOUNDARY_TYPE')
           valForme=objForme.valeur

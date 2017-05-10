@@ -239,7 +239,7 @@ class TELEMACParser(PythonParser):
 
       dicoParMC={}
       for simp in self.dictSimp:
-          if simp in TELEMACParser.__dict__ : TELEMACParser.__dict__[simp],(self,)
+          if simp in TELEMACParser.__dict__ : TELEMACParser.__dict__[simp](self,)
 
       for simp in self.dictSimp:
           if simp in ListeSupprimeCasToEficas: continue
@@ -286,6 +286,7 @@ class TELEMACParser(PythonParser):
           commentaire="COMMENTAIRE("+repr(dicoComment['fin'])+")\n"
           self.textePy=self.textePy+commentaire
 
+      #print (self.textePy)
       return self.textePy
 
 
@@ -317,8 +318,9 @@ class TELEMACParser(PythonParser):
 
 
    def convertFACT(self,obj,nom,valeur):
+       # traitement LIQUID_BOUNDARIES
        if nom in TELEMACParser.__dict__ : 
-          TELEMACParser.__dict__[nom],(self,)
+          TELEMACParser.__dict__[nom](self,)
           return
        self.textePy +=  nom + "=_F( "
        self.traiteMC(valeur)
@@ -456,8 +458,8 @@ class TELEMACParser(PythonParser):
           listeOut.insert(i,k)
       return listeOut
 
-   def LIQUID_BOUNDARIES(self):
-       texte_Boundaries="LIQUID_BOUNDARIES=( "
+   def BOUNDARY_CONDITIONS(self):
+       texte_Boundaries="BOUNDARY_CONDITIONS=_F(LIQUID_BOUNDARIES=( "
        if 'PRESCRIBED_ELEVATIONS' in self.dictSimp: 
               valeursPE=self.dictSimp["PRESCRIBED_ELEVATIONS"]
               if not type(valeursPE)==list : valeursPE = (valeursPE,)
@@ -508,6 +510,6 @@ class TELEMACParser(PythonParser):
                 continue
           print ("pb texte_Boundaries avec la valeur numero ", e)
 
-       texte_Boundaries +="),\n"
+       texte_Boundaries +="),),"
        self.textePy += texte_Boundaries
       
