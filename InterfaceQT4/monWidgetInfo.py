@@ -40,6 +40,7 @@ class MonWidgetInfo (Ui_WidgetInformative,QWidget):
         self.setupUi(self)
         valeur=node.item.get_valeur()
         self.lineEditVal.setText(str(valeur))
+        self.lineEditVal.setReadOnly(True)
         parentQt.commandesLayout.insertWidget(-1,self)
 
         commande.listeAffichageWidget.append(self.lineEditVal)

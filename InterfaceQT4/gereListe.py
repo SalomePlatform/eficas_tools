@@ -206,6 +206,7 @@ class GereListe(object):
    def moinsPushed(self):
        # on supprime le dernier
        if self.NumLineEditEnCours == 0 : return
+       if self.indexDernierLabel == 0 : return
        if self.NumLineEditEnCours==self.indexDernierLabel : 
           nomLineEdit=self.nomLine+str(self.indexDernierLabel)
           courant=getattr(self,nomLineEdit)
@@ -256,7 +257,7 @@ class GereListe(object):
              courant.setValeur(valeurADescendre)
              valeurADescendre=valeurAGarder
        self.changeValeur(changeDePlace=False)
-       self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)
+       if hasattr (self, 'LineEditEnCours') :self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)
 
    def voisListePushed(self):
        texteValeurs=""

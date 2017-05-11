@@ -152,8 +152,12 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         # Gestion des listes
         else :
           if maDefinition.intoSug != [] and maDefinition.intoSug != None:
-               from .monWidgetIntoSug import MonWidgetIntoSug
-               widget=MonWidgetIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
+                 from .monWidgetIntoSug import MonWidgetIntoSug
+                 widget=MonWidgetIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               else :
+                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           #if maDefinition.into != [] and maDefinition.into != None:
           # Attention pas fini --> on attend une liste de ASSD avec ordre
           elif self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():

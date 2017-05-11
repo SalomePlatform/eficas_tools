@@ -40,7 +40,7 @@ from Extensions.i18n import tr
 from six.moves import range
 from PyQt5.QtWidgets  import   QFrame, QApplication, QScrollBar
 from PyQt5.QtCore import QTimer, QSize, Qt
-from PyQt5.QtGui  import QIcon
+from PyQt5.QtGui  import QIcon, QPalette
 
 
 class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,GereListe,GerePlie):
@@ -64,7 +64,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           pass 
         self.prepareListeResultat()
         if len(self.listeAAfficher) < 20 : self.frameRecherche2.close()
-        if len(self.listeAAfficher) < 8 : self.frameRecherche.close()
+        if len(self.listeAAfficher) < 20 : self.frameRecherche.close()
         self.adjustSize()
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
@@ -83,7 +83,9 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           icon=QIcon(self.repIcon+"/verre-loupe-icone-6087-64.png")
           self.RBVoisListe.setIcon(icon)
 
+        self.PBClean.clicked.connect(self.cleanListeResultatFiltre)
         self.parentQt.commandesLayout.insertWidget(-1,self)
+        self.listeRouge=[]
 
        
   def prepareListeResultat(self):
@@ -118,16 +120,19 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            courant=getattr(self,nomLE)
            courant.setText(str(self.listeAAfficher[i]))
        self.vScrollBar.triggerAction(QScrollBar.SliderToMinimum)
-       if len(self.listeAAfficher) < 30 and hasattr(self,'frameRecherche') : self.frameRecherche.close() 
+       if len(self.listeAAfficher) < 15 and hasattr(self,'frameRecherche') : self.frameRecherche.close() 
+       if len(self.listeAAfficher) < 15 and hasattr(self,'frameRecherche2') : self.frameRecherche2.close() 
        
       
-  def setValeurs(self):
+  def setValeurs(self,first=True):
        self.listeValeursCourantes=self.node.item.GetListeValeurs()
-       if self.monSimpDef.max == "**" or self.monSimpDef.max == float('inf') : aConstruire=7
-       else                           : aConstruire=self.monSimpDef.max
-       if len(self.listeValeursCourantes) > aConstruire : aConstruire=len(self.listeValeursCourantes)
-       for i in range(1,aConstruire+1): self.ajoutLEResultat(i)
-       self.indexDernierLabel=aConstruire
+       if first : 
+          if self.monSimpDef.max == "**" or self.monSimpDef.max == float('inf') : aConstruire=7
+          else : aConstruire=self.monSimpDef.max
+          if len(self.listeValeursCourantes) > aConstruire : aConstruire=len(self.listeValeursCourantes)
+          self.indexDernierLabel = aConstruire
+          for i in range(1,aConstruire+1): self.ajoutLEResultat(i)
+       else : self.indexDernierLabel= len(self.listeValeursCourantes)
        index=1
        for val in self.listeValeursCourantes :
           nomLE="LEResultat"+str(index)
@@ -135,33 +140,64 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           courant.setText(str(val))
           courant.setReadOnly(True)
           index=index+1
-       self.prepareListeResultat()
+       #self.prepareListeResultat()
 
   def moinsPushed(self):
       self.ouAjouter=self.ouAjouter-1
       GereListe.moinsPushed(self)
-      self.setValeurs()
+      self.setValeurs(first=False)
 
+  def prepareListeResultatFiltre(self):
+      for i in self.listeRouge :
+          nomLE="lineEditVal"+str(i+1)
+          courant=getattr(self,nomLE)
+          texte=courant.text()
+          palette = QPalette(Qt.black)
+          palette.setColor(QPalette.WindowText,Qt.black)
+          courant.setPalette(palette)
+          courant.setText(texte)
+      
+      self.listeRouge = []
+      filtre=str(self.LEFiltre.text())
+      if filtre == '' : return
+      for i in range(len(self.listeAAfficher)):
+           nomLE="lineEditVal"+str(i+1)
+           courant=getattr(self,nomLE)
+           texte=courant.text()
+           if texte.find(filtre) == 0 :
+              palette = QPalette(Qt.red)
+              palette.setColor(QPalette.WindowText,Qt.red)
+              courant.setPalette(palette)
+              courant.setText(texte)
+           self.listeRouge.append(i)
+
+  def cleanListeResultatFiltre(self):
+      self.LEFiltre.setText('')
+      self.prepareListeResultatFiltre()
 
   def ajoutLEResultat (self,index,valeur=None):
+      #print ('ajoutLEResultat', index, valeur)
       nomLE="LEResultat"+str(index)
-      if hasattr(self,nomLE) : return
-      nouveauLE = LECustom(self.scrollAreaRE,self,index)
-      nouveauLE.setFrame(False)
-      self.CBChoisis.insertWidget(self.ouAjouter,nouveauLE)
-      self.ouAjouter=self.ouAjouter+1
-      nouveauLE.setText("")
-      nouveauLE.setReadOnly(True)
-      if index % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
-      else :	          nouveauLE.setStyleSheet("background:rgb(240,240,240)")
-      self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
-      self.vScrollBarRE.triggerAction(QScrollBar.SliderToMaximum)
-      setattr(self,nomLE,nouveauLE)
-      self.estVisibleRE=nouveauLE
-      if valeur != None : 
-         nouveauLE.setText(valeur)
+      if not (hasattr(self,nomLE)) : 
+        nouveauLE = LECustom(self.scrollAreaRE,self,index)
+        nouveauLE.setFrame(False)
+        self.CBChoisis.insertWidget(self.ouAjouter,nouveauLE)
+        self.ouAjouter=self.ouAjouter+1
+        nouveauLE.setReadOnly(True)
+        if index % 2 == 1 : nouveauLE.setStyleSheet("background:rgb(210,210,210)")
+        else :	          nouveauLE.setStyleSheet("background:rgb(240,240,240)")
+        self.vScrollBarRE = self.scrollAreaRE.verticalScrollBar()
+        self.vScrollBarRE.triggerAction(QScrollBar.SliderToMaximum)
+        setattr(self,nomLE,nouveauLE)
+        self.estVisibleRE=nouveauLE
+      else :
+         nouveauLE=getattr(self,nomLE)
+
+      if valeur == None : nouveauLE.setText("")
+      else : nouveauLE.setText(str(valeur))
       
   def ajoutLE(self,index,valeur=None):
+      #print ('ajoutLE')
       nomLE="lineEditVal"+str(index)
       nouveauLE = MonLabelListeClic(self)
       #self.CBLayout.addWidget(nouveauLE)
@@ -177,6 +213,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       setattr(self,nomLE,nouveauLE)
       
   def ajoutLineEdit(self):
+      #print ('ajoutLineEdit')
+      self.indexDernierLabel=self.indexDernierLabel+1
       self.ajoutLEResultat (self.indexDernierLabel)
 
 
@@ -213,7 +251,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            self.vScrollBarRE.triggerAction(QScrollBar.SliderToMaximum)
            QTimer.singleShot(1, self.rendVisibleLigneRE)
         self.changeValeur()
-        self.setValeurs()
+        self.setValeurs(first=False)
 
   def changeValeur(self,changeDePlace=False,oblige=False):
 #PN les 2 arg sont pour que la signature de ma fonction soit identique a monWidgetPlusieursBase
