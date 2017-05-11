@@ -44,6 +44,7 @@ class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
       self.CBRecherche.setEditable(True)
       self.CBRecherche.lineEdit().returnPressed.connect(self.rechercheCB)
       self.CBRecherche.currentIndexChanged.connect(self.rechercheCB)
+      self.CBRecherche.currentTextChanged.connect(self.rechercheCB)
 
       self.initRecherche()
 
