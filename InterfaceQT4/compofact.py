@@ -38,6 +38,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
         #if  hasattr(self,'plie') :print self.item.nom, self.plie
+        #if maDefinition.sensLayout == 'horizontal':
+        #   from .monWidgetFact import MonWidgetFactHorizontal
+        #   widget=MonWidgetFactHorizontal(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+        #elif  hasattr(self,'plie') and self.plie==True : 
         if  hasattr(self,'plie') and self.plie==True : 
            from .monWidgetFactPlie import MonWidgetFactPlie
            widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)

@@ -73,6 +73,14 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           icon3 = QIcon(fichier2)
           self.BSelectFichier.setIcon(icon3)
           self.BSelectFichier.setIconSize(QSize(32, 32))
+        if self.editor.salome :
+          icon=QIcon(self.repIcon+"/MoinsBleu.png")
+          self.RBMoins.setIcon(icon)
+          icon=QIcon(self.repIcon+"/PlusBleu.png")
+          self.RBPlus.setIcon(icon)
+          icon=QIcon(self.repIcon+"/verre-loupe-icone-6087-64.png")
+          self.RBVoisListe.setIcon(icon)
+
 
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 

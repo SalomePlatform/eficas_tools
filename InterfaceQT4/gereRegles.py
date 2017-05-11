@@ -25,6 +25,7 @@ except : pass
 
 from PyQt5.QtCore import Qt
 from  .monViewRegles  import ViewRegles
+from Extensions.i18n import tr
 
 class GereRegles(object) :
 
@@ -60,7 +61,7 @@ class GereRegles(object) :
                 else :
                    self.liste.append((ligne,Qt.red))
              self.liste.append(("",Qt.red))
-       if self.liste==[] : self.liste(tr("pas de regle de construction pour ce jeu de commandes",Qt.black))
+       if self.liste==[] : self.liste.append(("pas de regle de construction pour ce jeu de commandes",Qt.black))
                
 
    def AfficheRegles(self):

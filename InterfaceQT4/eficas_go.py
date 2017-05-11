@@ -49,7 +49,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     if options.code!= None : code=options.code
     if options.ssCode!= None : ssCode=options.ssCode
 
-    from .qtEficas import Appli
+    from InterfaceQT4.qtEficas import Appli
     app = QApplication(sys.argv)
     Eficas=Appli(code=code,ssCode=ssCode,multi=multi,langue=langue)
     Eficas.show()

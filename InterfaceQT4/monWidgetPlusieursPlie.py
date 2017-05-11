@@ -102,3 +102,21 @@ class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
          self.editor.affiche_infos(str(listeValeur) + '   ' +comm,Qt.red)
          self.lineEditVal.setText('')
        
+class MonWidgetPlusieursPlieASSD (MonWidgetPlusieursPlie):
+
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        MonWidgetPlusieursPlie.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        self.lineEditVal.setReadOnly(True)
+
+  def setValeurs(self):
+       self.listeValeursCourantes=self.node.item.GetListeValeurs()
+       self.politique=PolitiquePlusieurs(self.node,self.editor)
+       if self.listeValeursCourantes == []  :  self.lineEditVal.setText(""); return
+       txt="["
+       for elt in self.listeValeursCourantes :
+            txt= txt+ (str(elt)) + ","
+       txt= txt + "]"
+       self.lineEditVal.setText(txt)
+
+  def valeurEntree(self):
+      pass

@@ -174,9 +174,12 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                if len(listeAAfficher) == 0:
                  from .monWidgetVide import MonWidgetVide
                  widget = MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-               else :
+               elif self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
                  from .monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
                  widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               else :
+                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlieASSD
+                  widget=MonWidgetPlusieursPlieASSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.wait_tuple() :
             if self.item.object.definition.type[0].ntuple == 2:
                from .monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
@@ -197,7 +200,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                   from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-# tres vite pour le tag mais devra etre gere dans configuration
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
                   from .monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
                   widget=MonWidgetPlusieursIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)

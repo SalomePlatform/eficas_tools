@@ -48,9 +48,11 @@ class LECustom(QLineEdit):
         Constructor
         """
         QLineEdit.__init__(self,parent)
+        
         self.parentQt=parentQt
         self.num=i
         self.dansUnTuple=False
+        self.numDsLaListe=-1
 
  def focusInEvent(self,event):
      #print "dans focusInEvent de LECustom"
@@ -61,11 +63,16 @@ class LECustom(QLineEdit):
      QLineEdit.focusInEvent(self,event)
 
  def focusOutEvent(self,event):
-     #print "dans focusOutEvent de LECustom"
      self.setStyleSheet("border: 0px")
      if self.dansUnTuple    : self.setStyleSheet("background:rgb(235,235,235); border: 0px;")
      elif self.num % 2 == 1 : self.setStyleSheet("background:rgb(210,210,210)")
      else                   : self.setStyleSheet("background:rgb(235,235,235)")
+       
+    
+     if isinstance(self,LECustomTuple)  and  not self.tupleCustomParent.inFocusOutEvent:
+         self.tupleCustomParent.inFocusOutEvent=True
+         self.tupleCustomParent.valueChange()
+         self.tupleCustomParent.inFocusOutEvent=False
      QLineEdit.focusOutEvent(self,event)
 
  def clean(self):
@@ -86,6 +93,7 @@ class LECustomTuple(LECustom):
    #  index sera mis a jour par TupleCustom
    parentQt=parent.parent().parent().parent()
    LECustom. __init__(self,parent,parentQt,0)
+   #print (dir(self))
 
 # ---------------------------- #
 class MonLabelListeClic(QLabel):

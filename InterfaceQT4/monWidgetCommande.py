@@ -71,7 +71,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.labelNomCommande.setText(tr(self.obj.nom))
 
 
-      if self.editor.closeFrameRechercheCommande==True : self.closeAutreCommande()
+      if self.editor.closeAutreCommande==True  : self.closeAutreCommande()
       else :
         try :
            self.bCatalogue.clicked.connect(self.afficheCatalogue)

@@ -54,7 +54,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.filtre=""
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parent,commande)
         GereListe.__init__(self)
-        self.finCommentaireListe()
+        #self.finCommentaireListe()
         self.gereIconePlier()
         self.listeValeursCourantes=self.node.item.GetListeValeurs()
         try :
@@ -63,7 +63,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           # cas ou on ne peut rien ajouter
           pass 
         self.prepareListeResultat()
-        if len(self.listeAAfficher) < 8 : self.frameRecherche2.close()
+        if len(self.listeAAfficher) < 20 : self.frameRecherche2.close()
+        if len(self.listeAAfficher) < 8 : self.frameRecherche.close()
         self.adjustSize()
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon

@@ -972,13 +972,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #------------#
       fonction="run"+self.code
       #print fonction
-      if fonction in JDCEditor.__dict__: JDCEditor.__dict__[fonction],(self,)
+      if fonction in JDCEditor.__dict__: JDCEditor.__dict__[fonction](self,)
 
     #------------#
     def saveRun(self):
     #------------#
       fonction="saveRun"+self.code
-      if fonction in JDCEditor.__dict__: JDCEditor.__dict__[fonction],(self,)
+      if fonction in JDCEditor.__dict__: JDCEditor.__dict__[fonction](self,)
 
     #---------------#
     def runMAP(self):

@@ -53,6 +53,7 @@ class TupleCustom(object) :
       self.parentQt=parentQt
       self.valeur=None
       self.index=index
+      self.inFocusOutEvent=False
 
 
       for i in range(self.tailleTuple):
@@ -61,6 +62,8 @@ class TupleCustom(object) :
          courant.num=index
          courant.dansUnTuple=True
          courant.returnPressed.connect(self.valueChange)
+         courant.numDsLaListe = i+1
+         courant.tupleCustomParent=self
 
 
   def valueChange(self):
@@ -70,8 +73,9 @@ class TupleCustom(object) :
          nomLE="lineEditVal_"+str(i+1)
          courant=getattr(self,nomLE)
          val=str(courant.text())
+        
          if str(val)=="" or val==None : 
-            courant.setFocus()
+            if not self.inFocusOutEvent : courant.setFocus()
             return
          try :
              valeur=eval(val,{})
