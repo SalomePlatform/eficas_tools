@@ -52,9 +52,9 @@ def localise(application, locale=None,file=None,translatorFichier=None, debug=Fa
      
     global code_translator
     if translatorFichier != None :
-       if (code_translator.load(translatorFichier)):
+       if (code_translator.load(translatorFichier)) and debug:
            print (translatorFichier, ' loaded')
-       elif (code_translator.load(translatorFichier+'_'+locale)):
+       elif (code_translator.load(translatorFichier+'_'+locale) and debug):
            print(translatorFichier+'_'+locale+ ' loaded')
        elif debug : 
            print ("Unable to load Code translator! No file or No translation" + translatorFichier)
