@@ -27,7 +27,7 @@ from PyQt5.QtCore import QTranslator
 code_translator = QTranslator()
 eficas_translator = QTranslator()
 
-def localise(application, locale=None,file=None,translatorFichier=None ):
+def localise(application, locale=None,file=None,translatorFichier=None, debug=False ):
     """
     """
     from PyQt5.QtCore import QLibraryInfo
@@ -41,13 +41,13 @@ def localise(application, locale=None,file=None,translatorFichier=None ):
     
     if locale=="ang" : locale="en"
 
-    if file != None :
+    if file != None and debug :
        print ('chargement de ', file,monPath)
        print (eficas_translator.load(file,monPath))
        print (QApplication.installTranslator(eficas_translator))
     elif eficas_translator.load("eficas_" + locale, monPath):
        QApplication.installTranslator(eficas_translator)
-    else:
+    elif debug:
        print ("Unable to load Eficas translator!")
      
     global code_translator
@@ -56,9 +56,9 @@ def localise(application, locale=None,file=None,translatorFichier=None ):
            print (translatorFichier, ' loaded')
        elif (code_translator.load(translatorFichier+'_'+locale)):
            print(translatorFichier+'_'+locale+ ' loaded')
-       else : 
+       elif debug : 
            print ("Unable to load Code translator! No file or No translation" + translatorFichier)
-       print (QApplication.installTranslator(code_translator))
+       if debug : print (QApplication.installTranslator(code_translator))
        
 
 if __name__ == "__main__":
