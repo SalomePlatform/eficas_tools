@@ -26,7 +26,7 @@ from PyQt5.QtWidgets import QWidget
 
 from .groupe import Groupe
 from desWidgetFact import Ui_WidgetFact
-from desWidgetFactHorizon import Ui_WidgetFactHorizon
+#from desWidgetFactHorizon import Ui_WidgetFactHorizon
 from Extensions.i18n import tr
 # Import des panels
 
@@ -61,6 +61,6 @@ class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
       MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
 
-class MonWidgetFactHorizontal(Ui_WidgetFactHorizon,MonWidgetFactCommun):
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
+#class MonWidgetFactHorizontal(Ui_WidgetFactHorizon,MonWidgetFactCommun):
+#  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
+#      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
