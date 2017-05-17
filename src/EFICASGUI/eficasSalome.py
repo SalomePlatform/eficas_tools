@@ -85,8 +85,8 @@ class MyEficas( qtEficas.Appli ):
                 eficasArg += [ fichier ]
             if version:
                 eficasArg += [ "-c", version ]
-            else :
-                print "noversion"
+            #else :
+            #    print "noversion"
             session.parse( eficasArg )
                         
         self.editor = getStudyEditor()    # Editeur de l'arbre d'etude
