@@ -50,6 +50,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetPlusieursBase", nom
+        self.inFocusOutEvent=False
         self.nomLine="lineEditVal"
         self.inInit=True
         self.indexDernierLabel=0
@@ -141,6 +142,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       else :	                           nouveauLE.setStyleSheet("background:rgb(235,235,235)")
       nouveauLE.setFrame(False)
       nouveauLE.returnPressed.connect(self.changeValeur)
+
       setattr(self,nomLineEdit,nouveauLE)
       self.listeAffichageWidget.append(nouveauLE)
       self.etablitOrdre()

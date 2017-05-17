@@ -48,7 +48,7 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='fr',ssIhm=False):
+    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='ang',ssIhm=False):
         """
         Constructor
         """
@@ -395,8 +395,12 @@ class Appli(Ui_Eficas,QMainWindow):
         self.menuOptions.setTitle(tr("Options"))
 
     def PSEN(self):
-        if self.first: self.first=0
-        self.action_Nouveau.triggered.disconnect(self.fileNew)
+        if self.first:  self.first=0
+        try : self.action_Nouveau.triggered.disconnect(self.fileNew)
+        except : pass
+        try : self.action_Nouveau.triggered.disconnect(self.newPSEN)
+        except : pass
+
         self.action_Nouveau.triggered.connect(self.newPSEN)
         self.enleverActionsStructures()
         self.enleverParametres()

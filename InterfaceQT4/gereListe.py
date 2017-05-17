@@ -69,11 +69,20 @@ class LECustom(QLineEdit):
      else                   : self.setStyleSheet("background:rgb(235,235,235)")
        
     
-     if isinstance(self,LECustomTuple)  and  not self.tupleCustomParent.inFocusOutEvent:
-         self.tupleCustomParent.inFocusOutEvent=True
-         self.tupleCustomParent.valueChange()
-         self.tupleCustomParent.inFocusOutEvent=False
-     QLineEdit.focusOutEvent(self,event)
+     
+     from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
+     try :
+       #if isinstance (self.parentQt, MonWidgetPlusieursBase) and not self.parentQt.inFocusOutEvent : 
+       #  self.parentQt.inFocusOutEvent=True
+       #  self.parentQt.changeValeur(changeDePlace=True,oblige=False)
+       #  self.parentQt.inFocusOutEvent=False
+
+       #if isinstance(self,LECustomTuple)  and  not self.tupleCustomParent.inFocusOutEvent:
+       #  self.tupleCustomParent.inFocusOutEvent=True
+       #  self.tupleCustomParent.valueChange()
+       #  self.tupleCustomParent.inFocusOutEvent=False
+       QLineEdit.focusOutEvent(self,event)
+     except : pass
 
  def clean(self):
      self.setText("")
