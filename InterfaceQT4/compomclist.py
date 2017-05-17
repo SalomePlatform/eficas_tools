@@ -64,6 +64,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         child=self.append_brother(objet_a_copier,'before')
         if self.editor.fenetreCentraleAffichee : self.editor.fenetreCentraleAffichee.node.affichePanneau()
         self.update_node_label_in_black()
+        self.parent().build_children()
         return child
 
 
