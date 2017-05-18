@@ -1369,16 +1369,26 @@ class JDCEditor(Ui_baseWidget,QWidget):
             jdcText = ''
         return ulfile, jdcText
 
-    #-------------------------------#
+    #-----------------------------------#
     def updateJdc(self, itemApres,texte):
-    #--------------------------------#
-    # ajoute un morceau de JdC a partir d un tecte
+    #------------------------------------#
+    # ajoute une etape  de JdC a partir d un texte
         monItem=itemApres
         etape=monItem.item.object
-
         CONTEXT.set_current_step(etape)
         etape.build_includeInclude(texte)
         self.tree.racine.build_children()
+
+    #-----------------------------------#
+    def updateJdcEtape(self, itemApres,texte):
+    #------------------------------------#
+    # ajoute une etape  de JdC a partir d un texte
+        monItem=itemApres
+        etape=monItem.item.object
+        CONTEXT.set_current_step(etape)
+        etape.build_includeEtape(texte)
+        self.tree.racine.build_children()
+
 
     #-------------------------------------#
     def deleteEtape(self,etape):

@@ -27,8 +27,10 @@ import prefs
 name='prefs_'+prefs.code
 __import__(name)
 
-
-import sys,os
+import sys
+reload(sys)
+sys.setdefaultencoding('latin1')
+import os
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 
 import prefs

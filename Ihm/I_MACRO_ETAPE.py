@@ -80,7 +80,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisee par ops.POURSUITE et INCLUDE
     """
-    print ("get_contexte_jdc",self,self.nom)
+    #print ("get_contexte_jdc",self,self.nom)
     # On recupere l'etape courante
     step=CONTEXT.get_current_step()
     try:
@@ -224,7 +224,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             if callable(v):continue
             self.g_context[k]=param2.Variable(k,v)
 
-    print ('kljkljkljlkjklj')
     # On recupere le contexte courant
     self.current_context=j.current_context
     self.index_etape_courante=j.index_etape_courante
@@ -234,7 +233,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     CONTEXT.unset_current_step()
     CONTEXT.set_current_step(step)
 
-    print ('kljkljkljlkjklj')
     return j_context
 
   def reevalue_sd_jdc(self):
@@ -282,7 +280,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           Si la macro a elle meme des etapes, elle doit propager
           le traitement (voir methode control_jdc_context_apres de I_JDC)
       """
-      #print "I_MACRO_ETAPE.control_sdprods",d.keys(),self.nom,self.sd and self.sd.nom
+      #print ("I_MACRO_ETAPE.control_sdprods",d.keys(),self,self.nom,self.sd and self.sd.nom)
       if self.sd:
         if self.sd.nom in d:
            # Le concept est deja defini
@@ -523,7 +521,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # une poursuite a sa propre table d'unites
     self.recorded_units={}
     self.build_jdcaux(fichier,text)
-
        
 
   def build_includeInclude(self,text):
@@ -531,6 +528,32 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     self.JdC_aux=Extensions.jdc_include.JdC_include
     # un include partage la table des unites avec son parent (jdc)
     self.build_jdcauxInclude(text)
+
+
+
+  def build_includeEtape(self,text):
+    import Extensions.jdc_include
+    self.JdC_aux=Extensions.jdc_include.JdC_include
+    # un include partage la table des unites avec son parent (jdc)
+    #self.build_jdcauxInclude(text)
+    # Attention fonctionne pour import_Zone de MT
+    # a adapter eventuellement
+    try :
+       contexte = self.get_contexte_jdc(None,text)
+    except EficasException: pass
+     
+    for e in self.etapes: 
+        e.niveau=self.niveau
+        e.parent=self.parent
+
+    index=self.jdc.etapes.index(self)
+    self.jdc.etapes=self.jdc.etapes[:index+1]+self.etapes+self.jdc.etapes[index+1:]
+
+    self.g_context={}
+    self.etapes=[]
+    self.jdc.reset_context()
+    self.jdc_aux=None
+    CONTEXT.unset_current_step()
 
 
   def build_jdcauxInclude(self,text):
@@ -750,7 +773,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          Une MACRO_ETAPE peut ajouter plusieurs concepts dans le contexte
          Une fonction enregistree dans op_init peut egalement modifier le contexte
       """
-      #print "update_context",self,self.nom,d.keys()
+      print ("update_context",self,self.nom,d.keys())
       if hasattr(self,"jdc_aux") and self.jdc_aux:
             #ATTENTION: update_context NE DOIT PAS appeler reset_context
             # car il appelle directement ou indirectement update_context
@@ -770,7 +793,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
       if type(self.definition.op_init) == types.FunctionType:
         self.definition.op_init(*(self,d))
-      if self.sd != None:d[self.sd.nom]=self.sd
+      if self.sd != None :d[self.sd.nom]=self.sd
       for co in self.sdprods:
         d[co.nom]=co
       #print "update_context.fin",d.keys()

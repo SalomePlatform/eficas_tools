@@ -35,5 +35,8 @@ encoding='iso-8859-1'
 
 #
 catalogues=(
-   ('MT','default',os.path.join(repIni,'MT_Cata_V1.py'),'python','python'),
+   ('MT','V2016',os.path.join(repIni,'MT_Cata_V2016.py'),'python','python'),
 )
+nombreDeBoutonParLigne=4
+simpleClic=True
+closeFrameRechercheCommande=True
