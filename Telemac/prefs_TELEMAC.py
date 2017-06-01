@@ -19,6 +19,7 @@
 #
 # ======================================================================
 
+from __future__ import absolute_import
 import os,sys
 # repIni sert a localiser le fichier editeur.ini
 # Obligatoire
@@ -46,3 +47,4 @@ catalogues=(
 )
 mode_nouv_commande="figee"
 affiche         = "ordre"
+translatorFichier = os.path.join(repIni,'labelCataToIhm')

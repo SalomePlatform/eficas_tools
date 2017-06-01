@@ -16,6 +16,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+from __future__ import absolute_import
 code="TELEMAC" 
 import sys, os
 if os.path.dirname(os.path.abspath(__file__)) not in sys.path :

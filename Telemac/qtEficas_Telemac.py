@@ -24,6 +24,7 @@
 # Modules Python
 # Modules Eficas
 
+from __future__ import absolute_import
 import sys,os
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 

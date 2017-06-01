@@ -11,6 +11,8 @@ TelemacdicoEn = {
     'F':"Froude number",
     'Q':"scalar flowrate of fluid (m2/s)",
     'T1':"tracer 1 etc.",
+    'T*':"All the tracers 1 to 9.",
+    'T1*':"All the tracers 10 to 19.",
     'K':"turbulent kinetic energy in k-epsilon model (J/kg)",
     'E':"dissipation of turbulent energy (W/kg)",
     'D':"turbulent viscosity (m2/s)",
@@ -36,6 +38,7 @@ TelemacdicoEn = {
     'G1':"gradient 1, etc. ",
   },
 'VARIABLES_TO_BE_PRINTED' : {
+    'No':" ",
     'U':"velocity along x axis (m/s)",
     'V':"velocity along y axis (m/s)",
     'C':"wave celerity (m/s)",
@@ -268,6 +271,7 @@ TelemacdicoEn = {
 'TREATMENT_OF_NEGATIVE_DEPTHS' : {
     1:"SMOOTHING",
     2:"FLUX CONTROL",
+    3:"FLUX CONTROL (ERIA)",
   },
 'SOLVER_FOR_DIFFUSION_OF_TRACERS' : {
     1:"conjugate gradient",
@@ -280,8 +284,8 @@ TelemacdicoEn = {
     8:"direct",
   },
 'PRECONDITIONING_FOR_DIFFUSION_OF_TRACERS' : {
-    2:"diagonal",
     0:"no preconditioning ",
+    2:"diagonal",
     7:"crout",
     14:"diagonal and crout",
   },
@@ -368,6 +372,8 @@ TelemacdicoFr = {
     'F':"nombre de Froude",
     'Q':"debit scalaire du fluide (m2/s)",
     'T1':"traceur 1, etc.",
+    'T*':"Tous les traceurs de 1a 9.",
+    'T1*':"Tous les traceurs 10 a 19.",
     'K':"energie turbulente du modele k-epsilon (J/kg)",
     'E':"dissipation de l energie turbulente (W/kg)",
     'D':"viscosite turbulente (m2/s)",
@@ -393,6 +399,7 @@ TelemacdicoFr = {
     'G1':"gradient 1, etc. ",
   },
 'VARIABLES_TO_BE_PRINTED' : {
+    'No':" ",
     'U':"vitesse suivant l axe des x (m/s)",
     'V':"vitesse suivant l axe des y (m/s)",
     'C':"celerite des ondes (m/s)",
@@ -625,6 +632,7 @@ TelemacdicoFr = {
 'TREATMENT_OF_NEGATIVE_DEPTHS' : {
     1:"LISSAGE",
     2:"LIMITATION DES FLUX",
+    3:"LIMITATION DES FLUX (ERIA)",
   },
 'SOLVER_FOR_DIFFUSION_OF_TRACERS' : {
     1:"gradient conjuge",
@@ -637,8 +645,8 @@ TelemacdicoFr = {
     8:"direct",
   },
 'PRECONDITIONING_FOR_DIFFUSION_OF_TRACERS' : {
-    2:"diagonal",
     0:"aucun",
+    2:"diagonal",
     7:"crout",
     14:"diagonal et crout",
   },
@@ -1410,7 +1418,96 @@ DicoEnumCasFrToEnumCasEn = {
 'PARAMETER_ESTIMATION':{
   "":"",
   "FROTTEMENT":"FRICTION",
-  "FROTTEMENT, PERMANENT":"FROTTEMENT, STEADY",
+  "FROTTEMENT, PERMANENT":"FRICTION, STEADY",
+},
+
+'EQUATIONS':{
+  "SAINT-VENANT EF":"SAINT-VENANT FE",
+  "SAINT-VENANT VF":"SAINT-VENANT FV",
+  "BOUSSINESQ":"BOUSSINESQ",
+},
+
+'COUPLING_WITH':{
+  "SISYPHE":"SISYPHE",
+  "TOMAWAC":"TOMAWAC",
+  "DELWAQ":"DELWAQ",
+},
+
+'PARTITIONING_TOOL':{
+  "METIS":"METIS",
+  "SCOTCH":"SCOTCH",
+  "PARMETIS":"PARMETIS",
+  "PTSCOTCH":"PTSCOTCH",
+},
+
+}
+DicoEnumCasFrToEnumCasEn = {
+'INITIAL_CONDITIONS':{
+  "COTE NULLE":"ZERO ELEVATION",
+  "COTE CONSTANTE":"CONSTANT ELEVATION",
+  "HAUTEUR NULLE":"ZERO DEPTH",
+  "HAUTEUR CONSTANTE":"CONSTANT DEPTH",
+  "SPECIAL":"SPECIAL",
+  "PARTICULIERES":"PARTICULIERES",
+  "PARTICULAR":"PARTICULAR",
+  "ALTIMETRIE SATELLITE TPXO":"TPXO SATELLITE ALTIMETRY",
+},
+
+'BINARY_DATA_FILE_1_FORMAT':{
+  "BIN":"BIN",
+  "SERAFIN":"SERAFIN",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'BINARY_DATA_FILE_2_FORMAT':{
+  "BIN":"BIN",
+  "SERAFIN":"SERAFIN",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'GEOMETRY_FILE_FORMAT':{
+  "SERAFIN?":"SERAFIN?",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'REFERENCE_FILE_FORMAT':{
+  "SERAFIN?":"SERAFIN?",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'PREVIOUS_COMPUTATION_FILE_FORMAT':{
+  "SERAFIN?":"SERAFIN?",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'RESULTS_FILE_FORMAT':{
+  "SERAFIN?":"SERAFIN?",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'BINARY_RESULTS_FILE_FORMAT':{
+  "BIN":"BIN",
+  "SERAFIN":"SERAFIN",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'BINARY_ATMOSPHERIC_DATA_FILE_FORMAT':{
+  "SERAFIN?":"SERAFIN?",
+  "SERAFIND":"SERAFIND",
+  "MED":"MED",
+},
+
+'PARAMETER_ESTIMATION':{
+  "":"",
+  "FROTTEMENT":"FRICTION",
+  "FROTTEMENT, PERMANENT":"FRICTION, STEADY",
 },
 
 'EQUATIONS':{

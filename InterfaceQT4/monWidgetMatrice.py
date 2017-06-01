@@ -36,6 +36,7 @@ from desWidgetMatrice  import Ui_desWidgetMatrice
 
 from six.moves import range
 from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import QTableWidgetItem
 
 
 class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
@@ -164,9 +165,11 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
                else :
 	          initialFloat=0
                self.TBMatrice.setItem(row,column,QTableWidgetItem(str(initialFloat)))
-       header=QStringList()
+       #header=QStringList()
+       header=[]
        for var in self.listeVariables :
-	   header << var
+#	   header << var
+           header.append(var)
        self.TBMatrice.setVerticalHeaderLabels(header)
        self.TBMatrice.setHorizontalHeaderLabels(header)
 

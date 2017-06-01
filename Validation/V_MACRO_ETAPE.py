@@ -160,8 +160,8 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
                                                    sys.exc_info()[2])
                     self.cr.fatal( 'Impossible d affecter un type au resultat\n%s' % ' '.join(l[2:]))
                 return 0
-        # on teste maintenant si la SD est r\351utilis\351e ou s'il faut la
-        # cr\351er
+        # on teste maintenant si la SD est reutilisee ou s'il faut la
+        # creer
         valid = 1
         if self.reuse:
             # Un concept reutilise a ete specifie

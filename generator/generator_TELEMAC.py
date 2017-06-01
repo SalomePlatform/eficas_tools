@@ -34,7 +34,7 @@ from .generator_python import PythonGenerator
 extensions=('.comm',)
 #if 1:
 try :
-   from enumDicoTelemac       import TelemacdicoEn
+   from enum_Telemac2d_auto       import TelemacdicoEn
    DicoEnumCasEnInverse={}
    for motClef in TelemacdicoEn:
      d={}
@@ -65,14 +65,14 @@ def entryPoint():
 class TELEMACGenerator(PythonGenerator):
    """
       Ce generateur parcourt un objet de type JDC et produit
-      un texte au format eficas et 
+      un texte au format eficas et
       un texte au format dictionnaire
 
    """
 
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None,appli=None,statut="Entier"):
-       
+
       self.statut=statut
       self.langue=appli.langue
       self.initDico()
@@ -95,9 +95,9 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 # initialisations
 #----------------------------------------------------------------------------------------
-   
+
    def initDico(self) :
- 
+
       self.PE=False
       self.FE=False
       self.VE=False
@@ -113,7 +113,7 @@ class TELEMACGenerator(PythonGenerator):
         self.textVE = 'PRESCRIBED VELOCITIES :'
       self.nbTracers = 0
       self.texteDico = ""
- 
+
 
 
 
@@ -125,7 +125,7 @@ class TELEMACGenerator(PythonGenerator):
        self.texteDico+='\n&ETA\n&FIN\n'
        if self.statut == 'Leger' : extension = ".Lcas"
        else                      : extension = ".cas"
-       fileDico = fn[:fn.rfind(".")] + extension 
+       fileDico = fn[:fn.rfind(".")] + extension
        f = open( str(fileDico), 'w')
        f.write( self.texteDico )
        f.close()
@@ -136,15 +136,15 @@ class TELEMACGenerator(PythonGenerator):
 
    def writeLeger(self,fn,jdc,config,appli) :
        jdc_formate=self.gener(jdc,config=config,appli=appli,statut="Leger")
-       self.writeDefault(fn) 
+       self.writeDefault(fn)
 
 
 #----------------------------------------------------------------------------------------
-#  analyse de chaque noeud de l'arbre 
+#  analyse de chaque noeud de l'arbre
 #----------------------------------------------------------------------------------------
 
    def generPROC_ETAPE(self,obj):
-        if  not self.commentaireAvant or self.texteCom.find(obj.nom) < 0: 
+        if  not self.commentaireAvant or self.texteCom.find(obj.nom) < 0:
             self.texteDico += '/------------------------------------------------------------------/\n'
             self.texteDico += '/\t\t\t'+obj.nom +'\n'
             self.texteDico += '/------------------------------------------------------------------/\n'
@@ -152,43 +152,41 @@ class TELEMACGenerator(PythonGenerator):
         self.texteCom=''
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         if obj.nom in TELEMACGenerator.__dict__ : TELEMACGenerator.__dict__[obj.nom](*(self,obj))
-        
+
         return s
 
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
 
-       
+
         # Attention pas sur --> ds certains cas non traite par MCFACT ?
-        # a reflechir avec Yoann 
+        # a reflechir avec Yoann
         # ajouter le statut ?
         if self.statut == 'Leger' :
           if hasattr(obj.definition,'defaut') and (obj.definition.defaut == obj.valeur) and (obj.nom not in self.listeTelemac) : return s
           if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == tuple or type(obj.valeur) == list) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
- 
+
 
         #nomMajuscule=obj.nom.upper()
-        #nom=nomMajuscule.replace('_',' ') 
+        #nom=nomMajuscule.replace('_',' ')
         #if nom in listeSupprime or s == "" : return s
         if s == "" : return s
 
-      
-
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (tuple,list) ):
-           if obj.nom in DicoEnumCasEnInverse:  
+           if obj.nom in DicoEnumCasEnInverse:
              try : sTelemac=str(DicoEnumCasEnInverse[obj.nom][obj.valeur])
-             except : 
+             except :
                if obj.valeur==None :  sTelemac=obj.valeur
                else : print(("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur))
         if type(obj.valeur) in (tuple,list) :
-           if obj.nom in DicoEnumCasEnInverse:  
+           if obj.nom in DicoEnumCasEnInverse:
              #sT = "'"
              sT=''
              for v in obj.valeur:
                try : sT +=str(DicoEnumCasEnInverse[obj.nom][v]) +";"
-               except : 
+               except :
                  if obj.definition.intoSug != [] : sT +=str(v) + ";"
                  else : print(("generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur))
              #sTelemac=sT[0:-1]+"'"
@@ -196,11 +194,10 @@ class TELEMACGenerator(PythonGenerator):
            else  :
              sTelemac=sTelemac[0:-1]
              if sTelemac.find("'") > 0 :
-                sTelemac= sTelemac.replace (',',';\n	') 
+                sTelemac= sTelemac.replace (',',';\n	')
                 # on enleve le dernier  ';'
                 index=(sTelemac.rfind(";"))
                 sTelemac=sTelemac[:index]+' '+sTelemac[index+1:]
-
 
         if self.langue=='fr' :
            s1=str(sTelemac).replace('True','OUI')
@@ -208,15 +205,18 @@ class TELEMACGenerator(PythonGenerator):
         else :
            s1=str(sTelemac).replace('True','YES')
            s2=s1.replace('False','NO')
-        s3=s2.replace(',',';')
-        if s3 != "" and s3[0]=='(' : 
+        if hasattr(obj.definition,'max'):
+           s3=s2.replace(',',';')
+        else:
+           s3=s2
+        if s3 != "" and s3[0]=='(' :
           try : s3=s3[1:-1] # cas de liste vide
           except : s3 = ' '
-        
-       
+
+
         # LIQUID_BOUNDARIES
-        if obj.nom in ('PRESCRIBED_FLOWRATES','PRESCRIBED_VELOCITIES','PRESCRIBED_ELEVATIONS') :
-           return s
+        #if obj.nom in ('PRESCRIBED_FLOWRATES','PRESCRIBED_VELOCITIES','PRESCRIBED_ELEVATIONS') :
+        #   return s
 
         if obj.nom not in self.dicoCataToCas :
            if obj.nom == 'Consigne' : return ""
@@ -224,12 +224,15 @@ class TELEMACGenerator(PythonGenerator):
 
         nom=self.dicoCataToCas[obj.nom]
         if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
-              if s3 != 'None' :
+              if s3 != 'None':
                 s3=s3.replace(';',',')
                 s3="'"+ s3 +"'"
-        if s3 == "" or s3 == " " : s3 = "None"
+              else:
+                s3 = "''"
+              #print("s3+",s3)
+        if s3 == "" or s3 == " " : s3 = " "
         ligne=nom+ " : " + s3 + "\n"
-        if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3) 
+        if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3)
         self.texteDico+=ligne
 
    def generMCFACT(self,obj):
@@ -237,45 +240,63 @@ class TELEMACGenerator(PythonGenerator):
       """
       s=PythonGenerator.generMCFACT(self,obj)
       if obj.nom in TELEMACGenerator.__dict__ : TELEMACGenerator.__dict__[obj.nom](self,obj)
- 
+
       return s
 
-  
-   def LIQUID_BOUNDARIES(self,obj):
-      print ('jkljklj')
-      if 'BOUNDARY_TYPE' in  obj.liste_mc_presents() :
-          objForme=obj.get_child('BOUNDARY_TYPE')
-          valForme=objForme.valeur
-          if valForme == None : return
 
-          nomBloc='b_'+valForme.split(" ")[1] 
-          if nomBloc in  obj.liste_mc_presents() :
-             objBloc=obj.get_child(nomBloc)
-             objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0])
-             valeur=objValeur.valeur
-             if valeur== None : valeur="0."
-          if valForme == 'Prescribed Elevations' :
-              self.PE=True
-              self.textPE += str(valeur) +"; "
-          else : self.textPE += "0.; "
-          if valForme == 'Prescribed Flowrates' :
-              self.FE=True
-              self.textFE += str(valeur) +"; "
-          else : self.textFE += "0.; "
-          if valForme == 'Prescribed Velocity'  :
-              self.VE=True
-              self.textVE += str(valeur) +"; "
-          else : self.textVE += "0.; "
+#  def LIQUID_BOUNDARIES(self,obj):
+#     print ('jkljklj')
+#     if 'BOUNDARY_TYPE' in  obj.liste_mc_presents() :
+#         objForme=obj.get_child('BOUNDARY_TYPE')
+#         valForme=objForme.valeur
+#         if valForme == None : return
 
-   def BOUNDARY_CONDITIONS(self,obj):
-       # sans '; '
-       if self.FE :  self.texteDico += self.textFE[0:-2]+'\n' 
-       if self.PE :  self.texteDico += self.textPE[0:-2]+'\n' 
-       if self.VE :  self.texteDico += self.textVE[0:-2]+'\n' 
+
+#         if valForme == 'Prescribed Unknown':
+#            nomBloc='b_'+valForme.split(" ")[1]
+#            if nomBloc in  obj.liste_mc_presents() :
+#               objBloc=obj.get_child(nomBloc)
+#               valeurPE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0]).valeur
+#               valeurFE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[1]).valeur
+#               valeurVE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[2]).valeur
+#               if valeurPE== None : valeurPE="0."
+#               if valeurFE== None : valeurPE="0."
+#               if valeurVE== None : valeurPE="0."
+#            self.PE=True
+#            self.textPE += str(valeurPE) +"; "
+#            self.FE=True
+#            self.textFE += str(valeurFE) +"; "
+#            self.VE=True
+#            self.textVE += str(valeurVE) +"; "
+#         else:
+#            nomBloc='b_'+valForme.split(" ")[1]
+#            if nomBloc in  obj.liste_mc_presents() :
+#               objBloc=obj.get_child(nomBloc)
+#               objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0])
+#               valeur=objValeur.valeur
+#               if valeur== None : valeur="0."
+#            if valForme == 'Prescribed Elevations' :
+#                self.PE=True
+#                self.textPE += str(valeur) +"; "
+#            else : self.textPE += "0.; "
+#            if valForme == 'Prescribed Flowrates' :
+#                self.FE=True
+#                self.textFE += str(valeur) +"; "
+#            else : self.textFE += "0.; "
+#            if valForme == 'Prescribed Velocity'  :
+#                self.VE=True
+#                self.textVE += str(valeur) +"; "
+#            else : self.textVE += "0.; "
+
+#  def BOUNDARY_CONDITIONS(self,obj):
+#      # sans '; '
+#      if self.FE :  self.texteDico += self.textFE[0:-2]+'\n'
+#      if self.PE :  self.texteDico += self.textPE[0:-2]+'\n'
+#      if self.VE :  self.texteDico += self.textVE[0:-2]+'\n'
 
    def TRACERS(self,obj):
        if self.nbTracers != 0 :  self.texteDico += 'NUMBER_OF_TRACERS : '+str(self.nbTracers) + '\n'
- 
+
 
    def NAME_OF_TRACER(self,obj):
        print((dir(obj) ))
@@ -283,7 +304,7 @@ class TELEMACGenerator(PythonGenerator):
 
    def Validation(self,obj):
        self.texteDico += "VALIDATION : True \n"
- 
+
    def Date_De_L_Origine_Des_Temps (self,obj):
        an=obj.get_child('Year').valeur
        mois=obj.get_child('Month').valeur
@@ -319,15 +340,15 @@ class TELEMACGenerator(PythonGenerator):
        self.texteDico += "TYPE OF ADVECTION = "+ str(listeAdvection) + "\n"
        self.texteDico += "SUPG OPTION = "+ str(listeSupg) + "\n"
        self.texteDico += "UPWIND COEFFICIENTS = "+ str(listeUpwind) + "\n"
-       
+
    def chercheChildren(self,obj):
        for c in obj.liste_mc_presents():
            objc=obj.get_child(c)
            if hasattr(objc,'liste_mc_presents') and objc.liste_mc_presents() != [] : self.chercheChildren(objc)
            else : self.listeMCAdvection.append(objc)
 
-      
- 
+
+
    def redecoupeLigne(self,nom,valeur) :
        text=nom+ " : \n"
        valeur=valeur
