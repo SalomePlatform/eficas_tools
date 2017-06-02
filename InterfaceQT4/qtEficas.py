@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -93,18 +93,18 @@ class Appli(Ui_Eficas,QMainWindow):
              if code==None: return
 
 
-      
+
         if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
 
 
-        self.suiteTelemac=False 
+        self.suiteTelemac=False
         if hasattr (self, 'CONFIGURATION') :
            if self.CONFIGURATION.force_langue :
               from .monChoixLangue import MonChoixLangue
               widgetLangue = MonChoixLangue(self)
               ret=widgetLangue.exec_()
-           self.suiteTelemac=self.CONFIGURATION.suiteTelemac 
-           
+           self.suiteTelemac=self.CONFIGURATION.suiteTelemac
+
 
         from Extensions import localisation
         app=QApplication
@@ -114,7 +114,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.setupUi(self)
         #if parent != None : self.parentCentralWidget = parent.centralWidget()
-        #else              : self.parentCentralWidget = None 
+        #else              : self.parentCentralWidget = None
 
         if not self.salome :
            if  hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'taille') : self.taille=self.CONFIGURATION.taille
@@ -123,7 +123,7 @@ class Appli(Ui_Eficas,QMainWindow):
            if self.code in ['MAP',] : self.resize(1440,self.height())
            else : self.resize(self.taille,self.height())
 
-   
+
         icon = QIcon(self.repIcon+"/parametres.png")
         self.actionParametres.setIcon(icon)
 
@@ -270,7 +270,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
         if hasattr(self,'actionOpenProcess'):return
-        
+
         self.actionOpenProcess = QAction(self)
         self.actionOpenProcess.setText(tr("Open Process_Output File"))
         self.menuN1.addAction(self.actionOpenProcess)
@@ -384,7 +384,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ajoutExecution()
         self.ajoutSauveExecution()
         self.griserActionsStructures()
-        
+
     def MAP(self):
         self.enleverNewInclude()
         self.toolBar.addSeparator()
@@ -435,7 +435,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def ajoutHelpPSEN(self):
         self.actionParametres_Eficas.setText('Help PSEN')
         self.actionParametres_Eficas.triggered.connect(self.aidePSEN)
-        
+
 
 
     def ChercheGrpMesh(self):
@@ -483,7 +483,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
 
-   
+
     def connecterSignauxQT4(self) :
         self.connect(self.recentMenu,SIGNAL('aboutToShow()'),self.handleShowRecentMenu)
 
@@ -680,7 +680,7 @@ class Appli(Ui_Eficas,QMainWindow):
            f=open(monFichier)
            while ( index < 9) :
               ligne=f.readline()
-              if ligne != "" : 
+              if ligne != "" :
                  l=(ligne.split("\n"))[0]
                  self.recent.append(l)
               index=index+1
@@ -756,7 +756,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def aidePPal(self) :
         repAide=os.path.dirname(os.path.abspath(__file__))
-        maD=os.path.join( repAide,'..','Doc','html')
+        maD=os.path.join( repAide,'..','Doc')
         try :
           indexAide=os.path.join(maD,'index.html')
           if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
@@ -767,7 +767,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def aidePSEN(self) :
         repAide=os.path.dirname(os.path.abspath(__file__))
-        maD=os.path.join( repAide,'..','Doc','html')
+        maD=os.path.join( repAide,'..','Doc')
         try :
           indexAide=os.path.join(maD,'index.html')
           if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
@@ -862,7 +862,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.demande=False
         self.initRecents()
         self.fileOpen()
-        
+
 
     def fileOpen(self):
         try:
