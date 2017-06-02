@@ -1386,8 +1386,17 @@ class JDCEditor(Ui_baseWidget,QWidget):
         monItem=itemApres
         etape=monItem.item.object
         CONTEXT.set_current_step(etape)
-        etape.build_includeEtape(texte)
+        try :
+          ok=etape.build_includeEtape(texte)
+        except :
+          ok=0
+        if not ok :
+           QMessageBox.information( self,
+                      tr("Import texte"),
+                      tr("Impossible d importer le texte"))
         self.tree.racine.build_children()
+        return ok
+
 
 
     #-------------------------------------#
