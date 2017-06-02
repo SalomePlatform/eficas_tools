@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2013   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,11 +27,11 @@ from PyQt5.QtWidgets import QDialog
 
 # Import des panels
 
-class DVisu(Ui_DVisu ,QtGui.QDialog):
+class DVisu(Ui_DVisu, QDialog):
   """
   """
   def __init__(self,parent = None , name = None,fl = 0):
-      QtGui.QDialog.__init__(self,parent)
+      QDialog.__init__(self,parent)
       self.setModal(True)
       self.setupUi(self)
 
@@ -40,4 +40,3 @@ class DVisu(Ui_DVisu ,QtGui.QDialog):
 
   def on_buttonOk_clicked(self):
       QDialog.accept(self)
-
