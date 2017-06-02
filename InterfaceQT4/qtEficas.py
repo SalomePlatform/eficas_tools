@@ -34,7 +34,7 @@ from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
-#from Extensions import param2
+from Extensions import param2
 
 
 from myMain import Ui_Eficas
