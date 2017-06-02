@@ -468,7 +468,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            self.lastModified = self.fileInfo.lastModified()
         else :
            self.lastModified = 1
-        nouveauTitre=self.titre+"              "+str(os.path.basename(self.fichier))
+        nouveauTitre=self.titre+"              "+os.path.basename(self.fichier)
         self.appliEficas.setWindowTitle(nouveauTitre)
         return jdc
 

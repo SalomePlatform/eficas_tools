@@ -56,7 +56,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.listeWidget=[]
       self.dicoCmd={}
       if self.editor.fichier != None : 
-          nouveauTitre=debutTitre+" "+str(os.path.basename(self.editor.fichier))
+          nouveauTitre=debutTitre+" "+os.path.basename(self.editor.fichier)
       else :
           nouveauTitre=debutTitre
       self.editor.appliEficas.setWindowTitle(nouveauTitre)

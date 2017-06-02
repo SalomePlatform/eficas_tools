@@ -42,8 +42,19 @@ class SaisieValeur(object):
 
 
   def LEValeurPressed(self,valeur=None):
+         if not hasattr(self, 'inSaisieValeur' ) : self.inSaisieValeur=False
+         if self.inSaisieValeur : return
+         self.inSaisieValeur=True
          if valeur == None :
-            nouvelleValeur=str(self.lineEditVal.text())
+            try :
+              nouvelleValeur=str(self.lineEditVal.text())
+            except UnicodeEncodeError as e :
+               self.editor.affiche_infos("pb d encoding", Qt.red)
+               validite,commentaire=self.politique.RecordValeur(None)
+               self.lineEditVal.setText('')
+               self.setValide()
+               self.inSaisieValeur=False
+               return
          else :
             #PN PN PN ???? la 1 ligne est tres bizarre.
             try : 
@@ -55,6 +66,7 @@ class SaisieValeur(object):
           if self.node.item.definition.validators.verif_item(nouvelleValeur) !=1 :
                 commentaire=self.node.item.definition.validators.info_erreur_item()
                 self.editor.affiche_infos(commentaire,Qt.red)
+                self.inSaisieValeur=False
                 return
          nouvelleValeurFormat=self.politique.GetValeurTexte(nouvelleValeur)
          validite,commentaire=self.politique.RecordValeur(nouvelleValeurFormat)
@@ -66,6 +78,7 @@ class SaisieValeur(object):
                 self.editor.affiche_commentaire(commentaire)
             else :
                 self.editor.affiche_infos(commentaire,Qt.red)
+         self.inSaisieValeur=False
          self.setValide()
 
 

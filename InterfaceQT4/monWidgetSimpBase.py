@@ -55,8 +55,8 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
 
   def monFocusOutEvent(self,event):
       if self.oldValeurTexte != self.lineEditVal.text():
-         self.LEValeurPressed()
          self.oldValeurTexte= self.lineEditVal.text()
+         self.LEValeurPressed()
       QLineEdit.focusOutEvent(self.lineEditVal,event)
 
   #def showEvent(self, event):
@@ -108,7 +108,10 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
 
 
   def LEValeurPressed(self):
-      if str(self.lineEditVal.text())=="" or str(self.lineEditVal.text())==None : return
+      # pour les soucis d encoding
+      try :
+        if str(self.lineEditVal.text())=="" or str(self.lineEditVal.text())==None : return
+      except : pass
       SaisieValeur.LEValeurPressed(self)
       self.parentQt.donneFocus()
       self.setValeurs()

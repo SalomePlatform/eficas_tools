@@ -34,7 +34,7 @@ from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
-from Extensions import param2
+#from Extensions import param2
 
 
 from myMain import Ui_Eficas
@@ -48,13 +48,14 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=0,parent=None,ssCode=None,multi=False,langue='ang',ssIhm=False):
+    def __init__(self,code=None,salome=1,parent=None,ssCode=None,multi=False,langue='ang',ssIhm=False):
         """
         Constructor
         """
         QMainWindow.__init__(self,parent)
         Ui_Eficas.__init__(self)
 
+        
 
         version=getEficasVersion()
         self.VERSION_EFICAS="Eficas QT5 Salome " + version
@@ -81,8 +82,11 @@ class Appli(Ui_Eficas,QMainWindow):
 
         if self.salome:
           import Accas
-          import eficasSalome
-          Accas.SalomeEntry = eficasSalome.SalomeEntry
+          try :
+            import eficasSalome
+            Accas.SalomeEntry = eficasSalome.SalomeEntry
+          except : 
+            print ('eficas hors salome')
 
         self.multi=multi
         self.demande=multi # specifique PSEN

@@ -215,7 +215,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if   (isinstance(self.item,compocomm.COMMTreeItem)) : name=tr("Commentaire")
         elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=tr(str(item.GetLabelText()[0]))
         #else:   name  = tr(str(tr(item.GetLabelText()[0]))+" :")
-        else:   name  = tr(str(tr(item.GetLabelText()[0])))
+        else:   name  = tr(item.GetLabelText()[0])
         if item.nom != tr(item.nom) : name = str(tr(item.nom)+" :")
         value = tr(str( item.GetText() ) )
  

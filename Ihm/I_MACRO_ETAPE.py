@@ -540,7 +540,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # a adapter eventuellement
     try :
        contexte = self.get_contexte_jdc(None,text)
-    except EficasException: pass
+    except EficasException: 
+       return 0
      
     for e in self.etapes: 
         e.niveau=self.niveau
@@ -554,6 +555,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     self.jdc.reset_context()
     self.jdc_aux=None
     CONTEXT.unset_current_step()
+    return 1
 
 
   def build_jdcauxInclude(self,text):
