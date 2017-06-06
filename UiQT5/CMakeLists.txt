@@ -31,6 +31,18 @@ macro ( eficas_compile_ui uifile )
   list ( APPEND _PYFILES ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} )
 endmacro ( eficas_compile_ui )
 
+macro ( eficas_compile_ui_2 uifile )
+  get_filename_component ( _file_we ${uifile} NAME_WE )
+  set ( _pyfile "${_file_we}.py" )
+  add_custom_command ( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile}
+                       COMMAND ${PYUIC5} ARGS -x -o ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
+                       COMMAND sed -i -e "'s/\\(QtCore\\.QMetaObject\\.connectSlotsByName(WidgetFactPlie)\\)/#\\1/'" ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile}
+                       MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${uifile}
+                       COMMENT "Compiling ${uifile}"
+                     )
+  list ( APPEND _PYFILES ${CMAKE_CURRENT_BINARY_DIR}/${_pyfile} )
+endmacro ( eficas_compile_ui_2 )
+
 eficas_compile_ui ( myMain.ui )
 eficas_compile_ui ( desBaseWidget.ui )
 eficas_compile_ui ( desChoixCata.ui )
@@ -57,7 +69,7 @@ eficas_compile_ui ( desWidgetCB.ui )
 eficas_compile_ui ( desWidgetCommentaire.ui )
 eficas_compile_ui ( desWidgetDate.ui )
 eficas_compile_ui ( desWidgetFact.ui )
-eficas_compile_ui ( desWidgetFactPlie.ui )
+eficas_compile_ui_2 ( desWidgetFactPlie.ui )
 eficas_compile_ui ( desWidgetHeure.ui )
 eficas_compile_ui ( desWidgetInactif.ui )
 eficas_compile_ui ( desWidgetInformation.ui )
