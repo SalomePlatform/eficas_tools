@@ -32,6 +32,8 @@ from .gereIcones import FacultatifOuOptionnel
 from PyQt5.QtWidgets  import QApplication, QWidget, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import Qt
+
 
 
 from Extensions.i18n import tr
@@ -245,6 +247,18 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         else : self.recentre()
       else : self.recentre()
       self.inhibeExpand=False
+
+  def reafficheSeulement(self,nodeAReafficher,index):
+      #print ('ds reafficheSeulement', nodeAReafficher)
+      parentNodeAReafficher=nodeAReafficher.parentQt
+      index=parentNodeAReafficher.commandesLayout.indexOf(nodeAReafficher)
+      oldFenetre=nodeAReafficher.node.fenetre
+      newWidget=nodeAReafficher.node.getPanelGroupe(parentNodeAReafficher,self,index)
+      nodeAReafficher.node.fenetre=newWidget
+      oldFenetre.setParent(None)
+      oldFenetre.close()
+      oldFenetre.deleteLater()
+      #print ("fin pour " , self.node.item.nom)
 
 
   def recentre(self):

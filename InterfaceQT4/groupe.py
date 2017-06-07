@@ -28,6 +28,7 @@ from Extensions.i18n import tr
 
 from .gereIcones import FacultatifOuOptionnel
 import Accas 
+import traceback
 
     
 # Import des panels
@@ -104,13 +105,14 @@ class Groupe(QWidget,FacultatifOuOptionnel):
            
 
   def ajouteMCOptionnelDesBlocs(self):
-       #print ("Je passe dans ajouteMCOptionnelDesBlocs pour", self.node.item.nom)
       self.dictMCVenantDesBlocs={}
       i=0
       self.calculOptionnel()
       liste=self.liste_mc
       for MC in self.liste_mc : self.dictMCVenantDesBlocs[MC]=self
-      while i < self.commandesLayout.count():
+      # ce cas est le cas machine tournant sr le plie
+      try :
+        while i < self.commandesLayout.count():
           from .monWidgetBloc import MonWidgetBloc
           widget=self.commandesLayout.itemAt(i).widget()
           i=i+1
@@ -121,6 +123,8 @@ class Groupe(QWidget,FacultatifOuOptionnel):
               if MC in self.dictMCVenantDesBlocs: print ("Pb Sur les MC" )
               else : self.dictMCVenantDesBlocs[MC]=widget.dictMCVenantDesBlocs[MC]
           liste=liste+listeW
+      except : 
+        pass
       return liste
 
 
@@ -171,11 +175,118 @@ class Groupe(QWidget,FacultatifOuOptionnel):
 
   def Plie(self):
       self.node.setPlie()
+      if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
+         #if  (len(self.node.item.get_genealogie())==2):
+             index=self.maCommande.commandesLayout.indexOf(self)
+             self.maCommande.reafficheSeulement(self,index)
+             return
+         #else :
+         #  self.reaffiche(self.node)
+         #return
+      #print ('je reaffiche dans Plie')
       self.reaffiche(self.node) 
 
   def Deplie(self):
       self.node.setDeplie()
+      if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
+         #if  (len(self.node.item.get_genealogie())==2):
+             index=self.parentQt.commandesLayout.indexOf(self)
+             self.maCommande.reafficheSeulement(self,index)
+             return
+         #else :
+         #  self.reaffiche(self.node)
+         #return
+      #print ('je reaffiche dans Plie')
       self.reaffiche(self.node) 
+    
+    
+  #def Plie(self):
+      #print ('Deplie', self)
+      #print (self.obj.nom)
+      #print (self.node.setPlie)
+      #print (self.parentQt)
+      #print (self)
+   #   self.node.setPlie()
+      #if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
+      #   itemAtraiter = self.node.item
+      #   nodeAtraiter=self.node
+         #while (len(itemAtraiter.get_genealogie())  > 2 ): 
+         #      itemAtraiter=itemAtraiter.parent
+         #      nodeAtraiter=nodeAtraiter.vraiParent
+         #ancien=nodeAtraiter.fenetre
+         #panneau = nodeAtraiter.getPanelGroupe(self,self.maCommande,insertIn=False)
+         #print (itemAtraiter,nodeAtraiter)
+         #self.parentQt.commandesLayout.replaceWidget(ancien,panneau,Qt.FindDirectChildrenOnly)
+         #nodeAtraiter.vraiParent.fenetre.commandesLayout.replaceWidget(ancien,panneau,Qt.FindDirectChildrenOnly)
+         #return
+   #   if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
+   #      if  (len(self.node.item.get_genealogie())==2):
+             #print (self)
+             #print (self.obj.nom)
+             #print (self.node.item.getlabeltext())
+             #print (self.parentQt)
+             #print (self.editor.fenetreCentraleAffichee)
+             #print (self.maCommande)
+   #          index=self.parentQt.commandesLayout.indexOf(self)
+             #print (index)
+   #          self.maCommande.reafficheSeulement(self,index)
+             #self.disconnect()
+             #for c in self.children(): 
+             #  print (c)
+             #  try :
+             #    c.setParent(None)
+             #    c.deleteLater()
+             # c.close()
+             #   c.disconnect()
+             #  except :
+             #    print('poum')
+             #panneau = self.node.getPanelGroupe(self.parentQt,self.maCommande,insertIn=False)
+      #       print (self.parentQt)
+      #       print (self)
+             #self.parentQt.commandesLayout.replaceWidget(self,panneau,Qt.FindDirectChildrenOnly)
+      #       self.parentQt.setUpdatesEnabled(True)
+      #       print (dir(self.parentQt.commandesLayout))
+             #self.parentQt.commandesLayout.updateGeometry()
+   #      else :
+   #        self.reaffiche(self.node)
+   #      return
+      #print ('je reaffiche dans Plie')
+   #   self.reaffiche(self.node) 
+#
+#  def Deplie(self):
+#      print ('Deplie', self)
+#      print (self.obj.nom)
+#      print (self.node.item.GetLabelText())
+#      self.node.setDeplie()
+#      #if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") and (len(self.node.item.get_genealogie())==2):
+#      #print (self.node.vraiParent.children)
+#      #if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
+#      #   itemAtraiter = self.node.item
+#      #   nodeAtraiter=self.node
+#      #   while (len(itemAtraiter.get_genealogie())  > 2 ): 
+#      #         itemAtraiter=itemAtraiter.parent
+#      #         nodeAtraiter=nodeAtraiter.vraiParent
+#      #   ancien=nodeAtraiter.fenetre
+#      #   panneau = nodeAtraiter.getPanelGroupe(self,self.maCommande,insertIn=False)
+#         #print (itemAtraiter,nodeAtraiter)
+#         #self.parentQt.commandesLayout.replaceWidget(ancien,panneau,Qt.FindDirectChildrenOnly)
+#      #   nodeAtraiter.vraiParent.fenetre.commandesLayout.replaceWidget(ancien,panneau,Qt.FindDirectChildrenOnly)
+#      #   return
+#      if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
+#         if  (len(self.node.item.get_genealogie())==2):
+#             #panneau = self.node.getPanelGroupe(self.parentQt,self.maCommande,insertIn=False)
+#             #self.parentQt.commandesLayout.replaceWidget(self,panneau,Qt.FindDirectChildrenOnly)
+#             #index=self.parentQt.commandesLayout.indexOf(self)
+#             #index=self.maCommande.commandesLayout.indexOf(self)
+#             #print ('index = ', index)
+#             index=0
+#             self.maCommande.reafficheSeulement(self,index)
+#         else :
+#           self.reaffiche(self.node)
+#         return
+#     
+#      #print ('je reaffiche')
+#      self.reaffiche(self.node) 
 
   def traiteClicSurLabel(self,texte):
       if self.editor.code != "CARMELCND" : self.afficheOptionnel()

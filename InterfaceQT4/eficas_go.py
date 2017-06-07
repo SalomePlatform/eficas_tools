@@ -51,7 +51,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
 
     from InterfaceQT4.qtEficas import Appli
     app = QApplication(sys.argv)
-    Eficas=Appli(code=code,ssCode=ssCode,multi=multi,langue=langue)
+    Eficas=Appli(code=code,salome=0,ssCode=ssCode,multi=multi,langue=langue)
     Eficas.show()
 
     res=app.exec_()

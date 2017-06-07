@@ -33,13 +33,14 @@ from Extensions.i18n import tr
 class MonWidgetFactCommun(Groupe):
   """
   """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
       #print "fact : ",node.item.nom
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       labeltext,fonte,couleur = self.node.item.GetLabelText()
       self.GroupBox.setText(tr(labeltext))
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
-      self.parentQt.commandesLayout.insertWidget(-1,self)
+      self.parentQt.commandesLayout.insertWidget(insertIn,self)
+      #else :  self.parentQt.commandesLayout.insertWidget(0,self)
       self.doitAfficherOptionnel=False
 
   def enterEvent(self,event):
@@ -58,8 +59,8 @@ class MonWidgetFactCommun(Groupe):
       if self.doitAfficherOptionnel and self.editor.code != "CARMELCND" :self.afficheOptionnel()
 
 class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=True):
+      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
 
 #class MonWidgetFactHorizontal(Ui_WidgetFactHorizon,MonWidgetFactCommun):
 #  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):

@@ -326,7 +326,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         # posera des pb si un code decide d appeler FIN un mot clef
         # on resoudera a ce moment la
         # pour l instant pas de poussiere sous le tapis
-        #print( 'debut affichePanneau pour', self.item.nom)
         if  not(self.item.isactif()) : 
             from .monWidgetInactif import MonWidgetInactif
             self.fenetre = MonWidgetInactif(self,self.editor)
@@ -527,11 +526,15 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if obj is None:obj=0
         if obj == 0:return 0
         try :
+        #if 1 :
            child=self.children[index]
            if plier == True : child.setPlie()
            else             : child.setDeplie() 
         except :
            child=self.children[index]
+        try : 
+           if len(obj) > 1 : self.build_children()
+        except : pass
         self.tree.inhibeExpand=False
         #print (" fin append child")
         return child
@@ -833,7 +836,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         #       item.appartientAUnNoeudPlie=False
 
     def setPlieChildren(self):
-        #print "dans setPlieChildren pour", self.item.nom
+        #print ("dans setPlieChildren pour", self.item.nom)
         self.plie=True
         for c in self.children :
             c.setPlieChildren()

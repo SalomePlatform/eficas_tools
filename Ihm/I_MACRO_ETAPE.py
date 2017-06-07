@@ -775,7 +775,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          Une MACRO_ETAPE peut ajouter plusieurs concepts dans le contexte
          Une fonction enregistree dans op_init peut egalement modifier le contexte
       """
-      print ("update_context",self,self.nom,d.keys())
+      #print ("update_context",self,self.nom,d.keys())
       if hasattr(self,"jdc_aux") and self.jdc_aux:
             #ATTENTION: update_context NE DOIT PAS appeler reset_context
             # car il appelle directement ou indirectement update_context

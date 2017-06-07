@@ -36,7 +36,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
-    def getPanelGroupe(self,parentQt,commande):
+    def getPanelGroupe(self,parentQt,commande,insertIn=-1):
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
@@ -47,10 +47,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         if not (monObjet.isMCList()) :
            if  hasattr(self,'plie') and self.plie==True : 
                from .monWidgetFactPlie import MonWidgetFactPlie
-               widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+               widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
            else:
                from .monWidgetFact import MonWidgetFact
-               widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+               widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
         else :
            from .monWidgetBloc import MonWidgetBloc
            widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)

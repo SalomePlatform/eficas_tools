@@ -28,11 +28,11 @@ from Extensions.i18n import tr
 class MonWidgetFactPlie(Ui_WidgetFactPlie,Groupe):
   """
   """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
       #print "fact plie : ",node.item.nom
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       self.groupBox.setText(self.node.item.GetLabelText()[0])
-      self.parentQt.commandesLayout.insertWidget(-1,self)
+      self.parentQt.commandesLayout.insertWidget(insertIn,self)
 
   def traiteClicSurLabel(self,texte):
       return
