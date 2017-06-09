@@ -62,28 +62,24 @@ class TELEMACGenerator(PythonGenerator):
 
       self.statut=statut
       self.langue=appli.langue
+      self.DicoEnumCasEnInverse={}
+      from enum_Telemac2d_auto       import TelemacdicoEn
+      for motClef in TelemacdicoEn:
+          d={}
+          for valTelemac in TelemacdicoEn[motClef]:
+             valEficas= TelemacdicoEn[motClef][valTelemac]
+             d[valEficas]=valTelemac
+          self.DicoEnumCasEnInverse[motClef]=d
       if self.langue == 'fr' : 
          from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
-         self.DicoEnumCasEnInverse={}
          for motClef in DicoEnumCasFrToEnumCasEn:
               d={}
               for valTelemac in DicoEnumCasFrToEnumCasEn[motClef]:
                  valEficas= DicoEnumCasFrToEnumCasEn[motClef][valTelemac]
                  d[valEficas]=valTelemac
               self.DicoEnumCasEnInverse[motClef]=d
-      else :
-         try :
-            from enum_Telemac2d_auto       import TelemacdicoEn
-            self.DicoEnumCasEnInverse={}
-            for motClef in TelemacdicoEn:
-              d={}
-              for valTelemac in TelemacdicoEn[motClef]:
-                 valEficas= TelemacdicoEn[motClef][valTelemac]
-                 d[valEficas]=valTelemac
-              self.DicoEnumCasEnInverse[motClef]=d
-         except :
-            pass
       self.initDico()
+      #print (self.DicoEnumCasEnInverse.keys())
       # Pour Simplifier les verifs d ecriture
       if hasattr(appli,'listeTelemac') : self.listeTelemac=appli.listeTelemac
       else : self.listeTelemac = ()
@@ -130,7 +126,7 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-       self.texteDico+='\n&ETA\n&FIN\n'
+       self.texteDico+='&ETA\n'
        if self.statut == 'Leger' : extension = ".Lcas"
        else                      : extension = ".cas"
        fileDico = fn[:fn.rfind(".")] + extension
@@ -188,6 +184,7 @@ class TELEMACGenerator(PythonGenerator):
              except :
                if obj.valeur==None :  sTelemac=obj.valeur
                else : print(("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur))
+
         if type(obj.valeur) in (tuple,list) :
            if obj.nom in self.DicoEnumCasEnInverse:
              #sT = "'"
@@ -214,9 +211,10 @@ class TELEMACGenerator(PythonGenerator):
            s1=str(sTelemac).replace('True','YES')
            s2=s1.replace('False','NO')
         if hasattr(obj.definition,'max'):
-           s3=s2.replace(',',';')
-        else:
-           s3=s2
+           if obj.definition.max != 1:
+              s3=s2.replace(',',';')
+           else:
+              s3=s2
         if s3 != "" and s3[0]=='(' :
           try : s3=s3[1:-1] # cas de liste vide
           except : s3 = ' '
@@ -232,12 +230,11 @@ class TELEMACGenerator(PythonGenerator):
 
         nom=self.dicoCataToCas[obj.nom]
         if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
-              if s3 != 'None':
+              if s3 != 'None' and s3 != "''":
                 s3=s3.replace(';',',')
                 s3="'"+ s3 +"'"
               else:
                 s3 = "''"
-              #print("s3+",s3)
         if s3 == "" or s3 == " " : s3 = " "
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3)

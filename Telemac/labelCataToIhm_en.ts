@@ -1,11 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="en">
-<context>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE TS><TS version="1.1" language="en"><context>
     <name>@default</name>
-    <message>
-        <source>ASSIMILATION_STUDY</source>
-        <translation>Assimilation Study traduit</translation>
-    </message>
     <message>
         <source>COEFFICIENT_TO_CALIBRATE_TIDAL_VELOCITIES</source>
         <translation>Coefficient to calibrate tidal velocities</translation>
@@ -67,6 +61,10 @@
         <translation>Newmark time integration coefficient</translation>
     </message>
     <message>
+        <source>FINITE_ELEMENT_ASSEMBLY</source>
+        <translation>Finite element assembly</translation>
+    </message>
+    <message>
         <source>TIME_STEP</source>
         <translation>Time step</translation>
     </message>
@@ -125,10 +123,6 @@
     <message>
         <source>COEFFICIENT_FOR_DIFFUSION_OF_TRACERS</source>
         <translation>Coefficient for diffusion of tracers</translation>
-    </message>
-    <message>
-        <source>NAMES_OF_DIFFERENTIATORS</source>
-        <translation>Names of differentiators</translation>
     </message>
     <message>
         <source>VELOCITY_DIFFUSIVITY</source>
@@ -315,6 +309,10 @@
         <translation>Binary results file format</translation>
     </message>
     <message>
+        <source>AD_LINEAR_SOLVER_RESET_DERIVATIVES</source>
+        <translation>Ad linear solver reset derivatives</translation>
+    </message>
+    <message>
         <source>TEMPERATURE_DELWAQ_FILE</source>
         <translation>Temperature DELWAQ file</translation>
     </message>
@@ -337,6 +335,10 @@
     <message>
         <source>PRESCRIBED_FLOWRATES</source>
         <translation>Prescribed flowrates</translation>
+    </message>
+    <message>
+        <source>SISYPHE_STEERING_FILE</source>
+        <translation>Sisyphe steering file</translation>
     </message>
     <message>
         <source>REFINEMENT_LEVELS</source>
@@ -463,6 +465,10 @@
         <translation>Diffusivity for DELWAQ</translation>
     </message>
     <message>
+        <source>AD_NUMBER_OF_DIRECTIONS</source>
+        <translation>Ad number of directions</translation>
+    </message>
+    <message>
         <source>BOTTOM_SURFACES_DELWAQ_FILE</source>
         <translation>Bottom surfaces DELWAQ file</translation>
     </message>
@@ -539,8 +545,8 @@
         <translation>Exchange areas DELWAQ file</translation>
     </message>
     <message>
-        <source>SISYPHE_STEERING_FILE</source>
-        <translation>Sisyphe steering file</translation>
+        <source>NAMES_OF_DERIVATIVES</source>
+        <translation>Names of derivatives</translation>
     </message>
     <message>
         <source>IMPLICITATION_FOR_DIFFUSION_OF_VELOCITY</source>
@@ -691,10 +697,6 @@
         <translation>Title</translation>
     </message>
     <message>
-        <source>NUMBER_OF_DIFFERENTIATORS</source>
-        <translation>Number of differentiators</translation>
-    </message>
-    <message>
         <source>ORIGINAL_HOUR_OF_TIME</source>
         <translation>Original hour of time</translation>
     </message>
@@ -715,12 +717,20 @@
         <translation>Desired courant number</translation>
     </message>
     <message>
+        <source>AD_LINEAR_SOLVER_DERIVATIVE_CONVERGENCE</source>
+        <translation>Ad linear solver derivative convergence</translation>
+    </message>
+    <message>
         <source>DISSIPATION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
         <translation>Dissipation coefficient for secondary currents</translation>
     </message>
     <message>
         <source>COUPLING_PERIOD_FOR_SISYPHE</source>
         <translation>Coupling period for sisyphe</translation>
+    </message>
+    <message>
+        <source>AD_SYMBOLIC_LINEAR_SOLVER</source>
+        <translation>Ad symbolic linear solver</translation>
     </message>
     <message>
         <source>ALGAE_TRANSPORT_MODEL</source>
@@ -935,6 +945,10 @@
         <translation>Preconditioning for K-Epsilon model</translation>
     </message>
     <message>
+        <source>ACCURACY_OF_SPALART_ALLMARAS</source>
+        <translation>Accuracy of spalart-allmaras</translation>
+    </message>
+    <message>
         <source>PRODUCTION_COEFFICIENT_FOR_SECONDARY_CURRENTS</source>
         <translation>Production coefficient for secondary currents</translation>
     </message>
@@ -1003,8 +1017,8 @@
         <translation>Duration</translation>
     </message>
     <message>
-        <source>ACCURACY_OF_SPALART_ALLMARAS</source>
-        <translation>Accuracy of spalart-allmaras</translation>
+        <source>NUMBER_OF_DERIVATIVES</source>
+        <translation>Number of derivatives</translation>
     </message>
     <message>
         <source>COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION</source>

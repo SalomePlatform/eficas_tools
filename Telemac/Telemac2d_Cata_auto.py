@@ -37,13 +37,14 @@ class Tuple:
 
 
 
-JdC = JDC_CATA (code = 'TELEMAC',
+JdC = JDC_CATA (code = 'TELEMAC2D',
                 execmodul = None,
                 )
 # =======================================================================
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
+VERSION_CATALOGUE="TRUNK"
 # -----------------------------------------------------------------------
 COMPUTATION_ENVIRONMENT = PROC(nom= "COMPUTATION_ENVIRONMENT",op = None,
 # -----------------------------------------------------------------------
@@ -138,28 +139,6 @@ CONSTANTE-""",
                 ang = """ Value to be used along with the option: INITIAL CONDITIONS -CONSTANT
 DEPTH-""",
             ),
-        ),
-#       -----------------------------------
-        b_INITIAL_CONDITIONSI = BLOC(condition="INITIAL_CONDITIONS == 'TPXO SATELLITE ALTIMETRY'",
-#       -----------------------------------
-#           -----------------------------------
-            ASCII_DATABASE_FOR_TIDE = SIMP(statut ='o',
-#           -----------------------------------
-                typ = ('FichierOuRepertoire','All Files (*)'),
-                defaut = '',
-                fr = """ Base de donnees de constantes harmoniques tirees du fichier du modele
-de maree. Ancien nom en version 6.1 : BASE DE DONNEES DE MAREE""",
-                ang = """ Tide data base of harmonic constituents extracted from the tidal model
-file. Old name in 6.1 version: TIDE DATA BASE""",
-            ),
-        ),
-#       -----------------------------------
-        b_INITIAL_CONDITIONSJ = BLOC(condition="INITIAL_CONDITIONS == 'SPECIAL'",
-#       -----------------------------------
-#           -----------------------------------
-            Consigne = SIMP(statut ="o", homo="information", typ="TXM",
-#           -----------------------------------
-                defaut = "The initial conditions with the water depth should be stated in the CONDIN subroutine."),
         ),
 #       -----------------------------------
         BINARY_DATA_FILE_1_FORMAT = SIMP(statut ='f',
@@ -261,7 +240,7 @@ topography and the friction coefficients.""",
 #           -----------------------------------
             FORTRAN_FILE = SIMP(statut ='f',
 #           -----------------------------------
-                typ = ('Fichier','All Files (*)'),
+                typ = 'FichierOuRepertoire',
                 defaut = 'DEFAUT',
                 fr = """ Nom du fichier FORTRAN a soumettre.""",
                 ang = """ Name of FORTRAN file to be submitted.""",
@@ -319,34 +298,30 @@ subroutine VALIDA, which can be modified as to so as to include, for
 example,a comparison with an exact solution.""",
             ),
 #           -----------------------------------
-            b_VALIDATIONG = BLOC(condition="VALIDATION == True",
+            REFERENCE_FILE_FORMAT = SIMP(statut ='f',
 #           -----------------------------------
-#               -----------------------------------
-                REFERENCE_FILE_FORMAT = SIMP(statut ='o',
-#               -----------------------------------
-                    typ = 'TXM',
-                    into = ['SERAFIN?','SERAFIND','MED'],
-                    defaut = 'SERAFIN?',
-                    fr = """ Format du fichier de resultats du calcul precedent. Les valeurs
+                typ = 'TXM',
+                into = ['SERAFIN?','SERAFIND','MED'],
+                defaut = 'SERAFIN?',
+                fr = """ Format du fichier de resultats du calcul precedent. Les valeurs
 possibles sont :
 - SERAFIN : format standard simple precision pour Telemac;
 - SERAFIND: format standard double precision pour Telemac;
 - MED : format MED base sur HDF5""",
-                    ang = """ Previous computation results file format. Possible values are:
+                ang = """ Previous computation results file format. Possible values are:
 - SERAFIN : classical single precision format in Telemac;
 - SERAFIND: classical double precision format in Telemac;
 - MED : MED format based on HDF5""",
-                ),
-#               -----------------------------------
-                REFERENCE_FILE = SIMP(statut ='o',
-#               -----------------------------------
-                    typ = ('Fichier','All Files (*)'),
-                    defaut = '',
-                    fr = """ Fichier de resultats de reference pour la validation. Les resultats a
+            ),
+#           -----------------------------------
+            REFERENCE_FILE = SIMP(statut ='f',
+#           -----------------------------------
+                typ = ('Fichier','All Files (*)'),
+                defaut = '',
+                fr = """ Fichier de resultats de reference pour la validation. Les resultats a
 placer dans ce fichier seront a ecrire sur le canal 22.""",
-                    ang = """ Binary-coded result file for validation. The results to be entered
+                ang = """ Binary-coded result file for validation. The results to be entered
 into this file shall be written on channel 22.""",
-                ),
             ),
         ),
 #       -----------------------------------
@@ -529,7 +504,7 @@ VARIABLES FOR GRAPHIC PRINTOUTS in the RESULTS FILE.""",
             VARIABLES_FOR_GRAPHIC_PRINTOUTS = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM', min=0, max='**',
-                into = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1 etc.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","Courant number ","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","maximum elevation","time of maximum elevation","maximum velocity","time of maximum velocity","friction velocity","gradient 1, etc. "],
+                into = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1 etc.","All the tracers 1 to 9.","All the tracers 10 to 19.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","Courant number ","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","maximum elevation","time of maximum elevation","maximum velocity","time of maximum velocity","friction velocity","gradient 1, etc. "],
                 defaut = ["velocity along x axis (m/s)","velocity along y axis (m/s)","water depth (m)","bottom elevation (m)"],
                 fr = """ Noms des variables que l''utilisateur veut ecrire dans le fichier des
 resultats. Chaque variable est representee par une lettre. Le choix des
@@ -637,7 +612,7 @@ example, it will compute H from S and B.""",
 #           -----------------------------------
             NAMES_OF_PRIVATE_VARIABLES = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'TXM', min= 2, max= 2,
+                typ = 'TXM', min=0, max='**',
                 fr = """ Noms des variables privees en 32 caracteres, 16 pour le nom 16 pour
 l''unite. Elles correspondent au bloc PRIVE et peuvent etre lues dans le
 fichier de geometrie si elles y sont presentes avec leur nom""",
@@ -712,7 +687,7 @@ be entered into this file shall be written on channel 29.""",
 #           -----------------------------------
             CONTROL_SECTIONS = SIMP(statut ='f',
 #           -----------------------------------
-                typ = Tuple(2), min= 2, max='**' ,validators = VerifTypeTuple(('I','I')),
+                typ = 'I', min=0, max='**',
                 fr = """ Couples de points (numeros globaux dans le maillage) entre lesquels
 les debits instantanes et cumules seront donnes.""",
                 ang = """ Couples of points (global numbers in the mesh) defining sections where
@@ -826,22 +801,15 @@ the options MASS BALANCE and VALIDATION are inhibited. Not recommended
 for use.""",
             ),
 #           -----------------------------------
-            VARIABLES_TO_BE_PRINTED = SIMP(statut ='o',
+            VARIABLES_TO_BE_PRINTED = SIMP(statut ='f',
 #           -----------------------------------
                 typ = 'TXM', min=0, max='**',
                 intoSug = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1, etc.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity of k-epsilon model (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","nombre de courants ","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","gradient 1, etc."],
-                fr = """ Nom des variables que l''utilisateur desire ecrire a l''ecran. Meme
+                defaut = '',
+                fr = """Nom des variables que l''utilisateur desire ecrire a l''ecran. Meme
 possibilites que pour les sorties graphiques.""",
-                ang = """""",
-            ),
-#           -----------------------------------
-            PN_VARIABLES_TO_BE_PRINTED = SIMP(statut ='o',
-#           -----------------------------------
-                typ = 'TXM', min=0, max='**',
-               # into = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1, etc.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity of k-epsilon model (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","nombre de courants ","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","gradient 1, etc."],
-                fr = """ Nom des variables que l''utilisateur desire ecrire a l''ecran. Meme
-possibilites que pour les sorties graphiques.""",
-                ang = """""",
+                ang = """Name of the variables that the user wants printed on screen.
+Same values available as graphical outputs""",
             ),
 #           -----------------------------------
             MASS_BALANCE = SIMP(statut ='o',
@@ -876,14 +844,14 @@ the solution of the linear system.""",
 #           -----------------------------------
             LIST_OF_POINTS = SIMP(statut ='f',
 #           -----------------------------------
-                typ = Tuple(2), min= 2, max='**' ,validators = VerifTypeTuple(('I','I')),
+                typ = 'I', min=0, max='**',
                 fr = """ Liste de points remarquables pour les impressions""",
                 ang = """ List of remarkable points for printouts""",
             ),
 #           -----------------------------------
             NAMES_OF_POINTS = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'TXM', min= 2, max= 2,
+                typ = 'TXM', min=0, max='**',
                 fr = """ Noms des points remarquables pour les impressions""",
                 ang = """ Names of remarkable points for printouts""",
             ),
@@ -894,7 +862,7 @@ the solution of the linear system.""",
 #           -----------------------------------
             FOURIER_ANALYSIS_PERIODS = SIMP(statut ='o',
 #           -----------------------------------
-                typ = Tuple(2), min= 2, max='**' ,validators = VerifTypeTuple(('R','R')),
+                typ = 'R', min=0, max='**',
                 fr = """ Liste des periodes que l''on veut analyser""",
                 ang = """ List of periods to be analysed""",
             ),
@@ -917,51 +885,40 @@ HYDRO = PROC(nom= "HYDRO",op = None,
     BOUNDARY_CONDITIONS = FACT(statut='o',
 #   -----------------------------------
 #       -----------------------------------
+        PRESCRIBED_ELEVATIONS = SIMP(statut ='f',
 #       -----------------------------------
-        LIQUID_BOUNDARIES = FACT(statut ='f', min = 1, max="**",
+            typ = 'R', max='**',
+            defaut = [0.0,0.0],
+            fr = """ Valeurs des cotes imposees aux frontieres liquides entrantes. Lire la
+partie du mode d''emploi consacree aux conditions aux limites""",
+            ang = """ Values of prescribed elevations at the inflow boundaries. The section
+about boundary conditions is to be read in the manual""",
+        ),
 #       -----------------------------------
-            BOUNDARY_TYPE = SIMP(statut ='o', typ = 'TXM', into = ['Prescribed Flowrates', 'Prescribed Elevations', 'Prescribed Velocity'],),
-    #       -----------------------------------
-
-        #    ------------------------------------
-             b_Elevations = BLOC (condition = "BOUNDARY_TYPE == 'Prescribed Elevations'",
-        #    ------------------------------------
-
-        #       -----------------------------------
-                PRESCRIBED_ELEVATIONS = SIMP(statut ='o',
-        #       -----------------------------------
-                    typ = 'R',
-                    fr = """ Valeurs des cotes imposees aux frontieres liquides entrantes. Lire la
-        partie du mode d''emploi consacree aux conditions aux limites""",
-                    ang = """ Values of prescribed elevations at the inflow boundaries. The section
-        about boundary conditions is to be read in the manual""",
-                ),
-            ),
-            # ------------------------------------
-             b_Flowrates = BLOC (condition = "BOUNDARY_TYPE == 'Prescribed Flowrates'",
-    #        ------------------------------------
-    #       -----------------------------------
-            PRESCRIBED_FLOWRATES = SIMP(statut ='o',
-        #       -----------------------------------
-                    typ = 'R',
-                    fr = """ Valeurs des debits imposes aux frontieres liquides entrantes. Lire la
-        partie du mode d''emploi consacree aux conditions aux limites""",
-                    ang = """ Values of prescribed flowrates at the inflow boundaries. The section
-        about boundary conditions is to be read in the manual""",
-                ),
-            ),
-             b_Velocity = BLOC (condition = "BOUNDARY_TYPE == 'Prescribed Velocity'",
-        #       -----------------------------------
-                PRESCRIBED_VELOCITIES = SIMP(statut ='o',
-            #       -----------------------------------
-                        typ = 'R',
-                        fr = """ Valeurs des vitesses imposees aux frontieres liquides entrantes. Lire
-            la partie du mode d''emploi consacree aux conditions aux limites""",
-                        ang = """ Values of prescribed velocities at the liquid inflow boundaries. Refer
-            to the section dealing with the boundary conditions""",
-                    ),
-                ),
-      ), # Fin LIQUID
+        PRESCRIBED_FLOWRATES = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'R', max='**',
+            defaut = [0.0,0.0],
+            fr = """ Valeurs des debits imposes aux frontieres liquides entrantes. Lire la
+partie du mode d''emploi consacree aux conditions aux limites""",
+            ang = """ Values of prescribed flowrates at the inflow boundaries. The section
+about boundary conditions is to be read in the manual""",
+        ),
+#       -----------------------------------
+        PRESCRIBED_VELOCITIES = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'R', max='**',
+            defaut = [0.0,0.0],
+            fr = """ Valeurs des vitesses imposees aux frontieres liquides entrantes. Lire
+la partie du mode d''emploi consacree aux conditions aux limites""",
+            ang = """ Values of prescribed velocities at the liquid inflow boundaries. Refer
+to the section dealing with the boundary conditions""",
+        ),
+    ),
+#   -----------------------------------
+    BOUNDARY_CONDITIONS_OTHERS = FACT(statut='o',
+#   -----------------------------------
+#       -----------------------------------
         STAGE_DISCHARGE_CURVES = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'TXM', max='**',
@@ -986,7 +943,7 @@ HYDRO = PROC(nom= "HYDRO",op = None,
 #       -----------------------------------
         VELOCITY_PROFILES = SIMP(statut ='f',
 #       -----------------------------------
-            typ = 'TXM', max='**',
+            typ = 'TXM', min=0, max='**',
             into = ["constant normal profile","u and v given in the conlim file","normal velocity given in ubor in the conlim file","velocity proportional to square root of depth","velocity proportional to square root of depth, variant"],
             fr = """ 1:profil normal constant 2:u et v donnes dans le fichier conlim
 3:vitesse normale donnee dans ubor dans le fichier conlim 4:profil en
@@ -1366,7 +1323,7 @@ le modele CN du SCS. Les options disponibles sont:
   1 : conditions precedentes seches
   2 : conditions precedentes normales
   3 : conditions prcedentes mouillees
-ce mot cle est uniquement utile pour le modele pluie-débit 1 (CN)""",
+ce mot cle est uniquement utile pour le modele pluie-debit 1 (CN)""",
                 ang = """Gives the antecedent moisture conditions before a rainfall
  event for the SCS CN runoff model. Available options are:
   1 : dry antecedent conditions
@@ -1482,7 +1439,7 @@ longshore current (cf OConnor and Yoo, 1988, Coast Eng.12.)""",
             PARAMETER_ESTIMATION = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM',
-                into = ['','FRICTION','FROTTEMENT, STEADY'],
+                into = ['','FRICTION','FRICTION, STEADY'],
                 defaut = '',
                 fr = """ Liste des parametres a estimer, choix : FROTTEMENT ou FROTTEMENT,
 PERMANENT""",
@@ -1532,30 +1489,30 @@ adjoint""",
         SOURCES = FACT(statut='f',
 #       -----------------------------------
 #           -----------------------------------
-            ABSCISSAE_OF_SOURCES = SIMP(statut ='o',
+            ABSCISSAE_OF_SOURCES = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """ Valeurs des abscisses des sources de debit et de traceur.""",
                 ang = """ abscissae of sources of flowrate and/or tracer""",
             ),
 #           -----------------------------------
-            ORDINATES_OF_SOURCES = SIMP(statut ='o',
+            ORDINATES_OF_SOURCES = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """ Valeurs des ordonnees des sources de debit et de traceur.""",
                 ang = """ ordinates of sources of flowrate and/or tracer""",
             ),
 #           -----------------------------------
-            WATER_DISCHARGE_OF_SOURCES = SIMP(statut ='o',
+            WATER_DISCHARGE_OF_SOURCES = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """ Valeurs des debits des sources.""",
                 ang = """ values of water discharge of sources""",
             ),
 #           -----------------------------------
             VELOCITIES_OF_THE_SOURCES_ALONG_X = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """ Vitesses du courant a chacune des sources. Si elles ne sont pas
 donnees, on considere que la vitesse est celle du courant""",
                 ang = """ Velocities at the sources. If they are not given, the velocity of the
@@ -1564,7 +1521,7 @@ flow at this location is taken""",
 #           -----------------------------------
             VELOCITIES_OF_THE_SOURCES_ALONG_Y = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """ Vitesses du courant a chacune des sources""",
                 ang = """ Velocities at the sources""",
             ),
@@ -1580,7 +1537,7 @@ fonction de Dirac""",
 multiplied by a Dirac function""",
             ),
 #           -----------------------------------
-            SOURCES_FILE = SIMP(statut ='o',
+            SOURCES_FILE = SIMP(statut ='f',
 #           -----------------------------------
                 typ = ('Fichier','All Files (*)'),
                 defaut = '',
@@ -2099,6 +2056,15 @@ shall be made.""",
             fr = """ Changement de variable de H en C dans le systeme lineaire final""",
             ang = """ Change of variable from H to C in the final linear system""",
         ),
+#       -----------------------------------
+        FINITE_ELEMENT_ASSEMBLY = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'TXM',
+            into = ["normal","Integer I8","Compensated"],
+            defaut = "normal",
+            fr = """1 : normal 2 : avec des entiers I8 3:compense""",
+            ang = """1: normal 2: with I8 integers 3:compensation""",
+        ),
     ),
 #   -----------------------------------
     DISCRETISATIONS_IMPLICITATION = FACT(statut='o',
@@ -2146,7 +2112,7 @@ IMPLEMENTED) 11: linear 12: quasi-bubble 13: quadratic""",
 #           -----------------------------------
             Consigne = SIMP(statut ="o", homo="information", typ="TXM",
 #           -----------------------------------
-                defaut = "Choice of space discretisation for every variable These coefficients are applied respectively to 1) U and V 2) H 3) T 4) K and EPSILON"),
+                defaut = "Choice of space discretisation for every variable. These coefficients are applied respectively to 1) U and V 2) H 3) T 4) K and EPSILON"),
         ),
     ),
 #   -----------------------------------
@@ -2284,7 +2250,7 @@ ADVECTION""",
         TYPE_OF_ADVECTION = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'TXM', max='**',
-            into = ["CHARACTERISTICS","SUPG","CONSERVATIVE N-SCHEME","CONSERVATIVE N-SCHEME","CONSERVATIVE PSI-SCHEME","EDGE-BASED N-SCHEME","EDGE-BASED N-SCHEME","ERIA SCHEME"],
+            into = ["CHARACTERISTICS","SUPG","CONSERVATIVE N-SCHEME LP","CONSERVATIVE N-SCHEME","CONSERVATIVE PSI-SCHEME","EDGE-BASED N-SCHEME LP","EDGE-BASED N-SCHEME","ERIA SCHEME"],
             defaut = ["CHARACTERISTICS","CONSERVATIVE PSI-SCHEME","CHARACTERISTICS","CHARACTERISTICS"],
             fr = """ Choix du schema de convection pour chaque variable ces coefficients
 sont respectivement appliques a 1) U et V 2) H 3) T 4) K ET EPSILON 1 :
@@ -2305,7 +2271,7 @@ Edge-based N-scheme Second integer must be 5""",
 #           -----------------------------------
             Consigne = SIMP(statut ="o", homo="information", typ="TXM",
 #           -----------------------------------
-                defaut = "Choice of space discretisation for every variable These coefficients are applied respectively to 1) U and V 2) H 3) T 4) K and EPSILON"),
+                defaut = "Choice of space discretisation for every variable. These coefficients are applied respectively to 1) U and V 2) H 3) T 4) K and EPSILON"),
         ),
 #       -----------------------------------
         OPTION_FOR_CHARACTERISTICS = SIMP(statut ='o',
@@ -2521,18 +2487,19 @@ velocity""",
     AUTOMATIC_DIFFERENTIATION = FACT(statut='o',
 #   -----------------------------------
 #       -----------------------------------
-        NUMBER_OF_DIFFERENTIATORS = SIMP(statut ='o',
+        NUMBER_OF_DERIVATIVES = SIMP(statut ='o',
 #       -----------------------------------
             typ = 'I',
             defaut = 0,
-            fr = """ Definit le nombre de differentiateurs utilisateurs.""",
-            ang = """ Defines the number of user differentiators""",
+            fr = """Definit le nombre de derivees utilisateurs, dans le cadre
+de la differentiation algorithmique.""",
+            ang = """Defines the number of user derivatives, within the framework
+of the algorithmic differentiation.""",
         ),
 #       -----------------------------------
-        NAMES_OF_DIFFERENTIATORS = SIMP(statut ='f',
+        NAMES_OF_DERIVATIVES = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'TXM', min= 2, max= 2,
-            defaut = ';',
             fr = """ Noms des differentiateurs utilisateurs en 32 caracteres, 16 pour le
 nom, 16 pour l''unite""",
             ang = """ Name of user differentiators in 32 characters, 16 for the name, 16 for
@@ -2948,7 +2915,7 @@ fully implemented.""",
 TRACERS = PROC(nom= "TRACERS",op = None,
 # -----------------------------------------------------------------------
 #   -----------------------------------
-    BOUNDARY_CONDITIONS_FOR_TRACERS = FACT(statut='o',
+    BOUNDARY_CONDITIONS_FOR_TRACERS = FACT(statut='f',
 #   -----------------------------------
 #       -----------------------------------
         PRESCRIBED_TRACERS_VALUES = SIMP(statut ='o',
@@ -2974,14 +2941,14 @@ section dealing with the boundary conditions""",
 #       -----------------------------------
         NAMES_OF_TRACERS = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'TXM', max='**',
+            typ = 'TXM', min=0, max='**',
             fr = """ Noms des traceurs en 32 caracteres, 16 pour le nom 16 pour l''unite""",
             ang = """ Name of tracers in 32 characters, 16 for the name, 16 for the unit.""",
         ),
 #       -----------------------------------
         INITIAL_VALUES_OF_TRACERS = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'R', max='**',
+            typ = 'R', min=0, max='**',
             defaut = [0.,0.],
             fr = """ Fixe la valeur initiale du traceur.""",
             ang = """ Sets the initial value of the tracer.""",
@@ -3038,8 +3005,8 @@ direct""",
 #       -----------------------------------
         SOLVER_OPTION_FOR_TRACERS_DIFFUSION = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'I',
-            defaut = 2,
+            typ = 'I', min=0, max='**',
+            defaut = [2],
             fr = """ si le solveur est GMRES (7) le mot cle est la dimension de l''espace
 de KRILOV (valeurs conseillees entre 2 et 15)""",
             ang = """ WHEN GMRES (7) IS CHOSEN, DIMENSION OF THE KRYLOV SPACE TRY VALUES
@@ -3050,7 +3017,7 @@ BETWEEN 2 AND 15""",
 #       -----------------------------------
             typ = 'TXM', min=0, max='**',
             into = ["no preconditioning ","diagonal","crout","diagonal and crout"],
-            defaut = "diagonal",
+            defaut = ["diagonal"],
             fr = """ Permet de preconditionner le systeme relatif au traceur. Memes
 definition et possibilites que pour le mot-cle PRECONDITIONNEMENT. 0 :
 pas de preconditionnement; 2 : preconditionnement diagonal. 7 : Crout
@@ -3084,23 +3051,23 @@ diffusion of tracer.""",
         ),
     ),
 #   -----------------------------------
-    SOURCES_TRA = FACT(statut='o',
+    SOURCES_TRA = FACT(statut='f',
 #   -----------------------------------
 #       -----------------------------------
         VALUES_OF_THE_TRACERS_AT_THE_SOURCES = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'R', min= 2, max= 2,
+            typ = 'R', min=0, max='**',
             fr = """ Valeurs des traceurs a chacune des sources""",
             ang = """ Values of the tracers at the sources""",
         ),
     ),
 #   -----------------------------------
-    METEOROLOGY_TRA = FACT(statut='o',
+    METEOROLOGY_TRA = FACT(statut='f',
 #   -----------------------------------
 #       -----------------------------------
         VALUES_OF_TRACERS_IN_THE_RAIN = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'R', min= 2, max= 2,
+            typ = 'R', min=0, max='**',
             fr = """generalement ce traceur est la temperature, dans ce cas
 cette valeur  est a modifier, sinon la valeur 0 est raisonnable""",
             ang = """most often, this tracer is temperature, in this case
@@ -3123,11 +3090,11 @@ reasonable""",
         b_ADVECTION_OF_TRACERSG = BLOC(condition="ADVECTION_OF_TRACERS == True",
 #       -----------------------------------
 #           -----------------------------------
-            SCHEME_FOR_ADVECTION_OF_TRACERS = SIMP(statut ='o',
+            SCHEME_FOR_ADVECTION_OF_TRACERS = SIMP(statut ='f',
 #           -----------------------------------
                 typ = 'TXM', min=0, max='**',
                 into = ["NO ADVECTION","CHARACTERISTICS","EXPLICIT + SUPG","EXPLICIT LEO POSTMA","EXPLICIT + MURD SCHEME N","EXPLICIT + MURD SCHEME PSI","LEO POSTMA FOR TIDAL FLATS","N-SCHEME FOR TIDAL FLATS","ERIA SCHEME FOR TIDAL FLATS"],
-                defaut = "CHARACTERISTICS",
+                defaut = ["CHARACTERISTICS"],
                 fr = """ Choix du schema de convection pour les traceurs, remplace FORME DE LA
 CONVECTION""",
                 ang = """ Choice of the advection scheme for the tracers, replaces TYPE OF
@@ -3156,9 +3123,8 @@ ADVECTION""",
 #           -----------------------------------
             COEFFICIENT_FOR_DIFFUSION_OF_TRACERS = SIMP(statut ='o',
 #           -----------------------------------
-                typ = 'R',
-                defaut = 1.E-6,
-                #max='**',
+                typ = 'R', min=0, max='**',
+                defaut = [1.E-6],
                 fr = """ Fixe la valeur du coefficient de diffusion du traceur. L''influence de
 ce parametre sur l''evolution du traceur dans le temps est importante.""",
                 ang = """ Sets the value of the tracer diffusivity.""",
@@ -3167,9 +3133,9 @@ ce parametre sur l''evolution du traceur dans le temps est importante.""",
 #       -----------------------------------
         OPTION_FOR_THE_DIFFUSION_OF_TRACERS = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'TXM',
+            typ = 'TXM', min=0, max='**',
             into = ["div( nu grad(T) )","1/h div ( h nu grad(T)"],
-            defaut = "div( nu grad(T) )",
+            defaut = ["div( nu grad(T) )"],
             fr = """ 1: Diffusion de la forme div( nu grad(T) ) 2: Diffusion de la forme
 1/h div ( h nu grad(T) )""",
             ang = """ 1: Diffusion in the form div( nu grad(T) ) 2: Diffusion in the form
@@ -3178,9 +3144,8 @@ ce parametre sur l''evolution du traceur dans le temps est importante.""",
 #       -----------------------------------
         SCHEME_OPTION_FOR_ADVECTION_OF_TRACERS = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'I',
-            defaut = 1,
-            max='**',
+            typ = 'I', min=0, max='**',
+            defaut = [1],
             fr = """ Si present remplace et a priorite sur : OPTION POUR LES
 CARACTERISTIQUES OPTION DE SUPG Si schema PSI ou N : 1=explicite
 2=predicteur-correcteur 3=predicteur-correcteur deuxieme ordre en temps
@@ -3204,19 +3169,19 @@ predictor-corrector second-order in time 4= implicit""",
 #       -----------------------------------
         LAW_OF_TRACERS_DEGRADATION = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'TXM', min= 2, max= 2,
+            typ = 'TXM', min=0, max='**',
             into = ["NO DEGRADATION","F(T90) LAW"],
             defaut = ["NO DEGRADATION","NO DEGRADATION"],
             fr = """ Prise en compte d''une loi de decroissance des traceurs""",
             ang = """ Take in account a law for tracers decrease""",
         ),
 #       -----------------------------------
-        b_LAW_OF_TRACERS_DEGRADATIONG = BLOC(condition="LAW_OF_TRACERS_DEGRADATION == 'F(T90) LAW'",
+        b_LAW_OF_TRACERS_DEGRADATIONG = BLOC(condition="'F(T90) LAW' in LAW_OF_TRACERS_DEGRADATION",
 #       -----------------------------------
 #           -----------------------------------
             COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION = SIMP(statut ='o',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """ Coefficient 1 de la loi de decroissance des traceurs""",
                 ang = """ Coefficient 1 of law for tracers decrease""",
             ),
@@ -3414,7 +3379,7 @@ the weir data file (see written documentation)""",
                 typ = 'TXM',
                 into = ["HORIZONTAL WITH SAME NUMBER OF NODES UPSTREAM/DOWNSTREAM","GENERAL"],
                 defaut = "HORIZONTAL WITH SAME NUMBER OF NODES UPSTREAM/DOWNSTREAM",
-                fr = """ Méthode de traitement des seuils. Deux Solutions:
+                fr = """ Methode de traitement des seuils. Deux Solutions:
 - HORIZONTAL AVEC MEME NOMBRE DE NOEUDS AMONT/AVAL (Solution historique
   avec bord)
 - GENERALE (Nouvelle solution avec pts sources)""",
@@ -3547,7 +3512,7 @@ constituents on the internet""",
         b_TIDAL_DATA_BASEG = BLOC(condition="TIDAL_DATA_BASE == 'TPXO'",
 #       -----------------------------------
 #           -----------------------------------
-            MINOR_CONSTITUENTS_INFERENCE = SIMP(statut ='o',
+            MINOR_CONSTITUENTS_INFERENCE = SIMP(statut ='f',
 #           -----------------------------------
                 typ = bool,
                 defaut = False,
@@ -3560,7 +3525,7 @@ the one read in input files linked to keywords BINARY DATABASE 1 FOR
 TIDE and BINARY DATABASE 2 FOR TIDE""",
             ),
 #           -----------------------------------
-            BINARY_DATABASE_1_FOR_TIDE = SIMP(statut ='o',
+            BINARY_DATABASE_1_FOR_TIDE = SIMP(statut ='f',
 #           -----------------------------------
                 typ = ('Fichier','All Files (*)'),
                 defaut = '',
@@ -3572,7 +3537,7 @@ the TPXO satellite altimetry model, this file should be for free surface
 level, for instance h\_tpxo7.2""",
             ),
 #           -----------------------------------
-            BINARY_DATABASE_2_FOR_TIDE = SIMP(statut ='o',
+            BINARY_DATABASE_2_FOR_TIDE = SIMP(statut ='f',
 #           -----------------------------------
                 typ = ('Fichier','All Files (*)'),
                 defaut = '',
@@ -3585,7 +3550,7 @@ velocities, for instance u\_tpxo7.2""",
             ),
         ),
 #       -----------------------------------
-        TIDAL_MODEL_FILE = SIMP(statut ='o',
+        TIDAL_MODEL_FILE = SIMP(statut ='f',
 #       -----------------------------------
             typ = ('Fichier','All Files (*)'),
             defaut = '',
@@ -3595,7 +3560,17 @@ harmoniques""",
 extracted""",
         ),
 #       -----------------------------------
-        HARMONIC_CONSTANTS_FILE = SIMP(statut ='o',
+        ASCII_DATABASE_FOR_TIDE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = ('Fichier','All Files (*)'),
+            defaut = '',
+            fr = """ Base de donnees de constantes harmoniques tirees du fichier du modele
+de maree. Ancien nom en version 6.1 : BASE DE DONNEES DE MAREE""",
+            ang = """ Tide data base of harmonic constituents extracted from the tidal model
+file. Old name in 6.1 version: TIDE DATA BASE""",
+        ),
+#       -----------------------------------
+        HARMONIC_CONSTANTS_FILE = SIMP(statut ='f',
 #       -----------------------------------
             typ = ('Fichier','All Files (*)'),
             defaut = '',
@@ -4060,6 +4035,52 @@ TELEMAC,DAMO,UTILE,BIEF,HP""",
         ang = """ Default parallel executable for T2D""",
     ),
 )
+# -----------------------------------------------------------------------
+INPUT_OUTPUT__FILES = PROC(nom= "INPUT_OUTPUT__FILES",op = None,
+# -----------------------------------------------------------------------
+    UIinfo = {"groupes": ("CACHE")},
+#   -----------------------------------
+    NAMES = FACT(statut='o',
+#   -----------------------------------
+#       -----------------------------------
+        AD_NUMBER_OF_DIRECTIONS = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'I',
+            defaut = 1,
+            fr = """Definit le nombre de directions de differentiateurs.""",
+            ang = """Defines the number of directions for the differentiators""",
+        ),
+    ),
+)
+# -----------------------------------------------------------------------
+NUMERICAL_PARAMETERS__SOLVER = PROC(nom= "NUMERICAL_PARAMETERS__SOLVER",op = None,
+# -----------------------------------------------------------------------
+    UIinfo = {"groupes": ("CACHE")},
+#   -----------------------------------
+    AD_SYMBOLIC_LINEAR_SOLVER = SIMP(statut ='f',
+#   -----------------------------------
+        typ = bool,
+        defaut = False,
+        fr = """Enables the symbolic linear solver for AD.""",
+        ang = """Enables the symbolic linear solver for AD.""",
+    ),
+#   -----------------------------------
+    AD_LINEAR_SOLVER_RESET_DERIVATIVES = SIMP(statut ='f',
+#   -----------------------------------
+        typ = bool,
+        defaut = True,
+        fr = """Resets the derivatives for AD.""",
+        ang = """Resets the derivatives for AD.""",
+    ),
+#   -----------------------------------
+    AD_LINEAR_SOLVER_DERIVATIVE_CONVERGENCE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = bool,
+        defaut = True,
+        fr = """Iterative linear solvers:  derivative convergence test for AD.""",
+        ang = """Iterative linear solvers:  derivative convergence test for AD.""",
+    ),
+)
 Ordre_Des_Commandes = (
 'COMPUTATION_ENVIRONMENT',
 'HYDRO',
@@ -4073,7 +4094,9 @@ Ordre_Des_Commandes = (
 'TIDES',
 'COUPLING',
 'MISC',
-'INTERNAL')
+'INTERNAL',
+'INPUT_OUTPUT__FILES',
+'NUMERICAL_PARAMETERS__SOLVER')
 Classement_Commandes_Ds_Arbre = (
 'COMPUTATION_ENVIRONMENT',
 'HYDRO',
@@ -4087,4 +4110,6 @@ Classement_Commandes_Ds_Arbre = (
 'TIDES',
 'COUPLING',
 'MISC',
-'INTERNAL')
+'INTERNAL',
+'INPUT_OUTPUT__FILES',
+'NUMERICAL_PARAMETERS__SOLVER')
