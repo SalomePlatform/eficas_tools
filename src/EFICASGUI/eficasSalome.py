@@ -92,6 +92,8 @@ class MyEficas( qtEficas.Appli ):
         self.editor = getStudyEditor()    # Editeur de l'arbre d'etude
 
         if lang!=None : langue=lang
+        else : langue=str(sgPyQt.stringSetting("language","language"))
+
         qtEficas.Appli.__init__( self,code=code,salome=1,parent=parent,multi=multi,langue=langue)
         
         #--------------- specialisation EFICAS dans SALOME  -------------------                
@@ -575,6 +577,7 @@ class MyEficas( qtEficas.Appli ):
         Revu pour QT4
         """
         msgError    = "Erreur dans l'export du fichier de commande dans l'arbre d'etude Salome"
+        if jdcPath == "" or jdcPath == None : return
         ok = False
         try:            
             atLeastOneStudy = self.editor.study
