@@ -54,7 +54,7 @@ class MyEficas( qtEficas.Appli ):
     b)la visualisation d'elements geometrique dans le coposant GEOM de SALOME par selection dans EFICAS
     """
     def __init__( self, parent, code = None, fichier = None, module = "EFICAS",
-                  version = None, componentName = "Eficas",multi=False):
+                  version = None, componentName = "Eficas",multi=False,lang=None):
         """
         Constructeur.
         @type   parent: 
@@ -91,6 +91,7 @@ class MyEficas( qtEficas.Appli ):
                         
         self.editor = getStudyEditor()    # Editeur de l'arbre d'etude
 
+        if lang!=None : langue=lang
         qtEficas.Appli.__init__( self,code=code,salome=1,parent=parent,multi=multi,langue=langue)
         
         #--------------- specialisation EFICAS dans SALOME  -------------------                
