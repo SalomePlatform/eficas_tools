@@ -184,6 +184,9 @@ class TELEMACGenerator(PythonGenerator):
              except :
                if obj.valeur==None :  sTelemac=obj.valeur
                else : print(("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur))
+             # Si le resultat est du texte on ajoute des guillemets
+             if sTelemac[0] not in '0123456789':
+               sTelemac = "'" + sTelemac +"'"
 
         if type(obj.valeur) in (tuple,list) :
            if obj.nom in self.DicoEnumCasEnInverse:
@@ -230,7 +233,7 @@ class TELEMACGenerator(PythonGenerator):
 
         nom=self.dicoCataToCas[obj.nom]
         if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
-              if s3 != 'None' and s3 != "''":
+              if s3 != '':
                 s3=s3.replace(';',',')
                 s3="'"+ s3 +"'"
               else:

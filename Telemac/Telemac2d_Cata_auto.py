@@ -805,7 +805,7 @@ for use.""",
 #           -----------------------------------
                 typ = 'TXM', min=0, max='**',
                 intoSug = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1, etc.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity of k-epsilon model (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","nombre de courants ","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","gradient 1, etc."],
-                defaut = '',
+                defaut = [''],
                 fr = """Nom des variables que l''utilisateur desire ecrire a l''ecran. Meme
 possibilites que pour les sorties graphiques.""",
                 ang = """Name of the variables that the user wants printed on screen.

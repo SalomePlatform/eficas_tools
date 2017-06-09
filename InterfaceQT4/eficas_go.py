@@ -58,7 +58,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     sys.exit(res)
 
 
-def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=False):
+def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=False,langue='en'):
     """
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
@@ -70,7 +70,7 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=Fal
     if code == None : code=options.code
 
     from .qtEficas import Appli
-    Eficas=Appli(code=code,ssCode=ssCode,ssIhm=True)
+    Eficas=Appli(code=code,salome=0,ssCode=ssCode,ssIhm=True,langue=langue)
 
     from .ssIhm  import QWParentSSIhm
     parent=QWParentSSIhm(code,Eficas,version)
@@ -92,9 +92,9 @@ def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=Non
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
     print((monEditeur.jdc.cr))
 
-def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False,debug=False,leger=False):
+def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False,debug=False,leger=False,langue='ang'):
     #print 'lance_eficas_ssIhm_reecrit', fichier
-    monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
+    monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version,langue=langue)
     if ou == None : 
        fileName=fichier.split(".")[0]+"_reecrit.comm"
        fn=fichier.split(".")[0]+"_cr.txt"

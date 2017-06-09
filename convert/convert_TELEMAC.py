@@ -66,8 +66,6 @@ pattern_ContientDouble=re.compile (r"^.*''.*$")
 
 #Si le code n est pas Telemac
 try :
-#if 1 :
-   from aideAuxConvertisseurs import ListeSupprimeCasToEficas
    from enum_Telemac2d_auto       import TelemacdicoEn
 except :
    pass
@@ -242,7 +240,6 @@ class TELEMACParser(PythonParser):
           if simp in TELEMACParser.__dict__ : TELEMACParser.__dict__[simp](self,)
 
       for simp in self.dictSimp:
-          if simp in ListeSupprimeCasToEficas: continue
           if simp not in self.dicoInverse :
              #print ( "************")
              print  ("pb avec dans dicoInverse", simp,'------')
@@ -385,7 +382,6 @@ class TELEMACParser(PythonParser):
                    if valeur != None :
                       print ("pb avec le type de ", obj.nom, obj.type, 'et la valeur ', valeur)
 
-          if obj.nom == 'ASCII_DATABASE_FOR_TIDE':    print (obj.nom,obj.type)
           if 'Fichier' in obj.type or 'TXM' in obj.type or 'Repertoire' in obj.type or 'FichierOuRepertoire' in obj.type :
               valeur=str(valeur)
               if valeur == "" or valeur == " " :
@@ -462,17 +458,17 @@ class TELEMACParser(PythonParser):
 
 #   def BOUNDARY_CONDITIONS(self):
 #       texte_Boundaries="BOUNDARY_CONDITIONS=_F(LIQUID_BOUNDARIES=( "
-#       if 'PRESCRIBED_ELEVATIONS' in self.dictSimp: 
+#       if 'PRESCRIBED_ELEVATIONS' in self.dictSimp:
 #              valeursPE=self.dictSimp["PRESCRIBED_ELEVATIONS"]
 #              if not type(valeursPE)==list : valeursPE = (valeursPE,)
 #              longueur=len(self.dictSimp["PRESCRIBED_ELEVATIONS"])
 #       else : valeursPE=None
-#       if 'PRESCRIBED_FLOWRATES' in self.dictSimp: 
+#       if 'PRESCRIBED_FLOWRATES' in self.dictSimp:
 #              valeursPF=self.dictSimp["PRESCRIBED_FLOWRATES"]
 #              if not type(valeursPF)==list : valeursPF = (valeursPF,)
 #              longueur=len(self.dictSimp["PRESCRIBED_FLOWRATES"])
 #       else : valeursPF=None
-#       if 'PRESCRIBED_VELOCITIES' in self.dictSimp: 
+#       if 'PRESCRIBED_VELOCITIES' in self.dictSimp:
 #              valeursPV=self.dictSimp["PRESCRIBED_VELOCITIES"]
 #              if not type(valeursPV)==list : valeursPV = (valeursPV,)
 #              longueur=len(self.dictSimp["PRESCRIBED_VELOCITIES"])
@@ -484,29 +480,29 @@ class TELEMACParser(PythonParser):
 #
 #       if valeursPE == None or valeursPF == None or valeursPV == None :
 #          listNulle=[]
-#          for i in range(longueur) : listNulle.append('0') 
+#          for i in range(longueur) : listNulle.append('0')
 #
 #
 #       if valeursPE == None : valeursPE = listNulle
 #       if valeursPF == None : valeursPF = listNulle
 #       if valeursPV == None : valeursPV = listNulle
-#      
+#
 #
 #       for e in range(len(valeursPE)):
 #          if valeursPE[e] != "" or valeursPE[e] != "\n" :
-#            if eval(valeursPE[e],{}) != 0 : 
+#            if eval(valeursPE[e],{}) != 0 :
 #               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Elevations',\n"
 #               texte_Boundaries += "PRESCRIBED_ELEVATIONS = " + str(valeursPE[e]) + "),\n"
 #               continue
 #
 #          if valeursPF[e] != "" or valeursPF[e] != "\n" :
-#            if eval(valeursPF[e],{}) != 0 : 
+#            if eval(valeursPF[e],{}) != 0 :
 #               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Flowrates',\n"
 #               texte_Boundaries += "PRESCRIBED_FLOWRATES = " + str(valeursPF[e]) + "),\n"
 #               continue
-#               
+#
 #          if valeursPV[e] != "" or valeursPV[e] != "\n" :
-#             if eval(valeursPV[e],{})!=0 : 
+#             if eval(valeursPV[e],{})!=0 :
 #                texte_Boundaries += "_F( BOUNDARY_TYPE= 'Prescribed Velocity',\n"
 #                texte_Boundaries += "PRESCRIBED_VELOCITIES = " + str(valeursPV[e]) + "),\n"
 #                continue
@@ -514,4 +510,4 @@ class TELEMACParser(PythonParser):
 #
 #       texte_Boundaries +="),),"
 #       self.textePy += texte_Boundaries
-#      
+#
