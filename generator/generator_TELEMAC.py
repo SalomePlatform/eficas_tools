@@ -32,19 +32,6 @@ from Extensions.i18n import tr
 from .generator_python import PythonGenerator
 
 extensions=('.comm',)
-#if 1:
-try :
-   from enum_Telemac2d_auto       import TelemacdicoEn
-   DicoEnumCasEnInverse={}
-   for motClef in TelemacdicoEn:
-     d={}
-     for valTelemac in TelemacdicoEn[motClef]:
-        valEficas= TelemacdicoEn[motClef][valTelemac]
-        d[valEficas]=valTelemac
-     DicoEnumCasEnInverse[motClef]=d
-
-except :
-   pass
 
 
 
@@ -75,6 +62,27 @@ class TELEMACGenerator(PythonGenerator):
 
       self.statut=statut
       self.langue=appli.langue
+      if self.langue == 'fr' : 
+         from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
+         self.DicoEnumCasEnInverse={}
+         for motClef in DicoEnumCasFrToEnumCasEn:
+              d={}
+              for valTelemac in DicoEnumCasFrToEnumCasEn[motClef]:
+                 valEficas= DicoEnumCasFrToEnumCasEn[motClef][valTelemac]
+                 d[valEficas]=valTelemac
+              self.DicoEnumCasEnInverse[motClef]=d
+      else :
+         try :
+            from enum_Telemac2d_auto       import TelemacdicoEn
+            self.DicoEnumCasEnInverse={}
+            for motClef in TelemacdicoEn:
+              d={}
+              for valTelemac in TelemacdicoEn[motClef]:
+                 valEficas= TelemacdicoEn[motClef][valTelemac]
+                 d[valEficas]=valTelemac
+              self.DicoEnumCasEnInverse[motClef]=d
+         except :
+            pass
       self.initDico()
       # Pour Simplifier les verifs d ecriture
       if hasattr(appli,'listeTelemac') : self.listeTelemac=appli.listeTelemac
@@ -175,17 +183,17 @@ class TELEMACGenerator(PythonGenerator):
 
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (tuple,list) ):
-           if obj.nom in DicoEnumCasEnInverse:
-             try : sTelemac=str(DicoEnumCasEnInverse[obj.nom][obj.valeur])
+           if obj.nom in self.DicoEnumCasEnInverse:
+             try : sTelemac=str(self.DicoEnumCasEnInverse[obj.nom][obj.valeur])
              except :
                if obj.valeur==None :  sTelemac=obj.valeur
                else : print(("generMCSIMP Pb valeur avec ", obj.nom, obj.valeur))
         if type(obj.valeur) in (tuple,list) :
-           if obj.nom in DicoEnumCasEnInverse:
+           if obj.nom in self.DicoEnumCasEnInverse:
              #sT = "'"
              sT=''
              for v in obj.valeur:
-               try : sT +=str(DicoEnumCasEnInverse[obj.nom][v]) +";"
+               try : sT +=str(self.DicoEnumCasEnInverse[obj.nom][v]) +";"
                except :
                  if obj.definition.intoSug != [] : sT +=str(v) + ";"
                  else : print(("generMCSIMP Pb Tuple avec ", obj.nom, v, obj.valeur))
@@ -328,11 +336,11 @@ class TELEMACGenerator(PythonGenerator):
            if c.nom[0:18] == 'Type_Of_Advection_' and c.valeur!=None:
               suf=c.nom[18:]
               index=dicoSuf[suf]
-              listeAdvection[index]=DicoEnumCasEnInverse['Type_Of_Advection'][c.valeur]
+              listeAdvection[index]=self.DicoEnumCasEnInverse['Type_Of_Advection'][c.valeur]
            if c.nom[0:13] == 'Supg_Option_' and c.valeur!=None:
               suf=c.nom[13:]
               index=dicoSuf[suf]
-              listeAdvection[index]=DicoEnumCasEnInverse['Supg_Option'][c.valeur]
+              listeAdvection[index]=self.DicoEnumCasEnInverse['Supg_Option'][c.valeur]
            if c.nom[0:23] == 'Upwind_Coefficients_Of_' and c.valeur!=None:
               suf=c.nom[23:]
               index=dicoSuf[suf]

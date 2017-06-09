@@ -67,6 +67,7 @@ class MyTabview(object):
             if self.appliEficas.code in DictExtensions:
                chaine="JDC (*"+DictExtensions[self.appliEficas.code]+");;"
                extensions=tr(chaine+ "All Files (*)")
+            elif self.appliEficas.code== "TELEMAC" : extensions=tr('CAS (*.cas);;All Files (*)')
             else :
                extensions=tr('Fichiers JDC (*.comm);;''Tous les Fichiers (*)')
 

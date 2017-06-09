@@ -48,7 +48,7 @@ class Appli(Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=1,parent=None,ssCode=None,multi=False,langue='ang',ssIhm=False):
+    def __init__(self,code=None,salome=1,parent=None,ssCode=None,multi=False,langue='fr',ssIhm=False):
         """
         Constructor
         """
@@ -77,8 +77,6 @@ class Appli(Ui_Eficas,QMainWindow):
         self.listeCode=['Adao','ADAO','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
         self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
 
-        if langue=='fr': self.langue=langue
-        else           : self.langue="ang"
 
         if self.salome:
           import Accas
@@ -91,6 +89,8 @@ class Appli(Ui_Eficas,QMainWindow):
         self.multi=multi
         self.demande=multi # specifique PSEN
 
+        if langue=='fr': self.langue=langue
+        else           : self.langue="ang"
 
         if self.multi == False :
              self.definitCode(code,ssCode)
@@ -98,7 +98,6 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
 
-        if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : langue=self.CONFIGURATION.lang
 
 
         self.suiteTelemac=False
@@ -110,11 +109,10 @@ class Appli(Ui_Eficas,QMainWindow):
            self.suiteTelemac=self.CONFIGURATION.suiteTelemac
 
 
+        if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : self.langue=self.CONFIGURATION.lang
         from Extensions import localisation
         app=QApplication
         if hasattr (self, 'CONFIGURATION') : localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
-
-
 
         self.setupUi(self)
         #if parent != None : self.parentCentralWidget = parent.centralWidget()
@@ -194,9 +192,10 @@ class Appli(Ui_Eficas,QMainWindow):
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
            self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
-        from Extensions import localisation
-        app=QApplication
-        if hasattr (self, 'CONFIGURATION') : localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
+        # 
+        #from Extensions import localisation
+        #app=QApplication
+        #if hasattr (self, 'CONFIGURATION') : localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
         #PN --> pb d exception qui font planter salome
         # plus supporte en python 3
         #if hasattr(prefsCode,'encoding'):

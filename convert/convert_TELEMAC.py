@@ -102,7 +102,7 @@ class TELEMACParser(PythonParser):
       self.Ordre_Des_Commandes=appli.readercata.Ordre_Des_Commandes
 
       if appli.langue=='fr' :
-          from enum_Telemac2d_into       import DicoEnumCasFrToEnumCasEn
+          from enum_Telemac2d_auto       import DicoEnumCasFrToEnumCasEn
           for k in DicoEnumCasFrToEnumCasEn :
               TelemacdicoEn[k]=DicoEnumCasFrToEnumCasEn[k]
 
@@ -333,7 +333,7 @@ class TELEMACParser(PythonParser):
        print (nom)
 
    def convertSIMP(self,obj,nom,valeur):
-       #print 'in convertSIMP', nom,valeur
+       #print ('in convertSIMP', nom,valeur)
        #if nom in ("PRESCRIBED_FLOWRATES", "PRESCRIBED_VELOCITIES", "PRESCRIBED_ELEVATIONS" ): return
        if obj.max==1 :
           if hasattr(obj.type[0],'ntuple') :

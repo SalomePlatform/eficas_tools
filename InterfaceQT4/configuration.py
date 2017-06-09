@@ -31,8 +31,9 @@ except : pass
 import os, sys,  types, re
 import traceback
 from PyQt5.QtWidgets import QMessageBox
-from  Editeur.utils import read_file
+from  Editeur.Eficas_utils import read_file
 from Extensions.i18n import tr
+
 
 class CONFIG_BASE(object):
 

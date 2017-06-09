@@ -52,7 +52,7 @@ from monWidgetCreeParam import MonWidgetCreeParam
 from . import browser
 from . import readercata
 
-DictExtensions= {"MAP" : ".map", "TELEMAC" : '.comm'}
+DictExtensions= {"MAP" : ".map", "TELEMAC" : '.cas'}
 
     
 
@@ -194,6 +194,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             if jdc==None :
                try :
                    self.jdc = self.readFile(self.fichier)
+                   if self.salome : self.appliEficas.addJdcInSalome( self.fichier)
                except :
                    print ("mauvaise lecture")
             else :
@@ -1076,7 +1077,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def determineNomFichier(self,path,extension):
     #-----------------------------------------------------#
       if self.appli.code in DictExtensions:
-         chaine1="JDC (*"+DictExtensions[self.appli.code]+");;"
+         chaine1=DictExtensions[self.appli.code]+" (*."+DictExtensions[self.appli.code]+");;"
          extensions= tr(chaine1+ "All Files (*)")
       else :
          extensions= tr("JDC (*.comm);;" "All Files (*)")
