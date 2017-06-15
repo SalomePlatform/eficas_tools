@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import os
 
-# répertoire du logiciel Eficas
+# rÃ©pertoire du logiciel Eficas
 eficasPath = ''
-if os.environ.has_key( "EFICAS_ROOT"):
+if "EFICAS_ROOT" in os.environ:
     eficasPath = os.environ["EFICAS_ROOT"]
 
 
