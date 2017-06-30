@@ -233,7 +233,7 @@ class TELEMACGenerator(PythonGenerator):
 
         nom=self.dicoCataToCas[obj.nom]
         if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
-              if s3 != '' and s3  != 'None'
+              if s3 != '' and s3  != 'None':
                 s3=s3.replace(';',',')
                 s3="'"+ s3 +"'"
               else:
