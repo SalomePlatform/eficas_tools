@@ -70,6 +70,8 @@ class monRBButtonCustom(QCheckBox):
         maLangue =  self.monOptionnel.parentMC.jdc.lang
         if hasattr(maDefinition,maLangue): 
           monAide = getattr(maDefinition,self.monOptionnel.parentMC.jdc.lang)
+        else : 
+          monAide = ""
       except :
           monAide = ""
       self.monOptionnel.parentMC.editor.affiche_commentaire(monAide)
