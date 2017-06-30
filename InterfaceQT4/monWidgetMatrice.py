@@ -37,6 +37,7 @@ from desWidgetMatrice  import Ui_desWidgetMatrice
 from six.moves import range
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtGui import QIcon
 
 
 class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
