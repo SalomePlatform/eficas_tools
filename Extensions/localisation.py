@@ -59,6 +59,7 @@ def localise(application, locale=None,file=None,translatorFichier=None, debug=Fa
        elif debug : 
            print ("Unable to load Code translator! No file or No translation" + translatorFichier)
        if debug : print (QApplication.installTranslator(code_translator))
+       else : QApplication.installTranslator(code_translator)
        
 
 if __name__ == "__main__":
