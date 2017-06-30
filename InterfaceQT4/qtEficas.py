@@ -265,6 +265,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.fileNew()
 
     def ajoutN1(self):
+        return
         self.menuN1 = self.menubar.addMenu(tr("Process Output"))
         self.actionN1 = QAction(self)
         self.actionN1.setText(tr("Process Output"))
