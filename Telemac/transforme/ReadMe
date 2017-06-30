@@ -7,3 +7,4 @@ modifier  DicoCasEnToCata en dicoCataToEng
 ./reEcrittsFr.py -i cata_name2fra_name.ts -d dicoCasFrToCata.py -t labelCataToIhmFr.ts
 regler à la main les histoires de ""
 modifier  DicoCasEnToCata en dicoCataToFr
+attention a defaut default...

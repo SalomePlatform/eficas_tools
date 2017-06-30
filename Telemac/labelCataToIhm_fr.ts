@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE TS><TS version="1.1" language="fr"><context>
     <name>@default</name>
     <message>
+        <source>GEOMETRY_FILE_FORMAT</source>
+        <translation>Format du fichier de geometrie</translation>
+    </message>
+    <message>
         <source>COEFFICIENT_TO_CALIBRATE_TIDAL_VELOCITIES</source>
         <translation>Coefficient de calage des vitesses de courant</translation>
     </message>
@@ -175,10 +179,6 @@
     <message>
         <source>DESCRIPTION_OF_LIBRARIES</source>
         <translation>Description des librairies</translation>
-    </message>
-    <message>
-        <source>GEOMETRY_FILE_FORMAT</source>
-        <translation>Format du fichier de geometrie</translation>
     </message>
     <message>
         <source>ORIGINAL_HOUR_OF_TIME</source>
