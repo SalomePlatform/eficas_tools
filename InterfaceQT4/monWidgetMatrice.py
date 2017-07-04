@@ -35,7 +35,7 @@ from .feuille         import Feuille
 from desWidgetMatrice  import Ui_desWidgetMatrice 
 
 from six.moves import range
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtGui import QIcon
 
@@ -92,7 +92,13 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
       if monItem==None : return
       texte=monItem.text()
       if texte=="" : return
-      val,ok=texte.toDouble() 
+      #try :
+      if 1 :
+        val=float(str(texte))
+        ok=True
+      #except :
+      else :
+        ok=False
       if ok == False :
 	self.editor.affiche_infos(tr("Entrer un float SVP"),Qt.red)
         monItem.setText("")
@@ -207,7 +213,12 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
           for j in range(self.nbCols):
               monItem=self.TBMatrice.item(i,j)       
               texte=monItem.text()
-              val,ok=texte.toDouble() 
+              try :
+                 val=float(str(texte))
+                 ok=True
+              except :
+                 ok=False
+              #val,ok=texte.toDouble() 
               if ok == False :
                  QMessageBox.critical( self, tr("Mauvaise Valeur"),tr( "l element ") + str(i) + "," +str(j) +tr("n est pas correct"))
               listeCol.append(val)

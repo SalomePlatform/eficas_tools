@@ -387,8 +387,9 @@ class MyTabview(object):
             msgBox.setText(tr("Le fichier ne sera pas sauvegarde."))
             msgBox.addButton(tr("&Sauvegarder"),1)
             msgBox.addButton(tr("&Quitter sans sauvegarder"),0)
+            msgBox.addButton(tr("&Annuler"),2)
             res=msgBox.exec_()
-            if res == 2 : res = 1
+            if res == 2 : return res
             if res == 0:
                 (ok, newName) = editor.saveFile()
                 if ok:
