@@ -1,3 +1,0 @@
-self.monObjetVisu.Start()
-self.monObjetVisu.VisuCable( "P0101010 , P0101011 , O0101010" , 0.00022783 )
-self.monObjetVisu.Visualise()

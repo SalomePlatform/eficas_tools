@@ -1,3 +1,0 @@
-self.monObjetVisu.Start()
-self.monObjetVisu.VisuPoutreCercle( element1D  ,  PLEIN  ,  CONSTANT  ,  2.0  ,  2.0  ,  0  ,  0 )
-self.monObjetVisu.Visualise()

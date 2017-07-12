@@ -1,3 +1,0 @@
-self.monObjetVisu.Start()
-self.monObjetVisu.VisuBarreGenerale( element1D )
-self.monObjetVisu.Visualise()

@@ -1,3 +1,0 @@
-self.monObjetVisu.Start()
-self.monObjetVisu.VisuGrille( element2D , 0 , 0 , 45.0   45.0 , , 0 , 0 , 0 , 0 , 0 , 0 )
-self.monObjetVisu.Visualise()

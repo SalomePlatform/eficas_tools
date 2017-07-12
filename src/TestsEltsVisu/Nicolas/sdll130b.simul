@@ -1,4 +1,0 @@
-self.monObjetVisu.Start()
-self.monObjetVisu.VisuPoutreRectangle( POUTRE , POU_AC  ,  PLEIN  ,  CONSTANT  ,  0  ,  0  ,  0  ,  0  ,  0.2  ,  0.5  ,  0.2  ,  0.5  ,  0,  0  ,  0  ,  0  )
-self.monObjetVisu.Orientation( POUTRE , POU_AC , 0 , 0 , 0 , 0 )
-self.monObjetVisu.Visualise()

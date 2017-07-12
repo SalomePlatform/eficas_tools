@@ -1,3 +1,0 @@
-self.monObjetVisu.Start()
-elf.monObjetVisu.VisuCoque("TUYAU , EFOND ", 0.02 , 0 , 0.0   -90.0 )
-self.monObjetVisu.Visualise()

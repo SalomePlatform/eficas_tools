@@ -1,5 +1,0 @@
-self.monObjetVisu.Start()
-self.monObjetVisu.VisuPoutreRectangle( AB  ,  PLEIN  ,  CONSTANT  ,  0.01  ,  0.01  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,0  )
-self.monObjetVisu.VisuPoutreRectangle( CA , GA , DG  ,  PLEIN  ,  CONSTANT  ,  0.01  ,  0.01  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  ,  0  )
-self.monObjetVisu.VisuPoutreRectangle( AE  ,  PLEIN  ,  HOMOTHETIQUE  ,  0.01  ,  0.01  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0  ,  0 ,  0  )
-self.monObjetVisu.Visualise()
