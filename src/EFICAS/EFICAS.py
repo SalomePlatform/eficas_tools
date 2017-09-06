@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 
-print "EFICAS.__init__: 1"
 import EFICAS_ORB__POA
 import SALOMEDS__POA
 import SALOME_ComponentPy
-
-print "EFICAS.__init__: 2"
-
-
-
 
 class SALOME_DriverPy_i(SALOMEDS__POA.Driver):
     """
@@ -17,7 +11,7 @@ class SALOME_DriverPy_i(SALOMEDS__POA.Driver):
     to provide persistence mechanism.
     """
     def __init__ (self, componentDataType):
-        print "SALOME_DriverPy.__init__: ",componentDataType
+        print ("SALOME_DriverPy.__init__: ", componentDataType)
         self._ComponentDataType = componentDataType
 
     def IORToLocalPersistentID(self, theSObject, IORString, isMultiFile, isASCII):
@@ -56,8 +50,8 @@ class SALOME_DriverPy_i(SALOMEDS__POA.Driver):
 
 
 class EFICAS(EFICAS_ORB__POA.EFICAS_Gen,
-              SALOME_ComponentPy.SALOME_ComponentPy_i,
-              SALOME_DriverPy_i ):
+        SALOME_ComponentPy.SALOME_ComponentPy_i,
+        SALOME_DriverPy_i ):
     """
         Pour etre un composant SALOME cette classe Python
         doit avoir le nom du composant et heriter de la
@@ -67,13 +61,10 @@ class EFICAS(EFICAS_ORB__POA.EFICAS_Gen,
     """
     def __init__ (self, orb, poa, contID, containerName, instanceName, 
                   interfaceName):
-        print "EFICAS.__init__: ",containerName,' ',instanceName
+        print ("EFICAS.__init__: ", containerName,' ', instanceName)
         SALOME_ComponentPy.SALOME_ComponentPy_i.__init__(self, orb, poa,
                     contID, containerName,instanceName, interfaceName, 0 )
         SALOME_DriverPy_i.__init__( self, 'OTHER' )                    
         # On stocke dans l'attribut _naming_service, une reference sur
         # le Naming Service CORBA
         self._naming_service=SALOME_ComponentPy.SALOME_NamingServicePy_i(self._orb)
-
-
-        

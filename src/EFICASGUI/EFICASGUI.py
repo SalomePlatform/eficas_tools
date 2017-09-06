@@ -2,21 +2,17 @@
 
 import os
 
-"""
-    Interface PyQt
-"""
 from PyQt5.QtWidgets import QMessageBox
-
-import salome
-import SalomePyQt
-
 from salome.kernel.studyedit import getStudyEditor
+import SalomePyQt
+import salome
 
-sgPyQt=SalomePyQt.SalomePyQt()
+
+sgPyQt = SalomePyQt.SalomePyQt()
 
 # -----------------------------------------------------------------------------
 
-print "EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::"
+print("EFicasGUI :: :::::::::::::::::::::::::::::::::::::::::::::::::::::")
 
 # Test Eficas directory
 eficasRoot = os.getenv("EFICAS_ROOT")
@@ -39,15 +35,15 @@ elif not os.path.isdir(eficasRoot):
 class GUIcontext:
     # menus/toolbars/actions IDs
     EFICAS_MENU_ID = 90
-    TELEMAC_ID       = 941
-    ADAO_ID          = 942
-    MAP_ID           = 943
-    CF_ID            = 944
-    MT_ID            = 945
-    SPECA_ID         = 946
-    SEP_ID           = 947
-    CARMEL3D_ID      = 948
-    MULTICATALOG_ID  = 949
+    TELEMAC_ID = 941
+    ADAO_ID = 942
+    MAP_ID = 943
+    CF_ID = 944
+    MT_ID = 945
+    SPECA_ID = 946
+    SEP_ID = 947
+    CARMEL3D_ID = 948
+    MULTICATALOG_ID = 949
 
     # constructor
     def __init__(self):
@@ -57,7 +53,7 @@ class GUIcontext:
         # create toolbar
         self.tid = sgPyQt.createTool("Eficas")
 
-        a = sgPyQt.createAction(GUIcontext.MULTICATALOG_ID, "Eficas MultiCatalogue","Lancer Eficas" , "Lancer Eficas",  "eficas.png")
+        a = sgPyQt.createAction(GUIcontext.MULTICATALOG_ID, "Eficas MultiCatalogue", "Lancer Eficas", "Lancer Eficas", "eficas.png")
         sgPyQt.createMenu(a, self.mid)
         sgPyQt.createTool(a, self.tid)
 
@@ -107,20 +103,21 @@ class GUIcontext:
 ################################################
 
 # study-to-context map
-__study2context__   = {}
+__study2context__ = {}
 # current context
 __current_context__ = None
 
-###
+
+# ##
 # set and return current GUI context
 # study ID is passed as parameter
-###
-def _setContext( studyID ):
+# ##
+def _setContext(studyID):
     global eficasRoot
     if eficasRoot is None:
         return
     global __study2context__, __current_context__
-    if not __study2context__.has_key(studyID):
+    if studyID not in __study2context__:
         __study2context__[studyID] = GUIcontext()
         pass
     __current_context__ = __study2context__[studyID]
@@ -129,162 +126,138 @@ def _setContext( studyID ):
 
 # -----------------------------------------------------------------------------
 
-def OnGUIEvent(commandID) :
-   if dict_command.has_key(commandID):
-      print "OnGUIEvent ::::::::::  commande associée  : ",commandID      
-      dict_command[commandID]()
-   else:
-      print "Pas de commande associée a : ",commandID
+def OnGUIEvent(commandID):
+    if commandID in dict_command:
+        print("OnGUIEvent ::::::::::  commande associée  : ", commandID)
+        dict_command[commandID]()
+    else:
+        print("Pas de commande associée a : ", commandID)
+
 
 # -----------------------------------------------------------------------------
 
 def setSettings():
-   """
-   Cette méthode permet les initialisations.
-   """
-   _setContext(sgPyQt.getStudyId())
+    """
+    Cette méthode permet les initialisations.
+    """
+    _setContext(sgPyQt.getStudyId())
+
 
 def activate():
-   """
-   Cette méthode permet l'activation du module, s'il a été chargé mais pas encore
-   activé dans une étude précédente.
-   
-   Portage V3.
-   """
-   setSettings()
+    """
+    Cette méthode permet l'activation du module, s'il a été chargé mais pas encore
+    activé dans une étude précédente.
+
+    Portage V3.
+    """
+    setSettings()
 
 
 # -----------------------------------------------------------------------------
 
 def activeStudyChanged(ID):
-   _setContext(ID)
-
-
-#def definePopup(theContext, theObject, theParent):    
-#   print "EFICASGUI --- definePopup"
-#   print "EFICASGUI --- definePopup"
-#   theContext= ""
-#   theObject = "100"
-#   theParent = "ObjectBrowser"
-#   a=salome.sg.getAllSelected()
-    
-#   selectedEntry = a[0]
-#   mySO = monEditor.study.FindObjectID(selectedEntry);
-#   aType = monEditor.getFileType(mySO)
-#   print aType
-#   return (theContext, theObject, theParent)
-
-
-#def customPopup(popup, theContext, theObject, theParent):
-#   a=salome.sg.getAllSelected()
-
-#   selectedEntry = a[0]
-#   mySO = monEditor.study.FindObjectID(selectedEntry);
-#   aType = monEditor.getFileType(mySO)
-
-#   print "EFICASGUI --- customPopup"
-#   print "EFICASGUI --- customPopup"
-#   print "EFICASGUI --- customPopup"
-#   print "EFICASGUI --- customPopup"
-#   print "EFICASGUI --- customPopup"
-#   print "EFICASGUI --- customPopup"
-#   print "EFICASGUI --- customPopup"
-#   print "EFICASGUI --- customPopup"
-#   popup.removeItem(99003)
-
+    _setContext(ID)
 
 
 # -----------------------------------------------------------------------------
 
 def runEficas():
-   print "-------------------------EFICASGUI::runEficas-------------------------"
-   import eficasSalome
-   eficasSalome.runEficas(multi=True)
-   
+    print("-------------------------EFICASGUI::runEficas-------------------------")
+    import eficasSalome
+    eficasSalome.runEficas(multi=True)
+
+
 def runEficaspourTelemac():
-   import eficasSalome
-   eficasSalome.runEficas( "TELEMAC" )
-   
-   
+    import eficasSalome
+    eficasSalome.runEficas("TELEMAC")
+
+
 def runEficaspourAdao():
-   print "runEficas Pour Ada"
-   import eficasSalome
-   eficasSalome.runEficas( "ADAO" ) 
-   
+    print("runEficas Pour Ada")
+    import eficasSalome
+    eficasSalome.runEficas("ADAO")
+
+
 def runEficaspourMT():
-   print "runEficas Pour MT"
-   import eficasSalome
-   eficasSalome.runEficas( "MT" ) 
-   
+    print("runEficas Pour MT")
+    import eficasSalome
+    eficasSalome.runEficas("MT")
+
+
 def runEficaspourSPECA():
-   print "runEficas Pour SPECA"
-   import eficasSalome
-   eficasSalome.runEficas( "SPECA" )
-   
+    print("runEficas Pour SPECA")
+    import eficasSalome
+    eficasSalome.runEficas("SPECA")
+
+
 def runEficaspourSEP():
-   print "runEficas Pour SEP"
-   import eficasSalome
-   eficasSalome.runEficas( "SEP" )
-   
+    print("runEficas Pour SEP")
+    import eficasSalome
+    eficasSalome.runEficas("SEP")
+
+
 def runEficaspourMap():
-   print "runEficas Pour Map "
-   import eficasSalome
-   eficasSalome.runEficas( "MAP" )
-   
-   
+    print("runEficas Pour Map ")
+    import eficasSalome
+    eficasSalome.runEficas("MAP")
+
+
 def runEficaspourCarmel3D():
-   print "runEficas Pour Carmel3D "
-   import eficasSalome
-   eficasSalome.runEficas( "CARMEL3D" )
-   
+    print("runEficas Pour Carmel3D ")
+    import eficasSalome
+    eficasSalome.runEficas("CARMEL3D")
+
+
 def runEficaspourCF():
-   print "runEficas Pour CF "
-   import eficasSalome
-   eficasSalome.runEficas( "CF" )
+    print("runEficas Pour CF ")
+    import eficasSalome
+    eficasSalome.runEficas("CF")
+
 
 def runEficasFichier(version=None):
-   """
-   Lancement d'eficas pour ASTER
-   si un fichier est sélectionné, il est ouvert dans eficas
-   """
-   fileName = None
-   code     = None
-   a=salome.sg.getAllSelected()
-   if len(a) == 1:
-      selectedEntry = a[0]
-      
-      editor = getStudyEditor()
-      mySO = editor.study.FindObjectID(selectedEntry);
-      aType = editor.getFileType(mySO)
-      aValue = editor.getFileName(mySO)
-      if aType !=  None :
-        fileName = aValue
-        code     = aType[15:]
-   else:        
-      QMessageBox.critical(None, "Selection Invalide",
-             "Selectionner un seul fichier SVP") 
-      return;
- 
-   import eficasSalome        
-   if code:
-        if version :
-            eficasSalome.runEficas( code, fileName, version=version)
-        else :
-            eficasSalome.runEficas( code, fileName)
-        
+    """
+    Lancement d'eficas pour ASTER
+    si un fichier est sélectionné, il est ouvert dans eficas
+    """
+    fileName = None
+    code = None
+    a = salome.sg.getAllSelected()
+    if len(a) == 1:
+        selectedEntry = a[0]
+
+        editor = getStudyEditor()
+        mySO = editor.study.FindObjectID(selectedEntry)
+        aType = editor.getFileType(mySO)
+        aValue = editor.getFileName(mySO)
+        if aType is not None:
+            fileName = aValue
+            code = aType[15:]
+    else:
+        QMessageBox.critical(None, "Selection Invalide",
+                             "Selectionner un seul fichier SVP")
+        return
+
+    import eficasSalome
+    if code:
+        if version:
+            eficasSalome.runEficas(code, fileName, version=version)
+        else:
+            eficasSalome.runEficas(code, fileName)
+
 
 # Partie applicative
 
-dict_command={
-                GUIcontext.TELEMAC_ID      : runEficaspourTelemac,
-                GUIcontext.ADAO_ID         : runEficaspourAdao,
-                GUIcontext.MT_ID           : runEficaspourMT,
-                GUIcontext.SPECA_ID        : runEficaspourSPECA,
-                GUIcontext.SEP_ID          : runEficaspourSEP,
-                GUIcontext.CF_ID           : runEficaspourCF,
-                GUIcontext.MAP_ID          : runEficaspourMap,
-                GUIcontext.CARMEL3D_ID     : runEficaspourCarmel3D,
-                GUIcontext.MULTICATALOG_ID : runEficas,
+dict_command = {
+                GUIcontext.TELEMAC_ID: runEficaspourTelemac,
+                GUIcontext.ADAO_ID: runEficaspourAdao,
+                GUIcontext.MT_ID: runEficaspourMT,
+                GUIcontext.SPECA_ID: runEficaspourSPECA,
+                GUIcontext.SEP_ID: runEficaspourSEP,
+                GUIcontext.CF_ID: runEficaspourCF,
+                GUIcontext.MAP_ID: runEficaspourMap,
+                GUIcontext.CARMEL3D_ID: runEficaspourCarmel3D,
+                GUIcontext.MULTICATALOG_ID: runEficas,
 
-                9041:runEficasFichier,
+                9041: runEficasFichier,
              }
+
