@@ -1,5 +1,5 @@
 your own custom EFICAS
-=======================
+======================
 
 User can choose to custom Eficas. They can decide which catalogs they used
 and which pdf reading tool they prefer. 

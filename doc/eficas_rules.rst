@@ -1,8 +1,8 @@
 .. _rules-label:
 
-===============================
+============
 Eficas rules 
-===============================
+============
 
 All the rules can be combinated, creating more complicated rules.
 
@@ -44,7 +44,7 @@ UN_PARMI
 
 
 EXCLUS
---------
+------
 
     EXCLUS means that, if one of the keyword is created, the other won't be allowed. 
  
@@ -98,7 +98,7 @@ PRESENT_PRESENT
 
 
 PRESENT_ABSENT
----------------
+--------------
 
     the rule means that if the FIRST keyword is selected, the others aren't allowed.
 

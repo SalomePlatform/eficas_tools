@@ -6,7 +6,7 @@ As in many GUI, a menu widget can be either a pull-down menu or a standalone con
 Eficas allows you to write (and reread) an unvalid file. At any time, user can save its works. 
 
 Choose a Code
----------------------
+-------------
 
 So try to build a new JDC.
 
@@ -22,7 +22,7 @@ Choose a version of the Code
    :align: center
 
 Enter commands
--------------------------
+---------------
 
 Eficas main widget provided two distinct views: The left size always contains the JDC explorer as a tree view. The right widget contains all informations used by the user to constructs the JDC. It shows which commands are available and which :ref:`rules-label`  have to be followed. Commands are append after this selected in the JDC tree.
 
@@ -42,7 +42,7 @@ The user  also can choose the way the commands are sorted, either by alphabetica
    :align: center
 
 Choosing command's keywords
----------------------------------
+---------------------------
 
 For each command, EFICAS shows which keywords  are available.
 
@@ -63,7 +63,7 @@ or
    :align: center
 
 types of item in the JDC (Jeu De Commande)
--------------------------------------------
+------------------------------------------
 
 In JDC, you can have :
 
@@ -103,7 +103,7 @@ described in the catalog.
 
 
 Attributes of a keyword
----------------------------
+-----------------------
 
 a parameter ("mot-clef simple") should have :
 
@@ -156,7 +156,7 @@ Input data panel depends on both these attributes. It forces the user to enter a
 
 
 Color chart
--------------
+-----------
 
 a very simple colors chart helps the user to know if a item is valid or not :
 
@@ -177,7 +177,7 @@ a very simple colors chart helps the user to know if a item is valid or not :
 
 
 Context Menus 
---------------
+-------------
 In the JDC tree, Context menus  (invoked by right-clicking) allow user to :
 
 - create comments in the tree
@@ -190,7 +190,7 @@ In the JDC tree, Context menus  (invoked by right-clicking) allow user to :
 
 
 Parameters 
-------------
+----------
 
 The Users can define parameters. As parameters, Eficas accepts :
 
@@ -213,7 +213,7 @@ To select the value in the modal dialog widget, highligh the corresponding line 
 
 
 Import data from file
------------------------
+---------------------
 
 The user also can import data from a ASCII text file by pushing button "Importer". He chooses to import part of  or the complete file.  
 
@@ -222,7 +222,7 @@ The user also can import data from a ASCII text file by pushing button "Importer
 
 
 Reports
----------------------
+-------
 You have acces to 
 
 - Rapport de Validation (Jdc Menu) : It resumes JDC errors
@@ -234,7 +234,7 @@ You have acces to
 
 
 Multiples files
----------------------
+---------------
 
 EFICAS allows you to open
 simultaneously files with differents catalogs  : for example a file with Openturns Study catalog and a file for Openturns wrapper. The user also can easely swap from one file to another by clicking on its tab.

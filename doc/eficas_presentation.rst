@@ -1,5 +1,5 @@
 What's EFICAS
-==============
+=============
 
 Name's origin
 -------------
@@ -10,7 +10,7 @@ It avoids misuse of commands which are not allowed in a given context.
 It insures integrity of the file.  
 
 General Behaviour
-------------------
+-----------------
 * Catalogs
 
 EFICAS can be used by multiple codes and handles with multiple versions of each code. It is customized with files named "Catalogue" : It contains all commands for a code.  Each command has a name and parametres which are defined by developpers.

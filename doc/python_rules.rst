@@ -1,8 +1,8 @@
 .. _python-label:
 
-===============================
+=======================
 rules for python syntax
-===============================
+=======================
 
 Variable names and identifier are similar to those in many other languages :
 ----------------------------------------------------------------------------
@@ -24,7 +24,7 @@ Some identifiers are reserved words :
 	- REGLE, VALIDATOR, 
 	- ETAPE, ENTITE
 
-Python's way for  assigning values to variables: 
+Python's way for  assigning values to variables : 
 -------------------------------------------------
 
 * Keep in mind that .comm are python files. The simplest form of assignement is : variable = value
