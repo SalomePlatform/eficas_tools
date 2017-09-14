@@ -53,6 +53,7 @@ from . import browser
 from . import readercata
 
 DictExtensions= {"MAP" : ".map", "TELEMAC" : '.cas'}
+debug = False
 
     
 
@@ -282,7 +283,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
          ###
          
       
-      #print ('in runPSEN_N1', dico)
+      print ('in runPSEN_N1', dico)
+      print (dico)
       from Run import run 
       run(dico)
       #res,txt_exception=run(dico)
@@ -306,7 +308,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          for k in dico['CONTINGENCY_PROCESSING']:
              #print (k)
              if k[0:19] == 'Component_List_For_' or k[0:21] =='Contingency_List_For_' :
-                newK=k.replace('___',' ')
+                newK=k.replace('__',' ')
                 l="'"+str(newK)+"'"
                 dico['CONTINGENCY_PROCESSING'][l]=dico['CONTINGENCY_PROCESSING'][k]
                 del dico['CONTINGENCY_PROCESSING'][k]
@@ -431,7 +433,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
              # Le convertisseur existe on l'utilise
              #appli = self
              p=convert.plugins[self.appliEficas.format_fichier_in]()
+             
              p.readfile(fn)
+
              if p.text=="" : self.nouveau=1
              pareil,texteNew=self.verifieCHECKSUM(p.text)
              #if texteNew == ""
@@ -441,7 +445,19 @@ class JDCEditor(Ui_baseWidget,QWidget):
              memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
              if memeVersion == 0 : texteNew=self.traduitCatalogue(texteNew)
              p.text=texteNew
+
+             #import cProfile, pstats, StringIO
+	     #pr = cProfile.Profile()
+             #pr.enable()
+
              text=p.convert('exec',self.appliEficas)
+             #pr.disable()
+             #s = StringIO.StringIO()
+             #sortby = 'cumulative'
+             #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+             #ps.print_stats()
+             #print (s.getvalue())
+
              if not p.cr.estvide():
                 self.affiche_infos("Erreur a la conversion",Qt.red)
         else :
@@ -910,7 +926,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
             else:
                 txt += eol
             txt=self.ajoutVersionCataDsJDC(txt)
-            checksum=self.get_checksum(txt)
+            if self.code != 'PSEN' and self.code != 'PSEN_N1' : checksum=self.get_checksum(txt)
+            else : checksum=''
             txt=txt+checksum
         if self.code=="TELEMAC" : return 1
         try:
@@ -1447,20 +1464,22 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if monMC== None : monMC= ouChercher.addentite(MCFils)
         monMC.isvalid()
 
-    #-------------------------------------#
+    #-------------------------------------------------#
     def getValeur(self,nomEtape,MCFils,listeAvant=()):
-    #-------------------------------------#
+    #-------------------------------------------------#
     # dans le JDC
 
         ouChercher=None
         for e in self.jdc.etapes:
             if e.nom == nomEtape : ouChercher=e; break
+        if debug : print ('etape trouvee', ouChercher)
         if ouChercher==None : return None
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
-              #print (mot, ouChercher)
+              if debug : print (mot, ouChercher)
               if ouChercher==None : return None
         monMC=ouChercher.get_child(MCFils,restreint="oui")
+        if debug : print ('monMC', monMC)
         if monMC== None : return None
         return monMC.valeur
 
@@ -1589,6 +1608,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             ouChercher=ouChercher.entites[k]
         MCADetruire=ouChercher.entites[nomDuMC]
         ouChercher.ordre_mc.remove(nomDuMC)
+        print ('remove de ', nomDuMC)
         del ouChercher.entites[nomDuMC]
         del self.dicoNouveauxMC[nomDuMC]
 
@@ -1608,6 +1628,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
         #Nouveau.ordre_mc=[]
         ouChercher.entites[nomDuMC]=Nouveau
         ouChercher.ordre_mc.append(nomDuMC)
+        #print ('ajout de ', nomDuMC)
+        #traceback.print_stack()
+        # ajout CIST sauvegarde
+        if nomDuMC in self.dicoNouveauxMC : del self.dicoNouveauxMC[nomDuMC]
         self.dicoNouveauxMC[nomDuMC]=('ajoutDefinitionMC',nomEtape,listeAvant,nomDuMC,typ,args)
         #print self.dicoNouveauxMC
 
@@ -1717,8 +1741,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
         indexFin=text.find(":FIN CHECKSUM")
         checkAvant=text[indexDeb:indexFin+13]
         textJDC=text[0:indexDeb]+text[indexFin+13:-1]
-        checksum=self.get_checksum(textJDC)
-        pareil=(checkAvant==checksum)
+        if self.code != 'PSEN'  and self.code != 'PSEN_N1':
+           checksum=self.get_checksum(textJDC)
+           pareil=(checkAvant==checksum)
+        else :
+           pareil=1
+        #if self.code=='PSEN'
         return pareil, textJDC
 
     #---------------------------#
@@ -1759,7 +1787,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def _newPSEN_N1(self):
     #---------------------------#
         texte="CASE_SELECTION();N_PROCESSING_OPTIONS();CONTINGENCY_OPTIONS();CONTINGENCY_SELECTION();\nCONTINGENCY_PROCESSING(); "
-        texte="CONTINGENCY_SELECTION();\nCONTINGENCY_PROCESSING(); "
+        #texte="CONTINGENCY_SELECTION();\nCONTINGENCY_PROCESSING(); "
         return texte
 
     #---------------------------#

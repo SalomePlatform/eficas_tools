@@ -189,7 +189,7 @@ class JDCTree( QTreeWidget,GereRegles ):
     def choisitPremier(self,name):
         self.editor.layoutJDCCHOIX.removeWidget(self.racine.fenetre)
         self.racine.fenetre.close()
-        new_node=self.racine.append_brother(name,'after')
+        new_node=self.racine.appendBrother(name,'after')
  
 # type de noeud
 COMMENT     = "COMMENTAIRE"
@@ -407,7 +407,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             pos = 'after'
         else:
             pos = 'before'
-        return self.append_brother( COMMENT, pos )
+        return self.appendBrother( COMMENT, pos )
                 
     def addParameters( self, after=True ):
         """
@@ -416,7 +416,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.editor.init_modif()
         if after: pos = 'after'
         else: pos = 'before'
-        child=self.append_brother( PARAMETERS, pos )
+        child=self.appendBrother( PARAMETERS, pos )
         return  child
     
     
@@ -434,7 +434,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
     # Methodes de creation et destruction de noeuds
     # Certaines de ces methodes peuvent etre appelees depuis l'externe
     #------------------------------------------------------------------
-    def append_brother(self,name,pos='after',plier=False):
+    def appendBrother(self,name,pos='after',plier=False):
         """
         Permet d'ajouter un objet frere a l'objet associe au noeud self
         par defaut on l'ajoute immediatement apres 
@@ -455,7 +455,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
           if   pos == 'before': index = index
           elif pos == 'after': index = index +1
           else:
-              print(six.text_type(pos), tr("  n'est pas un index valide pour append_brother"))
+              print(six.text_type(pos), tr("  n'est pas un index valide pour appendBrother"))
               return 0
           return self.treeParent.append_child(name,pos=index,plier=plier)
 
@@ -767,7 +767,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         child=None
         try :
         #if 1 :
-          child = self.append_brother(objet_a_copier,pos)
+          child = self.appendBrother(objet_a_copier,pos)
         except :
            pass
         return child

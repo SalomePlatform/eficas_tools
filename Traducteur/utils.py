@@ -40,6 +40,6 @@ def lineToDict(line):
 
 def DictToLine(d):
     """Transformation inverse: à partir d'un dictionnaire retourne une ligne"""
-    cols = d.keys()
+    cols = d
     cols.sort()
     return "".join([d[colno]for colno in cols])

@@ -134,11 +134,11 @@ def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION
     options=session.parse(sys.argv)
 
     from .qtEficas import Appli
-    app = QApplication(sys.argv)
-    Eficas=Appli(code=code,ssCode=None)
+    #app = QApplication(sys.argv)
+    #Eficas=Appli(code=code,ssCode=None,salome=0)
 
     from .ssIhm  import QWParentSSIhm
-    parent=QWParentSSIhm(code,Eficas,version)
+    Eficas=QWParentSSIhm(code,version)
 
     from . import readercata
     if not hasattr ( Eficas, 'readercata'):
@@ -150,6 +150,12 @@ def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION
     texte=loadJDC(fichier)
     parameters=getJdcParameters(texte,macro)
     return parameters
+
+def getEficasSsIhm(code='Adao',version='V0'):
+    from .qtEficasSsIhm import AppliSsIhm
+    app = QApplication(sys.argv)
+    Eficas=Appli(code=code,ssCode=None,salome=0)
+    return Eficas
 
 def getJdcParameters(jdc,macro):
     """

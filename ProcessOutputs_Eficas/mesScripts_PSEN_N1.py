@@ -1,45 +1,13 @@
 def EficasProcessXLS(listeparam) :
     print "dans processXLS"
     item=listeparam[0]
-    fileNameObj=item.object.get_child('XLS_file')
-    if fileNameObj : fileName=fileNameObj.get_valeur()
-    else : fileName = ""
-    if fileName == "" : return 0, 'Nom de fichier invalide'
+    dico=item.process_N1()
+    print dico
 
-    ongletListObj=item.object.get_child('Onglets')
-    if ongletListObj : ongletList= ongletListObj.get_valeur()
-    else : ongletList = [] 
-    if ongletList == [] : return 0, 'ongletList invalide'
-
-    busListObj=item.object.get_child('BusList')
-    if busListObj : busList= busListObj.get_valeur()
-    else : busList = [] 
-    if busList == [] : return 0, 'BusList invalide'
-
-    contListObj=item.object.get_child('ContList')
-    if contListObj : contList=contListObj.get_valeur()
-    else : contList = []
-    if contList == [] : return 0, 'ContList invalide'
-
-    dicoBus={}
-    dicoCont={}
-    for onglet in ongletList:
-        recherche=str(" ("+ str(onglet) +" )")
-        listeBusPourOnglet=[]
-        listeContPourOnglet=[]
-        for bus  in busList :  
-            nomBusSplit=str(bus).split(recherche)
-            if len(nomBusSplit) == 2 : listeBusPourOnglet.append(nomBusSplit[0])
-        for cont in contList : 
-            nomContSplit=str(cont).split(recherche)
-            if len(nomContSplit) == 2 : listeContPourOnglet.append(nomContSplit[0])
-        if listeBusPourOnglet != []  : dicoBus[onglet]=listeBusPourOnglet
-        if listeContPourOnglet != [] : dicoCont[onglet]=listeContPourOnglet
-
-    from Processor import processXLS
-    processXLS(fileName,dicoBus,dicoCont)
+    print "version pour Pascale --> decommenter les 2 lignes suivantes pour Laura"
+    #from Processor import processXLS
+    #processXLS(dico)
     
-    #if nouvelleVal != [] : prob.set_valeur(nouvelleVal)
 
 # le dictionnaire des commandes a la structure suivante :
 # la clef est la commande qui va proposer l action
@@ -51,7 +19,5 @@ def EficasProcessXLS(listeparam) :
 #	- appelable depuis un item valide uniquement 
 #	- toolTip
 dict_commandes={
-   'CONTINGENCY_PROCESSING': ( 
-       (EficasProcessXLS,"process",('item',),False,True,"process values "),
-                      ),
-  }
+   'CONTINGENCY_PROCESSING': ( (EficasProcessXLS,"process",('editor','item',),False,True,"process values "),),
+               }

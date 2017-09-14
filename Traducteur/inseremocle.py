@@ -21,7 +21,6 @@ import logging
 from Traducteur.parseur import FactNode
 from Traducteur.load import jdcSet 
 from Traducteur.dictErreurs import EcritErreur
-import string
 from Traducteur import regles
 debug=0
 

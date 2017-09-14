@@ -34,8 +34,9 @@ lang='en' #'fr'
 encoding='iso-8859-1'
 docPath=repIni
 
+affiche='ordre'
 
 #
 catalogues=(
-   ('PSEN_N1','default',os.path.join(repIni,'PSEN_Cata_N1.py'),'python','python'),
+   ('PSEN_N1','default',os.path.join(repIni,'PSEN_Cata_N1.py'),'ProcessOutputs','python'),
 )

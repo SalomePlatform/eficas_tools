@@ -21,6 +21,7 @@ class sModele :
 
    def __init__ (self):
        self.monModele=class_data.Modele()
+       self.monPost=class_data.Post_traitement()
 
 
 # --------------------------------------
@@ -42,11 +43,28 @@ class classeListesDB :
       self.listPostTraitement = None
       self.dicoListAffiche   = {}
       self.valeurEquationChoisie = None
-
+      self.listeConstantesAAfficher = []
+      self.listeEquationsAAfficher = []
+      self.listeCoefD  = []
+      self.listeCoefB  = []
+      self.dictParametresInitiaux = {}
+      self.listeParametresInitiaux= []
+      self.listeCoefInitiaux= []
+      self.listeCoefASupprimer= []
+      self.dicoCoefAffichageArr   = {}
+      self.dicoModeleFiltre = {}
+      self.dicoMateriauxFiltre = {}
+      self.monModele = None
+      self.listeDiffusion = []
+   
    def metAJour(self,valeur):
+      print ('metAJour')
       if valeur == None : return
       correspond=pckdb.DBRENAME
       self.listEquation, self.listModele,self.listPostTraitement=pckdb.read_pckdb(correspond[valeur])
+      self.dicoListeEquation   = {}
+      for equation in self.listEquation :
+          self.dicoListeEquation[equation.representation]=equation
 
    def getListEquation(self):
       return self.listEquation

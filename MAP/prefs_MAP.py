@@ -39,6 +39,7 @@ path_doc        = os.path.join(repIni,'Doc')
 exec_acrobat    = "/usr/bin/xpdf"
 savedir         = os.environ['HOME']
 affiche         = "groupe"
+taille          = 1400
 
 rep_cata=os.path.dirname(os.path.abspath(__file__))
  
@@ -53,4 +54,6 @@ catalogues=(
  ('MAP','Map',os.path.join(rep_cata,'mapcata.py'), 'essai'),
 )
 
+closeAutreCommande = True
+closeFrameRechercheCommande = True
 

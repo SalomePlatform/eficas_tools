@@ -78,7 +78,7 @@ def F_VectorSerie(statut, fv=NoCheckInNS) : return FACT(
     statut = statut,
     FROM = SIMP(statut = "o", typ = "TXM", into=("String", "Script", ), defaut="Script"),
     SCRIPT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
-        SCRIPT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=[OnlyStr(), FileExtVal('py'), FunctionVal(fv)], fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant si nécessaire la définition d'une variable interne de même nom que le concept parent", ang="Waiting for a script file name, with or without the full path to find it, containing if necessary the definition of an internal variable of the same name as the parent concept"),
+        SCRIPT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=[OnlyStr(), FileExtVal('py'), FunctionVal(fv)], fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant si ariable interne de meme nom que le concept parent", ang="Waiting for a script file name, with or without the full path to find it, containing if necessary the definition of an internal variable of the same name as the parent concept"),
         ),
     STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
         STRING = SIMP(statut = "o", typ = "TXM", fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur ou une matrice, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector or a matrix, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),

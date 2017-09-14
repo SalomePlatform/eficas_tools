@@ -25,7 +25,15 @@
 #from Accas import ASSD, JDC_CATA, AU_MOINS_UN, PROC, SIMP, FACT, OPER, MACRO, BLOC, A_VALIDATOR
 from Accas import *
 import opsPSEN_N1
+import pn
 #
+#class loi      ( ASSD ) : pass
+#class variable ( ASSD ) : pass
+class sd_charge     ( ASSD ) : pass
+class sd_generateur ( ASSD ) : pass
+class sd_ligne     ( ASSD ) : pass
+class sd_transfo ( ASSD ) : pass
+class sd_moteur ( ASSD ) : pass
 #
 
 # import types
@@ -34,6 +42,7 @@ class Tuple:
      self.ntuple=ntuple
 
    def __convert__(self,valeur):
+     import types
      if type(valeur) == types.StringType:
        return None
      if len(valeur) != self.ntuple:
@@ -72,21 +81,35 @@ class Tuple:
 #CONTEXT.debug = 1
 JdC = JDC_CATA ( code = 'PSEN',
                  execmodul = None,
-                 regles = ( AU_MOINS_UN ( 'CASE_SELECTION' ),
-                            # AU_MOINS_UN ( 'DIRECTORY' ),
-                            # AU_MOINS_UN ( 'DISTRIBUTION' ),
-                            # AU_MOINS_UN ( 'SIMULATION' ),
+                 regles = ( AU_MOINS_UN ( 'CASE_SELECTION', 'CONTINGENCY_PROCESSING' ),
+                            AU_MOINS_UN ( 'CONTINGENCY_SELECTION','N_PROCESSING_OPTIONS','CONTINGENCY_PROCESSING' ),
+                            PRESENT_PRESENT ( 'CONTINGENCY_SELECTION','CONTINGENCY_OPTIONS' ),
+                            PRESENT_PRESENT ( 'CONTINGENCY_PROCESSING','CONTINGENCY_OPTIONS' ),
+                             AU_MOINS_UN ( 'SIMULATION' ),
                             # AU_PLUS_UN ( 'PSSE_PARAMETERS' ),
-                            # AU_PLUS_UN ( 'DIRECTORY' ),
-                            # AU_PLUS_UN ( 'SIMULATION' ),
-                            # AU_PLUS_UN ( 'CORRELATION' ),
-                            # AU_PLUS_UN ( 'N_1_GENERATORS' ),
+                            AU_PLUS_UN ( 'CASE_SELECTION' ),
+                            AU_PLUS_UN ( 'CONTINGENCY_OPTIONS' ),
+                            AU_PLUS_UN ( 'CONTINGENCY_SELECTION' ),
+                            AU_PLUS_UN ( 'CONTINGENCY_PROCESSING' ),
+                            AU_PLUS_UN ( 'N_PROCESSING_OPTIONS' ),
                             # AU_PLUS_UN ( 'N_1_LINES' ),
                             # AU_PLUS_UN ( 'N_1_LOADS' ),
                             # AU_PLUS_UN ( 'N_1_TRANSFORMERS' ),
 
                             ),
                  ) # Fin JDC_CATA
+
+MODIFICATION_CATALOGUE = MACRO ( nom = "MODIFICATION_CATALOGUE",
+                     sd_prod = pn.modification_catalogue,
+                     op_init=  pn.modification_catalogue2,
+                     op=None,
+                     UIinfo={"groupes":("CACHE")},
+                     Fonction=SIMP(statut='o', typ='TXM', into=['ajoutDefinitionMC']),
+                     Etape=SIMP(statut='o', typ='TXM',),
+                     Genea=SIMP(statut='o', typ='TXM', min=0, max='**'),
+                     NomSIMP=SIMP(statut='o', typ='TXM',),
+                     TypeSIMP=SIMP(statut='o', typ='TXM',),
+                     PhraseArguments=SIMP(statut='o', typ='TXM',),)
 
 
 # --------------------------------------------------
@@ -98,7 +121,7 @@ CASE_SELECTION = MACRO ( nom = "CASE_SELECTION",
                       op_init = opsPSEN_N1.INCLUDE_context,
                       fichier_ini = 1,
                       op = None,
-                      fr = "Sélectionnez les cas à analyser",
+                      fr = "Selectionnez les cas a analyser",
                       ang = 'Select the cases to analyze',
                       PSSE_path = SIMP(statut="o",typ='Repertoire',defaut='C:\Program Files (x86)\PTI\PSSE33\PSSBIN'),
                       output_folder = SIMP(statut="o", typ="Repertoire"),
@@ -112,7 +135,7 @@ CASE_SELECTION = MACRO ( nom = "CASE_SELECTION",
                  )
 N_PROCESSING_OPTIONS = PROC ( nom = 'N_PROCESSING_OPTIONS',
                             op = None,
-                            ang = "Select whether the program should be displaying data ablout the different categories. The values displayed will be the min, max, and mean of each item, plus a chart.",  
+                            ang = "Select whether the program should be displaying data about the different categories.\nThe values displayed will be the min, max, and mean of each item, plus a chart.",
                            Output_bus_values = SIMP(statut = 'o', typ = bool, defaut = True),
                            Output_lines_values = SIMP(statut = 'o', typ = bool, defaut = True),
                            Output_transformer_values = SIMP(statut = 'o', typ = bool, defaut = True),
@@ -128,7 +151,7 @@ N_PROCESSING_OPTIONS = PROC ( nom = 'N_PROCESSING_OPTIONS',
 
 CONTINGENCY_OPTIONS = PROC (nom = 'CONTINGENCY_OPTIONS',
                             op = None,
-                            
+
                             GeneralOptions = FACT(statut='o',
                                 Vmin = SIMP(statut = 'o', typ = 'R', defaut = 0.9, val_min = 0),
                                 Vmax = SIMP(statut = 'o', typ = 'R', defaut = 1.1, val_min = 0),
@@ -139,7 +162,8 @@ CONTINGENCY_OPTIONS = PROC (nom = 'CONTINGENCY_OPTIONS',
                                 TripLines = SIMP(statut = 'o', typ = bool, defaut = True),
                                 TripTransfos = SIMP(statut = 'o', typ = bool, defaut = True),
                                 TripGenerators = SIMP(statut = 'o', typ = bool, defaut = True),
-                                ),                            
+                                TripBuses = SIMP(statut = 'o', typ = bool, defaut = False),
+                                ),
 
                             LoadFlowOptions = FACT(statut='o',
                                 AdjustTaps = SIMP(statut = 'o', typ = 'TXM', into = ['0 - Lock', '1 - Stepping', '2 - Direct'], defaut = '1 - Stepping'),
@@ -150,15 +174,15 @@ CONTINGENCY_OPTIONS = PROC (nom = 'CONTINGENCY_OPTIONS',
                                 FlatStart = SIMP(statut = 'o', typ = bool, defaut = False),
                                 VarLimits = SIMP(statut = 'o', typ = 'I', defaut = 99,ang = 'if set to -1, var limits will not be applied'),
                                 ),
-                            
-                            OutputOptions = FACT(statut='o',
-                                consigne1 = SIMP(statut='o',homo='information',typ = "TXM",defaut = 'Output PSSE multiple contingency report to Shell?'),
-                                MultipleContingencyReport = SIMP(statut = 'o', typ = bool, defaut = True, ang = 'Output PSSE multiple contingency report to Shell?'),
-                                consigne2 = SIMP(statut='o',homo='information',typ = "TXM",defaut = 'Write an Excel file for the results of each case file?'),
-                                WriteIndivExcels = SIMP(statut = 'o', typ = bool, defaut = True),
-                                consigne3 = SIMP(statut='o',homo='information',typ = "TXM",defaut = 'Add a tab in Excel results file for the differences between the max flow rate (MVAR) and the actual flow rate in lines and transformers?'),
-                                WriteFlowDifs = SIMP(statut = 'o', typ = bool, defaut = True),                            
-                            ),
+
+#                            OutputOptions = FACT(statut='o',
+#                                consigne1 = SIMP(statut='o',homo='information',typ = "TXM",defaut = 'Output PSSE multiple contingency report to Shell?'),
+#                                MultipleContingencyReport = SIMP(statut = 'o', typ = bool, defaut = True, ang = 'Output PSSE multiple contingency report to Shell?'),
+#                                consigne2 = SIMP(statut='o',homo='information',typ = "TXM",defaut = 'Write an Excel file for the results of each case file?'),
+#                                WriteIndivExcels = SIMP(statut = 'o', typ = bool, defaut = True),
+#                                consigne3 = SIMP(statut='o',homo='information',typ = "TXM",defaut = 'Add a tab in Excel results file for the differences between the max flow rate (MVAR) and the actual flow rate in lines and transformers?'),
+#                                WriteFlowDifs = SIMP(statut = 'o', typ = bool, defaut = True),
+#                            ),
                         )
 
 
@@ -167,17 +191,20 @@ CONTINGENCY_OPTIONS = PROC (nom = 'CONTINGENCY_OPTIONS',
 CONTINGENCY_SELECTION = PROC(nom='CONTINGENCY_SELECTION',op = None,
                       SelectionMethod = SIMP(statut='o',typ='TXM',into=['CaseSelectionFromFile','SelectAllCases','SelectWorstCases'],
                       ),
-                      
+
                       b_file = BLOC(condition="SelectionMethod=='CaseSelectionFromFile'",
                       CaseSelectionFromFiles = FACT(
                            statut = 'o',
-                           regles=(AU_MOINS_UN('branch_cases','transformer_cases','high_voltage_cases','low_voltage_cases',),),
-                           branch_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde'),),
-                           transformer_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde',),),
-                           high_voltage_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde'),),
-                           low_voltage_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde'),),
+                           case = FACT(statut='o',max='**',
+                                       case_name=SIMP(statut='o',typ='TXM'),
+                                       csv_file= SIMP(statut='o', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)',),),),
+#                           regles=(AU_MOINS_UN('branch_cases','transformer_cases','high_voltage_cases','low_voltage_cases',),),
+#                           branch_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde'),),
+#                           transformer_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde',),),
+#                           high_voltage_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde'),),
+#                           low_voltage_cases = SIMP(statut='o', defaut='', typ = ('Fichier', 'CSV file (*.csv);;All Files (*)','Sauvegarde'),),
                         ),
-                        
+
 #                      CaseSelectionFromFile = FACT(
 #                           statut = 'o',
 #                           input_path = SIMP(statut="o",typ='Repertoire'),
@@ -186,23 +213,24 @@ CONTINGENCY_SELECTION = PROC(nom='CONTINGENCY_SELECTION',op = None,
 #                           high_cases = SIMP(statut='o', typ='TXM'),
 #                           low_cases = SIMP(statut='o', typ='TXM'),
 #                        ),
-                        
+
                         ),
-                        
+
 #                      b_all = BLOC(condition="SelectionMethod=='SelectAllCases'",
 #                      SelectAllCases = FACT(
 #                           statut='o',
 #                           all_cases = SIMP(statut='o', typ=bool, defaut = True),
 #                         ),
 #                         ),
-                         
+
                       b_worst = BLOC(condition="SelectionMethod=='SelectWorstCases'",
                       SelectWorstCases = FACT(
-                          regles = (UN_PARMI('AvgBranchLoad', 'AvgBranchLoadPercent'), UN_PARMI('AvgTransformerLoad', 'AvgTransformerLoadPercent'), UN_PARMI('AvgHighVoltage', 'AvgHighVoltagePercent'), UN_PARMI('AvgLowVoltage', 'AvgLowVoltagePercent'),),
+                          regles = (AU_MOINS_UN('AvgLineLoad', 'AvgLineLoadPercent','AvgTransformerLoad','AvgTransformerLoadPercent','AvgHighVoltage', 'AvgHighVoltagePercent','AvgLowVoltage', 'AvgLowVoltagePercent'),
+                                    EXCLUS('AvgLineLoad', 'AvgLineLoadPercent'),EXCLUS('AvgTransformerLoad','AvgTransformerLoadPercent'),EXCLUS('AvgHighVoltage', 'AvgHighVoltagePercent'),EXCLUS('AvgLowVoltage', 'AvgLowVoltagePercent'),),
                           statut = 'o',
                           consigne = SIMP(statut='o',homo='information',typ = "TXM",defaut = 'Choose at least one of the potential selection criteria from the SelectWorstCases list on the right.'),
-                          AvgBranchLoad = SIMP(statut = 'f', typ = 'I', defaut = 0, val_min = 0),
-                          AvgBranchLoadPercent = SIMP(statut = 'f', typ = 'I', defaut = 0, val_min = 0, val_max = 100),
+                          AvgLineLoad = SIMP(statut = 'f', typ = 'I', defaut = 0, val_min = 0),
+                          AvgLineLoadPercent = SIMP(statut = 'f', typ = 'I', defaut = 0, val_min = 0, val_max = 100),
                           AvgTransformerLoad = SIMP(statut = 'f', typ = 'I', defaut = 0, val_min = 0),
                           AvgTransformerLoadPercent = SIMP(statut = 'f', typ = 'I', defaut = 0, val_min = 0, val_max = 100),
                           AvgHighVoltage = SIMP(statut = 'f', typ = 'I', defaut = 0, val_min = 0),
@@ -214,10 +242,10 @@ CONTINGENCY_SELECTION = PROC(nom='CONTINGENCY_SELECTION',op = None,
 
 
                       Automatic_N_2_Selection = FACT(statut='f',
-                                                     
+
                           BusesList = SIMP(statut = 'o', typ = 'R', min = 0, max = '**', defaut = (), homo = 'SansOrdreNiDoublon'),
                           LinesList = SIMP(statut = 'o', typ = 'R', min = 0, max = '**', defaut = (), homo = 'SansOrdreNiDoublon'),
-                          TransformersList = SIMP(statut = 'o', typ = 'TXM', min = 0, max = '**', defaut = (), homo = 'SansOrdreNiDoublon'),                                                    
+                          TransformersList = SIMP(statut = 'o', typ = 'TXM', min = 0, max = '**', defaut = (), homo = 'SansOrdreNiDoublon'),
                         ),
 
                      MultipleContingencyList = FACT (statut='f',
@@ -230,7 +258,7 @@ CONTINGENCY_SELECTION = PROC(nom='CONTINGENCY_SELECTION',op = None,
 CONTINGENCY_PROCESSING = MACRO ( nom = 'CONTINGENCY_PROCESSING',
                         sd_prod = opsPSEN_N1.PROCESS,
                         op_init = opsPSEN_N1.PROCESS_context,
-                                                
+
                         #sd_prod=None,
 
                         op = None,
@@ -238,13 +266,15 @@ CONTINGENCY_PROCESSING = MACRO ( nom = 'CONTINGENCY_PROCESSING',
                         fr = "",
                         ang="",
                         XLS_file = SIMP(statut="o", typ = ('Fichier', 'XLS file (*.xls);;All Files (*)',),),
-                        TabList = SIMP(statut = 'f', typ = 'TXM', min = 0, max = '**',  homo = 'SansOrdreNiDoublon'), 
-                        
+                        b_TabList = BLOC(condition="XLS_file != None and XLS_file != ''",
+                            TabList = SIMP(statut = 'o', typ = 'TXM', min = 0, max = '**', defaut = (), homo = 'SansOrdreNiDoublon'), ),
+
 #                        b_highVoltage = BLOC(condition="'High Voltage 0' in TabList",
 #                                                     HighVoltageBuses = SIMP(statut = 'o', typ = 'TXM', min = 0, max = '**', defaut = (), homo = 'SansOrdreNiDoublon'),
 #                                                     HighVoltageContingencies = SIMP(statut = 'o', typ = 'TXM', min = 0, max = '**', defaut = (), homo = 'SansOrdreNiDoublon'),
 #                                                     ),
-                        
+
                     )
 
-Ordre_Des_Commandes = ('CASE_SELECTION' , 'N_PROCESSING_OPTIONS' , 'CONTINGENCY_OPTIONS' , 'CONTINGENCY_SELECTION',)
+Ordre_Des_Commandes = ('CASE_SELECTION' , 'N_PROCESSING_OPTIONS' , 'CONTINGENCY_SELECTION', 'CONTINGENCY_OPTIONS' ,'CONTINGENCY_PROCESSING',)
+Classement_Commandes_Ds_Arbre = ('CASE_SELECTION' , 'N_PROCESSING_OPTIONS' , 'CONTINGENCY_SELECTION', 'CONTINGENCY_OPTIONS' ,'CONTINGENCY_PROCESSING',)

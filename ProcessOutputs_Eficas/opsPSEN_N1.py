@@ -19,21 +19,21 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-print "version en dur"
-from ExtractGeneratorLoadLineandTransfoDico import *
-#from ExtractGeneratorLoadLineandTransfoDico import ExtractGeneratorLoadLineandTransfoDico2
+from ExtractGeneratorLoadLineandTransfoDicoProcess import *
+import os
 
-#import Storage
+path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','TreatOutputs'))
+sys.path.append(path1)
+import Options
 
 def INCLUDE(self,PSSE_path,**args):
    """
        Fonction sd_prod pour la macro INCLUDE
    """
    CaseFolder = args['output_folder']
-   #Storage.MaximumDepth = args['MaxDepth']
-   #print('casefolder loaded')
-   if CaseFolder==None: return
-
+   Options.RecursiveDepth = args['MaxDepth']
+   if CaseFolder==None:
+      return
    reevalue=0
    if hasattr(self,'fichier_ini'):
        reevalue=1
@@ -57,7 +57,7 @@ def INCLUDE(self,PSSE_path,**args):
    CaseFile = ''
    FolderList = os.listdir(CaseFolder)
    for folder in FolderList:
-      if folder[0:7] == 'package':
+      if folder[0:7] == 'package' or folder[0:4]== 'core':
          # Get BaseCase.sav inside the first package folder we find
          FolderContents = os.listdir(os.path.join(CaseFolder, folder))
          for file in FolderContents:
@@ -65,44 +65,42 @@ def INCLUDE(self,PSSE_path,**args):
                CaseFile = os.path.join(os.path.join(CaseFolder, folder), file)
                break
          break
-   print "ops before try"
 
            
-   try:
-      #MachineDico,LoadDico,LineDico,TransfoDico,MotorDico,BusDico,BranchesDico,BusNominal = ExtractGeneratorLoadLineandTransfoDico(CaseFile, PSSE_path)
-      # BusList = getBusNominalkV(CaseFile)
+   #try:
+   if 1 :
       BusList, LinesList, TransfosList = getNominalkV(CaseFile)
+      #print "version en dur : decommenter la ligne suivante"
       #getTrueLines(CaseFile)
-   except Exception, e:
-      exc_type, exc_obj, exc_tb = sys.exec_info()
-      print(e)
-      print(exc_type, exc_tb.tb_lineno)
+   #except Exception, e:
+   #   exc_type, exc_obj, exc_tb = sys.exec_info()
+   #   print(e)
+   #   print(exc_type, exc_tb.tb_lineno)
+
    
    for e in self.jdc.etapes:
        if e.nom == 'CASE_SELECTION' : 
           etape=e
           break
-   self.jdc.appli.changeIntoMC(e, 'BusesList', BusList)
-   self.jdc.appli.changeIntoMC(e, 'LinesList', LinesList)
-   self.jdc.appli.changeIntoMC(e, 'TransformersList', TransfosList)
+   self.jdc.editor.changeIntoMC(e, 'BusesList', BusList)
+   self.jdc.editor.changeIntoMC(e, 'LinesList', LinesList)
+   self.jdc.editor.changeIntoMC(e, 'TransformersList', TransfosList)
 
-   self.jdc.appli.changeIntoDefMC('CONTINGENCY_SELECTION', ('Automatic_N_2_Selection', 'BusesList'), BusList)
-   self.jdc.appli.changeIntoDefMC('CONTINGENCY_SELECTION', ('Automatic_N_2_Selection', 'LinesList'), LinesList)
-   self.jdc.appli.changeIntoDefMC('CONTINGENCY_SELECTION', ('Automatic_N_2_Selection', 'TransformersList'), TransfosList)
+   self.jdc.editor.changeIntoDefMC('CONTINGENCY_SELECTION', ('Automatic_N_2_Selection', 'BusesList'), BusList)
+   self.jdc.editor.changeIntoDefMC('CONTINGENCY_SELECTION', ('Automatic_N_2_Selection', 'LinesList'), LinesList)
+   self.jdc.editor.changeIntoDefMC('CONTINGENCY_SELECTION', ('Automatic_N_2_Selection', 'TransformersList'), TransfosList)
    
 
    try:
-       #updateConts()
-       #self.jdc.appli.changeIntoDefMC('CONTINGENCY_SELECTION', ('MultipleContingencyList', 'ComponentList'), Storage.ContFullList)
-       ContFullList=('AAAA','ZER','t__uuu','nkop','iop')
-       self.jdc.appli.changeIntoDefMC('CONTINGENCY_SELECTION', ('MultipleContingencyList', 'ComponentList'), ContFullList)
-   except Exception, e:
+       print "version en dur : decommenter la ligne suivante"
+       #a = updateConts()
+       self.jdc.editor.changeIntoDefMC('CONTINGENCY_SELECTION', ('MultipleContingencyList', 'ComponentList'), Options.ContFullList)
+   except Exception as e:
       exc_type, exc_obj, exc_tb = sys.exec_info()
       print(e)
       print(exc_type, exc_tb.tb_lineno)
 
 
-   #self.jdc.ajoutMC(e,'TransfosList',listeTuple)
 
 
 
@@ -113,29 +111,24 @@ def INCLUDE_context(self,d):
    for k,v in self.g_context.items():
       d[k]=v
 
-def getXLS(fileName) :
-    dico={}
-    dico['onglet1']=(('bus1','bus2','bus3'),('contin1','contin2','contin3'))
-    dico['onglet2']=(('bus4','bus5'),('contin4','contin5','contin6'))
-    dico['onglet3']=(('bus6','bus7'),('contin8',))
-    print dico
-    return dico
-
 
 def PROCESS_context(self,d):
     print "dans le init du Process"
+    if self.get_child('XLS_file').valeur == "" or self.get_child('XLS_file').valeur== None : return
+    self.OngletsSelectionnes= self.get_child('b_TabList').get_child('TabList').valeur
+    print "fin de PROCESS_context"
 
 def PROCESS(self,XLS_file,**args):
 
-
-
-    print "dans PROCESS"
+    # self = Accas.A_MACRO_ETAPE.MACRO_ETAPE
+    self.sauve_args=args
     if XLS_file == "" or XLS_file == None: return
+    #print XLS_file
     #Storage.csvFileName = XLS_file
-    # c est la premier fois
+    # c est la premiere fois
     
     if not (hasattr(self,'sheets')) :
-       print "dans if" 
+       #print 'attention en dur'
        #from Processor_Storage import *
        #print getSheets
        #getSheets()
@@ -144,20 +137,14 @@ def PROCESS(self,XLS_file,**args):
        #print ContingencyList
        #Storage.selectedDoubleRow[Storage.sheets[0]]=['PV MATIMBA']
        #Storage.selectedDoubleCol[Storage.sheets[0]]=['MAZENOD_MHDAM_LI1_']
-       #self.jdc.appli.changeIntoMC(self,'TabList',Storage.sheets)
+       #self.jdc.editor.changeIntoMC(self,'TabList',Storage.sheets)
        #self.sheets=Storage.sheets
        #self.OngletsValeurs=[]
-       self.sheets=getXLS(XLS_file)
-       self.jdc.appli.changeIntoMC(self,'TabList',self.sheets.keys())
-      
-       for k in self.sheets.keys():
-           nom='Component_List_For_'+k
-           monInto=self.sheets[k][0]
-           self.jdc.appli.ajoutDefinitionMC('CONTINGENCY_PROCESSING',nom,'TXM',min=0, max='**', into=monInto, homo= 'SansOrdreNiDoublon')
-           nom='Contingency_List_For_'+k
-           monInto=self.sheets[k][1]
-           self.jdc.appli.ajoutDefinitionMC('CONTINGENCY_PROCESSING',nom,'TXM',min=0, max='**', into=monInto, homo= 'SansOrdreNiDoublon')
 
+       from Processor import getXLSinfo        
+       self.sheets = getXLSinfo(XLS_file)
+       self.jdc.editor.changeIntoMC(self,'TabList',self.sheets.keys(),('b_TabList',))
+ 
        self.MCAjoutes=[]
        self.OngletsSelectionnes=[]
        
@@ -165,23 +152,28 @@ def PROCESS(self,XLS_file,**args):
        # On a selectionne un onglet 
        # On teste si on a modifie la liste des onglets
 
-       nouveauxOngletsSelectionnes= self.get_child('TabList').getval()
+       nouveauxOngletsSelectionnes= self.get_child('b_TabList').get_child('TabList').valeur
        if  nouveauxOngletsSelectionnes==self.OngletsSelectionnes : return
        if nouveauxOngletsSelectionnes==() or nouveauxOngletsSelectionnes == [] :
-          for MC in self.MCAjoutes :
-              self.jdc.appli.deleteMC(self,MC)
+          for MC in self.MCAjoutes : self.jdc.editor.deleteMC(self,MC,('b_TabList',))
           self.MCAjoutes=[]
           self.OngletsSelectionnes=[]
+          self.jdc.editor.fenetreCentraleAffichee.reaffiche()
           return
           
        for Onglet in nouveauxOngletsSelectionnes:
            if Onglet in self.OngletsSelectionnes : continue
 
-           MCFils='Contingency_List_For_'+Onglet
-           self.jdc.appli.ajoutMC(self,MCFils,[])
-           self.MCAjoutes.append(MCFils)
            MCFils='Component_List_For_'+Onglet
-           self.jdc.appli.ajoutMC(self,MCFils,[])
+           monInto=self.sheets[Onglet][0]
+           self.jdc.editor.ajoutDefinitionMC('CONTINGENCY_PROCESSING',('b_TabList',),MCFils,'TXM',min=0, max='**', into=monInto, homo= 'SansOrdreNiDoublon')
+           self.jdc.editor.ajoutMC(self,MCFils,[],('b_TabList',))
+           self.MCAjoutes.append(MCFils)
+
+           MCFils='Contingency_List_For_'+Onglet
+           monInto=self.sheets[Onglet][1]
+           self.jdc.editor.ajoutDefinitionMC('CONTINGENCY_PROCESSING',('b_TabList',),MCFils,'TXM',min=0, max='**', into=monInto, homo= 'SansOrdreNiDoublon')
+           self.jdc.editor.ajoutMC(self,MCFils,[],('b_TabList',))
            self.MCAjoutes.append(MCFils)
 
 
@@ -189,35 +181,15 @@ def PROCESS(self,XLS_file,**args):
            if Onglet in nouveauxOngletsSelectionnes : continue
 
            MCFils='Contingency_List_For_'+Onglet
-           self.jdc.appli.deleteMC(self,MCFils)
+           self.jdc.editor.deleteMC(self,MCFils,('b_TabList',))
+           self.jdc.editor.deleteDefinitionMC('CONTINGENCY_PROCESSING',('b_TabList',),MCFils)
            self.MCAjoutes.remove(MCFils)
 
            MCFils='Component_List_For_'+Onglet
-           self.jdc.appli.deleteMC(self,MCFils)
+           self.jdc.editor.deleteMC(self,MCFils,('b_TabList',))
+           self.jdc.editor.deleteDefinitionMC('CONTINGENCY_PROCESSING',('b_TabList',),MCFils)
            self.MCAjoutes.remove(MCFils)
 
        self.OngletsSelectionnes=nouveauxOngletsSelectionnes
-     
-
-
-      # OldBusValeurs= self.get_child('BusList').getval()
-#       OldContValeurs= self.get_child('ContList').getval()
-#       if OldBusValeurs ==  None : OldBusValeurs=[]
-#       if OldContValeurs ==  None : OldContValeurs=[]
-#
-#       listeBus=[]
-#       listeCont=[]
-#       listeBusCoches=[]
-#       listeContCoches=[]
-#       for o in OngletsValeurs :
-#           for b in self.dico[o][0]:
-#               texte=b+" ("+ str(o) +" )"
-#               listeBus.append(str(texte))
-#               if texte in OldBusValeurs : listeBusCoches.append(str(texte))
-#           for c in self.dico[o][1]:
-#               texte=c+" ("+ str(o) +" )"
-#               listeCont.append(str(texte))
-#               if texte in OldContValeurs : listeContCoches.append(str(texte))
-#           
-#       self.jdc.appli.changeIntoMCandSet(self,'BusList',listeBus,listeBusCoches)
-#       self.jdc.appli.changeIntoMCandSet(self,'ContList',listeCont,listeContCoches)
+       self.jdc.editor.fenetreCentraleAffichee.reaffiche()
+   

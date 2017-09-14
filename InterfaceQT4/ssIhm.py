@@ -51,16 +51,9 @@ class appliEficasSSIhm(object):
        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
         
 class QWParentSSIhm(object):
-   def __init__(self,code,appliEficas,version_code,ssCode=None):
+   def __init__(self,code,version_code):
         self.ihm="QT"
         self.code=code
         self.version_code=version_code
-        self.ssCode=ssCode
-        if ssCode != None :
-           self.format_fichier= ssCode  #par defaut
-           #prefsCode.NAME_SCHEME=ssCode
-        else :
-           self.format_fichier="python" #par defaut
-        self.appliEficas=appliEficas
-        self.appliEficas.ssCode=ssCode
+        self.format_fichier="python" #par defaut
 

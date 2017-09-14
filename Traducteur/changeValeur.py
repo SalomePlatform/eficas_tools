@@ -45,7 +45,7 @@ def ChangementValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
              if indexTexteMC > len(liste_ligne_MC)-1 : break
              MaLigneGlob=jdc.getLines()[indexLigneGlob]
              MaLigneTexte=liste_ligne_MC[indexTexteMC]
-             for Valeur in DictNouvVal.keys() :
+             for Valeur in DictNouvVal :
                 MaLigneTexteDict=lineToDict(MaLigneTexte)
                 trouvecol=MaLigneTexte.find(Valeur)
                 if trouvecol > -1:
@@ -97,7 +97,7 @@ def ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste=(),ensemble=
                         if indexTexteMC > len(liste_ligne_MC)-1 : break
                         MaLigneGlob=jdc.getLines()[indexLigneGlob]
                         MaLigneTexte=liste_ligne_MC[indexTexteMC]
-                        for Valeur in DictNouvVal.keys() :
+                        for Valeur in DictNouvVal :
                             MaLigneTexteDict=lineToDict(MaLigneTexte)
                             trouvecol=MaLigneTexte.find(Valeur)
                             if trouvecol > -1:

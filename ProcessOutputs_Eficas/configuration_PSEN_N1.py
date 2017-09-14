@@ -33,7 +33,7 @@ class CONFIG(configuration.CONFIG_BASE):
   #-----------------------------------
 
       self.labels_user=['catalogues','lang']
-      self.labels_eficas=['lang','rep_cata','catalogues']
+      self.labels_eficas=['lang','rep_cata','catalogues','affiche']
 
       configuration.CONFIG_BASE.__init__(self,appli,'.Eficas_monCode')
 

@@ -114,7 +114,19 @@ class PythonParser(object):
    def convert(self,outformat,appli=None):
       if outformat == 'exec':
          try:
-            return PARSEUR_PYTHON(self.text).get_texte(appli)
+            #import cProfile, pstats, StringIO
+            #pr = cProfile.Profile()
+            #pr.enable()            
+            l= PARSEUR_PYTHON(self.text).get_texte(appli)
+
+            #pr.disable()
+            #s = StringIO.StringIO()
+            #sortby = 'cumulative'
+            #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+            #ps.print_stats()
+            #print (s.getvalue())
+
+            return l
          except EficasException:
             # Erreur lors de la conversion
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],

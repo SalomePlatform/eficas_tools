@@ -30,7 +30,7 @@ def EcritErreur(listeGena,ligne=None) :
     #try :
     if ( 1 == 1) :
 	maClef=maCle[1:]
-        if maClef in dict_erreurs.keys() :
+        if maClef in dict_erreurs :
            if ligne != None :
 	      logging.warning("ligne %d : %s ",ligne,dict_erreurs[maClef])
            else :
@@ -41,7 +41,7 @@ def EcritErreur(listeGena,ligne=None) :
               maCle=maCle+"_"+Mot
 	   maClef=maCle[1:]
 	   maClef=maCle+"_"+"VALEUR"
-           if maClef in dict_erreurs.keys() :
+           if maClef in dict_erreurs :
               if ligne != None :
 	          logging.warning("ligne %d : %s ",ligne,dict_erreurs[maClef])
               else :

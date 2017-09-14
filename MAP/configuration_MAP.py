@@ -38,7 +38,7 @@ class CONFIG(configuration.CONFIG_BASE):
       self.adresse="ftp://ftp.pleiade.edf.fr/projets/MAP/OnlineDoc/MAP2014.1/components"
 
       self.labels_user=['exec_acrobat','savedir','path_doc']
-      self.labels_eficas=['exec_acrobat','savedir','path_doc','catalogues']
+      self.labels_eficas=['exec_acrobat','savedir','path_doc','catalogues','closeAutreCommande','closeFrameRechercheCommande','taille']
 
       #self.cataFile="catalogues_MAP.ini"
       configuration.CONFIG_BASE.__init__(self,appli,repIni)

@@ -292,7 +292,7 @@
           <item>
            <widget class="QPushButton" name="PBCata">
             <property name="text">
-             <string>Originel</string>
+             <string>Original</string>
             </property>
            </widget>
           </item>

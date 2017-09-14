@@ -299,7 +299,7 @@ class ObjectTreeItem(TreeItem,Delegate):
             index = self.get_index_child(name)
         return self.addobject(name,index)
 
-    def append_brother(self,name,pos='after'):
+    def appendBrother(self,name,pos='after'):
         """
         Permet d'ajouter un frere a self
         par defaut on l'ajoute apres self
@@ -310,7 +310,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         elif pos == 'after':
             index = index +1
         else:
-            print((tr("%d n'est pas un index valide pour append_brother", pos)))
+            print((tr("%d n'est pas un index valide pour appendBrother", pos)))
             return
         return self.parent.addobject(name,index)
 

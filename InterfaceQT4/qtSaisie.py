@@ -110,6 +110,11 @@ class SaisieValeur(object):
         except :
             valeur=valeurBrute
 
+        # pour traiter 11.0 - 30.0 pour le CIST
+        if (valeurTraitee and (type(valeurTraitee) in types.StringTypes) and (self.node.item.wait_TXM())) :
+           valeur=str(valeurTraitee)
+
+
         if type(valeur)  in (list,tuple) :
            if self.node.item.wait_complex() :
               indice = 0

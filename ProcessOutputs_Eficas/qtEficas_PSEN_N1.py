@@ -35,6 +35,13 @@ path1 = os.path.abspath(os.path.join(os.path.abspath(__file__),'TreatOutputs'))
 path1 = 'C:\\Logiciels DER\\PSEN_V15\\Code\\ProcessOutputs_Eficas\TreatOutputs'
 sys.path.append(path1)
 
+print ('kjlkjlkjkl')
+print ('kjlkjlkjkl')
+print ('kjlkjlkjkl')
+print ('kjlkjlkjkl')
+print ('kjlkjlkjkl')
+print ('kjlkjlkjkl')
+print ('kjlkjlkjkl')
 
 from InterfaceQT4 import eficas_go
-eficas_go.lance_eficas(code=prefs.code)
+if __name__ == '__main__': eficas_go.lance_eficas(code=prefs.code)

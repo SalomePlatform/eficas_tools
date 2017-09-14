@@ -61,7 +61,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
     def doPaste(self,node_selected,pos):
         objet_a_copier = self.item.get_copie_objet()
         # before est un effet de bord heureux sur l index
-        child=self.append_brother(objet_a_copier,'before')
+        child=self.appendBrother(objet_a_copier,'before')
         if self.editor.fenetreCentraleAffichee : self.editor.fenetreCentraleAffichee.node.affichePanneau()
         self.update_node_label_in_black()
         self.parent().build_children()

@@ -20,7 +20,6 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 """
     Ce module sert pour charger les paramètres de configuration d'EFICAS
@@ -28,15 +27,12 @@
 # Modules Python
 # print "passage dans la surcharge de configuration pour Adao"
 import os, sys, string, types, re
-import traceback
-from daUtils.qtversion import useQT5
-if useQT5:
-    from PyQt5.QtGui  import *
-else:
-    from PyQt4.QtGui  import *
+
 
 # Modules Eficas
-from Editeur import utils
+
+
+#from Editeur import Eficas_utils
 from InterfaceQT4 import configuration
 
 # Classe de base permettant de lire, afficher
@@ -45,7 +41,6 @@ class CONFIG(configuration.CONFIG_BASE):
 
   def __init__(self,appli,repIni):
 
-    #self.labels_eficas = ['lang']
     self.labels_eficas=['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
     configuration.CONFIG_BASE.__init__(self,appli,repIni)
 
@@ -62,7 +57,7 @@ class CONFIG(configuration.CONFIG_BASE):
     # Format des catalogues...
     # (code, version, catalogue, formatIn, formatOut)
     # Il faut les mettre dans un tuple
-    self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"),)
+    #self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"),)
 
 def make_config(appli,rep):
 

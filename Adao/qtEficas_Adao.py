@@ -19,7 +19,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce module sert à lancer EFICAS configuré pour Syrthes
 """
 # Modules Python
 
@@ -28,6 +27,10 @@ import prefs
 name='prefs_'+prefs.code
 __import__(name)
 
-import sys
+#import sys
+#reload(sys)
+#sys.setdefaultencoding('latin1')
+
 from InterfaceQT4 import eficas_go
+print eficas_go
 eficas_go.lance_eficas(code=prefs.code)

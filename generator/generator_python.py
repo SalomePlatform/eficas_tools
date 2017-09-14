@@ -102,6 +102,9 @@ class PythonGenerator(object):
           Si format vaut 'beautifie', retourne le meme texte beautifie
       """
       import logging
+      if obj == None : 
+         print ('appel a gener avec None')
+         return
       self.appli=obj.get_jdc_root().appli
       #self.appli=obj.appli
       liste= self.generator(obj)

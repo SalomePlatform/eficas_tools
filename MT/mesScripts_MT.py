@@ -45,11 +45,12 @@ def import_zone(listeparam):
 
     #print editor.updateJdc
     #editor.updateJdc(itemWidget,txt)
-    editor.updateJdcEtape(itemWidget,texte)
+    retour = editor.updateJdcEtape(itemWidget,texte)
+    if retour : 
 
-    oldItem=itemParent.children[index]
-    oldItem.select()
-    oldItem.supprimeNoeud()
+      oldItem=itemParent.children[index]
+      oldItem.select()
+      oldItem.supprimeNoeud()
 
 
 # le dictionnaire des commandes a la structure suivante :
