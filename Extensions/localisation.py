@@ -51,6 +51,7 @@ def localise(application, locale=None,file=None,translatorFichier=None, debug=Fa
        print ("Unable to load Eficas translator!")
      
     global code_translator
+    if debug : print  ('translatorFichier :' ,translatorFichier)
     if translatorFichier != None :
        if (code_translator.load(translatorFichier)) and debug:
            print (translatorFichier, ' loaded')

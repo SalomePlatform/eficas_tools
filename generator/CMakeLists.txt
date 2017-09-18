@@ -19,18 +19,18 @@
 #
 # ======================================================================
 
-install ( FILES __init__.py generator_python.py Formatage.py generator_aplat.py generator_TELEMAC.py
-                generator_file_from_template.py generator_map.py
+
+install ( FILES __init__.py generator_python.py Formatage.py generator_aplat.py 
+               generator_dicoImbrique.py generator_dico.py generator_modification.py generator_vers3DSalome.py
+               generator_TELEMAC.py generator_map.py generator_GroupMA.py 
           DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
         )
 
 
 
-
-
 # Installation des fichiers : CARMEL
 if (WITH_CARMEL)
-  install ( FILES generator_CARMEL3D_frequentiel.py generator_CARMELCND.py
+  install ( FILES generator_CARMEL3D_frequentiel.py generator_CARMEL3D_temporel.py
             DESTINATION ${CMAKE_INSTALL_PREFIX}/generator
           )
 endif (WITH_CARMEL)

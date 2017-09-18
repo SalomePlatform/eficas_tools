@@ -175,7 +175,8 @@ class TELEMACGenerator(PythonGenerator):
         #nomMajuscule=obj.nom.upper()
         #nom=nomMajuscule.replace('_',' ')
         #if nom in listeSupprime or s == "" : return s
-        if s == "" : return s
+        if s == "None," : s=None 
+        if s == "" or s==None : return s
 
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (tuple,list) ):

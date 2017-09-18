@@ -38,7 +38,7 @@ import os,glob,types
 # Ce dictionnaire est renseigne par la methode charger_composants 
 composants = {}
 
-def charger_composants(Ihm="TK"):
+def charger_composants(Ihm="QT"):
     """
         Cette fonction a pour but de charger tous les modules composants graphiques
         (fichiers compo*.py dans le meme repertoire que ce module )
@@ -51,8 +51,6 @@ def charger_composants(Ihm="TK"):
     else :
        repertoire=reper+"/../InterfaceQT4"
        package="InterfaceQT4"
-       #repertoire=reper+"/../InterfaceQT"
-       #package="InterfaceQT"
     listfich=glob.glob(os.path.join(repertoire, "compo*.py"))
     for fichier in listfich:
         m= os.path.basename(fichier)[:-3]

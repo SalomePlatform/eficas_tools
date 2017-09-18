@@ -96,10 +96,6 @@ class Appli(Ui_Eficas,QMainWindow):
              self.definitCode(code,ssCode)
              if code==None: return
 
-
-
-
-
         self.suiteTelemac=False
         if hasattr (self, 'CONFIGURATION') :
            if self.CONFIGURATION.force_langue :
@@ -192,12 +188,14 @@ class Appli(Ui_Eficas,QMainWindow):
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
            self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
-        # 
-        #from Extensions import localisation
-        #app=QApplication
-        #if hasattr (self, 'CONFIGURATION') : localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
+
+        if hasattr (self,'CONFIGURATION') and self.CONFIGURATION.translatorFichier : 
+           from Extensions import localisation
+           localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
+
         #PN --> pb d exception qui font planter salome
         # plus supporte en python 3
+        #app=QApplication
         #if hasattr(prefsCode,'encoding'):
         #   import sys
         #   reload(sys)
