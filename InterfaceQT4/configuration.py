@@ -111,6 +111,7 @@ class CONFIG_BASE(object):
       self.dicoImages= {}
       self.simpleClic= False
       self.afficheOptionnelVide=False
+      self.afficheListesPliees=True
 
  
   #--------------------------------------
