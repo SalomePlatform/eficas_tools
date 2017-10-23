@@ -320,7 +320,15 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.insereNoeudApresClick(None)
 
   def rbClique(self,id):
-      self.name=self.dicoCmd[str(id.text())]
+ 
+      try : 
+        self.name=self.dicoCmd[id.text()]
+      except : 
+        try :
+          self.name=self.dicoCmd[str(id.text())]
+        except :
+          print ('pb d accent : contacter la maintenance')
+
       definitionEtape=getattr(self.jdc.cata[0],self.name)
       #commentaire=getattr(definitionEtape,self.jdc.lang)
       try :
