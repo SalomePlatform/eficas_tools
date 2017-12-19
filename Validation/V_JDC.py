@@ -50,13 +50,13 @@ class JDC(V_MCCOMPO.MCCOMPO):
         self.cr.debut = "BEGIN validation report : " + self.nom
         self.cr.fin = "END validation report :" + self.nom
         for e in self.etapes:
-            if e.isactif():
+            if e.isActif():
                 self.cr.add(e.report())
         self.state = 'modified'
-        self.isvalid(cr='oui')
+        self.isValid(cr='oui')
         return self.cr
 
-    def isvalid(self, cr='non'):
+    def isValid(self, cr='non'):
         """
           Methode booleenne qui retourne 0 si le JDC est invalide, 1 sinon
         """
@@ -74,9 +74,9 @@ class JDC(V_MCCOMPO.MCCOMPO):
                 valid = 0
             if valid:
                 for e in self.etapes:
-                    if not e.isactif():
+                    if not e.isActif():
                         continue
-                    if not e.isvalid():
+                    if not e.isValid():
                         valid = 0
                         break
             self.state = "unchanged"

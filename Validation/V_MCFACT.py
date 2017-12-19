@@ -43,7 +43,7 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
 
     txt_nat = "Mot cle Facteur :"
 
-    def isvalid(self, sd='oui', cr='non'):
+    def isValid(self, sd='oui', cr='non'):
         """
            Methode pour verifier la validite du MCFACT. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -61,7 +61,7 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
             else:
                 old_valid = None
             for child in self.mc_liste:
-                if not child.isvalid():
+                if not child.isValid():
                     valid = 0
                     break
             # Apres avoir verifie la validite de tous les sous-objets, on verifie
@@ -87,5 +87,5 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
             self.valid = valid
             self.state = 'unchanged'
             if not old_valid or old_valid != self.valid:
-                self.init_modif_up()
+                self.initModifUp()
             return self.valid

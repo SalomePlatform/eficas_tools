@@ -62,7 +62,7 @@ Fin Mot cle Facteur :mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcf',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
 
    def test032(self):
        cata=FACT(max=3,a=SIMP(typ='I',statut='o'),)
@@ -94,4 +94,4 @@ Fin Mot cle Facteur :mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcf',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))

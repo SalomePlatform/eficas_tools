@@ -47,8 +47,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    # Chaines
    def test040(self):
@@ -59,8 +59,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test041(self):
        cata=SIMP(typ='TXM',statut='o',max=3)
@@ -74,8 +74,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur) 
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur) 
 
    def test042(self):
        cata=SIMP(typ='TXM',statut='o',into=("toto","titi"),max=3)
@@ -89,8 +89,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test043(self):
        cata=SIMP(typ='TXM',statut='o',into=("toto","titi"),min=2,max=3)
@@ -104,8 +104,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    # Reels
    def test020(self):
@@ -115,8 +115,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test021(self):
        cata=SIMP(typ='R',statut='o',min=2,max=4)
@@ -126,8 +126,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
 
    def test022(self):
@@ -138,8 +138,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test023(self):
        cata=SIMP(typ='R',statut='o',val_min=2,val_max=4,max=4)
@@ -150,8 +150,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test024(self):
        cata=SIMP(typ='R',statut='o')
@@ -161,8 +161,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
 
    # Entiers
@@ -173,8 +173,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test031(self):
        cata=SIMP(typ='I',statut='o',into=(1,5,8),max=4)
@@ -186,8 +186,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    # Complexes
    def test010(self):
@@ -202,8 +202,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test011(self):
        cata=SIMP(typ='C',statut='o',max=3)
@@ -217,8 +217,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test012(self):
        cata=SIMP(typ='C',statut='o')
@@ -227,8 +227,8 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           self.assertEqual(o.isValid(),valid,"erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test013(self):
        cata=SIMP(typ=('R',maillage),statut='o')
@@ -239,9 +239,9 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,
+           self.assertEqual(o.isValid(),valid,
                 "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test014(self):
        cata=SIMP(typ=geom,statut='o')
@@ -250,9 +250,9 @@ Fin Mot-clé simple : mcs1
             )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,
+           self.assertEqual(o.isValid(),valid,
                 "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test015(self):
        cata=SIMP(typ=assd,statut='o')
@@ -261,9 +261,9 @@ Fin Mot-clé simple : mcs1
             )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,
+           self.assertEqual(o.isValid(),valid,
                 "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           if valid: self.assertEqual(o.getValeur(),valeur)
 
    def test016(self):
        class LongStr:
@@ -283,7 +283,7 @@ Fin Mot-clé simple : mcs1
              )
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
-           self.assertEqual(o.isvalid(),valid,
+           self.assertEqual(o.isValid(),valid,
                      "erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report()))
-           if valid: self.assertEqual(o.get_valeur(),valeur)
+           if valid: self.assertEqual(o.getValeur(),valeur)
 

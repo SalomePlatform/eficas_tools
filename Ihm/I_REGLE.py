@@ -29,7 +29,7 @@ class REGLE:
       text = text + '\t' + mc.strip() + '\n'
     return text
 
-  def purge_liste(self,liste_a_purger,liste_mc_presents):
+  def purge_liste(self,liste_a_purger,listeMcPresents):
     """
          Cette methode doit retirer de la liste liste_a_purger
          les elements qui ne doivent plus apparaitre en fonction du contexte

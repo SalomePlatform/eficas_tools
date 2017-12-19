@@ -18,7 +18,7 @@ def KP_return():
 def delete_node(panel):
     panel.node.delete()
 
-def uncomment_command(panel):
+def unComment_command(panel):
     panel.bouton_unc.invoke()
     root.update()
     panel=jdcdisplay.panel_courant

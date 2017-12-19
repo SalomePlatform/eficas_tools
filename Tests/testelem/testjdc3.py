@@ -10,16 +10,16 @@ from InterfaceTK import appli
 from Accas import AsException
 
 def add_param(j,pos,nom,valeur):
-    co=j.addentite("PARAMETRE",pos)
-    co.set_nom(nom)
+    co=j.addEntite("PARAMETRE",pos)
+    co.setNom(nom)
     co.set_valeur(valeur)
     return co
 
 def add_mcsimp(obj,nom,valeur):
     mcs=obj.get_child(nom,restreint='oui')
     if mcs is None:
-       pos=obj.get_index_child(nom)
-       mcs=obj.addentite(nom,pos)
+       pos=obj.getIndex_child(nom)
+       mcs=obj.addEntite(nom,pos)
     mcs.set_valeur(mcs.eval_val(valeur))
     return mcs
 
@@ -40,13 +40,13 @@ class TestCase(unittest.TestCase):
       app=appli.STANDALONE(version=version)
       file=os.path.join(prefs.INSTALLDIR,"Tests/testelem/az.comm")
       j=app.openJDC(file=file)
-      assert j.isvalid(),j.report()
+      assert j.isValid(),j.report()
       # on commente la commande LIRE_MAILLAGE
       for co in j.etapes:
         if co.nom == "LIRE_MAILLAGE" and co.sd.nom == "MAIL":break
-      cco=co.get_objet_commentarise(format=app.format_fichier.get())
+      cco=co.getObjetCommentarise(format=app.format_fichier.get())
       # on decommente la commande LIRE_MAILLAGE
-      commande,nom = cco.uncomment()
+      commande,nom = cco.unComment()
       # on reaffecte l'objet MAIL
       for co in j.etapes:
         if co.nom in ("AFFE_MODELE","AFFE_MATERIAU") :
@@ -63,14 +63,14 @@ class TestCase(unittest.TestCase):
       app=appli.STANDALONE(version=version)
       file=os.path.join(prefs.INSTALLDIR,"Tests/testelem/az.comm")
       j=app.openJDC(file=file)
-      assert j.isvalid(),j.report()
+      assert j.isValid(),j.report()
       # on commente la commande MACRO_MATR_ASSE
       for co in j.etapes:
         if co.nom == "MACRO_MATR_ASSE" :break
-      cco=co.get_objet_commentarise(format=app.format_fichier.get())
+      cco=co.getObjetCommentarise(format=app.format_fichier.get())
       # on decommente la commande MACRO_MATR_ASSE
-      commande,nom = cco.uncomment()
-      assert j.isvalid(),j.report()
+      commande,nom = cco.unComment()
+      assert j.isValid(),j.report()
 
    def test003(self):
       """ Test de commentarisation/decommentarisation de commandes dans fichier az.comm"""
@@ -81,14 +81,14 @@ MA=LIRE_MAILLAGE()
 FIN()
 """
       j=app.openTXT(text)
-      assert j.isvalid(),j.report()
+      assert j.isValid(),j.report()
       # on commente la commande LIRE_MAILLAGE
       co=j.etapes[1]
-      cco=co.get_objet_commentarise(format=app.format_fichier.get())
-      co=j.addentite("LIRE_MAILLAGE",2)
-      test,mess=co.nomme_sd("MA")
+      cco=co.getObjetCommentarise(format=app.format_fichier.get())
+      co=j.addEntite("LIRE_MAILLAGE",2)
+      test,mess=co.nommeSd("MA")
       # on decommente la commande LIRE_MAILLAGE
-      commande,nom = cco.uncomment()
+      commande,nom = cco.unComment()
       expected="""DEBUT CR validation : TEXT
    Etape : LIRE_MAILLAGE    ligne : ...
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -112,12 +112,12 @@ FIN()
       j=app.openTXT(text)
       # on commente la commande LIRE_MAILLAGE
       co=j.etapes[1]
-      cco=co.get_objet_commentarise(format=app.format_fichier.get())
+      cco=co.getObjetCommentarise(format=app.format_fichier.get())
       # on commente la commande AFFE_MODELE
       co=j.etapes[2]
-      cco2=co.get_objet_commentarise(format=app.format_fichier.get())
+      cco2=co.getObjetCommentarise(format=app.format_fichier.get())
       # on decommente la commande AFFE_MODELE
-      commande,nom = cco2.uncomment()
+      commande,nom = cco2.unComment()
       assert commande["MAILLAGE"] == None
 
    def test005(self):
@@ -132,10 +132,10 @@ FIN()
       j=app.openTXT(text)
       # on commente la commande AFFE_MODELE
       co=j.etapes[2]
-      cco2=co.get_objet_commentarise(format=app.format_fichier.get())
+      cco2=co.getObjetCommentarise(format=app.format_fichier.get())
       # on commente la commande LIRE_MAILLAGE
       co=j.etapes[1]
-      cco=co.get_objet_commentarise(format=app.format_fichier.get())
+      cco=co.getObjetCommentarise(format=app.format_fichier.get())
       # on decommente la commande AFFE_MODELE
-      self.assertRaises(AsException, cco2.uncomment, )
+      self.assertRaises(AsException, cco2.unComment, )
 

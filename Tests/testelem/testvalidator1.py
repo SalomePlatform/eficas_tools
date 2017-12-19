@@ -33,14 +33,14 @@ class TestValidCase(unittest.TestCase):
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
            msg=None
-           if valid != o.isvalid() :
+           if valid != o.isValid() :
               if not valid:
                  msg="erreur : le mot cle devrait etre invalide. valeur = %s, valid = %s " % (valeur,valid)
               else:
                  msg="erreur : le mot cle devrait etre valide. valeur = %s, valid = %s " % (valeur,valid) + '\n' + str(o.report())
-           self.assertEqual(o.isvalid(),valid,msg)
+           self.assertEqual(o.isValid(),valid,msg)
            if valid: 
-              self.assertEqual(o.get_valeur(),valeur)
+              self.assertEqual(o.getValeur(),valeur)
 
    def test001(self):
        cata=SIMP(typ='TXM',validators=LongStr(3,5))

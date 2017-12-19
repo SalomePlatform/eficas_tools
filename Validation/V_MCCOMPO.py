@@ -55,7 +55,7 @@ class MCCOMPO(object):
         # defini dans les classes derivees
         self.txt_nat = ''
 
-    def init_modif_up(self):
+    def initModifUp(self):
         """
            Propage l'etat modifie au parent s'il existe et n'est pas l'objet
            lui-meme
@@ -79,7 +79,7 @@ class MCCOMPO(object):
             self.cr.add(child.report())
         self.state = 'modified'
         try:
-            self.isvalid(cr='oui')
+            self.isValid(cr='oui')
         except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()

@@ -70,14 +70,14 @@ class TestMCBlocCase(unittest.TestCase):
       co=OP1(traitement=mcf,WWWW='WWWW')
       mcfact=co.etape['traitement']
       self.assertEqual(mcfact['TYPE_RAFFINEMENT_LIBRE']['DERAFFINEMENT'] , None)
-      dico=mcfact[0].cree_dict_valeurs(mcfact[0].mc_liste)
+      dico=mcfact[0].creeDictValeurs(mcfact[0].mc_liste)
       self.assertEqual(dico['DERAFFINEMENT'] , None)
       self.assertEqual(dico['RAFFINEMENT'] , None)
       self.assertEqual(dico['WWWW'] , 'WWWW')
       self.assertRaises(IndexError, mcfact.__getitem__, 'NITER')
 
       mcfact=co.etape['trait'][0]
-      dico=mcfact.cree_dict_valeurs(mcfact.mc_liste)
+      dico=mcfact.creeDictValeurs(mcfact.mc_liste)
       self.assertEqual(dico['DERAFFINEMENT'] , None)
       self.assertEqual(dico['RAFFINEMENT'] , None)
       self.assertEqual(dico['WWWW'] , 'WWWW')
@@ -100,7 +100,7 @@ class TestMCBlocCase(unittest.TestCase):
    def test003(self):
       co=MACR_BIDON(NOM_CHAM='ACCE',RESULTAT=_F(VAL2=3.4))
       mcfact=co.etape['RESULTAT']
-      self.assertEqual(co.etape.isvalid(), 0)
+      self.assertEqual(co.etape.isValid(), 0)
 
    def test004(self):
       mcf={'VVVV':'',
@@ -110,34 +110,34 @@ class TestMCBlocCase(unittest.TestCase):
            'NOM_MED_MAILLAGE_NP1':'',
            }
       co=OP1(traitement=mcf,WWWW="WWWW",trait={'N':1})
-      val=co.etape.isvalid()
+      val=co.etape.isValid()
       if not val:msg=co.etape.report()
       else:msg=""
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
 
       co=OP1(traitement=mcf,WWWW="WWWW")
-      val=co.etape.isvalid()
+      val=co.etape.isValid()
       if not val:msg=co.etape.report()
       else:msg=""
-      self.assertEqual(co.etape.isvalid() , 0,msg=msg)
+      self.assertEqual(co.etape.isValid() , 0,msg=msg)
 
       co=OP1(traitement=mcf,WWWW="WW",trait={'N':1})
-      val=co.etape.isvalid()
+      val=co.etape.isValid()
       if not val:msg=co.etape.report()
       else:msg=""
-      self.assertEqual(co.etape.isvalid() , 0,msg=msg)
+      self.assertEqual(co.etape.isValid() , 0,msg=msg)
 
       co=OP1(traitement=mcf,WWWW="WW",trait={'FFFF':'X'})
-      val=co.etape.isvalid()
+      val=co.etape.isValid()
       if not val:msg=co.etape.report()
       else:msg=""
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
 
       co=OP1(traitement=mcf,WWWW="WW",)
-      val=co.etape.isvalid()
+      val=co.etape.isValid()
       if not val:msg=co.etape.report()
       else:msg=""
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
 
    def test005(self):
       OP1 = OPER(nom='OP1',op=1, sd_prod=concept,
@@ -160,17 +160,17 @@ class TestMCBlocCase(unittest.TestCase):
                 )
       co=OP1()
       msg=co.etape.report()
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
       co=OP1(MASS={},MODE=1)
       msg=co.etape.report()
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
       co=OP1(MASS=({},{}),MODE=1,XX=1)
       msg=co.etape.report()
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
       co=OP1(MASS=({'Y':1},{}),MODE=1,XX=1,YY=1)
       msg=co.etape.report()
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
       co=OP1(MASS=({'Y':1,'Z':{'T':1}},{}),MODE=1,XX=1,YY=1,ZZ=1)
       msg=co.etape.report()
-      self.assertEqual(co.etape.isvalid() , 1,msg=msg)
+      self.assertEqual(co.etape.isValid() , 1,msg=msg)
 

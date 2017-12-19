@@ -18,7 +18,7 @@ class TestSimpCase(unittest.TestCase):
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
            msg="erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report())
-           self.assertEqual(o.isvalid(),valid,msg=msg)
+           self.assertEqual(o.isValid(),valid,msg=msg)
 
    def test002(self):
        cata=SIMP(statut='f',typ='TXM',defaut="d")
@@ -28,7 +28,7 @@ class TestSimpCase(unittest.TestCase):
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
            msg="erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report())
-           self.assertEqual(o.isvalid(),valid,msg=msg)
+           self.assertEqual(o.isValid(),valid,msg=msg)
 
    def test003(self):
        cata=SIMP(statut='o',typ='R',max=3)
@@ -40,7 +40,7 @@ class TestSimpCase(unittest.TestCase):
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
            msg="erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report())
-           self.assertEqual(o.isvalid(),valid,msg=msg)
+           self.assertEqual(o.isValid(),valid,msg=msg)
 
    def test004(self):
        cata=SIMP(statut='f',typ=('R','I'),max=5)
@@ -50,7 +50,7 @@ class TestSimpCase(unittest.TestCase):
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
            msg="erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report())
-           self.assertEqual(o.isvalid(),valid,msg=msg)
+           self.assertEqual(o.isValid(),valid,msg=msg)
 
    def _test005(self):
        cata=SIMP(statut='f',typ='I',max=5)
@@ -60,5 +60,5 @@ class TestSimpCase(unittest.TestCase):
        for valeur,valid in liste:
            o=cata(valeur,'mcs',None)
            msg="erreur sur le test %s %s" % (valeur,valid)+'\n'+str(o.report())
-           self.assertEqual(o.isvalid(),valid,msg=msg)
+           self.assertEqual(o.isValid(),valid,msg=msg)
 

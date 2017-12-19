@@ -35,7 +35,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(a=1,c="TABLEAU",b=_F(d='rr'))
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
 
    def test002(self):
       """ Test position=global_jdc
@@ -56,9 +56,9 @@ class TestCase(unittest.TestCase):
       co1=OP10(a=1,c="TABLEAU",)
       co2=OP11(b=_F(d='rr'))
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
       msg=co2.etape.report()
-      self.assertEqual(co2.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co2.etape.isValid(),1,msg=msg)
 
    def test003(self):
       """ Test position=global_jdc
@@ -89,13 +89,13 @@ class TestCase(unittest.TestCase):
       co3=OP11()
       co4=OP12(b=_F(d='rr'))
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
       msg=co2.etape.report()
-      self.assertEqual(co2.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co2.etape.isValid(),1,msg=msg)
       msg=co3.etape.report()
-      self.assertEqual(co3.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co3.etape.isValid(),1,msg=msg)
       msg=co4.etape.report()
-      self.assertEqual(co4.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co4.etape.isValid(),1,msg=msg)
 
    def futuretest004(self):
       """ Test position = global
@@ -124,10 +124,10 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(a=1,b=_F(c="TABLEAU"),g=_F(d='rr'))
       msg=msg0+str(co1.etape.report())
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
       co2=OP10(a=1,b=_F(c="TABLEAU"),xx=_F(d='rr'))
       msg=msg0+str(co2.etape.report())
-      self.assertEqual(co2.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co2.etape.isValid(),1,msg=msg)
 
    def test005(self):
       """ Test position = global
@@ -144,7 +144,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(a=1,g=_F(c="TABLEAU"),d='rr')
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
 
    def test006(self):
       """ Test position = global
@@ -162,7 +162,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(a=1,g=_F(a=1),d='rr')
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),0,msg=msg)
+      self.assertEqual(co1.etape.isValid(),0,msg=msg)
 
    def test007(self):
       """ Test position = global
@@ -177,7 +177,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(b=_F(d='rr'))
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
 
    def test008(self):
       """ Test position = global
@@ -190,7 +190,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(d='rr')
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
 
    def test009(self):
       """ Test position = global
@@ -203,7 +203,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(d='rr')
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
 
    def test010(self):
       """ Test position = global
@@ -218,7 +218,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(g=_F(a=1),d='rr')
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
 
    def test011(self):
       """ Test position = global
@@ -233,7 +233,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(d='rr')
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
 
    def test012(self):
       """ Test position = global
@@ -250,7 +250,7 @@ class TestCase(unittest.TestCase):
                  )
       co1=OP10(d='rr')
       msg=co1.etape.report()
-      self.assertEqual(co1.etape.isvalid(),0,msg=msg)
+      self.assertEqual(co1.etape.isValid(),0,msg=msg)
       co2=OP10(g=_F(c="TABLEAU"),d='rr')
       msg=co2.etape.report()
-      self.assertEqual(co2.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co2.etape.isValid(),1,msg=msg)

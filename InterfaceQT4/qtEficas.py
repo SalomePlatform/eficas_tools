@@ -95,6 +95,8 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
+        else :
+             OOOOOOOOOOO
 
         self.suiteTelemac=False
         if hasattr (self, 'maConfiguration') :
@@ -206,9 +208,6 @@ class Appli(Ui_Eficas,QMainWindow):
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
         self.maConfiguration = configuration.make_config(self,prefsCode.repIni)
-        self.CONFIGStyle = None
-        if hasattr(configuration,'make_config_style'):
-           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
 
         if hasattr (self,'maConfiguration') and self.maConfiguration.translatorFichier : 
            from Extensions import localisation

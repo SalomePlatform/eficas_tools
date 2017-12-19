@@ -47,7 +47,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
     """
     """
 
-    def isvalid(self, sd='oui', cr='non'):
+    def isValid(self, sd='oui', cr='non'):
         """
            Methode pour verifier la validite de l'objet ETAPE. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -65,7 +65,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
 
         """
         if CONTEXT.debug:
-            print(("ETAPE.isvalid ", self.nom))
+            print(("ETAPE.isValid ", self.nom))
         if self.state == 'unchanged':
             return self.valid
         else:
@@ -115,7 +115,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
 
             # Si la macro comprend des etapes internes, on teste leur validite
             for e in self.etapes:
-                if not e.isvalid():
+                if not e.isValid():
                     valid = 0
                     break
 
@@ -140,7 +140,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
         self.typret = None
         if type(sd_prod) == types.FunctionType:
             # Type de concept retourne calcule
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mc_liste)
             try:
                 # la sd_prod d'une macro a l'objet lui meme en premier argument
                 # contrairement a une ETAPE ou PROC_ETAPE

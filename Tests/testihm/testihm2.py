@@ -39,9 +39,9 @@ class TestCase(unittest.TestCase):
         init_common(root,jdcdisplay)
 
         # commande DEBUT
-        co=j.addentite("DEBUT",0)
+        co=j.addEntite("DEBUT",0)
         # commande FIN
-        co=j.addentite("FIN",1)
+        co=j.addEntite("FIN",1)
 
         jdctree=jdcdisplay.tree.tree.children[0]
         panel=select_child("DEBUT",jdctree)
@@ -67,4 +67,4 @@ class TestCase(unittest.TestCase):
         panel=select_node(command)
         panel=nomme_concept("MO",panel)
 
-        assert j.isvalid(),j.report()
+        assert j.isValid(),j.report()

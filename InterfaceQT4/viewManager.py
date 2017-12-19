@@ -316,7 +316,7 @@ class MyTabview(object):
               double=editor
        else :
             from .editor import JDCEditor
-            editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,vm = self,include=include)
+            editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,include=include)
             if double != None : 
                self.doubles[editor]=double
             if editor.jdc: # le fichier est bien un jdc

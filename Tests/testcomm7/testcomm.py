@@ -6,16 +6,16 @@ import prefs
 from InterfaceTK import appli
 
 def add_param(j,pos,nom,valeur):
-    co=j.addentite("PARAMETRE",pos)
-    co.set_nom(nom)
+    co=j.addEntite("PARAMETRE",pos)
+    co.setNom(nom)
     co.set_valeur(valeur)
     return co
 
 def add_mcsimp(obj,nom,valeur):
     mcs=obj.get_child(nom,restreint='oui')
     if mcs is None:
-       pos=obj.get_index_child(nom)
-       mcs=obj.addentite(nom,pos)
+       pos=obj.getIndex_child(nom)
+       mcs=obj.addEntite(nom,pos)
     mcs.set_valeur(mcs.eval_val(valeur))
     return mcs
 
@@ -60,7 +60,7 @@ class TestCase(unittest.TestCase):
       assert j.cr.get_mess_exception() == ""
 
       if err == "":
-        assert j.isvalid(),j.report()
+        assert j.isValid(),j.report()
       else:
         txt=str(j.report())
         assert txt == err,cdiff(err,txt)

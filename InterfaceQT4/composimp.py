@@ -481,7 +481,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
 
   def getIconName(self):
-    if self.isvalid():
+    if self.isValid():
       if self.object.valeur == self.object.definition.defaut :
          return "ast-green-dark-ball"
       return "ast-green-ball"

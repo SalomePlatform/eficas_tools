@@ -20,7 +20,7 @@ MA=LIRE_MAILLAGE()
         expected="""MA=LIRE_MAILLAGE()
 
 """
-        txt = parseur_python.PARSEUR_PYTHON(text).get_texte(appli())
+        txt = parseur_python.PARSEUR_PYTHON(text).getTexte(appli())
         assert txt == expected, cdiff(expected,txt)
 
     def test02(self):
@@ -33,7 +33,7 @@ MB=LIRE_MAILLAGE()
 MB=LIRE_MAILLAGE()
 
 """
-        txt = parseur_python.PARSEUR_PYTHON(text).get_texte(appli())
+        txt = parseur_python.PARSEUR_PYTHON(text).getTexte(appli())
         assert txt == expected, cdiff(expected,txt)
 
     def test03(self):
@@ -55,7 +55,7 @@ MA=LIRE_MAILLAGE()
 MB=LIRE_MAILLAGE()
 
 '''
-        txt = parseur_python.PARSEUR_PYTHON(text).get_texte(appli())
+        txt = parseur_python.PARSEUR_PYTHON(text).getTexte(appli())
         assert txt == expected, cdiff(expected,txt)
 
     def test04(self):
@@ -104,5 +104,5 @@ zy = PARAMETRE(nom='zy',valeur= y[1])
 FIN();
 
 '''
-        txt = parseur_python.PARSEUR_PYTHON(text).get_texte(appli())
+        txt = parseur_python.PARSEUR_PYTHON(text).getTexte(appli())
         assert txt == expected, cdiff(expected,txt)

@@ -43,13 +43,13 @@ class TestCase(unittest.TestCase):
         panel=select_child("MACRO_MATR_ASSE",jdctree)
         panel=comment_command(panel)
         #decommentariser commande MACRO_MATR_ASSE
-        panel=uncomment_command(panel)
+        panel=unComment_command(panel)
         #creation commande commentée
         panel=create_command("LIRE_MAILLAGE",panel)
         panel=comment_command(panel)
         panel=change_commandcomm("mm=LIRE_MAILLAGE(INFO=2,UNITE=21)",panel)
-        panel=uncomment_command(panel)
+        panel=unComment_command(panel)
         panel=select_child("DEFI_FONCTION",jdctree)
         delete_node(panel)
 
-        assert j.isvalid(),j.report()
+        assert j.isValid(),j.report()

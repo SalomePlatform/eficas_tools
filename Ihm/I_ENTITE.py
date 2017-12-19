@@ -35,12 +35,12 @@ class ENTITE:
   def __init__(self):
      number_entite(self)
     
-  def get_docu(self):
+  def getDocu(self):
     if hasattr(self,'docu') :
       if self.docu != "" : return self.docu
       else:
         if hasattr(self,'pere'):
-          return self.pere.get_docu()
+          return self.pere.getDocu()
         else:
           return None
     else:
@@ -98,11 +98,11 @@ class ENTITE:
              regle.enregistreXML(moi,catalogueXml)
          catalogueXml.reglesUtilisees.append(self.regles)
 
-      if ((self.get_docu() !="" and self.get_docu() !=None) or  \
+      if ((self.getDocu() !="" and self.getDocu() !=None) or  \
           (self.fr != "" and self.fr != None) or \
           (self.ang != "" and self.ang != None) ):
                 dico={}
-                if self.get_docu() !=None : dico["docu"]=self.get_docu()
+                if self.getDocu() !=None : dico["docu"]=self.getDocu()
                 if self.fr != None        : dico["fr"]=six.text_type(self.fr,"iso-8859-1")
                 if self.ang != None       : dico["ang"]=self.ang
                 doc=ET.SubElement(moi,'doc')

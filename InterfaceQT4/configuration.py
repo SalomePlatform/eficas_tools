@@ -35,7 +35,7 @@ from  Editeur.Eficas_utils import read_file
 from Extensions.i18n import tr
 
 
-class CONFIG_BASE(object):
+class configBase(object):
 
   #-------------------------------
   def __init__(self,appli,repIni):
@@ -60,17 +60,20 @@ class CONFIG_BASE(object):
       else           : self.name="editeur.ini"
       self.rep_mat = None
       self.repIni  = repIni
+     
+      if self.code == None : self.code=''
       if sys.platform[0:5]=="linux" :
-              self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',appli.code)
+              self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
       else :
-              self.rep_user   = os.path.join('C:/','.config/Eficas',appli.code)
+              self.rep_user   = os.path.join('C:/','.config/Eficas',self.code)
 
 
       self.setValeursParDefaut()
       
-      self.lecture_fichier_ini_standard()
-      self.lecture_fichier_ini_integrateur()
-      self.lecture_fichier_ini_utilisateur()
+      if self.code != '' :
+         self.lecture_fichier_ini_standard()
+         self.lecture_fichier_ini_integrateur()
+         self.lecture_fichier_ini_utilisateur()
 
       if self.boutonDsMenuBar:
          self.closeAutreCommande = True
@@ -216,4 +219,5 @@ class CONFIG_BASE(object):
       f.write(texte) 
       f.close()
 #
+
 

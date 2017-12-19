@@ -24,7 +24,7 @@ from . import I_MCCOMPO
 import Noyau
 
 class MCFACT(I_MCCOMPO.MCCOMPO):
-  def isrepetable(self):
+  def isRepetable(self):
      """ 
          Indique si l'objet est repetable.
          Retourne 1 si le mot-cle facteur self peut etre repete
@@ -36,7 +36,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
      else :
        return 0
 
-  def isoblig(self):
+  def isOblig(self):
     if self.definition.statut != 'o' : return 0
     objet = self.parent.get_child(self.nom)
     if len(objet) > 1 : return 0
@@ -55,25 +55,25 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
 
     try:
       if len(objet) > 1 :
-        index = objet.get_index(self)+1 # + 1 a cause de la numerotation qui commence a 0
+        index = objet.getIndex(self)+1 # + 1 a cause de la numerotation qui commence a 0
         return self.nom +'_'+repr(index)+':'
       else:
         return self.nom
     except:
       return tr("Erreur - mot cle facteur de nom : %s", self.nom)
 
-  def get_genealogie_precise(self):
+  def getGenealogie_precise(self):
     nom=self.getlabeltext() 
     if nom[-1]==':' : nom=nom[0:-1]
     if self.parent:
-       l=self.parent.get_genealogie_precise()
+       l=self.parent.getGenealogie_precise()
        l.append(nom.strip())
        return l
     else:
        return [nom.strip()]
 
 
-  def init_modif(self):
+  def initModif(self):
     """
        Met l'etat de l'objet a modified et propage au parent
        qui vaut None s'il n'existe pas
@@ -81,7 +81,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     self.state = 'modified'
     parent= hasattr(self,"alt_parent") and self.alt_parent or self.parent
     if parent:
-       parent.init_modif()
+       parent.initModif()
 
   def fin_modif(self):
     """

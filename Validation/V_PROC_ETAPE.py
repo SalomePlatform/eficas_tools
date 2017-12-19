@@ -41,7 +41,7 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
        de ETAPE par heritage.
     """
 
-    def isvalid(self, sd='oui', cr='non'):
+    def isValid(self, sd='oui', cr='non'):
         """
            Methode pour verifier la validite de l'objet PROC_ETAPE. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -58,7 +58,7 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
             - propager l'eventuel changement d'etat au parent
         """
         if CONTEXT.debug:
-            print(("ETAPE.isvalid ", self.nom))
+            print(("ETAPE.isValid ", self.nom))
         if self.state == 'unchanged':
             return self.valid
         else:

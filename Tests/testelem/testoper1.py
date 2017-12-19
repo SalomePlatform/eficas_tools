@@ -52,7 +52,7 @@ class TestOperCase(unittest.TestCase):
 
    def test06(self):
       """ Test fonction sd_prod
-          Test sur un mot-clé simple d'un mot-clé facteur : mcf.get_child(mcs).get_valeur()
+          Test sur un mot-clé simple d'un mot-clé facteur : mcf.get_child(mcs).getValeur()
       """
       co2=OP1(a=1)
       co1=OP5(FFT={'FONCTION':co2})
@@ -140,7 +140,7 @@ class TestOperCase(unittest.TestCase):
       valeur=(2,0,1)
       co1=OP10(a=mylist(valeur))
       msg="erreur sur le test " +'\n'+str(co1.etape.report())
-      self.assertEqual(co1.etape.isvalid(),0,msg=msg)
+      self.assertEqual(co1.etape.isValid(),0,msg=msg)
       co1.etape.supprime()
 
    def futuretest13(self):
@@ -151,7 +151,7 @@ class TestOperCase(unittest.TestCase):
       valeur=(2,0,1)
       co1=OP10(a=mylist(valeur))
       msg="erreur sur le test " +'\n'+str(co1.etape.report())
-      self.assertEqual(co1.etape.isvalid(),1,msg=msg)
+      self.assertEqual(co1.etape.isValid(),1,msg=msg)
       co1.etape.supprime()
 
    def futuretest14(self):
@@ -162,7 +162,7 @@ class TestOperCase(unittest.TestCase):
       valeur=(2,0,1)
       co1=OP10(a=mylist(valeur))
       msg="erreur sur le test " +'\n'+str(co1.etape.report())
-      self.assertEqual(co1.etape.isvalid(),0,msg=msg)
+      self.assertEqual(co1.etape.isValid(),0,msg=msg)
       co1.etape.supprime()
 
    def test15(self):
@@ -171,7 +171,7 @@ class TestOperCase(unittest.TestCase):
       co1=OP7(FILTRE="coucou")
       cr=co1.etape.report()
       msg="erreur sur le test " +'\n'+str(cr)
-      self.assertEqual(co1.etape.isvalid(),0,msg=msg)
+      self.assertEqual(co1.etape.isValid(),0,msg=msg)
       co1.etape.supprime()
 
    def test16(self):
@@ -181,5 +181,5 @@ class TestOperCase(unittest.TestCase):
       valeur=(2,0,1)
       co1=OP10(a=valeur)
       msg="erreur sur le test " +'\n'+str(co1.etape.report())
-      self.assertEqual(co1.etape.isvalid(),0,msg=msg)
+      self.assertEqual(co1.etape.isValid(),0,msg=msg)
       co1.etape.supprime()

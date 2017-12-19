@@ -64,21 +64,23 @@ class JDCEditor(Ui_baseWidget,QWidget):
        Editeur de jdc
     """
 
-    def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):
-    #----------------------------------------------------------------------------------------------------------#
+    #def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 , vm=None):
+    def __init__ (self,appli,fichier = None, jdc = None, QWParent=None, units = None, include=0 ):
+    #--------------------------------------------------------------------------------------------#
 
         QWidget.__init__(self,None)
-        self.i=0
         self.setupUi(self)
+
         self.inhibeSplitter=0
         self.widgetOptionnel=None
         self.fenetreCentraleAffichee=None
         self.dejaDansPlieTout=False
         self.afficheCommandesPliees = True
         self.listeDesListesOuvertes=set()
+
         self.appliEficas = appli
         self.appli       = appli  #---- attendu par IHM
-        self.vm          = vm
+        #self.vm          = vm
         self.fichier     = fichier
         self.jdc         = jdc
         self.first	 = True
@@ -94,6 +96,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code   = self.appliEficas.maConfiguration.code
+        self.maConfiguration   = self.appliEficas.maConfiguration
         self.initSplitterSizes()
 
         #self.afficheListesPliees=False
@@ -101,7 +104,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code == "ASTER" or self.code == "monCode" : self.afficheListesPliees =True
         if self.code == 'PSEN_N1' : self.afficheListesPliees = False
 
-        self.maConfiguration=self.appliEficas.maConfiguration
         self.closeAutreCommande=self.appliEficas.maConfiguration.closeAutreCommande
         self.closeFrameRechercheCommande = self.appliEficas.maConfiguration.closeFrameRechercheCommande
         self.closeArbre=self.appliEficas.maConfiguration.closeArbre
@@ -146,7 +148,6 @@ class JDCEditor(Ui_baseWidget,QWidget):
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
         self.maConfiguration = self.appliEficas.maConfiguration
-        self.CONFIGStyle =   self.appliEficas.CONFIGStyle
 
         try:
           self.maConfiguration.generator_module

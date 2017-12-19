@@ -53,7 +53,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
     def valid_child(self):
         """ Cette methode teste la validite des mots cles de l'etape """
         for child in self.mc_liste:
-            if not child.isvalid():
+            if not child.isValid():
                 return 0
         return 1
 
@@ -83,7 +83,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                 valid = 0
         return valid
 
-    def get_valid(self):
+    def getValid(self):
         if hasattr(self, 'valid'):
             return self.valid
         else:
@@ -91,13 +91,13 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
             return None
 
     def set_valid(self, valid):
-        old_valid = self.get_valid()
+        old_valid = self.getValid()
         self.valid = valid
         self.state = 'unchanged'
         if not old_valid or old_valid != self.valid:
-            self.init_modif_up()
+            self.initModifUp()
 
-    def isvalid(self, sd='oui', cr='non'):
+    def isValid(self, sd='oui', cr='non'):
         """
            Methode pour verifier la validite de l'objet ETAPE. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -115,7 +115,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
 
         """
         if CONTEXT.debug:
-            print(("ETAPE.isvalid ", self.nom))
+            print(("ETAPE.isValid ", self.nom))
         if self.state == 'unchanged':
             return self.valid
         else:
@@ -171,7 +171,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
         """
         sd_prod = self.definition.sd_prod
         if type(sd_prod) == types.FunctionType:  # Type de concept retourne calcule
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mc_liste)
             try:
                 sd_prod = sd_prod(*(), **d)
             except:
@@ -237,7 +237,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                           fin='End Command : ' + tr(self.nom))
         self.state = 'modified'
         try:
-            self.isvalid(cr='oui')
+            self.isValid(cr='oui')
         except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()

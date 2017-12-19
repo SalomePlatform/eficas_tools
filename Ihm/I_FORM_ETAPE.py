@@ -70,7 +70,7 @@ class FORM_ETAPE(MACRO_ETAPE):
            l_args=None
         return type_retourne,l_args,corps
 
-    def get_nom(self):
+    def getNom(self):
         """
         Retourne le nom de la FORMULE, cad le nom de la SD si elle existe,
         la string vide sinon
@@ -86,10 +86,10 @@ class FORM_ETAPE(MACRO_ETAPE):
         (nom,type_retourne,arguments,corps)
         """
         t,a,c = self.analyse_formule()
-        n = self.get_nom()
+        n = self.getNom()
         return (n,t,a,c)
 
-    def verif_arguments(self,arguments = None):
+    def verifArguments(self,arguments = None):
         """
         Verifie si les arguments passes en argument (si aucun prend les arguments courants)
         sont des arguments valide pour une FORMULE.
@@ -129,7 +129,7 @@ class FORM_ETAPE(MACRO_ETAPE):
             corps = self.corps
         if not arguments :
             arguments = self.arguments
-        formule=(self.get_nom(),self.type_retourne,arguments,corps)
+        formule=(self.getNom(),self.type_retourne,arguments,corps)
         # on recupere la liste des constantes et des autres fonctions predefinies
         # et qui peuvent etre utilisees dans le corps de la formule courante
         l_ctes,l_form = self.jdc.get_parametres_fonctions_avant_etape(self)
@@ -141,9 +141,9 @@ class FORM_ETAPE(MACRO_ETAPE):
         except :
             traceback.print_exc()
             return 0,tr("Impossible de realiser la verification de la formule")
-        return verificateur.isvalid(),verificateur.report()
+        return verificateur.isValid(),verificateur.report()
 
-    def verif_nom(self,nom=None):
+    def verifNom(self,nom=None):
         """
         Verifie si le nom passe en argument (si aucun prend le nom courant)
         est un nom valide pour une FORMULE.
@@ -152,7 +152,7 @@ class FORM_ETAPE(MACRO_ETAPE):
             - un message d'erreurs ('' si illicite)
         """
         if not nom :
-            nom = self.get_nom()
+            nom = self.getNom()
         if nom == "" :
             return 0,tr("Pas de nom donne a la FORMULE")
         if len(nom) > 8 :
@@ -180,7 +180,7 @@ class FORM_ETAPE(MACRO_ETAPE):
             return 0,tr("Une formule ne peut retourner une valeur de type : %s" %type)
         return 1,''
 
-    def verif_formule(self,formule=None):
+    def verifFormule(self,formule=None):
         """
         Verifie la validite de la formule passee en argument.
         Cette nouvelle formule est passee sous la forme d'un tuple : (nom,type_retourne,arguments,corps)
@@ -191,13 +191,13 @@ class FORM_ETAPE(MACRO_ETAPE):
         """
         if not formule :
             formule = (None,None,None,None)
-        test_nom,erreur_nom = self.verif_nom(formule[0])
+        test_nom,erreur_nom = self.verifNom(formule[0])
         test_type,erreur_type = self.verif_type(formule[1])
         if formule[2]:
             args = '('+formule[2]+')'
         else:
             args = None
-        test_arguments,erreur_arguments = self.verif_arguments(args)
+        test_arguments,erreur_arguments = self.verifArguments(args)
         test_corps,erreur_corps = self.verif_corps(corps = formule[3], arguments = args)
         # test global = produit des tests partiels
         test = test_nom*test_type*test_arguments*test_corps
@@ -208,7 +208,7 @@ class FORM_ETAPE(MACRO_ETAPE):
                 erreur = erreur+(len(mess) > 0)*'\n'+mess
         return test,erreur
 
-    def verif_formule_python(self,formule=None):
+    def verifFormule_python(self,formule=None):
         """
         Pour l instant ne fait qu un compile python
         il serait possible d ajouter des tests sur les arguments
@@ -216,12 +216,12 @@ class FORM_ETAPE(MACRO_ETAPE):
         """
         if not formule :
             formule = (None,None,None,None)
-        test_nom,erreur_nom = self.verif_nom(formule[0])
+        test_nom,erreur_nom = self.verifNom(formule[0])
         if formule[2]:
             args = '('+formule[2]+')'
         else:
             args = None
-        test_arguments,erreur_arguments = self.verif_arguments(args)
+        test_arguments,erreur_arguments = self.verifArguments(args)
         corps=formule[3]
         erreur_formule= ''
         test_formule=1
@@ -254,7 +254,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         self.valeur = {}
         self.valeur[self.type_retourne] = self.arguments+' = ' + self.corps
         self.McBuild()
-        sd = self.get_sd_prod()
+        sd = self.getSdProd()
         if sd:
             sd.nom = formule[0]
 
@@ -292,10 +292,10 @@ class FORM_ETAPE(MACRO_ETAPE):
            
         self.corps = formule[2]
         self.type_retourne = formule[1]
-        sd = self.get_sd_prod()
+        sd = self.getSdProd()
         if sd:
             sd.nom = formule[0]
-        self.init_modif()
+        self.initModif()
         return 1
 
     def active(self):
@@ -304,8 +304,8 @@ class FORM_ETAPE(MACRO_ETAPE):
         Il faut ajouter la formule au contexte global du JDC
         """
         self.actif = 1
-        self.init_modif()
-        nom = self.get_nom()
+        self.initModif()
+        nom = self.getNom()
         if nom == '' : return
         try:
             self.jdc.append_fonction(self.sd)
@@ -318,14 +318,14 @@ class FORM_ETAPE(MACRO_ETAPE):
         Il faut supprimer la formule du contexte global du JDC
         """
         self.actif = 0
-        self.init_modif()
+        self.initModif()
         if not self.sd : return
         self.jdc.del_fonction(self.sd)
 
-    def update_concept(self,sd):
+    def updateConcept(self,sd):
         return
 
-    def delete_concept(self,sd):
+    def deleteConcept(self,sd):
         """ 
          Inputs :
            - sd=concept detruit
@@ -336,9 +336,9 @@ class FORM_ETAPE(MACRO_ETAPE):
          sauf les objets FORM_ETAPE qui doivent verifier que le concept detruit n'est pas 
          utilise dans le corps de la fonction
         """
-        self.init_modif()
+        self.initModif()
          
-    def replace_concept(self,old_sd,sd):
+    def replaceConcept(self,old_sd,sd):
         """
          Inputs :
            - old_sd=concept remplace
@@ -347,5 +347,5 @@ class FORM_ETAPE(MACRO_ETAPE):
          Les objets FORM_ETAPE devraient verifier que le concept remplace n'est pas
          utilise dans le corps de la fonction
         """
-        self.init_modif()
+        self.initModif()
 

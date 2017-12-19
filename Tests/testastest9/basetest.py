@@ -53,7 +53,7 @@ def make_tests(files):
           try:
             j=self.app.openJDC(file=file)
             if err == "":
-              assert j.isvalid(),j.report()
+              assert j.isValid(),j.report()
             else:
               txt=str(j.report())
               assert txt == err,cdiff(err,txt)

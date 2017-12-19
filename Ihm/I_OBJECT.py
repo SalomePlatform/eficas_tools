@@ -34,7 +34,7 @@ class OBJECT:
     """
     return 0
 
-  def get_regles(self):
+  def getRegles(self):
     """ 
        Retourne les regles de self 
     """
@@ -45,14 +45,14 @@ class OBJECT:
     else :
       return []
 
-  def init_modif(self):
+  def initModif(self):
     """
        Met l'etat de l'objet a modified et propage au parent
        qui vaut None s'il n'existe pas
     """
     self.state = 'modified'
     if self.parent:
-      self.parent.init_modif()
+      self.parent.initModif()
 
   def fin_modif(self):
       """
@@ -66,20 +66,20 @@ class OBJECT:
       if self.parent:
         self.parent.fin_modif()
 
-  def isrepetable(self):
+  def isRepetable(self):
     """
          Indique si l'objet est repetable
     """
     return 0
 
-  def liste_mc_presents(self):
+  def listeMcPresents(self):
     """
          Retourne la liste des noms des mots cles presents
     """
     return []
 
-  def get_docu(self):
-    return self.definition.get_docu()
+  def getDocu(self):
+    return self.definition.getDocu()
 
   def get_liste_mc_inconnus(self):
      """
@@ -87,7 +87,7 @@ class OBJECT:
      """
      return []
 
-  def verif_condition_regles(self,liste_presents):
+  def verifConditionRegles(self,liste_presents):
     """ 
         Retourne la liste des mots-cles a rajouter pour satisfaire les regles
         en fonction de la liste des mots-cles presents 
@@ -97,7 +97,7 @@ class OBJECT:
         liste=regle.verif_condition_regle(liste,liste_presents)
     return liste
 
-  def verif_condition_bloc(self):
+  def verifConditionBloc(self):
     """ 
         Evalue les conditions de tous les blocs fils possibles 
         (en fonction du catalogue donc de la definition) de self et
@@ -107,27 +107,27 @@ class OBJECT:
     """
     return [],[]
 
-  def get_genealogie_precise(self):
+  def getGenealogie_precise(self):
     if self.parent:
-       l=self.parent.get_genealogie_precise()
+       l=self.parent.getGenealogie_precise()
        l.append(self.nom.strip())
        return l
     else:
        return [self.nom.strip()]
 
-  def get_genealogie(self):
+  def getGenealogie(self):
     """ 
         Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
         ou ETAPE) de self jusqu'au premier objet etape rencontre
     """
     if self.parent:
-       l=self.parent.get_genealogie()
+       l=self.parent.getGenealogie()
        l.append(self.nom.strip())
        return l
     else:
        return [self.nom.strip()]
 
-  def get_fr(self):
+  def getFr(self):
      """
          Retourne la chaine d'aide contenue dans le catalogue
          en tenant compte de la langue
@@ -144,7 +144,7 @@ class OBJECT:
         except :
             return ''
 
-  def update_concept(self,sd):
+  def updateConcept(self,sd):
      pass
 
   def normalize(self):

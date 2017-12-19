@@ -10,16 +10,16 @@ from Editeur import Objecttreeitem
 
 
 def add_param(j,pos,nom,valeur):
-    co=j.addentite("PARAMETRE",pos)
-    co.set_nom(nom)
+    co=j.addEntite("PARAMETRE",pos)
+    co.setNom(nom)
     co.set_valeur(valeur)
     return co
 
 def add_mcsimp(obj,nom,valeur):
     mcs=obj.get_child(nom,restreint='oui')
     if mcs is None:
-       pos=obj.get_index_child(nom)
-       mcs=obj.addentite(nom,pos)
+       pos=obj.getIndex_child(nom)
+       mcs=obj.addEntite(nom,pos)
     mcs.set_valeur(mcs.eval_val(valeur))
     return mcs
 
@@ -38,7 +38,7 @@ class TestCase(unittest.TestCase):
 
    def test001(self):
       """Test comploader"""
-      composants=comploader.charger_composants()
+      composants=comploader.chargerComposants()
       itemtype=comploader.gettreeitem({'a':1})
       assert itemtype is Objecttreeitem.ObjectTreeItem
 
@@ -48,20 +48,20 @@ class TestCase(unittest.TestCase):
       file=os.path.join(prefs.INSTALLDIR,"Tests/testelem/az.comm")
       j=app.openJDC(file=file)
       item=app.create_item(j)
-      assert item.isvalid(),item.report()
+      assert item.isValid(),item.report()
       # on commente la commande LIRE_MAILLAGE
-      commands=item.GetSubList()
+      commands=item.getSubList()
       for it in commands:
         if it.nom == "LIRE_MAILLAGE" and it.sd.nom == "MAIL":break
       pos=commands.index(it)
-      cco=it.get_objet_commentarise()
-      commands=item.GetSubList()
-      commands[pos].uncomment()
-      commands=item.GetSubList()
+      cco=it.getObjetCommentarise()
+      commands=item.getSubList()
+      commands[pos].unComment()
+      commands=item.getSubList()
       # on reaffecte l'objet MAIL
       for it in commands:
         if it.nom in ("AFFE_MODELE","AFFE_MATERIAU") :
-           for mc in it.GetSubList():
+           for mc in it.getSubList():
               if mc.nom == "MAILLAGE":
                  valeur,validite=mc.eval_valeur("MAIL")
                  test = mc.set_valeur(valeur)

@@ -9,16 +9,16 @@ import prefs
 from InterfaceTK import appli
 
 def add_param(j,pos,nom,valeur):
-    co=j.addentite("PARAMETRE",pos)
-    co.set_nom(nom)
+    co=j.addEntite("PARAMETRE",pos)
+    co.setNom(nom)
     co.set_valeur(valeur)
     return co
 
 def add_mcsimp(obj,nom,valeur):
     mcs=obj.get_child(nom,restreint='oui')
     if mcs is None:
-       pos=obj.get_index_child(nom)
-       mcs=obj.addentite(nom,pos)
+       pos=obj.getIndex_child(nom)
+       mcs=obj.addEntite(nom,pos)
     mcs.set_valeur(mcs.eval_val(valeur))
     return mcs
 
@@ -38,9 +38,9 @@ class TestCase(unittest.TestCase):
       app=appli.STANDALONE(version='v7')
       j=app.newJDC()
 # commande DEBUT
-      co=j.addentite("DEBUT",0)
+      co=j.addEntite("DEBUT",0)
 # commande FIN
-      co=j.addentite("FIN",1)
+      co=j.addEntite("FIN",1)
 # parametres
       pos=0
       pos=pos+1
@@ -57,43 +57,43 @@ class TestCase(unittest.TestCase):
       co=add_param(j,pos,"P4","[2,3,4]")
 # commentaire
       pos=pos+1
-      co=j.addentite("COMMENTAIRE",pos)
+      co=j.addEntite("COMMENTAIRE",pos)
       co.set_valeur("Pas trouve   shellpanel")
 # commande LIRE_MAILLAGE
       pos=pos+1
-      co=j.addentite("LIRE_MAILLAGE",pos)
-      test,mess=co.nomme_sd("MAILLA2")
-      mcs=co.addentite("UNITE")
+      co=j.addEntite("LIRE_MAILLAGE",pos)
+      test,mess=co.nommeSd("MAILLA2")
+      mcs=co.addEntite("UNITE")
       valeur=mcs.eval_val("P4[1]")
       test=mcs.set_valeur(valeur)
 # formule
       pos=pos+1
-      co=j.addentite("FORMULE",pos)
+      co=j.addEntite("FORMULE",pos)
       co.update_formule_python(("aaa","REEL","a+z","(a,z)"))
 # commande LIRE_MAILLAGE
       pos=pos+1
-      ma=co=j.addentite("LIRE_MAILLAGE",pos)
-      test,mess=co.nomme_sd("MAIL")
-      mcs=co.addentite("UNITE")
+      ma=co=j.addEntite("LIRE_MAILLAGE",pos)
+      test,mess=co.nommeSd("MAIL")
+      mcs=co.addEntite("UNITE")
       valeur,validite=mcs.eval_valeur("P3")
       test=mcs.set_valeur(valeur)
 #
       pos=pos+1
-      co=j.addentite("COMMENTAIRE",pos)
+      co=j.addEntite("COMMENTAIRE",pos)
       co.set_valeur(" 'LIRE_MAILLAGE', 'UNITE'            --> uniquebasepanel")
 # formule
       pos=pos+1
-      co=j.addentite("FORMULE",pos)
+      co=j.addEntite("FORMULE",pos)
       co.update_formule_python(("az","REEL","aaaaa","(ae,inst)"))
 # commande AFFE_MODELE
       pos=pos+1
-      co=j.addentite("AFFE_MODELE",pos)
+      co=j.addEntite("AFFE_MODELE",pos)
       mcs=co.get_child("MAILLAGE")
       valeur,validite=mcs.eval_valeur("MAIL")
       assert valeur == ma.sd
       test=mcs.set_valeur(valeur)
       assert valeur == co["MAILLAGE"]
-      mcf=co.addentite("AFFE")
+      mcf=co.addEntite("AFFE")
       mcs=mcf[0].get_child("PHENOMENE")
       valeur=mcs.eval_val_item('MECANIQUE')
       assert valeur=='MECANIQUE',str(valeur)
@@ -104,14 +104,14 @@ class TestCase(unittest.TestCase):
       assert mcf["MODELISATION"] == 'DIS_T'
       mcs=add_mcsimp(mcf[0],"GROUP_MA",('RESSORT','eee',))
 
-      mcf=co.addentite("AFFE")
+      mcf=co.addEntite("AFFE")
       mcs=mcf[1].get_child("PHENOMENE")
       mcs.set_valeur(mcs.eval_val_item('MECANIQUE'))
       mcs=mcf[1].get_child("b_mecanique").get_child("MODELISATION")
       mcs.set_valeur(mcs.eval_val_item('DIS_T'))
       mcs=add_mcsimp(mcf[1],"GROUP_MA",'MASSES')
 
-      mcf=co.addentite("AFFE")
+      mcf=co.addEntite("AFFE")
       mcs=mcf[2].get_child("PHENOMENE")
       mcs.set_valeur(mcs.eval_val_item('ACOUSTIQUE'))
       mcs=mcf[2].get_child("b_acoustique").get_child("MODELISATION")
@@ -119,14 +119,14 @@ class TestCase(unittest.TestCase):
       #mcs=add_mcsimp(mcf[2],"GROUP_NO",'GNP3,GNP5,GNP6,GNP7,GNP8,GNP9,GNP10,GNP11,GNP12')
       mcs=add_mcsimp(mcf[2],"GROUP_NO","'GNP3','GNP5','GNP6','GNP7','GNP8','GNP9','GNP10','GNP11','GNP12'")
 
-      co.nomme_sd("AFFE1")
+      co.nommeSd("AFFE1")
 # commande AFFE_MODELE
       pos=pos+1
-      co=j.addentite("AFFE_MODELE",pos)
+      co=j.addEntite("AFFE_MODELE",pos)
       mcs=co.get_child("MAILLAGE")
       mcs.set_valeur(mcs.eval_val("MAIL"))
 
-      mcf=co.addentite("AFFE")
+      mcf=co.addEntite("AFFE")
       mcs=mcf[0].get_child("PHENOMENE")
       valeur=mcs.eval_val_item('MECANIQUE')
       test=mcs.set_valeur(valeur)
@@ -134,31 +134,31 @@ class TestCase(unittest.TestCase):
       mcs.set_valeur(mcs.eval_val_item('DIS_T'))
       mcs=add_mcsimp(mcf[0],"GROUP_MA",'RESSORT')
 
-      mcf=co.addentite("AFFE")
+      mcf=co.addEntite("AFFE")
       mcs=mcf[1].get_child("PHENOMENE")
       mcs.set_valeur(mcs.eval_val_item('MECANIQUE'))
       mcs=mcf[1].get_child("b_mecanique").get_child("MODELISATION")
       mcs.set_valeur(mcs.eval_val_item('DIS_T'))
       mcs=add_mcsimp(mcf[1],"GROUP_MA",'MASSES')
 
-      mcf=co.addentite("AFFE")
+      mcf=co.addEntite("AFFE")
       mcs=mcf[2].get_child("PHENOMENE")
       mcs.set_valeur(mcs.eval_val_item('THERMIQUE'))
       mcs=mcf[2].get_child("b_thermique").get_child("MODELISATION")
       mcs.set_valeur(mcs.eval_val_item('COQUE'))
       mcs=add_mcsimp(mcf[2],"TOUT",'OUI')
 
-      co.nomme_sd("MOD")
+      co.nommeSd("MOD")
 #CARA=AFFE_CARA_ELEM(MODELE=MOD,
 #                    POUTRE=_F(GROUP_MA='MA',
 #                              SECTION='CERCLE',
 #                              CARA='R',
 #                              VALE=(3.0,P6,),),);
       pos=pos+1
-      co=j.addentite("AFFE_CARA_ELEM",pos)
+      co=j.addEntite("AFFE_CARA_ELEM",pos)
       mcs=co.get_child("MODELE")
       mcs.set_valeur(mcs.eval_val("MOD"))
-      mcf=co.addentite("POUTRE")
+      mcf=co.addEntite("POUTRE")
       mcs=mcf[0].get_child("SECTION")
       mcs.set_valeur(mcs.eval_val('CERCLE'))
       assert mcf[0]["SECTION"] == 'CERCLE'
@@ -167,10 +167,10 @@ class TestCase(unittest.TestCase):
       mcs.set_valeur(mcs.eval_val('R'))
       mcs=mcf[0].get_child("b_cercle").get_child("b_constant").get_child("VALE")
       mcs.set_valeur(mcs.eval_val('3.0,P6'))
-      co.nomme_sd("CARA")
+      co.nommeSd("CARA")
 # commentaire
       pos=pos+1
-      co=j.addentite("COMMENTAIRE",pos)
+      co=j.addEntite("COMMENTAIRE",pos)
       text=""" 'AFFE_MODELE', 'MAILLAGE'           --> uniqueassdpanel
   AFFE_MODELE', 'AFFE', 'GROUP_MA'   --> plusieursbasepanel 
  'AFFE_MODELE', 'AFFE', 'PHENOMENE'  --> uniqueintopanel
@@ -179,24 +179,24 @@ class TestCase(unittest.TestCase):
 #F1=DEFI_FONCTION(NOM_PARA='DX',
 #                 VALE=(5.0,3.0,P4[1],P3,),);
       pos=pos+1
-      co=j.addentite("DEFI_FONCTION",pos)
+      co=j.addEntite("DEFI_FONCTION",pos)
       mcs=co.get_child("NOM_PARA")
       mcs.set_valeur(mcs.eval_val("DX"))
-      mcs=co.addentite("VALE")
+      mcs=co.addEntite("VALE")
       mcs.set_valeur(mcs.eval_val("5.0,3.0,P4[1],P3"))
-      co.nomme_sd("F1")
+      co.nommeSd("F1")
 #F3=DEFI_FONCTION(NOM_PARA='DRX',
 #                 VALE_C=(5.0,7.0,9.0,9.0,8.0,7.0,),);
       pos=pos+1
-      co=j.addentite("DEFI_FONCTION",pos)
+      co=j.addEntite("DEFI_FONCTION",pos)
       mcs=co.get_child("NOM_PARA")
       mcs.set_valeur(mcs.eval_val("DRX"))
-      mcs=co.addentite("VALE_C")
+      mcs=co.addEntite("VALE_C")
       mcs.set_valeur(mcs.eval_val("5.0,7.0,9.0,9.0,8.0,7.0"))
-      co.nomme_sd("F3")
+      co.nommeSd("F3")
 # commentaire
       pos=pos+1
-      co=j.addentite("COMMENTAIRE",pos)
+      co=j.addEntite("COMMENTAIRE",pos)
       co.set_valeur(" 'DEFI_FONCTION', 'VALE'             --> fonctionpanel  ")
 #MATER2=DEFI_MATERIAU(ELAS=_F(E=100000000000.0,
 #                             NU=0.0,),
@@ -205,13 +205,13 @@ class TestCase(unittest.TestCase):
 #                                       DT_SIGM_EPSI=0.0,
 #                                       SY_T=50000000.0,),);
       pos=pos+1
-      co=j.addentite("DEFI_MATERIAU",pos)
-      mcf=co.addentite("ELAS")
+      co=j.addEntite("DEFI_MATERIAU",pos)
+      mcf=co.addEntite("ELAS")
       mcs=mcf[0].get_child("E")
       mcs.set_valeur(mcs.eval_val("100000000000.0"))
       mcs=mcf[0].get_child("NU")
       mcs.set_valeur(mcs.eval_val("0.0"))
-      mcf=co.addentite("ECRO_ASYM_LINE")
+      mcf=co.addEntite("ECRO_ASYM_LINE")
       mcs=mcf[0].get_child("DC_SIGM_EPSI")
       mcs.set_valeur(mcs.eval_val("0.0"))
       mcs=mcf[0].get_child("DT_SIGM_EPSI")
@@ -220,74 +220,74 @@ class TestCase(unittest.TestCase):
       mcs.set_valeur(mcs.eval_val("200000000.0"))
       mcs=mcf[0].get_child("SY_T")
       mcs.set_valeur(mcs.eval_val("50000000.0"))
-      co.nomme_sd("MATER2")
+      co.nommeSd("MATER2")
 #PS1=DEFI_PARA_SENSI(VALE=1.0,);
 #PS2=DEFI_PARA_SENSI(VALE=1.0,);
 #PS3=DEFI_PARA_SENSI(VALE=1.0,);
       pos=pos+1
-      co=j.addentite("DEFI_PARA_SENSI",pos)
+      co=j.addEntite("DEFI_PARA_SENSI",pos)
       mcs=co.get_child("VALE")
       mcs.set_valeur(mcs.eval_val("1.0"))
-      co.nomme_sd("PS1")
+      co.nommeSd("PS1")
       pos=pos+1
-      co=j.addentite("DEFI_PARA_SENSI",pos)
+      co=j.addEntite("DEFI_PARA_SENSI",pos)
       mcs=co.get_child("VALE")
       mcs.set_valeur(mcs.eval_val("1.0"))
-      co.nomme_sd("PS2")
+      co.nommeSd("PS2")
       pos=pos+1
-      co=j.addentite("DEFI_PARA_SENSI",pos)
+      co=j.addEntite("DEFI_PARA_SENSI",pos)
       mcs=co.get_child("VALE")
       mcs.set_valeur(mcs.eval_val("1.0"))
-      co.nomme_sd("PS3")
+      co.nommeSd("PS3")
 #CHMAT2=AFFE_MATERIAU(MAILLAGE=MAIL,
 #                     AFFE=_F(TOUT='OUI',
 #                             MATER=MATER2,),);
       pos=pos+1
-      co=j.addentite("AFFE_MATERIAU",pos)
+      co=j.addEntite("AFFE_MATERIAU",pos)
       add_mcsimp(co,"MAILLAGE","MAIL")
       mcf=co.get_child("AFFE")
       add_mcsimp(mcf[0],"TOUT","OUI")
       add_mcsimp(mcf[0],"MATER","MATER2")
-      co.nomme_sd("CHMAT2")
+      co.nommeSd("CHMAT2")
 #AAAZ=AFFE_CHAR_THER(MODELE=AFFE1,
 #                    TEMP_IMPO=_F(TOUT='OUI',
 #                                 TEMP=0.0,),);
       pos=pos+1
-      co=j.addentite("AFFE_CHAR_THER",pos)
+      co=j.addEntite("AFFE_CHAR_THER",pos)
       add_mcsimp(co,"MODELE","AFFE1")
-      mcf=co.addentite("TEMP_IMPO")
+      mcf=co.addEntite("TEMP_IMPO")
       add_mcsimp(mcf[0],"TOUT","OUI")
       add_mcsimp(mcf[0],"TEMP","0.0")
-      co.nomme_sd("AAAZ")
+      co.nommeSd("AAAZ")
 #TH1=THER_LINEAIRE(MODELE=AFFE1,
 #                  CHAM_MATER=CHMAT2,
 #                  EXCIT=_F(CHARGE=AAAZ,),
 #                  SENSIBILITE=(PS1,PS2,),);
       pos=pos+1
-      co=j.addentite("THER_LINEAIRE",pos)
+      co=j.addEntite("THER_LINEAIRE",pos)
       add_mcsimp(co,"MODELE","AFFE1")
       add_mcsimp(co,"CHAM_MATER","CHMAT2")
       mcf=co.get_child("EXCIT")
       add_mcsimp(mcf[0],"CHARGE","AAAZ")
       add_mcsimp(co,"SENSIBILITE","PS1,PS2")
-      co.nomme_sd("TH1")
+      co.nommeSd("TH1")
 # commentaire
       pos=pos+1
-      co=j.addentite("COMMENTAIRE",pos)
+      co=j.addEntite("COMMENTAIRE",pos)
       co.set_valeur(" 'THER_LINEAIRE', 'SENSIBILITE'       --> plusieursassdpanel")
 #ACA1=AFFE_CHAR_ACOU(MODELE=AFFE1,
 #                    PRES_IMPO=_F(TOUT='OUI',
 #                                 PRES=('RI',3.0,3.0,),),);
       pos=pos+1
-      co=j.addentite("AFFE_CHAR_ACOU",pos)
+      co=j.addEntite("AFFE_CHAR_ACOU",pos)
       add_mcsimp(co,"MODELE","AFFE1")
-      mcf=co.addentite("PRES_IMPO")
+      mcf=co.addEntite("PRES_IMPO")
       add_mcsimp(mcf[0],"TOUT","OUI")
       add_mcsimp(mcf[0],"PRES","'RI',3.0,3.0")
-      co.nomme_sd("ACA1")
+      co.nommeSd("ACA1")
 # commentaire
       pos=pos+1
-      co=j.addentite("COMMENTAIRE",pos)
+      co=j.addEntite("COMMENTAIRE",pos)
       co.set_valeur(" 'AFFE_CHAR_ACOU', 'PRES_IMPO', 'PRES' --> uniquecomppanel")
 
 # 'AFFE_CHAR_ACOU', 'PRES_IMPO', 'PRES' --> uniquecomppanel
@@ -297,7 +297,7 @@ class TestCase(unittest.TestCase):
 #                MATR_ASSE=_F(MATRICE=CO('MAT1'),
 #                             OPTION='RIGI_THER',),);
       pos=pos+1
-      co=j.addentite("MACRO_MATR_ASSE",pos)
+      co=j.addEntite("MACRO_MATR_ASSE",pos)
       add_mcsimp(co,"MODELE","AFFE1")
       mcs=co.get_child("NUME_DDL")
       mcs.set_valeur_co('DDL1')
@@ -307,10 +307,10 @@ class TestCase(unittest.TestCase):
       mcs.set_valeur_co('MAT1')
 # commentaire
       pos=pos+1
-      co=j.addentite("COMMENTAIRE",pos)
+      co=j.addEntite("COMMENTAIRE",pos)
       co.set_valeur(" 'MACRO_MATR_ASSE', 'MATR_ASSE', 'MATRICE'  --> uniquesdcopanel")
 
-      assert j.isvalid(),j.report()
+      assert j.isValid(),j.report()
 
       text1=app.get_text_JDC(j,'python')
       file=os.path.join(prefs.INSTALLDIR,"Tests/testelem/az.comm")
@@ -325,9 +325,9 @@ class TestCase(unittest.TestCase):
       app=appli.STANDALONE(version='v7')
       j=app.newJDC()
 # commande DEBUT
-      co=j.addentite("DEBUT",0)
+      co=j.addEntite("DEBUT",0)
 # commande FIN
-      co=j.addentite("FIN",1)
+      co=j.addEntite("FIN",1)
 #parametre
       pos=0
       pos=pos+1
@@ -336,41 +336,41 @@ class TestCase(unittest.TestCase):
       co=add_param(j,pos,"P2","sin(P1)")
 # formule
       pos=pos+1
-      co=j.addentite("FORMULE",pos)
+      co=j.addEntite("FORMULE",pos)
       co.update_formule_python(("aaa","REEL","a+z","(a,z)"))
 #parametre de formule
       pos=pos+1
       co=add_param(j,pos,"P3","aaa(P1,2.)")
 #commande defi_list_reel
       pos=pos+1
-      co=j.addentite("DEFI_LIST_REEL",pos)
+      co=j.addEntite("DEFI_LIST_REEL",pos)
       add_mcsimp(co,"VALE","1.,2.,3.")
-      co.nomme_sd("LI1")
+      co.nommeSd("LI1")
 #commande defi_list_reel
       pos=pos+1
-      co=j.addentite("DEFI_LIST_REEL",pos)
+      co=j.addEntite("DEFI_LIST_REEL",pos)
       add_mcsimp(co,"VALE","sin(1.)")
-      co.nomme_sd("LI2")
+      co.nommeSd("LI2")
 #commande defi_list_reel
       pos=pos+1
-      co=j.addentite("DEFI_LIST_REEL",pos)
+      co=j.addEntite("DEFI_LIST_REEL",pos)
       add_mcsimp(co,"VALE","aaa(1.,2.)")
-      co.nomme_sd("LI3")
+      co.nommeSd("LI3")
 #commande defi_list_reel
       pos=pos+1
-      co=j.addentite("DEFI_LIST_REEL",pos)
+      co=j.addEntite("DEFI_LIST_REEL",pos)
       add_mcsimp(co,"VALE","sin(1.,2)")
-      co.nomme_sd("LI4")
+      co.nommeSd("LI4")
 #commande defi_list_reel
       pos=pos+1
-      co=j.addentite("DEFI_LIST_REEL",pos)
+      co=j.addEntite("DEFI_LIST_REEL",pos)
       add_mcsimp(co,"VALE","aaa(1.)")
-      co.nomme_sd("LI5")
+      co.nommeSd("LI5")
 #commande defi_list_reel
       pos=pos+1
-      co=j.addentite("DEFI_LIST_REEL",pos)
+      co=j.addEntite("DEFI_LIST_REEL",pos)
       add_mcsimp(co,"VALE","1,sin(1.),2")
-      co.nomme_sd("LI6")
+      co.nommeSd("LI6")
 
       expected="""DEBUT CR validation : SansNom
    Etape : DEFI_LIST_REEL    ligne : ...

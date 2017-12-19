@@ -267,7 +267,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         repIcon=self.appliEficas.repIcon
 
         couleur=self.item.getIconName()
-        if not self.editor.configuration.differencieSiDefaut and couleur == 'ast-green-dark-ball' : couleur="ast-green-ball"
+        if not self.editor.maConfiguration.differencieSiDefaut and couleur == 'ast-green-dark-ball' : couleur="ast-green-ball"
         monIcone = QIcon(repIcon+"/" + couleur + ".png")
 
         self.setIcon(0,monIcone)
@@ -701,7 +701,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """
         repIcon=self.appliEficas.repIcon
         couleur=self.item.getIconName()
-        if not self.editor.configuration.differencieSiDefaut and couleur == 'ast-green-dark-ball' : couleur="ast-green-ball"
+        if not self.editor.maConfiguration.differencieSiDefaut and couleur == 'ast-green-dark-ball' : couleur="ast-green-ball"
         monIcone = QIcon(repIcon+"/" + couleur + ".png")
         self.setIcon(0,monIcone)
 
