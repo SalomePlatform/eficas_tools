@@ -29,25 +29,25 @@ from Extensions.i18n import tr
 
 class GereRegles(object) :
 
-   def AppelleBuildLBRegles(self):
+   def appellebuildLBRegles(self):
        from .browser import JDCTree
        if isinstance(self,JDCTree):
-          self.AppelleBuildLBReglesForJdC()
+          self.appellebuildLBReglesForJdC()
        else :
-          self.AppelleBuildLBReglesForCommand()
-       self.BuildLBRegles(self.listeRegles,self.listeNomsEtapes)
-       self.AfficheRegles()
+          self.appellebuildLBReglesForCommand()
+       self.buildLBRegles(self.listeRegles,self.listeNomsEtapes)
+       self.afficheRegles()
        
-   def AppelleBuildLBReglesForCommand(self):
-       self.listeRegles     = self.item.get_regles()
-       self.listeNomsEtapes = self.item.get_mc_presents()
+   def appellebuildLBReglesForCommand(self):
+       self.listeRegles     = self.item.getRegles()
+       self.listeNomsEtapes = self.item.getMcPresents()
 
-   def AppelleBuildLBReglesForJdC(self):
-       self.listeRegles=self.item.get_regles()
-       self.listeNomsEtapes = self.item.get_l_noms_etapes()
+   def appellebuildLBReglesForJdC(self):
+       self.listeRegles=self.item.getRegles()
+       self.listeNomsEtapes = self.item.getLNomsEtapes()
 
 
-   def BuildLBRegles(self,listeRegles,listeNomsEtapes):
+   def buildLBRegles(self,listeRegles,listeNomsEtapes):
        self.liste=[]
        if len(listeRegles) > 0:
           for regle in listeRegles :
@@ -64,7 +64,7 @@ class GereRegles(object) :
        if self.liste==[] : self.liste.append(("pas de regle de construction pour ce jeu de commandes",Qt.black))
                
 
-   def AfficheRegles(self):
+   def afficheRegles(self):
       titre="Regles pour "+self.item.nom
       w = ViewRegles( self.editor,self.liste,titre  )
       w.exec_()

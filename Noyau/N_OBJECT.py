@@ -64,7 +64,7 @@ class OBJECT(object):
         self.jdc = None
         self.niveau = None
 
-    def get_val(self):
+    def getVal(self):
         """
             Retourne la valeur de l'objet. Cette méthode fournit
             une valeur par defaut. Elle doit etre dérivée pour chaque
@@ -78,13 +78,13 @@ class OBJECT(object):
         """
         return 0
 
-    def get_jdc_root(self):
+    def getJdcRoot(self):
         """
             Cette méthode doit retourner l'objet racine c'est à dire celui qui
             n'a pas de parent
         """
         if self.parent:
-            return self.parent.get_jdc_root()
+            return self.parent.getJdcRoot()
         else:
             return self
 
@@ -127,7 +127,7 @@ class ErrorObj(OBJECT):
             # self.niveau = None
             # self.etape = None
 
-    def isvalid(self, cr='non'):
+    def isValid(self, cr='non'):
         return 0
 
     def report(self):

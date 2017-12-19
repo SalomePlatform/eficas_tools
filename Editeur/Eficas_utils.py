@@ -27,7 +27,7 @@ import codecs,types
 
 from Extensions.i18n import tr
 
-def substract_list(liste1,liste2):
+def substractList(liste1,liste2):
   """ 
       Enleve tous les elements de liste2 presents dans liste1 et retourne liste1
   """
@@ -38,7 +38,7 @@ def substract_list(liste1,liste2):
       pass
   return liste1
 
-def get_rep_user(dir):
+def getRepUser(dir):
   """
       Determine sur quelle plate-forme s'execute Eficas et recherche
       le repertoire de l'utilisateur /$home/Eficas_install
@@ -92,7 +92,7 @@ def stripPath(pathAndFile):
     """ Return filename.ext if path/filename.ext is given """
     return os.path.split(pathAndFile)[1]
 
-def init_rep_cata_dev(fic_cata,rep_goal):
+def initRep_CataDev(fic_cata,rep_goal):
   """ 
       Initialise le repertoire des catalogues developpeurs (chemin d'acces donne
       dans le fichier eficas.ini cad :
@@ -106,7 +106,7 @@ def init_rep_cata_dev(fic_cata,rep_goal):
   try :
     if not os.path.isdir(rep_goal) :
       os.mkdir(rep_goal)
-    #texte_entete = get_entete_cata(fic_cata)
+    #texte_entete = getEnteteCata(fic_cata)
     texte_entete=""
     # rep_goal doit contenir les catalogues du developpeur sous la forme *.capy
     # il faut creer le catalogue developpeur par concatenation de entete,declaration_concepts
@@ -127,7 +127,7 @@ def init_rep_cata_dev(fic_cata,rep_goal):
     traceback.print_exc()
     print ( tr("Impossible de transferer les fichiers requis dans : %s", str(rep_goal)))
 
-def get_entete_cata(fic_cata):
+def getEnteteCata(fic_cata):
   """ Retrouve l'entete du catalogue """
   l_lignes = open(fic_cata,'r').readlines()
   txt = ''

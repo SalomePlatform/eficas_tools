@@ -52,7 +52,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
         self.nomVariables={}
         self.creeColonnes()
         self.connecterSignaux()
-        if self.node.item.get_valeur()== None:  self.initialSsValeur()
+        if self.node.item.getValeur()== None:  self.initialSsValeur()
         else :
            try    : self.initialValeur()
            except : self.initialSsValeur()
@@ -76,7 +76,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
   def afficheEntete(self):
       self.objSimp.changeEnteteMatrice()
       self.TBMatrice.clear()
-      if self.node.item.get_valeur()== None:  self.initialSsValeur()
+      if self.node.item.getValeur()== None:  self.initialSsValeur()
       else :
          try    : self.initialValeur()
          except : self.initialSsValeur()
@@ -84,7 +84,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
       self.node.item.object.parent.state='changed'
       self.setValide()
       self.parentQt.setValide()
-      self.node.item.jdc.isvalid()
+      self.node.item.jdc.isValid()
 
 
   def itemChanged(self):
@@ -100,20 +100,20 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
       else :
         ok=False
       if ok == False :
-	self.editor.affiche_infos(tr("Entrer un float SVP"),Qt.red)
+	self.editor.afficheInfos(tr("Entrer un float SVP"),Qt.red)
         monItem.setText("")
         return
       if self.monType.valSup != None :
          if val > self.monType.valSup :
-	    self.editor.affiche_infos(tr("Entrer un float inferieur a ") + repr(self.monType.valSup),Qt.red)
+	    self.editor.afficheInfos(tr("Entrer un float inferieur a ") + repr(self.monType.valSup),Qt.red)
             monItem.setText("")
             return
       if self.monType.valMin != None :
          if val < self.monType.valMin :
-	    self.editor.affiche_infos(tr("Entrer un float superieur a ") + repr(self.monType.valMin),Qt.red)
+	    self.editor.afficheInfos(tr("Entrer un float superieur a ") + repr(self.monType.valMin),Qt.red)
             monItem.setText("")
             return
-      self.editor.affiche_infos("")
+      self.editor.afficheInfos("")
       if self.monType.structure != None: MonWidgetMatrice.__dict__[self.monType.structure](*(self,))
       self.acceptVal()
 
@@ -140,7 +140,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
          self.nbCols=self.monType.nbCols
 
 
-  def  NbDeVariables(self):
+  def  nbDeVariables(self):
        jdc=self.node.item.object.jdc
        etape=self.node.item.object.etape
        self.listeVariables=jdc.get_variables(etape)
@@ -152,7 +152,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
        self.nbLigs=len(self.listeVariables)
        self.nbCols=len(self.listeVariables)
 
-  def  NbDeDistributions(self):
+  def  nNbDeDistributions(self):
        jdc=self.node.item.object.jdc
        etape=self.node.item.object.etape
        self.listeVariables=jdc.get_distributions(etape)
@@ -181,7 +181,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
        self.TBMatrice.setHorizontalHeaderLabels(header)
 
   def  initialValeur(self):
-      liste=self.node.item.get_valeur()
+      liste=self.node.item.getValeur()
       dejaAffiche=0
       if (len(liste)) != self.nbLigs +1  :
          QMessageBox.critical( self,tr( "Mauvaise dimension de matrice"),tr( "le nombre de ligne n est pas egal a ") + str(self.nbLigs))
@@ -224,4 +224,4 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
               listeCol.append(val)
           liste.append(listeCol)
       # on ajoute l ordre des variables aux valeurs
-      self.node.item.set_valeur(liste)
+      self.node.item.setValeur(liste)

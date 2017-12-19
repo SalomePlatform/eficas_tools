@@ -68,7 +68,7 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
           self.bAvant.clicked.connect(self.afficheAvant)
           self.bApres.clicked.connect(self.afficheApres)
       self.LENom.returnPressed.connect(self.nomChange)
-      self.LENomFormule.returnPressed.connect(self.NomFormuleSaisi)
+      self.LENomFormule.returnPressed.connect(self.nomFormuleSaisi)
       self.LENomsArgs.returnPressed.connect(self.argsSaisis)
       self.LECorpsFormule.returnPressed.connect(self.FormuleSaisie)
 
@@ -85,11 +85,11 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
 
 
   def setValeurs(self):
-        self.LENomFormule.setText(self.node.item.get_nom())
-        self.LECorpsFormule.setText(self.node.item.get_corps())
+        self.LENomFormule.setText(self.node.item.getNom())
+        self.LECorpsFormule.setText(self.node.item.getCorps())
         texte_args=""
-        if self.node.item.get_args() != None :
-            for i in self.node.item.get_args() :
+        if self.node.item.getArgs() != None :
+            for i in self.node.item.getArgs() :
                 if texte_args != "" : texte_args = texte_args +","
                 texte_args=texte_args + i
         self.LENomsArgs.setText(texte_args)
@@ -98,7 +98,7 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
   def nomChange(self):
       nom = str(self.LENom.text())
       self.LENomFormule.setText(nom)
-      self.NomFormuleSaisi()
+      self.nomFormuleSaisi()
 
 
   def afficheCatalogue(self):
@@ -116,26 +116,26 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
   def setValide(self):
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
-      if self.node.item.object.isvalid() :
+      if self.node.item.object.isValid() :
          icon=QIcon(self.repIcon+"/ast-green-ball.png")
       else :
          icon=QIcon(self.repIcon+"/ast-red-ball.png")
-      if self.node.item.GetIconName() == "ast-yellow-square" :
+      if self.node.item.getIconName() == "ast-yellow-square" :
          icon=QIcon(self.repIcon+"/ast-yel-ball.png")
       self.RBValide.setIcon(icon)
 
 
-  def NomFormuleSaisi(self):
+  def nomFormuleSaisi(self):
       nomFormule = str(self.LENomFormule.text())
       if nomFormule == '' : return
       self.LENom.setText(nomFormule)
-      test,erreur = self.node.item.verif_nom(nomFormule)
+      test,erreur = self.node.item.verifNom(nomFormule)
       if test :
          commentaire=nomFormule+tr(" est un nom valide pour une FORMULE")
-         self.editor.affiche_infos(commentaire)
+         self.editor.afficheInfos(commentaire)
       else :
          commentaire=nomFormule+tr(" n'est pas un nom valide pour une FORMULE")
-         self.editor.affiche_infos(commentaire,Qt.red)
+         self.editor.afficheInfos(commentaire,Qt.red)
          return
       if str(self.LENomsArgs.text()) != "" and  str(self.LECorpsFormule.text())!= "" : self.BOkPressedFormule()
       self.LENomsArgs.setFocus(7)
@@ -143,13 +143,13 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
   def argsSaisis(self):
       arguments = str(self.LENomsArgs.text())
       if arguments == '' : return
-      test,erreur = self.node.item.verif_arguments(arguments)
+      test,erreur = self.node.item.verifArguments(arguments)
       if test:
          commentaire=tr("Argument(s) valide(s) pour une FORMULE")
-         self.editor.affiche_infos(commentaire)
+         self.editor.afficheInfos(commentaire)
       else:
          commentaire=tr("Argument(s) invalide(s) pour une FORMULE")
-         self.editor.affiche_infos(commentaire,Qt.red)
+         self.editor.afficheInfos(commentaire,Qt.red)
       if str(self.LECorpsFormule.text()) != "" and  str(self.LENomFormule.text())!= "" : self.BOkPressedFormule()
       self.LECorpsFormule.setFocus(7)
 
@@ -158,50 +158,47 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
       arguments  = str(self.LENomsArgs.text())
       expression = str(self.LECorpsFormule.text())
       if expression == '' : return
-      test,erreur = self.node.item.verif_formule_python((nomFormule,"REEL",arguments,expression))
+      test,erreur = self.node.item.verifFormule_python((nomFormule,"REEL",arguments,expression))
 
       if test:
          commentaire=tr("Corps de FORMULE valide")
-         self.editor.affiche_infos(commentaire)
+         self.editor.afficheInfos(commentaire)
       else:
          commentaire=tr("Corps de FORMULE invalide")
-         self.editor.affiche_infos(commentaire,Qt.red)
+         self.editor.afficheInfos(commentaire,Qt.red)
       if str(self.LENomsArgs.text()) != "" and  str(self.LENomFormule.text())!= "" : self.BOkPressedFormule()
 
   def BOkPressedFormule(self):
       #print dir(self)
-      #if self.parent.modified == 'n' : self.parent.init_modif()
+      #if self.parent.modified == 'n' : self.parent.initModif()
 
       nomFormule = str(self.LENomFormule.text())
-      test,erreur = self.node.item.verif_nom(nomFormule)
+      test,erreur = self.node.item.verifNom(nomFormule)
       if not test :
-         self.editor.affiche_infos(erreur,Qt.red)
+         self.editor.afficheInfos(erreur,Qt.red)
          return
 
       arguments  = str(self.LENomsArgs.text())
-      test,erreur = self.node.item.verif_arguments(arguments)
+      test,erreur = self.node.item.verifArguments(arguments)
       if not test :
-         self.editor.affiche_infos(erreur,Qt.red)
+         self.editor.afficheInfos(erreur,Qt.red)
          return
 
       expression = str(self.LECorpsFormule.text())
-      test,erreur = self.node.item.verif_formule_python((nomFormule,"REEL",arguments,expression))
+      test,erreur = self.node.item.verifFormule_python((nomFormule,"REEL",arguments,expression))
       if not test :
-         self.editor.affiche_infos(erreur,Qt.red)
+         self.editor.afficheInfos(erreur,Qt.red)
          return
 
       test=self.node.item.object.update_formule_python(formule=(nomFormule,"REEL",arguments,expression))
-      test,erreur = self.node.item.save_formule(nomFormule,"REEL",arguments,expression)
+      test,erreur = self.node.item.saveFormule(nomFormule,"REEL",arguments,expression)
       if test :
-         #self.node.update_texte()
-         #self.node.update_label()
-         #self.node.update_node()
          self.node.onValid()
          self.node.update_valid()
          commentaire = "Formule saisie"
-         self.editor.affiche_infos(commentaire)
+         self.editor.afficheInfos(commentaire)
       else:
          commentaire ="Formule incorrecte : " + erreur
-         self.editor.affiche_infos(commentaire,Qt.red)
-      self.editor.init_modif()
+         self.editor.afficheInfos(commentaire,Qt.red)
+      self.editor.initModif()
 

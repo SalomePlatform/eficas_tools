@@ -48,8 +48,8 @@ class DRecherche(Ui_desRecherche ,QDialog):
       #if self.motAChercher!=self.LERecherche.text(): self.recherche()
       if self.listeTrouvee=={} : return
       if self.surLigne > len(self.listeTrouvee) -1 : return
-      if self.nodeSurligne!=None : self.nodeSurligne.update_node_texte_in_black()
-      #self.listeTrouvee[self.surLigne].update_node_texte_in_blue()
+      if self.nodeSurligne!=None : self.nodeSurligne.updateNodeTexteInBlack()
+      #self.listeTrouvee[self.surLigne].updateNodeTexteInBlue()
       #self.nodeSurligne=self.listeTrouvee[self.surLigne]
       self.listeTrouvee[self.surLigne].select()
       self.listeTrouvee[self.surLigne].affichePanneau()

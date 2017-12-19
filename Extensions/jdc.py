@@ -31,9 +31,9 @@ from . import etape_niveau
 class JDC(object):
   def __init__(self):
     self.dict_niveaux={}
-    self.build_niveaux()
+    self.buildNiveaux()
 
-  def build_niveaux(self):
+  def buildNiveaux(self):
     for niveau in self.definition.l_niveaux:
       etape_niv = etape_niveau.ETAPE_NIVEAU(niveau,self)
       self.etapes_niveaux.append(etape_niv)

@@ -84,7 +84,7 @@ class MCSIMP(N_OBJECT.OBJECT):
             val = self.convProto.convert(val)
         return val
 
-    def get_valeur(self):
+    def getValeur(self):
         """
             Retourne la "valeur" d'un mot-clé simple.
             Cette valeur est utilisée lors de la création d'un contexte
@@ -107,7 +107,7 @@ class MCSIMP(N_OBJECT.OBJECT):
             v = (v, )
         return v
 
-    def get_val(self):
+    def getVal(self):
         """
             Une autre méthode qui retourne une "autre" valeur du mot clé simple.
             Elle est utilisée par la méthode get_mocle

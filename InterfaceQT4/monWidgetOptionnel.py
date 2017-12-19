@@ -37,23 +37,22 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.dicoMCWidgetOptionnel={}
      self.parentQt=parentQt
 
-  def afficheOptionnel(self,liste,MC):
+  def afficheOptionnel(self,liste,liste_rouge,MC):
      #print ('afficheOptionnel MonWidgetOptionnel', self,liste,MC)
-     #import traceback
-     #traceback.print_stack()
      self.vireLesAutres(MC)
+   
      if MC.node.item.nom in self.dicoMCWidgetOptionnel :
         self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
         self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].deleteLater()
-     groupe = MonGroupeOptionnel(liste,self,MC)
+     groupe = MonGroupeOptionnel(liste,liste_rouge,self,MC)
      self.groupesOptionnelsLayout.insertWidget(0,groupe)
      self.dicoMCWidgetOptionnel[MC.node.item.nom]=groupe
      return groupe
 
   def vireLesAutres(self,MC):
       #print( "je passe dans vireLesAutres")
-      genea =MC.obj.get_genealogie()
+      genea =MC.obj.getGenealogie()
       #print (genea)
       for k in list(self.dicoMCWidgetOptionnel.keys()):
           #if k not in genea :  print ( k)
@@ -72,7 +71,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      if self.parentCommande.node.editor.code in ['Adao','ADAO'] and self.parentCommande.node.editor.closeFrameRechercheCommande==True :
         self.frameLabelCommande.close()
         return
-     labeltext,fonte,couleur = self.parentCommande.node.item.GetLabelText()
+     labeltext,fonte,couleur = self.parentCommande.node.item.getLabelText()
      l=tr(labeltext)
      li=[]
      while len(l) > 25:

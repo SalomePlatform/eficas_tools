@@ -105,7 +105,7 @@ class PythonGenerator(object):
       if obj == None : 
          print ('appel a gener avec None')
          return
-      self.appli=obj.get_jdc_root().appli
+      self.appli=obj.getJdcRoot().appli
       #self.appli=obj.appli
       liste= self.generator(obj)
       #format='standard'
@@ -339,7 +339,7 @@ class PythonGenerator(object):
             Methode particuliere pour les objets de type FORMULE
         """
         l=[]
-        nom = obj.get_nom()
+        nom = obj.getNom()
         if nom == '' : nom = 'sansnom'
         l.append(nom + ' = FORMULE(')
         for v in obj.mc_liste:
@@ -565,13 +565,13 @@ class PythonGenerator(object):
          if waitTuple :
             #s = str(obj.valeur) +','
             #obj.valeurFormatee=obj.valeur
-            s = obj.GetText() +','
-            obj.valeurFormatee=obj.GetText()
+            s = obj.getText() +','
+            obj.valeurFormatee=obj.getText()
          else :
             obj.valeurFormatee=[]
             for val in obj.valeur :
                s =s +self.format_item(val,obj.etape,obj,1) + ','
-               if obj.wait_TXM() :
+               if obj.waitTxm() :
                   obj.valeurFormatee.append(val)
                else :
                  obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))

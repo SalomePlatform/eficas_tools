@@ -57,10 +57,10 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
 
 
   def initLBSDCO(self):
-        listeNomsSDCO = self.node.item.get_sd_avant_du_bon_type()
+        listeNomsSDCO = self.node.item.getSdAvantDuBonType()
         for aSDCO in listeNomsSDCO:
             self.LBSDCO.insertItem( 1,aSDCO)
-        valeur = self.node.item.get_valeur()
+        valeur = self.node.item.getValeur()
         if valeur  != "" and valeur != None :
            self.LESDCO.setText(str(valeur.nom))
 
@@ -73,26 +73,26 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
         """
         nomConcept=str(self.LBSDCO.currentItem().text())
         self.LESDCO.clear()
-        self.editor.init_modif()
-        anc_val = self.node.item.get_valeur()
-        test_CO=self.node.item.is_CO(anc_val)
+        self.editor.initModif()
+        anc_val = self.node.item.getValeur()
+        test_CO=self.node.item.isCO(anc_val)
 
-        valeur,validite=self.node.item.eval_valeur(nomConcept)
-        test = self.node.item.set_valeur(valeur)
+        valeur,validite=self.node.item.evalValeur(nomConcept)
+        test = self.node.item.setValeur(valeur)
         if not test :
           commentaire = tr("impossible d'evaluer : ") +  valeur
         elif validite:
           commentaire = tr("Valeur du mot-clef enregistree")
           if test_CO:
              # il faut egalement propager la destruction de l'ancien concept
-             self.node.item.delete_valeur_co(valeur=anc_val)
-             self.node.item.object.etape.get_type_produit(force=1)
-             self.node.item.object.etape.parent.reset_context()
+             self.node.item.deleteValeurCo(valeur=anc_val)
+             self.node.item.object.etape.getType_produit(force=1)
+             self.node.item.object.etape.parent.resetContext()
              self.LESDCO.setText(nomConcept)
         else :
-          commentaire = self.node.item.get_cr()
+          commentaire = self.node.item.getCr()
           self.reset_old_valeur(anc_val,mess=mess)
-          self.editor.affiche_infos(commentaire,Qt.red)
+          self.editor.afficheInfos(commentaire,Qt.red)
         self.Commentaire.setText(tr(commentaire))
 
 

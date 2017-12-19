@@ -62,22 +62,17 @@ class READERCATA(object):
       self.code=self.QWParent.code
       self.ssCode=self.appliEficas.ssCode
       self.appliEficas.format_fichier='python'
-      self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
       self.version_code=self.QWParent.version_code
       self.version_cata=None
       self.fic_cata=None
-      self.OpenCata()
+      self.openCata()
+      self.traiteIcones()
       self.cataitem=None
-      self.cree_dico_inverse()
-      if self.code=="TELEMAC": self.cree_dico_CasToCata()
-      #for k in self.dicoInverse:
-      #   genea= self.dicoInverse[k]
-      #   for t in genea :
-      #       print t[0]
-      #   print "\n"
+      self.creeDicoInverse()
+      if self.code=="TELEMAC": self.creeDicoCasToCata()
 
 
-   def OpenCata(self):
+   def openCata(self):
       """ 
           Ouvre le catalogue standard du code courant, cad le catalogue present
           dans le repertoire Cata 
@@ -87,7 +82,7 @@ class READERCATA(object):
       self.Commandes_Ordre_Catalogue=[]
 
       all_cata_list = []
-      for catalogue in self.appliEficas.CONFIGURATION.catalogues:
+      for catalogue in self.appliEficas.maConfiguration.catalogues:
           if isinstance(catalogue, CatalogDescription):
               all_cata_list.append(catalogue)
           elif isinstance(catalogue, tuple):
@@ -142,7 +137,7 @@ class READERCATA(object):
           else:
               # plusieurs catalogues sont disponibles : il faut demander a l'utilisateur
               # lequel il veut utiliser ...
-              self.ask_choix_catalogue(cata_choice_list)
+              self.askChoixCatalogue(cata_choice_list)
 
       if self.fic_cata == None :
           if self.appliEficas.salome == 0 :
@@ -152,10 +147,9 @@ class READERCATA(object):
              self.appliEficas.close()
              return
 
-      if self.code == "ASTER" : self.determineMater()
 
       # import du catalogue
-      self.cata = self.import_cata(self.fic_cata)
+      self.cata = self.importCata(self.fic_cata)
       if not self.cata :          
           QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
           self.appliEficas.close()
@@ -164,11 +158,11 @@ class READERCATA(object):
       #
       # analyse du catalogue (ordre des mots-cles)
       #
-      # Retrouve_Ordre_Cata_Standard fait une analyse textuelle du catalogue
-      # remplace par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
+      # retrouveOrdreCataStandard fait une analyse textuelle du catalogue
+      # remplace par retrouveOrdreCataStandardAutre qui utilise une numerotation
       # des mots cles a la creation
-      self.Retrouve_Ordre_Cata_Standard_autre()
-      if self.mode_nouv_commande== "initial" : self.Retrouve_Ordre_Cata_Standard()
+      self.retrouveOrdreCataStandardAutre()
+      if self.appliEficas.maConfiguration.modeNouvCommande == "initial" : self.retrouveOrdreCataStandard()
       if hasattr(self.cata, 'Ordre_Des_Commandes') : self.Ordre_Des_Commandes=self.cata.Ordre_Des_Commandes
       else : self.Ordre_Des_Commandes=None
       
@@ -185,7 +179,6 @@ class READERCATA(object):
       #
       # traitement des clefs documentaires
       #
-      if self.code == "ASTER" : self.traite_clefs_documentaires()
       self.cata=(self.cata,)
 
       self.titre=self.VERSION_EFICAS+" "+tr( " avec le catalogue ") + os.path.basename(self.fic_cata)
@@ -194,24 +187,8 @@ class READERCATA(object):
       self.appliEficas.titre=self.titre
       self.QWParent.titre=self.titre
 
-   def determineMater(self) :
-      # Determinination du repertoire materiau
-      v_codeSansPoint=self.version_code
-      if v_codeSansPoint == None : return 
-      v_codeSansPoint=re.sub("\.","",v_codeSansPoint)
-      chaine="rep_mat_"+v_codeSansPoint
-      if hasattr(self.appliEficas.CONFIGURATION,chaine):
-          a=getattr(self.appliEficas.CONFIGURATION,chaine)
-      else :
-          try :
-             a=self.appliEficas.CONFIGURATION.dRepMat[self.version_code]
-          except :
-             if self.code == "ASTER" :
-                print ("Probleme avec le repertoire materiau")
-             a='.'
-      self.appliEficas.CONFIGURATION.rep_mat=a
 
-   def import_cata(self,cata):
+   def importCata(self,cata):
       """ 
           Realise l'import du catalogue dont le chemin d'acces est donne par cata
       """
@@ -228,19 +205,10 @@ class READERCATA(object):
           del sys.modules[k]
 
       mesScriptsNomFichier='mesScripts_'+self.code.upper()
-      if self.code == "ASTER" :
-         self.appliEficas.rep_scripts=os.path.join(rep_cata,nom_cata)
-         sys.path[:0] = [self.appliEficas.rep_scripts]
-         try :
-             self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
-         except:
-             pass
-         sys.path=sys.path[1:]
-      else :
-         try :
-            self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
-         except:
-            pass
+      try :
+          self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
+      except:
+          pass
 
       try :
           o=__import__(nom_cata)
@@ -251,31 +219,31 @@ class READERCATA(object):
 
 
 
-   def Retrouve_Ordre_Cata_Standard_autre(self):
+   def retrouveOrdreCataStandardAutre(self):
       """ 
           Construit une structure de donnees dans le catalogue qui permet
           a EFICAS de retrouver l'ordre des mots-cles dans le texte du catalogue.
           Pour chaque entite du catlogue on cree une liste de nom ordre_mc qui
           contient le nom des mots cles dans le bon ordre
       """ 
-      self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
+      self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
 
-   def Retrouve_Ordre_Cata_Standard(self):
+   def retrouveOrdreCataStandard(self):
       """ 
           Retrouve l'ordre des mots-cles dans le catalogue, cad :
           Attention s appuie sur les commentaires
       """
       nom_cata = os.path.splitext(os.path.basename(self.fic_cata))[0]
       rep_cata = os.path.dirname(self.fic_cata)
-      self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyse_catalogue(self.fic_cata)
+      self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyseCatalogue(self.fic_cata)
       #print self.Commandes_Ordre_Catalogue
 
-   def ask_choix_catalogue(self, cata_choice_list):
+   def askChoixCatalogue(self, cata_choice_list):
       """
       Ouvre une fenetre de selection du catalogue dans le cas où plusieurs
       ont ete definis dans Accas/editeur.ini
       """      
-      code = getattr(self.appliEficas.CONFIGURATION, "code", None)
+      code = getattr(self.appliEficas.maConfiguration, "code", None)
       if code != None : 
           title=tr("Choix d une version du code ")+str(code)
       else :
@@ -289,6 +257,7 @@ class READERCATA(object):
       lab+=str(self.code) 
       lab+=tr(" avec le catalogue ")
       if ret == QDialog.Accepted:
+          print (widgetChoix.CBChoixCata.currentIndex())
           cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
           self.version_cata = cata.identifier
           self.fic_cata = cata.cata_file_path
@@ -298,49 +267,32 @@ class READERCATA(object):
           lab+=self.version_cata
           self.appliEficas.setWindowTitle(lab)
           #qApp.mainWidget().setCaption(lab)
+          widgetChoix.close()
       else:
+          widgetChoix.close()
           raise EficasException()
         
-
-   def traite_clefs_documentaires(self):
+   def traiteIcones(self):
+      if self.appliEficas.maConfiguration.ficIcones==None : return
       try:
-        fic_doc='rep_doc_'+str(self.version_code)
-        self.fic_doc=getattr(self.appliEficas.CONFIGURATION,fic_doc )
-        f=open(self.fic_doc)
+        ficIcones=self.appliEficas.maConfiguration.ficIcones 
+        fichierIcones = __import__(ficIcones, globals(), locals(), [], -1)
+        self.dicoIcones=fichierIcones.dicoDesIcones.dicoIcones
       except:
-        print ("Pas de fichier associe contenant des clefs documentaires")
-        return
+        print ("Pas de fichier associe contenant des liens sur les icones ")
+        self.dicoIcones={}
+      
 
-      dict_clef_docu={}
-      for l in f.readlines():
-          clef=l.split(':')[0]
-          deb=l.find(':')+1
-          docu=l[deb:-1]
-          dict_clef_docu[clef]=docu
-      for oper in self.cata.JdC.commandes:
-           if oper.nom in dict_clef_docu :
-              oper.docu=dict_clef_docu[oper.nom]
 
-   def cree_dico_inverse(self):
+   def creeDicoInverse(self):
         self.dicoInverse={}
         self.dicoMC={} 
         listeEtapes=self.cata[0].JdC.commandes
         for e in self.cata[0].JdC.commandes:
-            self.traite_entite(e)
-
-        #self.dicoFrancaisAnglais={}
-        #self.dicoAnglaisFrancais={}
-        #for k in self.dicoInverse:
-        #    listefr=[]
-        #    for nom, obj in self.dicoInverse[k] :
-        #        listefr.append((tr(nom),obj))
-        #        self.dicoFrancaisAnglais[tr(nom)]=nom
-        #        self.dicoAnglaisFrancais[nom]=tr(nom)
-        #    self.dicoInverseFrancais[tr(k)]=listefr
-        #    #print tr(k),listefr
+            self.traiteEntite(e)
 
    
-   def cree_dico_CasToCata(self):
+   def creeDicoCasToCata(self):
         if self.appliEficas.langue=="ang" :
            from dicoCasEnToCata import dicoCasEnToCata as dicoCasToCata
         else :
@@ -349,12 +301,11 @@ class READERCATA(object):
         
         
          
-        
-   def traite_entite(self,e):
+   def traiteEntite(self,e):
        boolIn=0
        for (nomFils, fils) in list(e.entites.items()) :
           self.dicoMC[nomFils]=fils
-          self.traite_entite(fils)
+          self.traiteEntite(fils)
           boolIn=1
        if boolIn==0 :
           liste=[]
@@ -366,14 +317,14 @@ class READERCATA(object):
           self.dicoInverse[e.nom]=liste
           self.dicoInverse[tr(e.nom)]=liste
 
-   def cree_rubrique(self,e,dico, niveau):
+   def creeRubrique(self,e,dico, niveau):
        from Accas import A_BLOC
        decale=niveau*"   "
        #if niveau != 0 :
        #    if isinstance(e,A_BLOC.BLOC): print decale, e.condition 
        #    else :                           print decale, e. nom  
        for (nom, fils) in list(e.entites.items()) :
-           if  list(fils.entites.items()) != [] : self.cree_rubrique(fils,dico,niveau+1)
+           if  list(fils.entites.items()) != [] : self.creeRubrique(fils,dico,niveau+1)
            #else : print (niveau+1)*"   ", nom
 
         

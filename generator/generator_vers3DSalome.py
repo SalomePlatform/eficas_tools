@@ -115,7 +115,7 @@ class vers3DSalomeGenerator(PythonGenerator):
 
    def calcule_ouinon(self,obj):
       ouinon=1
-      for l in obj.get_genealogie() :
+      for l in obj.getGenealogie() :
           if not l in self.liste_motetat :
              ouinon=0
              break
@@ -125,7 +125,7 @@ class vers3DSalomeGenerator(PythonGenerator):
    def generETAPE(self,obj):
       """
       """
-      if obj.isvalid() == 0 :
+      if obj.isValid() == 0 :
          #showerror("Element non valide","Salome ne sait pas traiter les elements non valides")
          return
       for v in obj.mc_liste:
@@ -134,7 +134,7 @@ class vers3DSalomeGenerator(PythonGenerator):
    def generMACRO_ETAPE(self,obj):
       """
       """
-      if obj.isvalid() == 0 :
+      if obj.isValid() == 0 :
          #showerror("Element non valide","Salome ne sait pas traiter les elements non valides")
          return
       for v in obj.mc_liste:
@@ -148,7 +148,7 @@ class vers3DSalomeGenerator(PythonGenerator):
          suite = self.__class__.__dict__[obj.nom](self,obj)
       else :
          clef=self.dict_traduit[obj.nom]
-         # Traitement des parametres
+         # traitement des parametres
          try :
              self.dict_attributs[clef]=obj.val.eval()
          except :

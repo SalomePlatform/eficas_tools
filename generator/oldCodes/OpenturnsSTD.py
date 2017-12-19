@@ -109,7 +109,7 @@ class STDGenerateur :
     print "ListeVariablesOut= %s", ListeVariablesOut
     #print "DictLois=", DictLois
     self.texteSTD = defaultSTD
-    self.OpenTURNS_path = appli.CONFIGURATION.OpenTURNS_path
+    self.OpenTURNS_path = appli.maConfiguration.OpenTURNS_path
 
     # Ce dictionnaire fait la correspondance entre le mot lu dans le dictionnaire des mots-clefs et la methode a appeler
     self.traitement = {
@@ -247,13 +247,13 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'Type' ) ):
       TypeAnalyse =  self.DictMCVal[ 'Type' ]
 
-    Traitement = None
+    traitement = None
     subDict = {}
     if ( self.traitement.has_key( TypeAnalyse ) ):
-      (Traitement, subDict) =  self.traitement[ TypeAnalyse ]
+      (traitement, subDict) =  self.traitement[ TypeAnalyse ]
 
-    if ( Traitement is not None ):
-      self.texteSTD = apply( STDGenerateur.__dict__[ Traitement ], (self, subDict) )
+    if ( traitement is not None ):
+      self.texteSTD = apply( STDGenerateur.__dict__[ traitement ], (self, subDict) )
     
     return self.texteSTD
 
@@ -293,12 +293,12 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'Method' ) ):
       Methode =  self.DictMCVal[ 'Method' ]
 
-    Traitement = None
+    traitement = None
     if ( subDict.has_key( Methode ) ):
-      Traitement =  subDict[ Methode ]
+      traitement =  subDict[ Methode ]
 
-    if ( Traitement is not None ):
-      txt += apply( STDGenerateur.__dict__[ Traitement ], (self,) )
+    if ( traitement is not None ):
+      txt += apply( STDGenerateur.__dict__[ traitement ], (self,) )
 
     txt += self.MinMaxResult()
     
@@ -548,13 +548,13 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'Method' ) ):
       Methode =  self.DictMCVal[ 'Method' ]
 
-    Traitement = None
+    traitement = None
     if ( subDict.has_key( Methode ) ):
-      Traitement =  subDict[ Methode ]
+      traitement =  subDict[ Methode ]
 
-    if ( Traitement is not None ):
+    if ( traitement is not None ):
       txt += "# Etude 'Central Uncertainty'\n"
-      txt += apply( STDGenerateur.__dict__[ Traitement ], (self,) )
+      txt += apply( STDGenerateur.__dict__[ traitement ], (self,) )
 
     txt += self.Footer()
     return txt
@@ -711,12 +711,12 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'Method' ) ):
       Methode =  self.DictMCVal[ 'Method' ]
 
-    Traitement = None
+    traitement = None
     if ( subDict.has_key( Methode ) ):
-      Traitement =  subDict[ Methode ]
+      traitement =  subDict[ Methode ]
 
-    if ( Traitement is not None ):
-      txt += apply( STDGenerateur.__dict__[ Traitement ], (self, subDict) )
+    if ( traitement is not None ):
+      txt += apply( STDGenerateur.__dict__[ traitement ], (self, subDict) )
 
     txt += self.Footer()
     return txt
@@ -729,12 +729,12 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'Algorithm' ) ):
       Algorithme =  self.DictMCVal[ 'Algorithm' ]
 
-    Traitement = None
+    traitement = None
     if ( subDict.has_key( Algorithme ) ):
-      Traitement =  subDict[ Algorithme ]
+      traitement =  subDict[ Algorithme ]
 
-    if ( Traitement is not None ):
-      txt = apply( STDGenerateur.__dict__[ Traitement ], (self,) )
+    if ( traitement is not None ):
+      txt = apply( STDGenerateur.__dict__[ traitement ], (self,) )
 
     maxOuterSampling = None
     if ( self.DictMCVal.has_key( 'MaximumOuterSampling' ) ):
@@ -813,12 +813,12 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'OptimizationAlgorithm' ) ):
       OptimizationAlgo =  self.DictMCVal[ 'OptimizationAlgorithm' ]
 
-    Traitement = None
+    traitement = None
     if ( subDict.has_key( OptimizationAlgo ) ):
-      Traitement =  subDict[ OptimizationAlgo ]
+      traitement =  subDict[ OptimizationAlgo ]
 
-    if ( Traitement is not None ):
-      txt += apply( STDGenerateur.__dict__[ Traitement ], (self,) )
+    if ( traitement is not None ):
+      txt += apply( STDGenerateur.__dict__[ traitement ], (self,) )
 
     txt += self.OptimizerSettings()
     txt += self.PhysicalStartingPoint()
@@ -827,12 +827,12 @@ class STDGenerateur :
     if ( self.DictMCVal.has_key( 'Approximation' ) ):
       Approximation =  self.DictMCVal[ 'Approximation' ]
 
-    Traitement = None
+    traitement = None
     if ( subDict.has_key( Approximation ) ):
-      Traitement =  subDict[ Approximation ]
+      traitement =  subDict[ Approximation ]
 
-    if ( Traitement is not None ):
-      txt += apply( STDGenerateur.__dict__[ Traitement ], (self,) )
+    if ( traitement is not None ):
+      txt += apply( STDGenerateur.__dict__[ traitement ], (self,) )
 
     txt += self.RunAlgorithm()
     txt += self.AnalyticalResult()

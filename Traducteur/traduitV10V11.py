@@ -277,7 +277,7 @@ def traduc(infile,outfile,flog=None):
     GenereErreurPourCommande(jdc,("CALC_SENSI",))
 
 
-    ####  Traitement des cas particuliers   ##############################
+    ####  traitement des cas particuliers   ##############################
     #  On ne traite pas les commandes TEST*
     removeCommande(jdc,"TEST_COMPOR")
     removeCommande(jdc,"TEST_FICHIER")
@@ -286,7 +286,7 @@ def traduc(infile,outfile,flog=None):
     removeCommande(jdc,"TEST_TABLE")
     removeCommande(jdc,"TEST_TEMPS")
 
-    ####   Traitement de AFFE_CARA_ELEM   ##############################
+    ####   traitement de AFFE_CARA_ELEM   ##############################
     # Déplacement de PREC_AIRE et PREC_INERTIE dans MULTIFIBRE
     moveMotCleFromFactToFact(jdc,"AFFE_CARA_ELEM","POUTRE","PREC_AIRE","MULTIFIBRE")
     removeMotCleInFact(jdc,"AFFE_CARA_ELEM","POUTRE","PREC_AIRE",pasDeRegle(),0)
@@ -301,37 +301,37 @@ def traduc(infile,outfile,flog=None):
     # Suppression de ORIG_AXE
     removeMotCleInFact(jdc,"AFFE_CARA_ELEM","GRILLE","ORIG_AXE",pasDeRegle(),0)
 
-    ####   Traitement de AFFE_CHAR_MECA/_F  ##############################
+    ####   traitement de AFFE_CHAR_MECA/_F  ##############################
     renameMotCle(jdc,"AFFE_CHAR_MECA","SIGM_INTERNE","PRE_SIGM")
     renameMotCle(jdc,"AFFE_CHAR_MECA","EPSI_INIT","PRE_EPSI")
     renameMotCle(jdc,"AFFE_CHAR_MECA_F","SIGM_INTERNE","PRE_SIGM")
     renameMotCle(jdc,"AFFE_CHAR_MECA_F","EPSI_INIT","PRE_EPSI")
 
-    ####   Traitement de AFFE_CHAR_OPS011   ##############################
+    ####   traitement de AFFE_CHAR_OPS011   ##############################
     GenereErreurPourCommande(jdc,("AFFE_CHAR_OPS011",))
 
-    ####   Traitement de AFFE_CHAR_THER/_F  ##############################
+    ####   traitement de AFFE_CHAR_THER/_F  ##############################
     renameMotCle(jdc,"AFFE_CHAR_THER","GRAD_TEMP_INIT","PRE_GRAD_TEMP")
     renameMotCle(jdc,"AFFE_CHAR_THER_F","GRAD_TEMP_INIT","PRE_GRAD_TEMP")
 
-    ####   Traitement de AFFE_MATERIAU   ##############################
+    ####   traitement de AFFE_MATERIAU   ##############################
     # VALE_REF obligatoire si NOM_VARC in ('TEMP', 'SECH')
     lNOMVARC=["CORR","IRRA","HYDR","EPSA","M_ACIER","M_ZIRC","NEUT1","NEUT2"]
     removeMotCleInFactSiRegle(jdc,"AFFE_MATERIAU","AFFE_VARC","VALE_REF",((("NOM_VARC",lNOMVARC,jdc),"MCsousMCFcourantaPourValeurDansListe"),))
     # renommage CHAMP_GD en CHAM_GD
     renameMotCleInFact(jdc,"AFFE_MATERIAU","AFFE_VARC","CHAMP_GD","CHAM_GD",pasDeRegle(),0)
 
-    ####   Traitement de AFFE_MODELE   ##############################
+    ####   traitement de AFFE_MODELE   ##############################
     dXFEMCONT={"3D_XFEM_CONT":"3D","C_PLAN_XFEM_CONT":"C_PLAN","D_PLAN_XFEM_CONT":"D_PLAN"}
     ChangementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dXFEMCONT)
 
-    ####   Traitement de ASSE_ELEM_SSD   ##############################
+    ####   traitement de ASSE_ELEM_SSD   ##############################
     # Rien à faire
 
-    ####   Traitement de ASSEMBLAGE   ##############################
+    ####   traitement de ASSEMBLAGE   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de C_COMP_INCR   ##############################
+    ####   traitement de C_COMP_INCR   ##############################
     # Suppression de ALGO_C_PLAN et ALGO_1D
     lCOMMANDE=["CALC_FORC_NONL","CALC_IFS_DNL","CALC_POINT_MAT",
                "CALC_PRECONT","CALCUL","DYNA_NON_LINE","LIRE_RESU",
@@ -344,7 +344,7 @@ def traduc(infile,outfile,flog=None):
         renameMotCleInFact(jdc,com,"COMP_INCR","RESI_DEBO_RELA","RESI_CPLAN_RELA",pasDeRegle(),0)
         renameMotCleInFact(jdc,com,"COMP_INCR","ITER_MAXI_DEBORST","ITER_CPLAN_MAXI",pasDeRegle(),0)
 
-    ####   Traitement de C_NEWTON   ##############################
+    ####   traitement de C_NEWTON   ##############################
     # Renommage de EXTRAPOL en EXTRAPOLE
     lCOMMANDE=["CALC_IFS_DNL","CALC_POINT_MAT","CALC_PRECONT",
                "DYNA_NON_LINE","MACR_ASCOUF_CALC","MACR_ASPIC_CALC",
@@ -353,7 +353,7 @@ def traduc(infile,outfile,flog=None):
     for com in lCOMMANDE :
         ChangementValeurDsMCF(jdc,com,"NEWTON","PREDICTION",dPRED)
 
-    ####   Traitement de C_SOLVEUR   ##############################
+    ####   traitement de C_SOLVEUR   ##############################
     # Renommage de EXTRAPOL en EXTRAPOLE
     lCOMMANDE=["CALC_ELEM","CALC_FORC_AJOU","CALC_IFS_DNL",
                "CALC_MATR_AJOU","CALC_PRECONT","CREA_ELEM_SSD",
@@ -369,13 +369,13 @@ def traduc(infile,outfile,flog=None):
         removeMotCleInFact(jdc,com,"SOLVEUR","OUT_OF_CORE",pasDeRegle(),0)
         removeMotCleInFact(jdc,com,"SOLVEUR","LIBERE_MEMOIRE",pasDeRegle(),0)
 
-    ####   Traitement de CALC_CHAMP   ##############################
+    ####   traitement de CALC_CHAMP   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de CALC_ECREVISSE   ##############################
+    ####   traitement de CALC_ECREVISSE   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_ELEM   ##############################
+    ####   traitement de CALC_ELEM   ##############################
     # renommage de la commande
     renameCommande(jdc,"CALC_ELEM","CALC_CHAMP", )
     # Suppression des types de charges
@@ -534,28 +534,28 @@ def traduc(infile,outfile,flog=None):
     removeMotCle(jdc,"CALC_CHAMP","META",pasDeRegle(),0)
     removeMotCle(jdc,"CALC_CHAMP","ERREUR",pasDeRegle(),0)
 
-    ####   Traitement de CALC_ERREUR   ##############################
+    ####   traitement de CALC_ERREUR   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de CALC_ESSAI   ##############################
+    ####   traitement de CALC_ESSAI   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_EUROPLEXUS   ##############################
+    ####   traitement de CALC_EUROPLEXUS   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_FATIGUE   ##############################
+    ####   traitement de CALC_FATIGUE   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_FERRAILLAGE   ##############################
+    ####   traitement de CALC_FERRAILLAGE   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_FONCTION   ##############################
+    ####   traitement de CALC_FONCTION   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_FORC_AJOU   ##############################
+    ####   traitement de CALC_FORC_AJOU   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_G   ##############################
+    ####   traitement de CALC_G   ##############################
     # Suppression SYME_CHAR
     removeMotCle(jdc,"CALC_G","SYME_CHAR",pasDeRegle(),0)
     # Règle sur DEGRE
@@ -578,7 +578,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFactSiRegle(jdc,"CALC_G","THETA","THETA",((("THETA","FOND_FISS",),"existeMCsousMCF"),))
     removeMotCleInFactSiRegle(jdc,"CALC_G","THETA","THETA",((("THETA","FISSURE",),"existeMCsousMCF"),))
 
-    ####   Traitement de CALC_IFS_DNL   ##############################
+    ####   traitement de CALC_IFS_DNL   ##############################
     # Renommage CRIT_FLAMB en CRIT_STAB
     renameMotCle(jdc,"CALC_IFS_DNL","CRIT_FLAMB","CRIT_STAB")
     removeMotCleInFact(jdc,"CALC_IFS_DNL","CRIT_FLAMB","INST_CALCUL",pasDeRegle(),1)
@@ -587,37 +587,37 @@ def traduc(infile,outfile,flog=None):
     # Suppression de ARCHIVAGE/DETR_NUME_SUIV
     removeMotCleInFact(jdc,"CALC_IFS_DNL","ARCHIVAGE","DETR_NUME_SUIV",pasDeRegle(),0)
 
-    ####   Traitement de CALC_INTE_SPEC   ##############################
+    ####   traitement de CALC_INTE_SPEC   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_MAC3COEUR   ##############################
+    ####   traitement de CALC_MAC3COEUR   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de CALC_MATR_AJOU   ##############################
+    ####   traitement de CALC_MATR_AJOU   ##############################
     # Suppression d'algo pour PETSc
     removeMotCleSiRegle(jdc,"RESOUDRE","ALGORITHME",((("BCGS","BICG","TFQMR",),"MCaPourValeur"),))
 
-    ####   Traitement de CALC_MATR_ELEM   ##############################
+    ####   traitement de CALC_MATR_ELEM   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_META   ##############################
+    ####   traitement de CALC_META   ##############################
     # OPTION est obligatoire
     chercheOperInsereFacteurSiRegle(jdc,"CALC_META","OPTION='META_ELNO'",((("OPTION",),"nexistepas"),),0)
 
-    ####   Traitement de CALC_MISS   ##############################
+    ####   traitement de CALC_MISS   ##############################
     # Suppression de TYPE_CHARGE
     removeMotCle(jdc,"CALC_MISS","TYPE_CHARGE",pasDeRegle(),0)
 
-    ####   Traitement de CALC_MODAL   ##############################
+    ####   traitement de CALC_MODAL   ##############################
     # renommage de STOP_FREQ_VIDE
     renameMotCle(jdc,"CALC_MODAL","STOP_FREQ_VIDE","STOP_BANDE_VIDE")
 
-    ####   Traitement de CALC_MODE_ROTATION   ##############################
+    ####   traitement de CALC_MODE_ROTATION   ##############################
     # renommage de MATR_A et MATR_B
     renameMotCle(jdc,"CALC_MODE_ROTATION","MATR_A","MATR_RIGI")
     renameMotCle(jdc,"CALC_MODE_ROTATION","MATR_B","MATR_MASS")
 
-    ####   Traitement de CALC_NO   ##############################
+    ####   traitement de CALC_NO   ##############################
     # renommage de la commande
     renameCommande(jdc,"CALC_NO","CALC_CHAMPNO", )
     # Suppression des types de charges
@@ -741,20 +741,20 @@ def traduc(infile,outfile,flog=None):
     removeMotCle(jdc,"CALC_CHAMP","METANO",pasDeRegle(),0)
     removeMotCle(jdc,"CALC_CHAMP","ERREURNO",pasDeRegle(),0)
 
-    ####   Traitement de CALC_POINT_MAT   ##############################
+    ####   traitement de CALC_POINT_MAT   ##############################
     # Rien à faire
 
-    ####   Traitement de CALC_PRECONT   ##############################
+    ####   traitement de CALC_PRECONT   ##############################
     # Renommage de IMPLEX
     ChangementValeur(jdc,"CALC_PRECONT","METHODE",{"IMPL_EX":"IMPLEX"})
     removeMotCle(jdc,"CALC_PRECONT","IMPL_EX",pasDeRegle(),0)
 
-    ####   Traitement de CALC_SENSI   ##############################
+    ####   traitement de CALC_SENSI   ##############################
     # Résorption de la sensibilité
     removeCommande(jdc,"CALC_SENSI")
     #GenereErreurPourCommande(jdc,("CALC_SENSI",))
 
-    ####   Traitement de CALC_SPEC   ##############################
+    ####   traitement de CALC_SPEC   ##############################
     # Déplacement d'un mot-clé facteur facteur
     moveMotCleFromFactToFather(jdc,"CALC_SPEC","TAB_ECHANT","LONGUEUR_ECH")
     moveMotCleFromFactToFather(jdc,"CALC_SPEC","LONGUEUR_ECH","DUREE")
@@ -779,7 +779,7 @@ def traduc(infile,outfile,flog=None):
     moveMotClefInOperToFact(jdc,"CALC_SPEC","RECOUVREMENT_POURCENT","TAB_ECHANT")
     moveMotClefInOperToFact(jdc,"CALC_SPEC","RECOUVREMENT_NB_PTS","TAB_ECHANT")
 
-    ####   Traitement de CALC_TABLE   ##############################
+    ####   traitement de CALC_TABLE   ##############################
     # Renommage de AJOUT en AJOUT_LIGNE
     dOPE={"AJOUT":"AJOUT_LIGNE",}
     ChangementValeurDsMCF(jdc,"CALC_TABLE","ACTION","OPERATION",dOPE)
@@ -789,27 +789,27 @@ def traduc(infile,outfile,flog=None):
     dCRIT={"ABS_MAXI":"MAXI_ABS","ABS_MINI":"MINI_ABS"}
     ChangementValeurDsMCF(jdc,"CALC_TABLE","FILTRE","CRIT_COMP",dCRIT)
 
-    ####   Traitement de CALC_THETA   ##############################
+    ####   traitement de CALC_THETA   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"CALC_THETA","OPTION",pasDeRegle(),0)
     removeMotCle(jdc,"CALC_THETA","THETA_BANDE",pasDeRegle(),1)
     removeMotCle(jdc,"CALC_THETA","GRAD_NOEU_THETA",pasDeRegle(),0)
 
-    ####   Traitement de COMB_FOURIER  ##############################
+    ####   traitement de COMB_FOURIER  ##############################
     # Homogénéisation de ANGLE
     renameMotCle(jdc,"COMB_FOURIER","ANGL","ANGLE")
 
-    ####   Traitement de COMB_SISM_MODAL   ##############################
+    ####   traitement de COMB_SISM_MODAL   ##############################
     GenereErreurValeur(jdc,"COMB_SISM_MODAL","OPTION",("'EFCA_ELNO'",))
 
-    ####   Traitement de CREA_CHAMP   ##############################
+    ####   traitement de CREA_CHAMP   ##############################
     removeMotCle(jdc,"CREA_CHAMP","SENSIBILITE",pasDeRegle(),0)
     removeMotCle(jdc,"CREA_CHAMP","PROL_ZERO",pasDeRegle(),0)
 
-    ####   Traitement de CREA_ELEM_SSD   ##############################
+    ####   traitement de CREA_ELEM_SSD   ##############################
     # Rien à faire
 
-    ####   Traitement de CREA_MAILLAGE   ##############################
+    ####   traitement de CREA_MAILLAGE   ##############################
     # Suppression de la possibilité de copier un maillage
     lFACTEUR=['COQU_VOLU', 'CREA_FISS', 'CREA_GROUP_MA', 'CREA_MAILLE', 'CREA_POI1',
                         'DETR_GROUP_MA', 'ECLA_PG', 'HEXA20_27', 'LINE_QUAD', 'MODI_MAILLE',
@@ -817,13 +817,13 @@ def traduc(infile,outfile,flog=None):
     renameCommandeSiRegle(jdc,"CREA_MAILLAGE","COPIER",(((lFACTEUR),"nexistepasMCFParmi"),))
     renameMotCle(jdc,"COPIER","MAILLAGE","CONCEPT")
 
-    ####   Traitement de CREA_RESU   ##############################
+    ####   traitement de CREA_RESU   ##############################
     # Rien à faire
 
-    ####   Traitement de CREA_TABLE   ##############################
+    ####   traitement de CREA_TABLE   ##############################
     removeMotCle(jdc,"CREA_TABLE","SENSIBILITE",pasDeRegle(),0)
 
-    ####   Traitement de DEBUT   ##############################
+    ####   traitement de DEBUT   ##############################
     # Suppression du mot-clé TITRE
     removeMotCleInFact(jdc,"DEBUT","CATALOGUE","TITRE",pasDeRegle(),0)
     # Suppression du mot-clé IMPRESSION
@@ -835,13 +835,13 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"DEBUT","MEMOIRE","PARTITION",pasDeRegle(),0)
     removeMotCleInFact(jdc,"DEBUT","MEMOIRE","DYNAMIQUE",pasDeRegle(),0)
 
-    ####   Traitement de DEFI_BASE_MODALE   ##############################
+    ####   traitement de DEFI_BASE_MODALE   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_CABLE_BP   ##############################
+    ####   traitement de DEFI_CABLE_BP   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_COMPOR   ##############################
+    ####   traitement de DEFI_COMPOR   ##############################
     # Suppression famille de sytèmes de glissement
     lFAMGLIS=["'BASAL'", "'PRISMATIQUE'","'PYRAMIDAL1'","'PYRAMIDAL2'","'MACLAGE'",]
     GenereErreurValeurDsMCF(jdc,"DEFI_COMPOR","MONOCRISTAL","FAMI_SYST_GLIS",lFAMGLIS)
@@ -852,7 +852,7 @@ def traduc(infile,outfile,flog=None):
      # Suppression de DEFORMATION
     GenereErreurMotCleInFact(jdc,"DEFI_COMPOR","MULTIFIBRE","DEFORMATION")
 
-    ####   Traitement de DEFI_CONTACT  ##############################
+    ####   traitement de DEFI_CONTACT  ##############################
     GenereErreurValeurDsMCF(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT",("'AVANCE'",))
     GenereErreurValeurDsMCF(jdc,"DEFI_CONTACT","ZONE","ALGO_FROT",("'AVANCE'",))
     # résorption de RACCORD_LINE_QUAD et éléments de Barsoum
@@ -886,23 +886,23 @@ def traduc(infile,outfile,flog=None):
     # Ajout règle sur REAC_GEOM
     removeMotCleSiRegle(jdc,"DEFI_CONTACT","REAC_GEOM",((("ALGO_RESO_GEOM","NEWTON",jdc),"MCaPourValeur"),))
 
-    ####   Traitement de DEFI_COQU_MULT   ##############################
+    ####   traitement de DEFI_COQU_MULT   ##############################
     renameCommande(jdc,"DEFI_COQU_MULT","DEFI_COMPOSITE", )
 
-    ####   Traitement de DEFI_FICHIER   ##############################
+    ####   traitement de DEFI_FICHIER   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_FISS_XFEM   ##############################
+    ####   traitement de DEFI_FISS_XFEM   ##############################
     # Suppression de ORIE_FOND
     removeMotCle(jdc,"DEFI_FISS_XFEM","ORIE_FOND",pasDeRegle(),0)
     # Fusion FORM_FISS='ELLIPSE' et FORM_FISS='INCLUSION'
     dFORME={"INCLUSION":"ELLIPSE",}
     ChangementValeurDsMCF(jdc,"DEFI_FISS_XFEM","DEFI_FISS","FORM_FISS",dOPE)
 
-    ####   Traitement de DEFI_FONC_ELEC   ##############################
+    ####   traitement de DEFI_FONC_ELEC   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_FOND_FISS   ##############################
+    ####   traitement de DEFI_FOND_FISS   ##############################
     renameMotCle(jdc,"DEFI_FOND_FISS","FOND_FISS","FONDFISS")
     # Cas FOND OUVERT
     AjouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_FOND_FISS","FONDFISS","TYPE_FOND='OUVERT'",((("FONDFISS",),"existe"),))
@@ -927,27 +927,27 @@ def traduc(infile,outfile,flog=None):
     #
     renameMotCle(jdc,"DEFI_FOND_FISS","FONDFISS","FOND_FISS")
 
-    ####   Traitement de DEFI_GLRC   ##############################
+    ####   traitement de DEFI_GLRC   ##############################
     # Renommage de mot-clés
     renameMotCle(jdc,"DEFI_GLRC","GC","GAMMA_C")
     renameMotCle(jdc,"DEFI_GLRC","SYC","NYC")
     renameMotCle(jdc,"DEFI_GLRC","EPSI_FLEX","KAPPA_FLEX")
 
-    ####   Traitement de DEFI_GROUPE   ##############################
+    ####   traitement de DEFI_GROUPE   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_INTE_SPEC   ##############################
+    ####   traitement de DEFI_INTE_SPEC   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_LIST_INST   ##############################
+    ####   traitement de DEFI_LIST_INST   ##############################
     dMETHODE={"UNIFORME":"MANUEL","EXTRAPOLE":"MANUEL","AUCUNE":"AUTO"}
     ChangementValeurDsMCF(jdc,"DEFI_LIST_INST","ECHEC","SUBD_METHODE",dMETHODE)
     removeMotCleInFact(jdc,"DEFI_LIST_INST","ECHEC","SUBD_COEF_PAS_1",pasDeRegle(),0)
 
-    ####   Traitement de DEFI_MATER_GC   ##############################
+    ####   traitement de DEFI_MATER_GC   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de DEFI_MATERIAU   ##############################
+    ####   traitement de DEFI_MATERIAU   ##############################
     # Suppression des critères pour les poutres
     GenereErreurMCF(jdc,"DEFI_MATERIAU","ECRO_FLEJOU")
     GenereErreurMCF(jdc,"DEFI_MATERIAU","VMIS_POUTRE")
@@ -976,37 +976,37 @@ def traduc(infile,outfile,flog=None):
     # Suppression de la loi MONO_DD_CC
     GenereErreurMCF(jdc,"DEFI_MATERIAU","MONO_DD_CC")
 
-    ####   Traitement de DEFI_NAPPE   ##############################
+    ####   traitement de DEFI_NAPPE   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_PARA_SENSI   ##############################
+    ####   traitement de DEFI_PARA_SENSI   ##############################
     # Résorption de la sensibilité
     removeCommande(jdc,"DEFI_PARA_SENSI")
     #GenereErreurPourCommande(jdc,("DEFI_PARA_SENSI",))
 
-    ####   Traitement de DEFI_PART_FETI   ##############################
+    ####   traitement de DEFI_PART_FETI   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_SOL_MISS   ##############################
+    ####   traitement de DEFI_SOL_MISS   ##############################
     # Rien à faire
 
-    ####   Traitement de DEFI_SPEC_TURB  ##############################
+    ####   traitement de DEFI_SPEC_TURB  ##############################
     # Homogénéisation de ANGLE
     renameMotCleInFact(jdc,"DEFI_SPEC_TURB","SPEC_EXCI_POINT","ANGL","ANGLE",pasDeRegle(),0)
 
-    ####   Traitement de DETRUIRE  ##############################
+    ####   traitement de DETRUIRE  ##############################
     # Résorption de la sensibilité
     removeMotCleInFact(jdc,"DETRUIRE","CONCEPT","SENSIBILITE",pasDeRegle(),0)
     # Suppression mot-clé ALARME
     removeMotCle(jdc,"DETRUIRE","ALARME",pasDeRegle(),0)
 
-    ####   Traitement de DYNA_ALEA_MODAL   ##############################
+    ####   traitement de DYNA_ALEA_MODAL   ##############################
     # Rien à faire
 
-    ####   Traitement de DYNA_ISS_VARI   ##############################
+    ####   traitement de DYNA_ISS_VARI   ##############################
     AjouteMotClefDansFacteurCourantSiRegle(jdc,"DYNA_ISS_VARI","MATR_COHE","TYPE='MITA_LUCO'",((("MATR_COHE",),"existe"),))
 
-    ####   Traitement de DYNA_LINE_HARM   ##############################
+    ####   traitement de DYNA_LINE_HARM   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"DYNA_LINE_HARM","SENSIBILITE",pasDeRegle(),0)
     # Suppression mot-clé TYPE_CHARGE
@@ -1016,7 +1016,7 @@ def traduc(infile,outfile,flog=None):
     moveMotClefInOperToFact(jdc,"DYNA_LINE_HARM","AMOR_REDUIT","AMOR_MODAL")
     moveMotClefInOperToFact(jdc,"DYNA_LINE_HARM","LIST_AMOR","AMOR_MODAL")
 
-    ####   Traitement de DYNA_LINE_TRAN   ##############################
+    ####   traitement de DYNA_LINE_TRAN   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"DYNA_LINE_TRAN","SENSIBILITE",pasDeRegle(),0)
     # Ajout SCHEMA_TEMPS
@@ -1049,7 +1049,7 @@ def traduc(infile,outfile,flog=None):
     # Renommage dans ARCHIVAGE
     renameMotCleInFact(jdc,"DYNA_LINE_TRAN","ARCHIVAGE","LIST_ARCH","LIST_INST",pasDeRegle(),0)
 
-    ####   Traitement de DYNA_NON_LINE   ##############################
+    ####   traitement de DYNA_NON_LINE   ##############################
     # Renommage CRIT_FLAMB en CRIT_STAB
     renameMotCle(jdc,"DYNA_NON_LINE","CRIT_FLAMB","CRIT_STAB")
     # Résorption de la sensibilité
@@ -1057,10 +1057,10 @@ def traduc(infile,outfile,flog=None):
     # Suppression de ARCHIVAGE/DETR_NUME_SUIV
     removeMotCleInFact(jdc,"DYNA_NON_LINE","ARCHIVAGE","DETR_NUME_SUIV",pasDeRegle(),0)
 
-    ####   Traitement de DYNA_SPEC_MODAL   ##############################
+    ####   traitement de DYNA_SPEC_MODAL   ##############################
     # Rien à faire
 
-    ####   Traitement de DYNA_TRAN_MODAL   ##############################
+    ####   traitement de DYNA_TRAN_MODAL   ##############################
     # Ajout SCHEMA_TEMPS
     chercheOperInsereFacteur(jdc,"DYNA_TRAN_MODAL","SCHEMA_TEMPS")
     chercheOperInsereMotCleSiRegle(jdc,"DYNA_TRAN_MODAL","METHODE='EULER'",((("METHODE",),"nexistepas"),),)
@@ -1099,22 +1099,22 @@ def traduc(infile,outfile,flog=None):
     moveMotClefInOperToFact(jdc,"DYNA_TRAN_MODAL","LAMBDA","PARA_LAMEFLUI")
     renameMotCle(jdc,"DYNA_TRAN_MODAL","PARA_LAMEFLUI","PARA_LAME_FLUI")
 
-    ####   Traitement de DYNA_VIBRA   ##############################
+    ####   traitement de DYNA_VIBRA   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de EXEC_LOGICIEL   ##############################
+    ####   traitement de EXEC_LOGICIEL   ##############################
     # Rien à faire
 
-    ####   Traitement de EXTR_RESU   ##############################
+    ####   traitement de EXTR_RESU   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"EXTR_RESU","SENSIBILITE",pasDeRegle(),0)
 
-    ####   Traitement de EXTR_TABLE   ##############################
+    ####   traitement de EXTR_TABLE   ##############################
     # Renommage critere table
     dCRIT={"ABS_MAXI":"MAXI_ABS","ABS_MINI":"MINI_ABS"}
     ChangementValeurDsMCF(jdc,"RECU_TABLE","FILTRE","CRIT_COMP",dCRIT)
 
-    ####   Traitement de FACTORISER   ##############################
+    ####   traitement de FACTORISER   ##############################
     # Suppression de RENUM
     removeMotCleSiRegle(jdc,"FACTORISER","RENUM",((("PRE_COND","LDLT_INC",jdc),"MCaPourValeur"),))
     removeMotCleSiRegle(jdc,"FACTORISER","RENUM",((("PRE_COND","LDLT_SP",jdc),"MCaPourValeur"),))
@@ -1124,35 +1124,35 @@ def traduc(infile,outfile,flog=None):
     dMEM={"OUI":"OUT_OF_CORE","NON":"IN_CORE"}
     ChangementValeur(jdc,"FACTORISER","GESTION_MEMOIRE",dCRIT)
 
-    ####   Traitement de FORMULE   ##############################
+    ####   traitement de FORMULE   ##############################
     # Rien à faire
     
-    ####   Traitement de GENE_ACCE_SEISME   ##############################
+    ####   traitement de GENE_ACCE_SEISME   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de GENE_FONC_ALEA   ##############################
+    ####   traitement de GENE_FONC_ALEA   ##############################
     # Rien à faire
 
-    ####   Traitement de GENE_VARI_ALEA   ##############################
+    ####   traitement de GENE_VARI_ALEA   ##############################
     # Rien à faire
 
-    ####   Traitement de IMPR_CO  ##############################
+    ####   traitement de IMPR_CO  ##############################
     # Résorption de la sensibilité
     removeMotCleInFact(jdc,"IMPR_CO","CONCEPT","SENSIBILITE",pasDeRegle(),0)
 
-    ####   Traitement de IMPR_DIAG_CAMPBELL   ##############################
+    ####   traitement de IMPR_DIAG_CAMPBELL   ##############################
     # Rien à faire
 
-    ####   Traitement de IMPR_FONCTION   ##############################
+    ####   traitement de IMPR_FONCTION   ##############################
     # Rien à faire
 
-    ####   Traitement de IMPR_GENE   ##############################
+    ####   traitement de IMPR_GENE   ##############################
     # Rien à faire
 
-    ####   Traitement de IMPR_OAR   ##############################
+    ####   traitement de IMPR_OAR   ##############################
     # Rien à faire
 
-    ####   Traitement de IMPR_RESU   ##############################
+    ####   traitement de IMPR_RESU   ##############################
     # Résorption de la sensibilité
     removeMotCleInFact(jdc,"IMPR_RESU","RESU","SENSIBILITE",pasDeRegle(),0)
     # Suppression de l'écriture au format ENSIGHT
@@ -1162,7 +1162,7 @@ def traduc(infile,outfile,flog=None):
     # Suppression mot-clé MODELE
     removeMotCle(jdc,"IMPR_RESU","MODELE",pasDeRegle(),0)
 
-    ####   Traitement de IMPR_STURM   ##############################
+    ####   traitement de IMPR_STURM   ##############################
     renameMotCle(jdc,"IMPR_STURM","TYPE_RESU","TYPE_MODE")
     # renommage de MATR_A, MATR_B et MATR_C
     renameMotCleSiRegle(jdc,"IMPR_STURM","MATR_A","MATR_RIGI",((("TYPE_MODE","DYNAMIQUE",jdc),"MCaPourValeur"),),1)
@@ -1186,7 +1186,7 @@ def traduc(infile,outfile,flog=None):
     # Renommage de la commande
     renameCommande(jdc,"IMPR_STURM","INFO_MODE", )
 
-    ####   Traitement de IMPR_TABLE   ##############################
+    ####   traitement de IMPR_TABLE   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"IMPR_TABLE","SENSIBILITE",pasDeRegle(),0)
     # Renommage critere table
@@ -1195,37 +1195,37 @@ def traduc(infile,outfile,flog=None):
     # Suppression de FORMAT_C
     GenereErreurMCF(jdc,"IMPR_TABLE","FORMAT_C")
 
-    ####   Traitement de INCLUDE   ##############################
+    ####   traitement de INCLUDE   ##############################
     # Rien à faire
 
-    ####   Traitement de INCLUDE_MATERIAU   ##############################
+    ####   traitement de INCLUDE_MATERIAU   ##############################
     # Rien à faire
 
-    ####   Traitement de INFO_EXEC_ASTER   ##############################
+    ####   traitement de INFO_EXEC_ASTER   ##############################
     # Rien à faire
 
-    ####   Traitement de INFO_FONCTION   ##############################
+    ####   traitement de INFO_FONCTION   ##############################
     # Rien à faire
 
-    ####   Traitement de INFO_MODE   ##############################
+    ####   traitement de INFO_MODE   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de LIRE_CHAMP   ##############################
+    ####   traitement de LIRE_CHAMP   ##############################
     # Rien à faire
 
-    ####   Traitement de LIRE_FONCTION   ##############################
+    ####   traitement de LIRE_FONCTION   ##############################
     # Rien à faire
 
-    ####   Traitement de LIRE_IMPE_MISS   ##############################
+    ####   traitement de LIRE_IMPE_MISS   ##############################
     # Rien à faire
 
-    ####   Traitement de LIRE_INTE_SPEC   ##############################
+    ####   traitement de LIRE_INTE_SPEC   ##############################
     # Rien à faire
 
-    ####   Traitement de LIRE_MAILLAGE   ##############################
+    ####   traitement de LIRE_MAILLAGE   ##############################
     # Rien à faire
 
-    ####   Traitement de LIRE_RESU   ##############################
+    ####   traitement de LIRE_RESU   ##############################
     # Suppression du type HARM_GENE
     GenereErreurValeur(jdc,"LIRE_RESU","TYPE_RESU",("'HARM_GENE'",))
     # renommage de MATR_A et MATR_B
@@ -1241,10 +1241,10 @@ def traduc(infile,outfile,flog=None):
     GenereErreurValeurDsMCF(jdc,"LIRE_RESU","FORMAT_MED","NOM_CHAM",lSUPCHAMPS)
     GenereErreurValeur(jdc,"LIRE_RESU","NOM_CHAM",lSUPCHAMPS)
 
-    ####   Traitement de LIRE_TABLE   ##############################
+    ####   traitement de LIRE_TABLE   ##############################
     # Rien à faire
 
-    ####   Traitement de MACR_ADAP_MAIL   ##############################
+    ####   traitement de MACR_ADAP_MAIL   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"MACR_ADAP_MAIL","SENSIBILITE",pasDeRegle(),0)
     # Changement de version
@@ -1255,54 +1255,54 @@ def traduc(infile,outfile,flog=None):
     renameMotCle(jdc,"MACR_ADAP_MAIL","ELEMENTS_NON_HOMARD","ELEMENTS_ACCEPTES")
     ChangementValeur(jdc,"MACR_ADAP_MAIL","ELEMENTS_ACCEPTES",{"REFUSER":"HOMARD","IGNORER":"IGNORE_PYRA"})
 
-    ####   Traitement de MACR_ASCOUF_CALC   ##############################
+    ####   traitement de MACR_ASCOUF_CALC   ##############################
     # Rien à faire
 
-    ####   Traitement de MACR_ASCOUF_MAIL   ##############################
+    ####   traitement de MACR_ASCOUF_MAIL   ##############################
     # Rien à faire
 
-    ####   Traitement de MACR_ASPIC_CALC   ##############################
+    ####   traitement de MACR_ASPIC_CALC   ##############################
     # Rien à faire
 
-    ####   Traitement de MACR_ASPIC_MAIL   ##############################
+    ####   traitement de MACR_ASPIC_MAIL   ##############################
     # Rien à faire
 
-    ####   Traitement de MACR_CARA_POUTRE   ##############################
+    ####   traitement de MACR_CARA_POUTRE   ##############################
     renameMotCle(jdc,"MACR_CARA_POUTRE","SYME_Y","SYME_ZZ")
     renameMotCle(jdc,"MACR_CARA_POUTRE","SYME_X","SYME_Y")
     renameMotCle(jdc,"MACR_CARA_POUTRE","SYME_ZZ","SYME_Z")
 
-    ####   Traitement de MACR_ECLA_PG   ##############################
+    ####   traitement de MACR_ECLA_PG   ##############################
     # Rien à faire
 
-    ####   Traitement de MACR_ECRE_CALC   ##############################
+    ####   traitement de MACR_ECRE_CALC   ##############################
     # Changement de version
     ChangementValeur(jdc,"MACR_ECRE_CALC","VERSION",{"3.1.1":"3.2.1","3.1.2":"3.2.1","3.2":"3.2.1"})
 
-    ####   Traitement de MACR_ECREVISSE   ##############################
+    ####   traitement de MACR_ECREVISSE   ##############################
     # Changement de version
     ChangementValeur(jdc,"MACR_ECRE_CALC","VERSION",{"3.1.1":"3.2.1","3.1.2":"3.2.1","3.2":"3.2.1"})
 
-    ####   Traitement de MACR_ELEM_DYNA   ##############################
+    ####   traitement de MACR_ELEM_DYNA   ##############################
     # Rien à faire
 
-    ####   Traitement de MACR_FIABILITE   ##############################
+    ####   traitement de MACR_FIABILITE   ##############################
     GenereErreurPourCommande(jdc,("MACR_FIABILITE",))
 
-    ####   Traitement de MACR_FIAB_IMPR   ##############################
+    ####   traitement de MACR_FIAB_IMPR   ##############################
     GenereErreurPourCommande(jdc,("MACR_FIAB_IMPR",))
 
-    ####   Traitement de MACR_INFO_MAIL   ##############################
+    ####   traitement de MACR_INFO_MAIL   ##############################
     # Changement de version
     ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V10_1":"V10_6"})
     # Renommage du mot-clé ELEMENTS_NON_HOMARD
     renameMotCle(jdc,"MACR_INFO_MAIL","ELEMENTS_NON_HOMARD","ELEMENTS_ACCEPTES")
     ChangementValeur(jdc,"MACR_INFO_MAIL","ELEMENTS_ACCEPTES",{"REFUSER":"HOMARD","IGNORER":"IGNORE_PYRA"})
 
-    ####   Traitement de MACR_LIGN_COUPE   ##############################
+    ####   traitement de MACR_LIGN_COUPE   ##############################
     # Rien à faire
 
-    ####   Traitement de MACRO_ELAS_MULT   ##############################
+    ####   traitement de MACRO_ELAS_MULT   ##############################
     # Résorption de NUME_COUCHE NIVE_COUCHE
     removeMotCleInFact(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","NUME_COUCHE",pasDeRegle(),0)
     removeMotCleInFact(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","NIVE_COUCHE",pasDeRegle(),0)
@@ -1318,13 +1318,13 @@ def traduc(infile,outfile,flog=None):
           "'EPEQ_NOEU'","'FLUX_NOEU'",]
     GenereErreurValeurDsMCF(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","OPTION",lOPT)
 
-    ####   Traitement de MACRO_EXPANS   ##############################
+    ####   traitement de MACRO_EXPANS   ##############################
     # Rien à faire
 
-    ####   Traitement de MACRO_MATR_AJOU   ##############################
+    ####   traitement de MACRO_MATR_AJOU   ##############################
     # Rien à faire
 
-    ####   Traitement de MACRO_MATR_ASSE   ##############################
+    ####   traitement de MACRO_MATR_ASSE   ##############################
     # Suppression de paramètres mémoire
     removeMotCleInFact(jdc,"MACRO_MATR_ASSE","SOLVEUR","OUT_OF_CORE",pasDeRegle(),0)
     removeMotCleInFact(jdc,"MACRO_MATR_ASSE","SOLVEUR","LIBERE_MEMOIRE",pasDeRegle(),0)
@@ -1335,10 +1335,10 @@ def traduc(infile,outfile,flog=None):
     # Renommage de la commande
     renameCommande(jdc,"MACRO_MATR_ASSE","ASSEMBLAGE", )
 
-    ####   Traitement de MACRO_MISS_3D   ##############################
+    ####   traitement de MACRO_MISS_3D   ##############################
     # Rien à faire
 
-    ####   Traitement de MACRO_MODE_MECA   ##############################
+    ####   traitement de MACRO_MODE_MECA   ##############################
     # renommage de MATR_A et MATR_B
     renameMotCle(jdc,"MACRO_MODE_MECA","MATR_A","MATR_RIGI")
     renameMotCle(jdc,"MACRO_MODE_MECA","MATR_B","MATR_MASS")
@@ -1354,22 +1354,22 @@ def traduc(infile,outfile,flog=None):
     # Renommage critere de Sturm
     ChangementValeurDsMCF(jdc,"MACRO_MODE_MECA","VERI_MODE","STURM",{"OUI":"GLOBAL",})
  
-    ####   Traitement de MACRO_PROJ_BASE   ##############################
+    ####   traitement de MACRO_PROJ_BASE   ##############################
     renameMotCle(jdc,"MACRO_PROJ_BASE","PROFIL","STOCKAGE")
     # Renommage de la commande
     renameCommande(jdc,"MACRO_PROJ_BASE","PROJ_BASE", )
 
-    ####   Traitement de MACR_RECAL   ##############################
+    ####   traitement de MACR_RECAL   ##############################
     renameMotCle(jdc,"MACR_RECAL","POIDS","LIST_POIDS")
 
-    ####   Traitement de MACR_SPECTRE   ##############################
+    ####   traitement de MACR_SPECTRE   ##############################
     # Rien à faire
 
-    ####   Traitement de MECA_STATIQUE   ##############################
+    ####   traitement de MECA_STATIQUE   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"MECA_STATIQUE","SENSIBILITE",pasDeRegle(),0)
 
-    ####   Traitement de MODE_ITER_INV   ##############################
+    ####   traitement de MODE_ITER_INV   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"MODE_ITER_INV","SENSIBILITE",pasDeRegle(),0)
     # renommage de MATR_A, MATR_B et MATR_C
@@ -1384,7 +1384,7 @@ def traduc(infile,outfile,flog=None):
     renameMotCle(jdc,"MODE_ITER_INV","MATR_A","MATR_RIGI")
     renameMotCle(jdc,"MODE_ITER_INV","MATR_B","MATR_MASS")
 
-    ####   Traitement de MODE_ITER_SIMULT   ##############################
+    ####   traitement de MODE_ITER_SIMULT   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"MODE_ITER_SIMULT","SENSIBILITE",pasDeRegle(),0)
     # renommage de MATR_A, MATR_B et MATR_C
@@ -1401,14 +1401,14 @@ def traduc(infile,outfile,flog=None):
     # renommage STOP_FREQ_VIDE
     renameMotCle(jdc,"MODE_ITER_SIMULT","STOP_FREQ_VIDE","STOP_BANDE_VIDE")
 
-    ####   Traitement de MODE_STATIQUE   ##############################
+    ####   traitement de MODE_STATIQUE   ##############################
     # renommage du mot-clé FREQ
     renameMotCleInFact(jdc,"MODE_STATIQUE","MODE_INTERF","FREQ","SHIFT",pasDeRegle(),0)
 
-    ####   Traitement de MODI_MODELE_XFEM   ##############################
+    ####   traitement de MODI_MODELE_XFEM   ##############################
     GenereErreurValeur(jdc,"MODI_MODELE_XFEM","CONTACT",("'P1P1A'",))
 
-    ####   Traitement de MODI_REPERE   ##############################
+    ####   traitement de MODI_REPERE   ##############################
     # renommage de DEFI_REPERE
     renameMotCle(jdc,"MODI_REPERE","DEFI_REPERE","AFFE")
     moveMotCleFromFactToFather(jdc,"MODI_REPERE","AFFE","REPERE")
@@ -1418,58 +1418,58 @@ def traduc(infile,outfile,flog=None):
     moveMotClefInOperToFact(jdc,"MODI_REPERE","MAILLE","AFFE",)
     moveMotClefInOperToFact(jdc,"MODI_REPERE","NOEUD","AFFE",)
 
-    ####   Traitement de NORM_MODE   ##############################
+    ####   traitement de NORM_MODE   ##############################
     removeMotCle(jdc,"NORM_MODE","SENSIBILITE",pasDeRegle(),0)
 
-    ####   Traitement de NUME_DDL   ##############################
+    ####   traitement de NUME_DDL   ##############################
     # Rien à faire
 
-    ####   Traitement de NUME_DDL_GENE   ##############################
+    ####   traitement de NUME_DDL_GENE   ##############################
     # Rien à faire
 
-    ####   Traitement de OBSERVATION   ##############################
+    ####   traitement de OBSERVATION   ##############################
     # renommage de MATR_A et MATR_B
     renameMotCle(jdc,"OBSERVATION","MATR_A","MATR_RIGI")
     renameMotCle(jdc,"OBSERVATION","MATR_B","MATR_MASS")
 
-    ####   Traitement de POST_BORDET   ##############################
+    ####   traitement de POST_BORDET   ##############################
     # Rien à faire
     
-    ####   Traitement de POST_CHAMP   ##############################
+    ####   traitement de POST_CHAMP   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de POST_CHAM_XFEM   ##############################
+    ####   traitement de POST_CHAM_XFEM   ##############################
     # Suppression mot-clé MAILLAGE_SAIN
     removeMotCle(jdc,"POST_CHAM_XFEM","MAILLAGE_SAIN",pasDeRegle(),0)
 
-    ####   Traitement de POST_COQUE   ##############################
+    ####   traitement de POST_COQUE   ##############################
     # Rien à faire
 
-    ####   Traitement de POST_DECOLLEMENT   ##############################
+    ####   traitement de POST_DECOLLEMENT   ##############################
     # Rien à faire
 
-    ####   Traitement de POST_DYNA_ALEA   ##############################
+    ####   traitement de POST_DYNA_ALEA   ##############################
     # Suppression du mot-clé NUME_VITE_FLUI
     removeMotCle(jdc,"POST_DYNA_ALEA","NUME_VITE_FLUI",pasDeRegle(),0)
 
-    ####   Traitement de POST_ELEM   ##############################
+    ####   traitement de POST_ELEM   ##############################
     # Rien à faire
 
-    ####   Traitement de POST_ENDO_FISS   ##############################
+    ####   traitement de POST_ENDO_FISS   ##############################
     # Suppression du mot-clé MODELE
     removeMotCle(jdc,"POST_ENDO_FISS","MODELE",pasDeRegle(),0)
     # Renommage de SEUIL
     renameMotCleInFact(jdc,"POST_ENDO_FISS","RECHERCHE","SEUIL","BORNE_MIN",pasDeRegle(),0)
 
-    ####   Traitement de POST_FATIGUE   ##############################
+    ####   traitement de POST_FATIGUE   ##############################
     # Suppression du chargement periodique
     GenereErreurValeur(jdc,"POST_FATIGUE","CHARGEMENT",("'PERIODIQUE'",))
 
-    ####   Traitement de POST_GP   ##############################
+    ####   traitement de POST_GP   ##############################
     # Suppression de POST_GP au profit de CALC_GP
     GenereErreurPourCommande(jdc,("POST_GP",))
 
-    ####   Traitement de POST_K1_K2_K3   ##############################
+    ####   traitement de POST_K1_K2_K3   ##############################
     # Suppression de VECT_K1
     removeMotCle(jdc,"POST_K1_K2_K3","VECT_K1",pasDeRegle(),0)
     # Suppression de SYME_CHAR
@@ -1483,31 +1483,31 @@ def traduc(infile,outfile,flog=None):
     removeMotCle(jdc,"POST_K1_K2_K3","DTAN_ORIG",pasDeRegle(),0)
     removeMotCle(jdc,"POST_K1_K2_K3","DTAN_EXTR",pasDeRegle(),0)
 
-    ####   Traitement de POST_K_TRANS   ##############################
+    ####   traitement de POST_K_TRANS   ##############################
     # Suppression de la possibilité de donner un mode_meca
     GenereErreurMotCleInFact(jdc,"POST_K_TRANS","K_MODAL","RESU_MODA")
 
-    ####   Traitement de POST_MAC3COEUR   ##############################
+    ####   traitement de POST_MAC3COEUR   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de POST_MAIL_XFEM   ##############################
+    ####   traitement de POST_MAIL_XFEM   ##############################
     # Suppression du mot-clé MAILLAGE_SAIN
     removeMotCle(jdc,"POST_MAIL_XFEM","MAILLAGE_SAIN",pasDeRegle(),0)
 
-    ####   Traitement de POST_RCCM   ##############################
+    ####   traitement de POST_RCCM   ##############################
     # Rien à faire
 
-    ####   Traitement de POST_RELEVE_T   ##############################
+    ####   traitement de POST_RELEVE_T   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"POST_RELEVE_T","SENSIBILITE",pasDeRegle(),0)
 
-    ####   Traitement de POST_RUPTURE   ##############################
+    ####   traitement de POST_RUPTURE   ##############################
     # Rien à faire, n'existe pas en 10
 
-    ####   Traitement de POST_USURE   ##############################
+    ####   traitement de POST_USURE   ##############################
     # Rien à faire
 
-    ####   Traitement de POURSUITE   ##############################
+    ####   traitement de POURSUITE   ##############################
     # Suppression du mot-clé TITRE
     removeMotCleInFact(jdc,"POURSUITE","CATALOGUE","TITRE",pasDeRegle(),0)
     removeMotCle(jdc,"POURSUITE","IMPRESSION",pasDeRegle(),0)
@@ -1518,64 +1518,64 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"POURSUITE","MEMOIRE","PARTITION",pasDeRegle(),0)
     removeMotCleInFact(jdc,"POURSUITE","MEMOIRE","DYNAMIQUE",pasDeRegle(),0)
 
-    ####   Traitement de PROJ_BASE   ##############################
+    ####   traitement de PROJ_BASE   ##############################
     # Suppression de RESU_GENE pour défaut de validation
     GenereErreurMCF(jdc,"PROJ_BASE","RESU_GENE")
 
-    ####   Traitement de PROJ_CHAMP   ##############################
+    ####   traitement de PROJ_CHAMP   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"PROJ_CHAMP","SENSIBILITE",pasDeRegle(),0)
 
-    ####   Traitement de PROJ_RESU_BASE   ##############################
+    ####   traitement de PROJ_RESU_BASE   ##############################
     # Suppression de RESU_GENE pour défaut de validation
     GenereErreurMCF(jdc,"PROJ_RESU_BASE","RESU_GENE")
 
-    ####   Traitement de PROJ_SPEC_BASE   ##############################
+    ####   traitement de PROJ_SPEC_BASE   ##############################
     # Rien à faire
 
-    ####   Traitement de PROPA_FISS   ##############################
+    ####   traitement de PROPA_FISS   ##############################
     # Suppression de DTAN_ORIG et DTAN_EXTR pour calcul automatique
     removeMotCleInFact(jdc,"PROPA_FISS","FISSURE","DTAN_ORIG",pasDeRegle(),0)
     removeMotCleInFact(jdc,"PROPA_FISS","FISSURE","DTAN_EXTR",pasDeRegle(),0)
 
-    ####   Traitement de PROPA_XFEM   ##############################
+    ####   traitement de PROPA_XFEM   ##############################
     # Suppression paramètres Loi de Paris
     removeMotCle(jdc,"PROPA_XFEM","NB_POINT_FOND",pasDeRegle(),0)
     removeMotCle(jdc,"PROPA_XFEM","TABLE",pasDeRegle(),0)
     removeMotCle(jdc,"PROPA_XFEM","LOI_PROPA",pasDeRegle(),0)
     removeMotCle(jdc,"PROPA_XFEM","COMP_LINE",pasDeRegle(),0)
 
-    ####   Traitement de RAFF_XFEM   ##############################
+    ####   traitement de RAFF_XFEM   ##############################
     # Rien à faire
 
-    ####   Traitement de RECU_FONCTION   ##############################
+    ####   traitement de RECU_FONCTION   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"RECU_FONCTION","SENSIBILITE",pasDeRegle(),0)
     # Renommage critere table
     dCRIT={"ABS_MAXI":"MAXI_ABS","ABS_MINI":"MINI_ABS"}
     ChangementValeurDsMCF(jdc,"RECU_FONCTION","FILTRE","CRIT_COMP",dCRIT)
 
-    ####   Traitement de RECU_GENE   ##############################
+    ####   traitement de RECU_GENE   ##############################
     # Rien à faire
 
-    ####   Traitement de RESOUDRE   ##############################
+    ####   traitement de RESOUDRE   ##############################
     # Suppression d'algo pour PETSc
     removeMotCleSiRegle(jdc,"RESOUDRE","ALGORITHME",((("BCGS","BICG","TFQMR",),"MCaPourValeur"),))
 
-    ####   Traitement de REST_SPEC_PHYS   ##############################
+    ####   traitement de REST_SPEC_PHYS   ##############################
     # Rien à faire
 
-    ####   Traitement de SIMU_POINT_MAT   ##############################
+    ####   traitement de SIMU_POINT_MAT   ##############################
     # VALE_REF obligatoire si NOM_VARC in ('TEMP', 'SECH')
     lNOMVARC=["CORR","IRRA","HYDR","EPSA","M_ACIER","M_ZIRC","NEUT1","NEUT2"]
     removeMotCleInFactSiRegle(jdc,"SIMU_POINT_MAT","AFFE_VARC","VALE_REF",((("NOM_VARC",lNOMVARC,jdc),"MCsousMCFcourantaPourValeurDansListe"),))
     # Suppression de ARCHIVAGE/DETR_NUME_SUIV
     removeMotCleInFact(jdc,"SIMU_POINT_MAT","ARCHIVAGE","DETR_NUME_SUIV",pasDeRegle(),0)
 
-    ####   Traitement de STANLEY   ##############################
+    ####   traitement de STANLEY   ##############################
     # Rien à faire
 
-    ####   Traitement de STAT_NON_LINE   ##############################
+    ####   traitement de STAT_NON_LINE   ##############################
     # Renommage de IMPLEX
     ChangementValeur(jdc,"STAT_NON_LINE","METHODE",{"IMPL_EX":"IMPLEX"})
     removeMotCle(jdc,"STAT_NON_LINE","IMPL_EX",pasDeRegle(),0)
@@ -1591,14 +1591,14 @@ def traduc(infile,outfile,flog=None):
     # Suppression de ARCHIVAGE/DETR_NUME_SUIV
     removeMotCleInFact(jdc,"STAT_NON_LINE","ARCHIVAGE","DETR_NUME_SUIV",pasDeRegle(),0)
 
-    ####   Traitement de THER_LINEAIRE   ##############################
+    ####   traitement de THER_LINEAIRE   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"THER_LINEAIRE","SENSIBILITE",pasDeRegle(),0)
     removeMotCle(jdc,"THER_LINEAIRE","SENS_INIT",pasDeRegle(),0)
     # Suppression de ARCHIVAGE/DETR_NUME_SUIV
     removeMotCleInFact(jdc,"THER_LINEAIRE","ARCHIVAGE","DETR_NUME_SUIV",pasDeRegle(),0)
 
-    ####   Traitement de THER_NON_LINE   ##############################
+    ####   traitement de THER_NON_LINE   ##############################
     # Résorption de la sensibilité
     removeMotCle(jdc,"THER_NON_LINE","SENSIBILITE",pasDeRegle(),0)
     # Suppression du mot clé OPTION   ######################################
@@ -1606,7 +1606,7 @@ def traduc(infile,outfile,flog=None):
     # Suppression de ARCHIVAGE/DETR_NUME_SUIV
     removeMotCleInFact(jdc,"THER_NON_LINE","ARCHIVAGE","DETR_NUME_SUIV",pasDeRegle(),0)
 
-    ####   Traitement de THER_NON_LINE_MO   ##############################
+    ####   traitement de THER_NON_LINE_MO   ##############################
     # Rien à faire
 
     #################################################################

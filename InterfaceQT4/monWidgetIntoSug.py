@@ -38,7 +38,30 @@ from Extensions.i18n import tr
 from desWidgetIntoSug        import Ui_WidgetIntoSug 
 from monWidgetPlusieursInto  import MonWidgetPlusieursInto 
 
-class MonWidgetIntoSug (Ui_WidgetIntoSug, MonWidgetPlusieursInto):
+class GereAjoutDsPossible:
+  def LEValeurAjouteDsPossible(self):
+       text=str(self.lineEditVal.text())
+       if text == "" : return
+       # il faudrait essauer d en obtenir un reel, un tuple ou ...
+       # si cela est utilise pour autre chose que Telemac
+       # tout devrait etre fait ici
+       if not isinstance(text,str) : 
+          self.lineEditVal.setText("")
+          return
+       if self.node.item.hasIntoSug() : 
+          self.maListeDeValeur=list(self.node.item.getListePossibleAvecSug([]))
+          self.maListeDeValeur.insert(0,text)
+       else :
+         try :
+           self.monSimpDef.intoSug.insert(0,text)
+         except : 
+           self.monSimpDef.intoSug=list(self.monSimpDef.intoSug)
+           self.monSimpDef.intoSug.insert(0,text)
+       # selon si on est une liste ou un combo
+       try : self.ajouteValeurPossible(text)
+       except : self.setValeurs()
+
+class MonWidgetIntoSug (Ui_WidgetIntoSug, MonWidgetPlusieursInto,GereAjoutDsPossible):
 # Attention Attention
 # cette wdget ne fonctionne actuellement que pour Telemac
 # on attend du texte . on n essaye pas de transformer 
@@ -48,14 +71,3 @@ class MonWidgetIntoSug (Ui_WidgetIntoSug, MonWidgetPlusieursInto):
         MonWidgetPlusieursInto.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.lineEditVal.returnPressed.connect(self.LEValeurAjouteDsPossible)
 
-  def LEValeurAjouteDsPossible(self):
-       text=str(self.lineEditVal.text())
-       if text == "" : return
-       # il faudrait essauer d en obtenir un reel, un tuple ou ...
-       # si cela est utilise pour autre chose que Telemac
-       if not isinstance(text,str) : 
-          self.lineEditVal.setText("")
-          print ('jkjkl')
-          return
-       self.monSimpDef.intoSug.insert(0,text)
-       self.setValeurs()

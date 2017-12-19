@@ -51,7 +51,19 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
 
     from InterfaceQT4.qtEficas import Appli
     app = QApplication(sys.argv)
+
+    #import cProfile, pstats, StringIO
+    #pr = cProfile.Profile()
+    #pr.enable()
+
     Eficas=Appli(code=code,salome=0,ssCode=ssCode,multi=multi,langue=langue)
+    #pr.disable()
+    #s = StringIO.StringIO()
+    #sortby = 'cumulative'
+    #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    #ps.print_stats()
+    #print (s.getvalue())
+
     Eficas.show()
 
     res=app.exec_()
@@ -84,9 +96,9 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=Fal
     monEditeur=JDCEditor(Eficas,fichier)
     return monEditeur
 
-def lance_eficas_ssIhm_cherche_Groupes(code=None,fichier=None,ssCode=None,version=None):
+def lance_eficas_ssIhm_chercheGroupes(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    print((monEditeur.cherche_Groupes()))
+    print((monEditeur.chercheGroupes()))
 
 def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=None):
     monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)

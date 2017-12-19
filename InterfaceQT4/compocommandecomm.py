@@ -28,20 +28,20 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     itemNode=compocomm.Node
 
     def init(self):
-      self.setfunction = self.set_valeur
+      self.setFunction = self.setValeur
 
-    def GetIconName(self):
+    def getIconName(self):
       """
       Retourne le nom de l'icone associee au noeud qui porte self,
       dependant de la validite de l'objet
       NB : une commande commentarisee est toujours valide ...
       """
-      if self.isvalid():
+      if self.isValid():
           return "ast-green-percent"
       else:
           return "ast-red-percent"
 
-    def GetLabelText(self):
+    def getLabelText(self):
         """ Retourne 3 valeurs :
         - le texte a afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
@@ -49,13 +49,13 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
         """
         return 'commentaire'
 
-    def get_valeur(self):
+    def getValeur(self):
       """
       Retourne la valeur de la commande commentarisee cad son texte
       """
-      return self.object.get_valeur() or ''
+      return self.object.getValeur() or ''
     
-    def GetText(self):
+    def getText(self):
         texte = self.object.valeur
         texte = texte.split('\n')[0]
         if len(texte) < 25 :
@@ -63,26 +63,26 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
         else :
             return texte[0:24]
 
-    def set_valeur(self,valeur):
+    def setValeur(self,valeur):
       """
       Afefcte valeur a l'objet commande commentarisee
       """
-      self.object.set_valeur(valeur)
+      self.object.setValeur(valeur)
       
-    def GetSubList(self):
+    def getSubList(self):
       """
       Retourne la liste des fils de self
       """
       return []
 
-    def uncomment(self):
+    def unComment(self):
       """
       Demande a l'objet commande commentarisee de se decommentariser.
       Si l'operation s'effectue correctement, retourne l'objet commande
       et eventuellement le nom de la sd produite, sinon leve une exception
       """
       try:
-        commande,nom = self.object.uncomment()
+        commande,nom = self.object.unComment()
         #self.parent.children[pos].select()
       except Exception as e:
         traceback.print_exc()

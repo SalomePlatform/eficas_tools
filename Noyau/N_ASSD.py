@@ -50,7 +50,7 @@ class ASSD(object):
         else:
             self.parent = CONTEXT.get_current_step()
         if self.parent:
-            self.jdc = self.parent.get_jdc_root()
+            self.jdc = self.parent.getJdcRoot()
         else:
             self.jdc = None
 

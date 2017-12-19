@@ -65,18 +65,18 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     c=COMMENTAIRE(valeur=self.valeur,parent=self.jdc)
     return c
 
-  def isvalid(self):
+  def isValid(self):
     """
     Retourne 1 si self est valide, 0 sinon
     Retourne toujours 1 car un commentaire est toujours valide
     """
     return 1
 
-  def isoblig(self):
+  def isOblig(self):
     """ Indique si self est obligatoire ou non : retourne toujours 0 """
     return 0
 
-  def isrepetable(self):
+  def isRepetable(self):
     """ Indique si self est repetable ou non : retourne toujours 1 """
     return 1
 
@@ -93,7 +93,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       """
       self.actif = 1
 
-  def isactif(self):
+  def isActif(self):
       """
       Booleenne qui retourne 1 si self est valide, 0 sinon
       """
@@ -109,32 +109,32 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       self.definition = None
       self.niveau = None
 
-  def liste_mc_presents(self):
+  def listeMcPresents(self):
       return []
 
-  def get_valeur(self) :
+  def getValeur(self) :
     """ Retourne la valeur de self, cad le contenu du commentaire """
     try :
       return self.valeur
     except:
       return None
 
-  def set_valeur(self,new_valeur):
+  def setValeur(self,new_valeur):
     """ 
         Remplace la valeur de self(si elle existe) par new_valeur
     """
     self.valeur = new_valeur
-    self.init_modif()
+    self.initModif()
 
-  def init_modif(self):
+  def initModif(self):
     self.state = 'modified'
     if self.parent:
-      self.parent.init_modif()
+      self.parent.initModif()
 
-  def supprime_sdprods(self):
+  def supprimeSdProds(self):
     pass
 
-  def update_context(self,d):
+  def updateContext(self,d):
     """
         Update le dictionnaire d avec les concepts ou objets produits par self
         --> ne fait rien pour un commentaire
@@ -144,7 +144,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
   def report(self):
     """ Genere l'objet rapport (classe CR) """
     self.cr=CR()
-    if not self.isvalid(): self.cr.warn(tr("Objet commentaire non valorise"))
+    if not self.isValid(): self.cr.warn(tr("Objet commentaire non valorise"))
     return self.cr
 
   def ident(self):
@@ -153,13 +153,13 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     """
     return self.nom
 
-  def delete_concept(self,sd):
+  def deleteConcept(self,sd):
     pass
 
-  def replace_concept (self,old_sd,sd):
+  def replaceConcept (self,old_sd,sd):
     pass
 
-  def verif_condition_bloc(self):
+  def verifConditionBloc(self):
     """
         Evalue les conditions de tous les blocs fils possibles
         (en fonction du catalogue donc de la definition) de self et
@@ -169,36 +169,36 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     """
     return [],[]
 
-  def verif_condition_regles(self,liste_presents):
+  def verifConditionRegles(self,liste_presents):
     """
         Retourne la liste des mots-cles a rajouter pour satisfaire les regles
         en fonction de la liste des mots-cles presents
     """
     return []
 
-  def get_sdprods(self,nom_sd):
+  def getSdprods(self,nom_sd):
      """
          Retourne les concepts produits par la commande
      """
      return None
 
-  def verif_existence_sd(self):
+  def verifExistenceSd(self):
      pass
 
-  def get_fr(self):
+  def getFr(self):
     """
     Retourne le commentaire lui meme tronque a la 1ere ligne
     """
     return self.valeur.split('\n',1)[0]
 
-  def control_sdprods(self,d):
+  def controlSdprods(self,d):
       """sans objet """
       pass
 
   def close(self):
       pass
 
-  def reset_context(self):
+  def resetContext(self):
       pass
 
 

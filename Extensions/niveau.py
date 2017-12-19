@@ -47,7 +47,7 @@ class NIVEAU(object):
     self.entites.append(commande)
     self.l_noms_entites.append(commande.nom)
 
-  def get_liste_cmd(self):
+  def getListeCmd(self):
     self.l_noms_entites.sort()
     return self.l_noms_entites
 

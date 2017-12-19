@@ -192,7 +192,7 @@ def SuppressionValeurs(jdc, command,motcle,liste):
                    if premier == 1 and chercheLigne[fin] == ',': fin = fin + 1 # on supprime la ,
                    finLigne = chercheLigne[fin:]
                    MaLigne_tmp=debLigne+finLigne
-                   # Traitement ligne commancant par ,
+                   # traitement ligne commancant par ,
                    if len(MaLigne_tmp.strip()) > 0 :
                       if MaLigne_tmp.strip()[0]==',' :
                          MaLigne=MaLigne_tmp.strip()[1:]

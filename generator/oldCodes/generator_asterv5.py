@@ -262,7 +262,7 @@ class AsterGenerator:
             Methode particuliere pour les objets de type FORMULE
         """
         l=[]
-        nom = obj.get_nom()
+        nom = obj.getNom()
         if nom == '' : nom = 'sansnom'
         if len(obj.mc_liste)>0:
             l.append(nom + ' = FORMULE(')

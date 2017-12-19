@@ -61,6 +61,7 @@ class DicoImbriqueGenerator(PythonGenerator):
       # Cette instruction genere le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
       #print (self.text)
+      print (self.Dico)
       return self.text
 
 
@@ -96,9 +97,9 @@ class DicoImbriqueGenerator(PythonGenerator):
 
         s=PythonGenerator.generMCSIMP(self,obj)
         if obj.isInformation() : return s
-        if not obj.isvalid() :  return s 
+        if not obj.isValid() :  return s 
 
-        liste=obj.get_genealogie_precise() 
+        liste=obj.getGenealogie_precise() 
 
         if obj.etape.nom=='MODIFICATION_CATALOGUE' : return s
         nom = obj.etape.nom

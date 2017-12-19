@@ -56,7 +56,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         #self.appel = N_utils.callee_where(niveau=2)
         if reg=='oui' : self.register()
             
-    def isvalid(self):
+    def isValid(self):
         return 1
 
     def report(self):
@@ -64,7 +64,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         Genere l'objet rapport (classe CR)
         """
         self.cr=CR()
-        if not self.isvalid(): self.cr.warn(tr("Objet commande commentarise invalide"))
+        if not self.isValid(): self.cr.warn(tr("Objet commande commentarise invalide"))
         return self.cr
 
     def copy(self):
@@ -74,18 +74,18 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         # XXX self.texte ne semble pas exister ???
         return COMMANDE_COMM(self.texte,parent = self.parent,reg='non')
 
-    def init_modif(self):
+    def initModif(self):
         self.state = 'modified'
-        self.parent.init_modif()    
+        self.parent.initModif()    
 
-    def set_valeur(self,new_valeur):
+    def setValeur(self,new_valeur):
         """
         Remplace la valeur de self(si elle existe) par new_valeur)
         """
         self.valeur = new_valeur
-        self.init_modif()
+        self.initModif()
 
-    def get_valeur(self) :
+    def getValeur(self) :
         """
         Retourne la valeur de self, cad le texte de la commande commentarisee
         """
@@ -98,7 +98,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         """
         self.parent.register(self)
 
-    def isoblig(self):
+    def isOblig(self):
         """
         Indique si self est obligatoire ou non : retourne toujours 0
         """
@@ -111,13 +111,13 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         """
         return self.nom
 
-    def isrepetable(self):
+    def isRepetable(self):
         """
         Indique si self est repetable ou non : retourne toujours 1
         """
         return 1        
 
-    def get_attribut(self,nom_attribut) :
+    def getAttribut(self,nom_attribut) :
         """
         Retourne l'attribut de nom nom_attribut de self (ou herite)
         """
@@ -126,7 +126,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         else :
           return None
 
-    def get_fr(self):
+    def getFr(self):
         """
         Retourne l'attribut fr de self.definition
         """
@@ -136,7 +136,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         except:
           return ''
 
-    def liste_mc_presents(self):
+    def listeMcPresents(self):
         return []
 
     def supprime(self):
@@ -153,26 +153,26 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         self.val = None
         self.appel = None
 
-    def supprime_sdprods(self):
+    def supprimeSdProds(self):
         pass
 
-    def update_context(self,d):
+    def updateContext(self,d):
         """
         Update le dictionnaire d avec les concepts ou objets produits par self
         --> ne fait rien pour une commande en  commentaire
         """
         pass
 
-    def delete_concept(self,sd):
+    def deleteConcept(self,sd):
         pass
 
-    def replace_concept (self,old_sd,sd):
+    def replaceConcept (self,old_sd,sd):
         pass
 
-    def get_sdprods(self,nom_sd):
+    def getSdprods(self,nom_sd):
         return None
 
-    def uncomment(self):
+    def unComment(self):
         """
         Cette methode a pour but de decommentariser l'objet courant,
         cad de retourner un tuple contenant :
@@ -180,7 +180,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
           - le nom de la sdprod eventuellement produite (sinon None)
         """
         # on recupere le contexte avant la commande commentarisee
-        context_ini = self.jdc.get_contexte_avant(self)
+        context_ini = self.jdc.getContexte_avant(self)
         try:
             # on essaie de creer un objet JDC...
             CONTEXT.unset_current_step()
@@ -213,12 +213,12 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         else:
             nom_sd = None
         #new_etape=new_etape.copy()
-        #print "uncomment",new_etape.sd
+        #print "unComment",new_etape.sd
 
         pos=self.parent.etapes.index(self)
-        # L'ordre d'appel est important : suppentite fait le menage des concepts dans les etapes suivantes
-        self.parent.addentite(new_etape,pos)
-        self.parent.suppentite(self)
+        # L'ordre d'appel est important : suppEntite fait le menage des concepts dans les etapes suivantes
+        self.parent.addEntite(new_etape,pos)
+        self.parent.suppEntite(self)
         return new_etape,nom_sd
 
     def active(self):
@@ -233,13 +233,13 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         """
         self.actif = 0
 
-    def isactif(self):
+    def isActif(self):
         """
         Booleenne qui retourne 1 si self est valide, 0 sinon
         """
         return self.actif
     
-    def verif_condition_bloc(self):
+    def verifConditionBloc(self):
       """
           Evalue les conditions de tous les blocs fils possibles
           (en fonction du catalogue donc de la definition) de self et
@@ -249,7 +249,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       """
       return [],[]
 
-    def verif_condition_regles(self,liste_presents):
+    def verifConditionRegles(self,liste_presents):
       """
           Retourne la liste des mots-cles a rajouter pour satisfaire les regles
           en fonction de la liste des mots-cles presents
@@ -261,10 +261,10 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
           Cette methode sert a reinitialiser la parente de l'objet
       """
       self.parent=parent
-      self.jdc=parent.get_jdc_root()
+      self.jdc=parent.getJdcRoot()
       self.etape=self
 
-    def verif_existence_sd(self):
+    def verifExistenceSd(self):
       """
          Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
          avant etape, sinon enleve la reference a ces concepts
@@ -272,13 +272,13 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
       """
       pass
         
-    def control_sdprods(self,d):
+    def controlSdprods(self,d):
       """sans objet pour les commandes commentarisees"""
       pass
 
     def close(self):
       pass
 
-    def reset_context(self):
+    def resetContext(self):
       pass
 

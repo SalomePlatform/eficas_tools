@@ -118,7 +118,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
                     self.definition.op_init(*(
                         self, self.parent.g_context))
             else:
-                sd = self.get_sd_prod()
+                sd = self.getSdProd()
                 if sd != None and self.reuse == None:
                     # On ne nomme le concept que dans le cas de non reutilisation
                     # d un concept
@@ -145,7 +145,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         self.Execute()
         return sd
 
-    def get_sd_prod(self):
+    def getSdProd(self):
         """
           Retourne le concept resultat d'une macro etape
           La difference avec une etape ou une proc-etape tient a ce que
@@ -167,7 +167,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         self.typret = None
 
         if type(self.definition.sd_prod) == types.FunctionType:
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mc_liste)
             try:
                 # la sd_prod d'une macro a l'objet macro_etape lui meme en premier argument
                 # Comme sd_prod peut invoquer la methode type_sdprod qui ajoute
@@ -207,14 +207,14 @@ Causes possibles :
    Developpeur : La fonction "sd_prod" retourne un type invalide.""")
         return self.sd
 
-    def get_type_produit(self, force=0):
+    def getType_produit(self, force=0):
         try:
-            return self.get_type_produit_brut(force)
+            return self.getType_produit_brut(force)
         except:
             # traceback.print_exc()
             return None
 
-    def get_type_produit_brut(self, force=0):
+    def getType_produit_brut(self, force=0):
         """
              Retourne le type du concept resultat de l'etape et eventuellement type
              les concepts produits "a droite" du signe egal (en entree)
@@ -231,7 +231,7 @@ Causes possibles :
             return self.typret
 
         if type(self.definition.sd_prod) == types.FunctionType:
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mc_liste)
             # Comme sd_prod peut invoquer la methode type_sdprod qui ajoute
             # les concepts produits dans self.sdprods, il faut le mettre a zero
             self.sdprods = []
@@ -240,7 +240,7 @@ Causes possibles :
             sd_prod = self.definition.sd_prod
         return sd_prod
 
-    def get_contexte_avant(self, etape):
+    def getContexte_avant(self, etape):
         """
             Retourne le dictionnaire des concepts connus avant etape
             pour les commandes internes a la macro
@@ -254,7 +254,7 @@ Causes possibles :
         if etape is None:
             return d
         # retirer les sd produites par 'etape'
-        sd_names = [sd.nom for sd in etape.get_created_sd()]
+        sd_names = [sd.nom for sd in etape.getCreated_sd()]
         for nom in sd_names:
             try:
                 del d[nom]
@@ -454,9 +454,9 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         if nomsd in self.Outputs:
             # Il s'agit d'un concept de sortie de la macro. Il ne faut pas le creer
             # Il faut quand meme appeler la fonction sd_prod si elle existe.
-            # get_type_produit le fait et donne le type attendu par la commande
+            # getType_produit le fait et donne le type attendu par la commande
             # pour verification ulterieure.
-            sdprod = etape.get_type_produit_brut()
+            sdprod = etape.getType_produit_brut()
             sd = self.Outputs[nomsd]
             # On verifie que le type du concept existant sd.__class__ est un sur type de celui attendu
             # Cette règle est normalement coherente avec les règles de
@@ -486,9 +486,9 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             self.g_context[sd.nom] = sd
         elif etape.definition.reentrant != 'n' and etape.reuse != None:
             # On est dans le cas d'une commande avec reutilisation d'un concept existant
-            # get_sd_prod fait le necessaire : verifications, associations, etc. mais ne cree
+            # getSdProd fait le necessaire : verifications, associations, etc. mais ne cree
             # pas un nouveau concept. Il retourne le concept reutilise
-            sd = etape.get_sd_prod()
+            sd = etape.getSdProd()
             # Dans le cas d'un concept nomme automatiquement : _xxx, __xxx,
             # On force le nom stocke dans l'attribut sdnom  de l'objet etape : on lui donne le nom
             # du concept  reutilise (sd ou etape.reuse c'est pareil)
@@ -501,7 +501,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
                 etape.sdnom = sd.nom
         else:
             # On est dans le cas de la creation d'un nouveau concept
-            sd = etape.get_sd_prod()
+            sd = etape.getSdProd()
             if sd != None:
                 self.NommerSdprod(sd, nomsd)
         return sd
@@ -561,7 +561,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             # le concept dans son contexte. On ne traite plus que le nommage (restrict="oui")
             self.parent.NommerSdprod(sd, sdnom, restrict='oui')
 
-    def delete_concept_after_etape(self, etape, sd):
+    def deleteConceptAfterEtape(self, etape, sd):
         """
             Met a jour les etapes de la MACRO  qui sont après etape suite a
             la disparition du concept sd
@@ -571,7 +571,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         # Dans d'autres conditions, il faudrait surcharger cette methode.
         return
 
-    def get_created_sd(self):
+    def getCreated_sd(self):
         """Retourne la liste des sd reellement produites par l'etape.
         Si reuse est present, `self.sd` a ete creee avant, donc n'est pas dans
         cette liste."""
@@ -593,7 +593,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         """
         visitor.visitMACRO_ETAPE(self)
 
-    def update_context(self, d):
+    def updateContext(self, d):
         """
            Met a jour le contexte contenu dans le dictionnaire d
            Une MACRO_ETAPE peut ajouter plusieurs concepts dans le contexte
@@ -614,7 +614,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             fname = 'fort.%s' % unite
         if not fname:
             return
-        f, text = self.get_file(fic_origine=self.parent.nom, fname=fname)
+        f, text = self.getFile(fic_origine=self.parent.nom, fname=fname)
         self.fichier_init = f
         if f == None:
             return
@@ -651,25 +651,25 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         # Le contexte global est forme par concatenation du contexte
         # du parent de self et de celui de l'etape elle meme (self)
         # Pour les concepts, cela ne doit rien changer. Mais pour les constantes,
-        # les valeurs de get_contexte_avant sont moins recentes que dans
+        # les valeurs de getContexte_avant sont moins recentes que dans
         # get_global_contexte. On prend donc la precaution de ne pas ecraser
         # ce qui y est deja.
         d = self.parent.get_global_contexte()
         d.update(self.g_context)
-        d.update([(k, v) for k, v in list(self.parent.get_contexte_avant(self).items())
+        d.update([(k, v) for k, v in list(self.parent.getContexte_avant(self).items())
                   if d.get(k) is None])
         return d
 
-    def get_contexte_courant(self, etape_fille_du_jdc=None):
+    def getContexte_courant(self, etape_fille_du_jdc=None):
         """
            Retourne le contexte tel qu'il est au moment de l'execution de
            l'etape courante.
         """
         ctx = {}
         # update car par ricochet on modifierait jdc.current_context
-        ctx.update(self.parent.get_contexte_courant(self))
+        ctx.update(self.parent.getContexte_courant(self))
         # on peut mettre None car toujours en PAR_LOT='NON', donc la dernière
-        ctx.update(self.get_contexte_avant(None))
+        ctx.update(self.getContexte_avant(None))
         return ctx
 
     def get_concept(self, nomsd):
@@ -677,9 +677,9 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             Methode pour recuperer un concept a partir de son nom
             dans le contexte du jdc connu avant l'execution de la macro courante.
         """
-        # chercher dans self.get_contexte_avant, puis si non trouve
+        # chercher dans self.getContexte_avant, puis si non trouve
         # self.parent.get_concept est peut-etre plus performant
-        co = self.get_contexte_courant().get(nomsd.strip(), None)
+        co = self.getContexte_courant().get(nomsd.strip(), None)
         if not isinstance(co, ASSD):
             co = None
         return co

@@ -86,7 +86,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
       self.reste_val={}
       return mc_liste
 
-   def isvalid(self,cr='non'):
+   def isValid(self,cr='non'):
       """
           Indique si self (MCNUPLET) est un objet valide ou non : retourne 1 si oui, 0 sinon
       """
@@ -99,7 +99,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
         else:
           old_valid = None
         for child in self.mc_liste :
-          if not child.isvalid():
+          if not child.isValid():
             valid = 0
             break
         if len(self.mc_liste) != len(self.definition.entites):
@@ -109,7 +109,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
         self.valid = valid
         self.state = 'unchanged'
         if old_valid:
-          if old_valid != self.valid : self.init_modif_up()
+          if old_valid != self.valid : self.initModifUp()
         return self.valid
 
    def __getitem__(self,key):
@@ -140,13 +140,13 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
         s=s + str(e.valeur) + ','
       return s + ')'
 
-   def get_regles(self):
+   def getRegles(self):
       """
          Retourne la liste des regles attachees au nuplet
       """
       return []
 
-   def verif_condition_bloc(self):
+   def verifConditionBloc(self):
       """
           Verifie s'il y a des blocs sous le nuplet et retourne 
           les blocs en question
@@ -154,7 +154,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
       # Il n y a pas de BLOCs sous un NUPLET
       return [],[]
 
-   def isrepetable(self):
+   def isRepetable(self):
       """ 
           Indique si le NUPLET peut etre repete.
           Retourne 1 si c'est le cas.
@@ -169,10 +169,10 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
    def makeobjet(self):
       return self.definition(val = None, nom = self.nom,parent = self.parent)
 
-   def get_valeur(self):
+   def getValeur(self):
       """
           Cette methode doit retourner la valeur de l'objet. Elle est utilisee par 
-          cree_dict_valeurs pour construire un dictionnaire contenant les mots cles 
+          creeDictValeurs pour construire un dictionnaire contenant les mots cles 
           d'une etape.
           Dans le cas d'un nuplet, on retournera comme valeur une liste des valeurs
           des mots cle simples contenus.
@@ -182,7 +182,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
          l.append(v.valeur)
       return l
 
-   def get_val(self):
+   def getVal(self):
       """
           Une autre methode qui retourne une "autre" valeur du mot cle facteur.
           Elle est utilisee par la methode get_mocle
@@ -192,10 +192,10 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
          l.append(v.valeur)
       return l
 
-   def isoblig(self):
+   def isOblig(self):
       return self.definition.statut=='o'
 
-   def get_fr(self):
+   def getFr(self):
      """
         Retourne le texte d'aide dans la langue choisie
      """
@@ -204,11 +204,11 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
      except:
         return ''
 
-   def cree_dict_valeurs(self,liste=[],condition=0):
+   def creeDictValeurs(self,liste=[],condition=0):
      dico={}
      return dico
 
-   def update_condition_bloc(self):
+   def updateConditionBloc(self):
      """
        Realise l'update des blocs conditionnels fils de self
        et propage au parent (rien a faire pour nuplet)

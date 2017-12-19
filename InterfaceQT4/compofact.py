@@ -59,13 +59,13 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   itemNode=Node
   
-  def IsExpandable(self):
+  def isExpandable(self):
     return 1
 
-  def GetText(self):
+  def getText(self):
       return  ''
 
-  def GetLabelText(self):
+  def getLabelText(self):
       """ Retourne 3 valeurs :
         - le texte à afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
@@ -75,16 +75,16 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       if not(hasattr(self.object,'getlabeltext')): return self.object.nom,None,None
       return self.object.getlabeltext(),None,None
 
-  def isvalid(self):
-    return self.object.isvalid()
+  def isValid(self):
+    return self.object.isValid()
 
-  def iscopiable(self):
+  def isCopiable(self):
     return 1
 
-  def GetIconName(self):
-    if self.object.isvalid():
+  def getIconName(self):
+    if self.object.isValid():
       return "ast-green-los"
-    elif self.object.isoblig():
+    elif self.object.isOblig():
       return "ast-red-los"
     else:
       return "ast-yel-los"
@@ -94,7 +94,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   #  keys=self.object.mc_dict
   #  return keys
 
-  def GetSubList(self):
+  def getSubList(self):
       """
          Reactualise la liste des items fils stockes dans self.sublist
       """
@@ -113,20 +113,20 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       for obj in liste:
          if sublist[pos] is None:
             # nouvel objet : on cree un nouvel item
-            def setfunction(value, object=obj):
+            def setFunction(value, object=obj):
                 object.setval(value)
-            item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+            item = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj, setFunction)
             sublist[pos]=item
          pos=pos+1
 
       self.sublist=sublist
       return self.sublist
 
-  def additem(self,name,pos):
-    objet = self.object.addentite(name,pos)
+  def addItem(self,name,pos):
+    objet = self.object.addEntite(name,pos)
     return objet
 
-  def suppitem(self,item) :
+  def suppItem(self,item) :
       """ 
          Cette methode a pour fonction de supprimer l'item passee en argument
          des fils de l'item FACT qui est son pere
@@ -134,16 +134,13 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
            - item.getObject() = MCSIMP ou MCBLOC 
       """
       itemobject=item.getObject()
-      if itemobject.isoblig() :
-         #self.editor.affiche_infos(tr('Impossible de supprimer un mot-cle obligatoire '),Qt.red)
+      if itemobject.isOblig() :
          return (0, tr('Impossible de supprimer un mot-cle obligatoire '))
 
-      if self.object.suppentite(itemobject):
+      if self.object.suppEntite(itemobject):
          message = tr("Mot-cle %s supprime")+ six.text_type(itemobject.nom)
-         #self.editor.affiche_commentaire(message)
          return (1, message)
       else:
-         #self.editor.affiche_infos(tr('Pb interne : impossible de supprimer ce mot-cle'),Qt.red)
          return (0,tr('Pb interne : impossible de supprimer ce mot-cle'))
 
 import Accas

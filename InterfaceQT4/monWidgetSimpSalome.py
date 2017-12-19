@@ -45,19 +45,19 @@ class MonWidgetSimpSalome (Ui_WidgetSimpSalome,Feuille):
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
         self.politique=PolitiqueUnique(self.node,self.editor)
-        self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
+        self.lineEditVal.returnPressed.connect(self.LEvaleurPressed)
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 
 
-  def LEValeurPressed(self):
+  def LEvaleurPressed(self):
       if str(self.lineEditVal.text())=="" or str(self.lineEditVal.text())==None : return
-      SaisieValeur.LEValeurPressed(self)
+      SaisieValeur.LEvaleurPressed(self)
       self.parentQt.donneFocus()
       self.setValeurs()
       self.reaffiche()
 
 
   def setValeurs(self):
-      valeur=self.node.item.get_valeur()
+      valeur=self.node.item.getValeur()
       if valeur != None : self.lineEditVal.setText(str(valeur))

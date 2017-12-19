@@ -72,15 +72,15 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
             self.etape = None
         self.mc_liste = self.build_mc()
 
-    def get_valeur(self):
+    def getValeur(self):
         """
            Retourne la "valeur" de l'objet bloc. Il s'agit d'un dictionnaire dont
            les clés seront les noms des objets de self.mc_liste et les valeurs
            les valeurs des objets de self.mc_liste obtenues par application de
-           la méthode get_valeur.
+           la méthode getValeur.
 
            Dans le cas particulier d'un objet bloc les éléments du dictionnaire
-           obtenu par appel de la méthode get_valeur sont intégrés au niveau
+           obtenu par appel de la méthode getValeur sont intégrés au niveau
            supérieur.
 
         """
@@ -90,9 +90,9 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
                 # Si mocle est un BLOC, on inclut ses items dans le dictionnaire
                 # représentatif de la valeur de self. Les mots-clés fils de blocs sont
                 # donc remontés au niveau supérieur.
-                dico.update(mocle.get_valeur())
+                dico.update(mocle.getValeur())
             else:
-                dico[mocle.nom] = mocle.get_valeur()
+                dico[mocle.nom] = mocle.getValeur()
 
         # On rajoute tous les autres mots-clés locaux possibles avec la valeur
         # par défaut ou None

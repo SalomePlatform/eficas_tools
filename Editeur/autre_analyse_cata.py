@@ -31,7 +31,7 @@ if __name__ == "__main__" :
 
 from Accas import NUPL
 
-def traite_entiteNUPL(entite):
+def traiteEntiteNUPL(entite):
    """
        Fonction speciale pour les nuplets (classe NUPL)
        Cette fonction ajoute a l'objet entite un attribut de nom ordre_mc
@@ -39,7 +39,7 @@ def traite_entiteNUPL(entite):
    """
    entite.ordre_mc=[]
 
-def traite_entite(entite,liste_simp_reel):
+def traiteEntite(entite,liste_simp_reel):
    """
        Cette fonction ajoute a l'objet entite un attribut de nom ordre_mc
        qui est une liste contenant le nom des sous entites dans l'ordre 
@@ -52,16 +52,16 @@ def traite_entite(entite,liste_simp_reel):
    l=[]
    for k,v in list(entite.entites.items()):
       if isinstance(v,NUPL):
-         traite_entiteNUPL(v)
+         traiteEntiteNUPL(v)
       else:
-         traite_reel(v,liste_simp_reel)
-         traite_entite(v,liste_simp_reel)
-         traite_cache(v)
+         traiteReel(v,liste_simp_reel)
+         traiteEntite(v,liste_simp_reel)
+         traiteCache(v)
       l.append((v._no,k))
    l.sort()
    entite.ordre_mc=[ item for index, item in l ]
 
-def traite_cache(objet):
+def traiteCache(objet):
     if not hasattr(objet, "cache"): return
     if objet.cache == 0 :return
     clef=objet.nom
@@ -72,29 +72,29 @@ def traite_cache(objet):
       objet.pere.mcOblig={}
       objet.pere.mcOblig[clef]=objet.defaut
 
-def traite_reel(objet,liste_simp_reel):
+def traiteReel(objet,liste_simp_reel):
     if objet.__class__.__name__ == "SIMP":
        if ( 'R' in objet.type):
           if objet.nom not in liste_simp_reel :
              liste_simp_reel.append(objet.nom)
 
-def analyse_niveau(cata_ordonne_dico,niveau,liste_simp_reel):
+def analyseNiveau(cata_ordonne_dico,niveau,liste_simp_reel):
    """
        Analyse un niveau dans un catalogue de commandes
    """
    if niveau.l_niveaux == ():
        # Il n'y a pas de sous niveaux
        for oper in niveau.entites:
-           traite_entite(oper,liste_simp_reel)
+           traiteEntite(oper,liste_simp_reel)
            cata_ordonne_dico[oper.nom]=oper
    else:
        for niv in niveau.l_niveaux:
-           analyse_niveau(cata_ordonne_dico,niv)
+           analyseNiveau(cata_ordonne_dico,niv)
   
-def analyse_catalogue(cata):
+def analyseCatalogue(cata):
    """
       Cette fonction analyse le catalogue cata pour construire avec l'aide
-      de traite_entite la structure de donnees ordre_mc qui donne l'ordre
+      de traiteEntite la structure de donnees ordre_mc qui donne l'ordre
       d'apparition des mots cles dans le catalogue
       Elle retourne un dictionnaire qui contient toutes les commandes
       du catalogue indexees par leur nom
@@ -104,19 +104,19 @@ def analyse_catalogue(cata):
    if cata.JdC.l_niveaux == ():
        # Il n'y a pas de niveaux
        for oper in cata.JdC.commandes:
-           traite_entite(oper,liste_simp_reel)
+           traiteEntite(oper,liste_simp_reel)
            cata_ordonne_dico[oper.nom]=oper
    else:
        for niv in cata.JdC.l_niveaux:
-           analyse_niveau(cata_ordonne_dico,niv,liste_simp_reel)
+           analyseNiveau(cata_ordonne_dico,niv,liste_simp_reel)
    return cata_ordonne_dico,liste_simp_reel
 
 
 if __name__ == "__main__" :
    from Cata import cata_STA6
-   dico=analyse_catalogue(cata_STA6)
+   dico=analyseCatalogue(cata_STA6)
    #import cata_saturne
-   #dico=analyse_catalogue(cata_saturne)
+   #dico=analyseCatalogue(cata_saturne)
 
    def print_entite(entite,dec='  '):
        print (dec,entite.nom,entite.__class__.__name__)

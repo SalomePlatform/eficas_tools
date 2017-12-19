@@ -63,7 +63,7 @@ class MCList(UserList):
             self.niveau = None
             self.etape = None
 
-    def get_valeur(self):
+    def getValeur(self):
         """
            Retourne la "valeur" d'un objet MCList. Sert à construire
            un contexte d'évaluation pour une expression Python.
@@ -71,7 +71,7 @@ class MCList(UserList):
         """
         return self
 
-    def get_val(self):
+    def getVal(self):
         """
             Une autre méthode qui retourne une "autre" valeur d'une MCList
             Elle est utilisée par la méthode get_mocle
@@ -235,7 +235,7 @@ class MCList(UserList):
         """
         dresu = []
         for mcf in self:
-            dico = mcf.cree_dict_valeurs(mcf.mc_liste)
+            dico = mcf.creeDictValeurs(mcf.mc_liste)
             for i in list(dico.keys()):
                 if dico[i] == None:
                     del dico[i]

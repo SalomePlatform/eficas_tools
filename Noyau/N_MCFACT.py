@@ -68,7 +68,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         else:
             return val
 
-    def get_valeur(self):
+    def getValeur(self):
         """
             Retourne la "valeur" d'un mot-clé facteur qui est l'objet lui-meme.
             Cette valeur est utilisée lors de la création d'un contexte
@@ -76,7 +76,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         """
         return self
 
-    def get_val(self):
+    def getVal(self):
         """
             Une autre méthode qui retourne une "autre" valeur du mot clé facteur.
             Elle est utilisée par la méthode get_mocle

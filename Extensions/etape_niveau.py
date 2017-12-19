@@ -30,7 +30,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
 
   def __init__(self,niveau,parent):
     self.parent = parent
-    self.jdc = self.parent.get_jdc_root()
+    self.jdc = self.parent.getJdcRoot()
     self.niveau = self
     self.definition = niveau
     self.etapes=[]
@@ -38,9 +38,9 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
     self.dict_niveaux={}
     self.editmode = 0
     self.state="undetermined"
-    self.build_niveaux()
+    self.buildNiveaux()
 
-  def build_niveaux(self):
+  def buildNiveaux(self):
     for niveau in self.definition.l_niveaux:
       etape_niveau = ETAPE_NIVEAU(niveau,self)
       self.etapes_niveaux.append(etape_niveau)
@@ -52,7 +52,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
           - si editmode = 0 : on est en mode relecture d'un fichier de commandes
           auquel cas on ajoute etape a la fin de la liste self.etapes
           - si editmode = 1 : on est en mode ajout d'etape depuis eficas auquel cas
-          cette methode ne fait rien, c'est addentite qui enregistre etape
+          cette methode ne fait rien, c'est addEntite qui enregistre etape
           a la bonne place dans self.etapes 
     """
     if self.editmode : return
@@ -67,14 +67,14 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
   def ident(self):
     return self.definition.label
 
-  def isactif(self):
+  def isActif(self):
     #print 'Niveau : ',self.definition.nom
     #print '\tactif =',self.definition.actif
     if self.definition.actif == 1 :
       return 1
     else :
       # self.actif est une condition a evaluer dans un certain contexte ...
-      d = self.cree_dict_valeurs()
+      d = self.creeDictValeurs()
       try:
         t=eval(self.definition.actif,d)
         return t
@@ -82,39 +82,39 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
         traceback.print_exc()
         return 0
 
-  def cree_dict_valeurs(self):
+  def creeDictValeurs(self):
     """
     Retourne le dictionnaire des freres aines de self compose des couples :
-    {nom_frere isvalid()}
+    {nom_frere isValid()}
     """
     d={}
     for niveau in self.parent.etapes_niveaux:
       if niveau is self : break
-      d[niveau.definition.nom]=niveau.isvalid()
+      d[niveau.definition.nom]=niveau.isValid()
     return d
 
-  def isvalid(self):
+  def isValid(self):
     """ Methode booleenne qui retourne 0 si le niveau est invalide, 1 sinon """
     if self.etapes_niveaux == []:
       if len(self.etapes) == 0:
         return self.definition.valide_vide
       else:
         for etape in self.etapes :
-          if not etape.isvalid() : return 0
+          if not etape.isValid() : return 0
         return 1
     else:
       for etape_niveau in self.etapes_niveaux :
-        if not etape_niveau.isvalid() : return 0
+        if not etape_niveau.isValid() : return 0
       return 1
 
   def accept(self,visitor):
     visitor.visitETAPE_NIVEAU(self)
 
-  def addentite(self,name,pos_rel):
+  def addEntite(self,name,pos_rel):
     self.editmode = 1
     try :
       pos_abs=self.jdc.get_nb_etapes_avant(self)+pos_rel
-      cmd = self.jdc.addentite(name,pos_abs)
+      cmd = self.jdc.addEntite(name,pos_abs)
       self.etapes.insert(pos_rel,cmd)
       self.editmode = 0
       return cmd
@@ -123,14 +123,14 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
       self.editmode = 0
       return None
 
-  def suppentite(self,etape) :
+  def suppEntite(self,etape) :
     """ Classe ETAPE_NIVEAU
         Supprime une etape 
     """
-    self.jdc.suppentite(etape)
+    self.jdc.suppEntite(etape)
 
 
-  def get_fr(self):
+  def getFr(self):
      """
         Retourne le texte d'aide dans la langue choisie
      """

@@ -93,7 +93,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
 
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
-      if obj.isvalid() : 
+      if obj.isValid() : 
            try :
              # constitution du bloc VERSION du fichier PHYS (existe toujours)
              self.generBLOC_VERSION(obj)
@@ -325,7 +325,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
         self.dicoCourant=self.dicoMCFACTCourant
         s=PythonGenerator.generMCFACT(self,obj)
         # sauvegarde, dans self.dicoEtapeCourant, de la valeur du FACT courant, pour utilisation ultérieure dans generETAPE et generPROC_ETAPE
-        # Traitement des FACT CUTLINE et CUTPLANE multiples (max='**' dans le catalogue)
+        # traitement des FACT CUTLINE et CUTPLANE multiples (max='**' dans le catalogue)
         # Ce traitement spécial est nécessaire pour le moment car le générateur bogue sinon au niveau des matériaux (non-linéaires ?)
         if obj.nom in ('FIELDDUMP','CUTLINE', 'CUTPLANE', 'FIELDMAP', 'VISU3D' ): 
             # Remplissage se self.dicoEtapeCourant pour le nom du FACT courant
@@ -1035,14 +1035,14 @@ class CARMEL3DFV0Generator(PythonGenerator):
       # constitution du bloc VERSION du fichier PHYS
       # creation d une entite  VERSION ; elle sera du type PROC car decrit ainsi
       # dans le du catalogue
-      version=obj.addentite('VERSION',pos=None)
+      version=obj.addEntite('VERSION',pos=None)
       self.generPROC_ETAPE(obj.etapes[0])
       self.texteCarmel3D+="["+obj.etapes[0].nom+"\n"
       for cle in obj.etapes[0].valeur :
           self.texteCarmel3D+="   "+cle+" "+str(obj.etapes[0].valeur[cle])+"\n"
       self.texteCarmel3D+="]\n"
       # destruction de l entite creee 
-      obj.suppentite(version)
+      obj.suppEntite(version)
       #print 'ERREUR : test erreur boite graphique BLOC_VERSION'
       #raise ValueError, 'test erreur boite graphique BLOC_VERSION'
 

@@ -59,7 +59,7 @@ class MapGenerator(PythonGenerator):
    def gener(self,obj,format='brut',config=None,appli=None):
       self.initDico()
       self.text=PythonGenerator.gener(self,obj,format)
-      if obj.isvalid() :self.genereExeMap()
+      if obj.isValid() :self.genereExeMap()
       return self.text
 
 
@@ -94,7 +94,7 @@ class MapGenerator(PythonGenerator):
       Remplit le dictionnaire des MCSIMP 
       """
       
-      if obj.get_genealogie()[0][-6:-1]=="_PARA":
+      if obj.getGenealogie()[0][-6:-1]=="_PARA":
          self.dictParam[obj.nom]=obj.valeur
       else :
          self.dictValeur[obj.nom]=obj.valeur
@@ -103,7 +103,7 @@ class MapGenerator(PythonGenerator):
   
   
    def generRUN(self,obj,schema):
-       if not(obj.isvalid()) :
+       if not(obj.isValid()) :
           print ("TODO TODO TODO")
        self.texteEXE=""
        self.schema=schema

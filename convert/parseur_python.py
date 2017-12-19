@@ -119,7 +119,7 @@ number_kw_pattern=re.compile(r"""
 )
 """,re.VERBOSE|re.MULTILINE)
 
-def construit_genea(texte,liste_mc):
+def construitGenea(texte,liste_mc):
     """
        Retourne un dictionnaire dont les cles sont des reels et les valeurs sont leurs representations textuelles.
 
@@ -131,7 +131,7 @@ def construit_genea(texte,liste_mc):
        >>> s = '''a=+21.3e-5*85,b=-.1234,c=81.6   , d= -8 , e=_F(x=342.67,y=-1), f=+1.1, g=(1.3,-5,1.54E-3),
        ... #POMPE_PRIMA._BOUCLE_N._2_ELEMENT_NUMERO:0239
        ... h=_F(x=34.6,y=-1)'''
-       >>> construit_genea(s,['a','x'])
+       >>> construitGenea(s,['a','x'])
        {0.000213: '21.3e-5'}
     """
     d={}
@@ -157,10 +157,10 @@ class ENTITE_JDC(object) :
         self.texte = ''
         pere.l_objets.append(self)
 
-    def set_text(self,texte):
+    def setText(self,texte):
         self.texte = texte
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en mettant un retour chariot a la fin de texte
         """
@@ -183,7 +183,7 @@ class COMMENTAIRE(ENTITE_JDC):
         #s='COMMENTAIRE(u"""'+self.texte+'""")\n\n'
         #return s
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en enlevant le # initial
         """
@@ -203,7 +203,7 @@ class COMMANDE(ENTITE_JDC):
         """
         return self.texte+'\n'
         
-    def get_nb_par(self):
+    def getNbPar(self):
         """
         Retourne la difference entre le nombre de parentheses ouvrantes
         et le nombre de parentheses fermantes presentes dans self.texte
@@ -222,7 +222,7 @@ class COMMANDE(ENTITE_JDC):
 
 class AFFECTATION(ENTITE_JDC):
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en enlevant tout retour chariot et tout point virgule
         PN et tout commentaire
@@ -244,7 +244,7 @@ class AFFECTATION(ENTITE_JDC):
 
 class COMMANDE_COMMENTARISEE(ENTITE_JDC):
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en enlevant les doubles commentaires
         """
@@ -262,7 +262,7 @@ class COMMANDE_COMMENTARISEE(ENTITE_JDC):
 
 class AFFECTATION_EVAL(ENTITE_JDC):
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en enlevant tout retour chariot
         """
@@ -298,7 +298,7 @@ class PARSEUR_PYTHON(object):
         self.l_objets=None
         self.appli=None
 
-    def is_affectation(self,texte):
+    def isAffectation(self,texte):
         """
         Methode booleenne qui retourne 1 si le texte est celui d'une affectation dans un jeu de commandes
         Aster, 0 sinon
@@ -321,7 +321,7 @@ class PARSEUR_PYTHON(object):
             if m.end() != len(s):return 0
             return 1
 
-    def is_eval(self,texte):
+    def isEval(self,texte):
         """
         Methode booleenne qui retourne 1 si le texte est celui d'une affectation de type EVAL
         dans un jeu de commandes Aster, 0 sinon
@@ -338,7 +338,7 @@ class PARSEUR_PYTHON(object):
         else:
             return 0
             
-    def is_commande(self,texte):
+    def isCommande(self,texte):
         """
         Methode booleenne qui retourne 1 si le texte est celui d'une commande dans un jeu de commandes
         Aster, 0 sinon
@@ -357,7 +357,7 @@ class PARSEUR_PYTHON(object):
         else:
             return 0
 
-    def is_modification_catalogue(self,texte) :
+    def isModificationCatalogue(self,texte) :
         if self.pattern_commande.match(texte):
            return 1
 
@@ -417,17 +417,17 @@ class PARSEUR_PYTHON(object):
                     # on a un objet commentarise a l'interieur d'une commande
                     # --> non traite pour l'instant : on l'ajoute simplement a la commande courante comme
                     # un commentaire ordinaire
-                    commande_courante.append_text(ligne)
+                    commande_courante.appendText(ligne)
                 elif commande_commentarisee_courante :
                     # commande_commentarisee en cours : on ajoute la ligne
-                    commande_commentarisee_courante.append_text(ligne)
+                    commande_commentarisee_courante.appendText(ligne)
                     # on a 2 commandes commentarisees de suite
                     if pattern_finComments.match(ligne) :
                        commande_commentarisee_courante = None
                 else:
                     # debut de commande commentarisee : on cree un objet commande_commentarisee_courante
                     commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
-                    commande_commentarisee_courante.append_text(ligne)
+                    commande_commentarisee_courante.appendText(ligne)
 
                 #on passe a la ligne suivante
                 continue
@@ -441,16 +441,16 @@ class PARSEUR_PYTHON(object):
                 if commande_courante :
                     # il s'agit d'un commentaire a l'interieur d'une commande --> on ne fait rien de special
                     #on l'ajoute au texte de la commande 
-                    commande_courante.append_text(ligne)
+                    commande_courante.appendText(ligne)
                 elif commentaire_courant :
                     # il s'agit de la nieme ligne d'un commentaire entre deux commandes
                     # --> on ajoute cette ligne au commentaire courant
-                    commentaire_courant.append_text(ligne)
+                    commentaire_courant.appendText(ligne)
                 else :
                     # il s'agit d'un nouveau commentaire entre deux commandes
                     # --> on le cree et il devient le commentaire courant
                     commentaire_courant = COMMENTAIRE(self)
-                    commentaire_courant.append_text(ligne)
+                    commentaire_courant.appendText(ligne)
 
                 #on passe a la ligne suivante
                 continue
@@ -466,7 +466,7 @@ class PARSEUR_PYTHON(object):
 
             if commande_courante :
                 #on a une commande en cours. On l'enrichit ou on la termine
-                commande_courante.append_text(ligne)
+                commande_courante.appendText(ligne)
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
@@ -479,7 +479,7 @@ class PARSEUR_PYTHON(object):
 
             if affectation_courante != None :
                 #poursuite d'une affectation
-                affectation_courante.append_text(ligne)
+                affectation_courante.appendText(ligne)
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
@@ -490,15 +490,15 @@ class PARSEUR_PYTHON(object):
 
             # il peut s'agir d'une commande ou d'une affectation ...
             # ou d'un EVAL !!!
-            if self.is_eval(ligne):
+            if self.isEval(ligne):
                 # --> affectation de type EVAL
                 if affectation_courante : affectation_courante = None
                 affectation = AFFECTATION_EVAL(self)
-                affectation.append_text(ligne)
+                affectation.appendText(ligne)
                 #on passe a la ligne suivante
                 continue
 
-            if self.is_affectation(ligne):
+            if self.isAffectation(ligne):
                 #print( '--> affectation')
                 text=ligne
                 #traitement des commentaires en fin de ligne
@@ -506,7 +506,7 @@ class PARSEUR_PYTHON(object):
                 if compos > 2:
                     #commentaire en fin de ligne
                     #on cree un nouveau commentaire avant le parametre
-                    COMMENTAIRE(self).append_text(ligne[compos:])
+                    COMMENTAIRE(self).appendText(ligne[compos:])
                     text=ligne[:compos]
                 #si plusieurs instructions separees par des ; sur la meme ligne
                 inspos=line.find(u";")
@@ -520,7 +520,7 @@ class PARSEUR_PYTHON(object):
                                                  sur la meme ligne : %s", ligne))
 
                 affectation_courante = AFFECTATION(self)
-                affectation_courante.append_text(text)
+                affectation_courante.appendText(text)
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
@@ -529,11 +529,11 @@ class PARSEUR_PYTHON(object):
                 #on passe a la ligne suivante
                 continue
 
-            if self.is_commande(ligne):
+            if self.isCommande(ligne):
                 # --> nouvelle commande
                 affectation_courante = None
                 commande_courante = COMMANDE(self)
-                commande_courante.append_text(ligne)
+                commande_courante.appendText(ligne)
                 #si la commande est complete, on la termine
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
@@ -559,7 +559,7 @@ class PARSEUR_PYTHON(object):
              i=i+1
         return chaine 
             
-    def construit_genea(self,texte):
+    def construitGenea(self,texte):
         indiceC=0
         mot=""
         dict_reel_concept={}
@@ -649,9 +649,9 @@ class PARSEUR_PYTHON(object):
            #nomConcept=epure1.split(u"=")[0]
            #index=epure1.find(u"=")
            #epure2=epure1[index+1:len(epure1)].replace(u"_F(u","(u")
-           #dict_reel_concept=self.construit_genea(epure2)
+           #dict_reel_concept=self.construitGenea(epure2)
            if self.appli:
-             dict_reel_concept=construit_genea(epure2,self.appli.liste_simp_reel)
+             dict_reel_concept=construitGenea(epure2,self.appli.liste_simp_reel)
            else:
              dict_reel_concept={}
         if nomConcept == "sansnom" :
@@ -660,7 +660,7 @@ class PARSEUR_PYTHON(object):
            if len(dict_reel_concept) != 0:
               self.appli.dict_reels[nomConcept]=dict_reel_concept
 
-    def get_texte(self,appli=None):
+    def getTexte(self,appli=None):
         """
         Retourne le texte issu de l'analyse
         """

@@ -35,7 +35,6 @@ class monRBButtonCustom(QCheckBox):
    def __init__(self,texte,monOptionnel,parent=None):
       QCheckBox.__init__(self,tr(texte),parent)
       self.mousePressed=True
-      self.texte=texte
       self.monOptionnel=monOptionnel
       self.setToolTip(tr("clicker: affichage aide, double-click: ajout"))
 
@@ -74,7 +73,7 @@ class monRBButtonCustom(QCheckBox):
           monAide = ""
       except :
           monAide = ""
-      self.monOptionnel.parentMC.editor.affiche_commentaire(monAide)
+      self.monOptionnel.parentMC.editor.afficheCommentaire(monAide)
   
 class monPBButtonCustom(QWidget,Ui_customPB):
 
@@ -105,7 +104,7 @@ class monPBButtonCustom(QWidget,Ui_customPB):
 class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
   """
   """
-  def __init__(self,liste,parentQt,parentMC):
+  def __init__(self,liste,liste_rouge,parentQt,parentMC):
      #print "dans init de monWidgetOptionnel ", parentQt, liste,parentMC
      QWidget.__init__(self,None)
      self.setupUi(self)
@@ -117,7 +116,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      self.parentQt=parentQt
      self.parentMC=parentMC
      if liste != [] : 
-        self.affiche(liste)
+        self.affiche(liste,liste_rouge)
         self.afficheTitre()
      elif self.parentQt.parentQt.afficheOptionnelVide != False : 
         self.afficheTitre()
@@ -128,7 +127,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
 
 
   def afficheTitre(self):
-     labeltext,fonte,couleur = self.parentMC.node.item.GetLabelText()
+     labeltext,fonte,couleur = self.parentMC.node.item.getLabelText()
      #print (labeltext)
      l=tr(labeltext)
      li=[]
@@ -141,11 +140,12 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      texte=texte[0:-1]
      self.MCLabel.setText(texte)
 
-  def affiche(self,liste):
-     #print "dans Optionnel ____ affiche", liste
+  def affiche(self,liste,liste_rouge):
+     #print ("dans Optionnel ____ affiche", liste,liste_rouge)
      self.dicoCb={}
      liste.reverse()
      for mot in liste :
+         if mot in liste_rouge : print ('je dois afficher en rouge' , mot)
          if self.parentQt.parentQt.simpleClic == False :
             cb = monRBButtonCustom(mot,self)
             cb.clicked.connect(cb.ajoutAideMC)

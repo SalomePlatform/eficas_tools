@@ -143,7 +143,7 @@ class SEPGenerator(PythonGenerator):
       Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
       """
       clef=""
-      for i in obj.get_genealogie() :
+      for i in obj.getGenealogie() :
          clef=clef+"__"+i
       #self.dictMCVal[obj.nom]=obj.valeur
       self.dictMCVal[clef]=obj.valeur

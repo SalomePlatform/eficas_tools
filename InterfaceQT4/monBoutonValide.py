@@ -44,8 +44,12 @@ class MonBoutonValide(QToolButton) :
 
      def mousePressEvent(self, event):
        #print "dans mousePressEvent"
-       if self.parent.node.item.object.isvalid() :
+       if self.parent.node.item.object.isValid() :
           myToolTip=tr("objet valide")
+          if self.parent.editor.configuration.differencieSiDefaut :
+            if self.parent.node.item.object.valeur != self.parent.node.item.object.definition.defaut :
+                myToolTip+='\ndefaut : \n'+str(self.parent.node.item.object.definition.defaut)
+
           QToolTip.showText(event.globalPos(),myToolTip )
        else :
           t=""

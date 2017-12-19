@@ -40,7 +40,7 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
   """
   def __init__(self,editor, name = None,fl = 0):
        self.editor=editor
-       self.editor.affiche_infos("")
+       self.editor.afficheInfos("")
        QDialog.__init__(self,editor)
        self.setupUi(self)
        self.connecterSignaux()
@@ -64,10 +64,10 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
             return
         param= self.dictListe[item.text()]
         self.editor.nodeEnCours.lineEditVal.setText(param)
-        self.editor.nodeEnCours.LEValeurPressed()
+        self.editor.nodeEnCours.LEvaleurPressed()
        
 
-  def CreeParametre(self):
+  def creeParametre(self):
         nom=str(self.lineEditNom.text())
         val=str(self.lineEditVal.text())
         if val == "" or None : return
@@ -77,11 +77,11 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         else :                                     
            itemAvant=self.editor.tree.selectedItems()[0]
         param=itemAvant.addParameters(True)
-        param.item.set_nom(nom)
+        param.item.setNom(nom)
         #PN self.val permet d entrer du texte
-        param.item.set_valeur(self.val)
-        param.update_node_texte()
-        param.update_node_valid()
+        param.item.setValeur(self.val)
+        param.updateNodeTexte()
+        param.updateNodeValid()
         self.LBParam.addItem((repr(param.item.object)))
         self.dictListe[repr(param.item.object)] = param.item.object.nom
         self.lineEditVal.setText("")
@@ -98,7 +98,7 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         exec("from math import *", contexte)
         jdc=self.editor.jdc
         if jdc == None : 
-          self.editor.affiche_infos(tr(u"La Creation de parametre n est possible que dans un jeu de donnees"),Qt.red)
+          self.editor.afficheInfos(tr(u"La Creation de parametre n est possible que dans un jeu de donnees"),Qt.red)
           return
 
         for p in jdc.params :
@@ -116,8 +116,8 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
             monTexte="monParam='"+valString+"'"
             self.val="'"+valString+"'"
           except :
-            self.editor.affiche_infos(tr("Valeur incorrecte"),Qt.red)
-        if self.lineEditNom.text()!="" and self.dejaExistant==False : self.CreeParametre()
+            self.editor.afficheInfos(tr("Valeur incorrecte"),Qt.red)
+        if self.lineEditNom.text()!="" and self.dejaExistant==False : self.creeParametre()
 
 
   def lineEditNomReturnPressed(self):
@@ -126,14 +126,14 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
         if not pattern_name.match(nom) :
            self.lineEditNom.setText("")
            commentaire=nom + tr(" n est pas un identifiant correct\n ")
-           self.editor.affiche_infos(commentaire,Qt.red)
+           self.editor.afficheInfos(commentaire,Qt.red)
         for p in self.editor.jdc.params :
            if p.nom==nom :
              commentaire=nom + tr(" existe deja\n ")
-             self.editor.affiche_infos(commentaire,Qt.red)
+             self.editor.afficheInfos(commentaire,Qt.red)
              return
 
-        if self.lineEditVal.text()!="" : self.CreeParametre()
+        if self.lineEditVal.text()!="" : self.creeParametre()
         self.lineEditVal.setFocus(Qt.OtherFocusReason)
 
 

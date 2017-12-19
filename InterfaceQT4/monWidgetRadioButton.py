@@ -53,8 +53,8 @@ class MonWidgetRadioButtonCommun (Feuille):
 
 
   def setValeursApresBouton(self):
-      if self.objSimp.get_valeur()==None : return
-      valeur=self.objSimp.get_valeur()
+      if self.objSimp.getValeur()==None : return
+      valeur=self.objSimp.getValeur()
       if not(type(valeur) == str) : valeur=str(valeur)
       try :
         self.dict_bouton[valeur].setChecked(True)
@@ -90,7 +90,7 @@ class MonWidgetRadioButtonCommun (Feuille):
       for valeur in self.dict_bouton:
           if self.dict_bouton[valeur].isChecked():
              #print "dans boutonclic is checked", valeur, type(valeur)
-             SaisieValeur.LEValeurPressed(self,valeur)
+             SaisieValeur.LEvaleurPressed(self,valeur)
       self.reaffiche()
 
 
@@ -146,7 +146,7 @@ class MonWidgetRadioButtonSD (Ui_WidgetRadioButton,MonWidgetRadioButtonCommun):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "dans le init de MonWidgetRadioButtonSD",self
-        self.maListeDeValeur=node.item.get_sd_avant_du_bon_type()
+        self.maListeDeValeur=node.item.getSdAvantDuBonType()
         MonWidgetRadioButtonCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 
   def setMaxI(self):

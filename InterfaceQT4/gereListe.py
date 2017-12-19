@@ -127,18 +127,6 @@ class GereListe(object):
    def __init__(self):
        self.connecterSignaux()
 
-   def connecterSignauxQT4(self):
-       if hasattr(self,'RBHaut'):
-          self.connect(self.RBHaut,SIGNAL("clicked()"),self.hautPushed)
-          self.connect(self.RBBas,SIGNAL("clicked()"),self.basPushed)
-          self.connect(self.RBMoins,SIGNAL("clicked()"),self.moinsPushed)
-          self.connect(self.RBPlus,SIGNAL("clicked()"),self.plusPushed)
-          self.connect(self.RBVoisListe,SIGNAL("clicked()"),self.voisListePushed)
-       if hasattr(self,'PBAlpha'):
-          self.connect(self.PBAlpha,SIGNAL("clicked()"),self.alphaPushed)
-          self.connect(self.PBCata,SIGNAL("clicked()"),self.cataPushed)
-          self.connect(self.PBFind,SIGNAL("clicked()"),self.findPushed)
-          self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEFiltreReturnPressed)
 
    def connecterSignaux(self):
        if hasattr(self,'RBHaut'):
@@ -239,7 +227,7 @@ class GereListe(object):
    def plusPushed(self):
        if self.indexDernierLabel == self.monSimpDef.max:
           if len(self.listeValeursCourantes) < self.monSimpDef.max : self.chercheLigneVide()
-          else : self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint',Qt.red)
+          else : self.editor.afficheInfos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint',Qt.red)
           return
        self.ajoutLineEdit()
        self.descendLesLignes()
@@ -270,7 +258,7 @@ class GereListe(object):
 
    def voisListePushed(self):
        texteValeurs=""
-       for v in self.node.item.GetListeValeurs():
+       for v in self.node.item.getListeValeurs():
           texteValeurs+=str(v)+", "
        entete="Valeurs pour "+self.nom
        f=ViewText(self,self.editor,entete,texteValeurs[0:-2])
@@ -278,7 +266,7 @@ class GereListe(object):
 
 
    def selectInFile(self):
-       init=str( self.editor.CONFIGURATION.savedir)
+       init=str( self.editor.maConfiguration.savedir)
        fn = QFileDialog.getOpenFileName(self.node.appliEficas,
                                          tr("Fichier de donnees"),
                                          init,
@@ -287,7 +275,7 @@ class GereListe(object):
        if fn == None : return
        if fn == "" : return
        ulfile = os.path.abspath(six.text_type(fn))
-       self.editor.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+       self.editor.maConfiguration.savedir=os.path.split(ulfile)[0]
 
        from .monSelectVal import MonSelectVal
        MonSelectVal(file=fn,parent=self).show()

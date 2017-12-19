@@ -28,9 +28,9 @@ import os, sys
 import six
 
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QBoxLayout, QMenu, QAction, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QBoxLayout, QMenu, QAction, QMessageBox
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
@@ -63,7 +63,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.parentMainWindow=parent
         self.ihm="QT"
         self.ssIhm=ssIhm
-        self.top = self    #(pour CONFIGURATION)
+        self.top = self    #(pour maConfiguration)
         self.QWParent=None #(Pour lancement sans IHM)
         self.code=code
         self.indice=0
@@ -97,25 +97,25 @@ class Appli(Ui_Eficas,QMainWindow):
              if code==None: return
 
         self.suiteTelemac=False
-        if hasattr (self, 'CONFIGURATION') :
-           if self.CONFIGURATION.force_langue :
+        if hasattr (self, 'maConfiguration') :
+           if self.maConfiguration.force_langue :
               from .monChoixLangue import MonChoixLangue
               widgetLangue = MonChoixLangue(self)
               ret=widgetLangue.exec_()
-           self.suiteTelemac=self.CONFIGURATION.suiteTelemac
+           self.suiteTelemac=self.maConfiguration.suiteTelemac
 
 
-        if not self.salome and hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'lang') : self.langue=self.CONFIGURATION.lang
+        if not self.salome and hasattr (self, 'maConfiguration') and hasattr(self.maConfiguration,'lang') : self.langue=self.maConfiguration.lang
         from Extensions import localisation
         app=QApplication
-        if hasattr (self, 'CONFIGURATION') : localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
+        if hasattr (self, 'maConfiguration') : localisation.localise(None,self.langue,translatorFichier=self.maConfiguration.translatorFichier)
 
         self.setupUi(self)
         #if parent != None : self.parentCentralWidget = parent.centralWidget()
         #else              : self.parentCentralWidget = None
 
         if not self.salome :
-           if  hasattr (self, 'CONFIGURATION') and hasattr(self.CONFIGURATION,'taille') : self.taille=self.CONFIGURATION.taille
+           if  hasattr (self, 'maConfiguration') and hasattr(self.maConfiguration,'taille') : self.taille=self.maConfiguration.taille
            else : self.taille=1700
 
            if self.code in ['MAP',] : self.resize(1440,self.height())
@@ -125,20 +125,39 @@ class Appli(Ui_Eficas,QMainWindow):
         icon = QIcon(self.repIcon+"/parametres.png")
         self.actionParametres.setIcon(icon)
 
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.boutonDsMenuBar  : 
+           self.frameEntete.setMaximumSize(QSize(16777215,100))
+           self.frameEntete.setMinimumSize(QSize(0,100))
+           
 
         self.myQtab.removeTab(0)
-        self.blEntete= QBoxLayout(0,self.frameEntete)
+        self.blEnteteGlob = QBoxLayout(2,self.frameEntete)
+        self.blEnteteGlob.setSpacing(0)
+        self.blEnteteGlob.setContentsMargins(0,0,0,0)
+
+        self.blEntete = QBoxLayout(0)
         self.blEntete.insertWidget(0,self.toolBar)
         self.blEntete.insertWidget(0,self.menubar)
+        self.blEnteteGlob.insertLayout(0,self.blEntete)
 
-        if hasattr (self, 'CONFIGURATION') and self.CONFIGURATION.closeEntete==True and self.salome: self.closeEntete()
+
+        
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.boutonDsMenuBar  : 
+            self.blEnteteCommmande = QBoxLayout(0)
+            self.blEnteteCommmande.insertWidget(0,self.toolBarCommande)
+            self.blEnteteGlob.insertLayout(-1,self.blEnteteCommmande)
+        else :
+            self.toolBarCommande.close()
+         
+
+        if hasattr (self, 'maConfiguration') and self.maConfiguration.closeEntete==True and self.salome: self.closeEntete()
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-        #self.resize(20,20)
         self.viewmanager = MyTabview(self)
         self.recentMenu=QMenu(tr('&Recents'))
         #self.menuFichier.insertMenu(self.actionOuvrir,self.recentMenu)
+
         # actionARemplacer ne sert que pour l insert Menu
         self.menuFichier.insertMenu(self.actionARemplacer ,self.recentMenu)
         self.menuFichier.removeAction(self.actionARemplacer)
@@ -147,13 +166,14 @@ class Appli(Ui_Eficas,QMainWindow):
         if self.code != None : self.construitMenu()
 
         self.setWindowTitle(self.VERSION_EFICAS)
-        #try :
-        if 1 :
+        try :
+        #if 1 :
+         # print ('attention try devient if 1')
           self.ouvreFichiers()
-        #except EficasException, exc:
+        except EficasException, exc:
         #except:
         #  print "je suis dans le except"
-          #if self.salome == 0 : exit()
+          if self.salome == 0 : exit()
 
         #self.adjustSize()
 
@@ -169,7 +189,8 @@ class Appli(Ui_Eficas,QMainWindow):
            self.cleanPath()
            from .monChoixCode import MonChoixCode
            widgetChoix = MonChoixCode(self)
-           ret=widgetChoix.exec_()
+           #ret=widgetChoix.exec_()
+           widgetChoix.show()
         import sys
         if self.code == None:return # pour le cancel de la fenetre choix code
         name='prefs_'+self.code
@@ -184,15 +205,16 @@ class Appli(Ui_Eficas,QMainWindow):
 
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
-        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
+        self.maConfiguration = configuration.make_config(self,prefsCode.repIni)
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
            self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
 
-        if hasattr (self,'CONFIGURATION') and self.CONFIGURATION.translatorFichier : 
+        if hasattr (self,'maConfiguration') and self.maConfiguration.translatorFichier : 
            from Extensions import localisation
-           localisation.localise(None,self.langue,translatorFichier=self.CONFIGURATION.translatorFichier)
+           localisation.localise(None,self.langue,translatorFichier=self.maConfiguration.translatorFichier)
 
+        print ('self.closeAutreCommande',self.maConfiguration.closeAutreCommande)
         #PN --> pb d exception qui font planter salome
         # plus supporte en python 3
         #app=QApplication
@@ -224,8 +246,8 @@ class Appli(Ui_Eficas,QMainWindow):
         repAide=os.path.dirname(os.path.abspath(__file__))
         fileName='index.html'
         self.docPath=repAide+"/../Aide"
-        if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'docPath') : self.docPath=self.CONFIGURATION.docPath
-        if hasattr(self,'CONFIGURATION') and hasattr(self.CONFIGURATION,'fileName'):fileName=self.CONFIGURATION.fileName
+        if hasattr(self,'maConfiguration') and hasattr(self.maConfiguration,'docPath') : self.docPath=self.maConfiguration.docPath
+        if hasattr(self,'maConfiguration') and hasattr(self.maConfiguration,'fileName'):fileName=self.maConfiguration.fileName
         self.fileDoc=os.path.join(self.docPath,fileName)
         self.actionCode.setText(tr("Aide specifique ")+str(self.code))
         if not os.path.isfile(self.fileDoc) :
@@ -326,7 +348,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def enleverSupprimer(self):
         self.toolBar.removeAction(self.actionSupprimer)
 
-    def enleverNewInclude(self):
+    def enlevernewInclude(self):
         self.actionNouvel_Include.setVisible(False)
 
     def enleverRechercherDsCatalogue(self):
@@ -346,7 +368,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
 
     def ZCRACKS(self):
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.toolBar.addSeparator()
         self.ajoutExecution()
 
@@ -356,7 +378,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def ADAO(self):
         self.enleverActionsStructures()
-        self.enleverNewInclude()
+        self.enlevernewInclude()
 
     def ASTER(self) :
         self.menuTraduction = self.menubar.addMenu("menuTraduction")
@@ -374,21 +396,21 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def CARMEL3D(self):
         #if self.salome == 0 : return
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.menuMesh = self.menubar.addMenu(tr("Gestion Maillage"))
         self.menuMesh.setObjectName("Mesh")
         self.menuMesh.addAction(self.actionChercheGrpMaille)
         #self.griserActionsStructures()
 
     def CARMELCND(self):
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.enleverRechercherDsCatalogue()
         self.ajoutExecution()
         self.ajoutSauveExecution()
         self.griserActionsStructures()
 
     def MAP(self):
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.toolBar.addSeparator()
         self.ajoutExecution()
         self.ajoutSauveExecution()
@@ -407,7 +429,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.enleverActionsStructures()
         self.enleverParametres()
         self.enleverRechercherDsCatalogue()
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.ajoutExecution()
         self.ajoutN1()
         self.ajoutHelpPSEN()
@@ -417,19 +439,19 @@ class Appli(Ui_Eficas,QMainWindow):
         self.enleverActionsStructures()
         self.enleverParametres()
         self.enleverRechercherDsCatalogue()
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.ajoutExecution()
         self.ajoutIcones()
 
     def TELEMAC(self):
         self.enleverActionsStructures()
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.connectRechercherDsCatalogue()
         self.ajoutSortieLegere()
 
     def lookSuiteTelemac(self):
         self.enleverActionsStructures()
-        self.enleverNewInclude()
+        self.enlevernewInclude()
         self.enleverParametres()
         self.enleverSupprimer()
         self.enleverRechercherDsCatalogue()
@@ -490,7 +512,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.recentMenu,SIGNAL('aboutToShow()'),self.handleShowRecentMenu)
 
         self.connect(self.action_Nouveau,SIGNAL("triggered()"),self.fileNew)
-        self.connect(self.actionNouvel_Include,SIGNAL("triggered()"),self.NewInclude)
+        self.connect(self.actionNouvel_Include,SIGNAL("triggered()"),self.newInclude)
         self.connect(self.actionOuvrir,SIGNAL("triggered()"),self.fileOpen)
         self.connect(self.actionEnregistrer,SIGNAL("triggered()"),self.fileSave)
         self.connect(self.actionEnregistrer_sous,SIGNAL("triggered()"),self.fileSaveAs)
@@ -507,7 +529,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.connect(self.actionColler,SIGNAL("triggered()"),self.editPaste)
         self.connect(self.actionSupprimer,SIGNAL("triggered()"),self.supprimer)
         self.connect(self.actionRechercher,SIGNAL("triggered()"),self.rechercher)
-        self.connect(self.actionDeplier_replier,SIGNAL("triggered()"),self.Deplier)
+        self.connect(self.actionDeplier_replier,SIGNAL("triggered()"),self.handleDeplier)
 
         self.connect(self.actionRapport_de_Validation,SIGNAL("triggered()"),self.jdcRapport)
         self.connect(self.actionRegles_du_JdC,SIGNAL("triggered()"),self.jdcRegles)
@@ -557,7 +579,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.recentMenu.aboutToShow.connect(self.handleShowRecentMenu)
         self.action_Nouveau.triggered.connect(self.fileNew)
-        self.actionNouvel_Include.triggered.connect(self.NewInclude)
+        self.actionNouvel_Include.triggered.connect(self.newInclude)
         self.actionOuvrir.triggered.connect(self.fileOpen)
         self.actionEnregistrer.triggered.connect(self.fileSave)
         self.actionEnregistrer_sous.triggered.connect(self.fileSaveAs)
@@ -575,7 +597,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionColler.triggered.connect(self.editPaste)
         self.actionSupprimer.triggered.connect(self.supprimer)
         self.actionRechercher.triggered.connect(self.rechercher)
-        self.actionDeplier_replier.triggered.connect(self.Deplier)
+        self.actionDeplier_replier.triggered.connect(self.handleDeplier)
 
         self.actionRapport_de_Validation.triggered.connect(self.jdcRapport)
         self.actionRegles_du_JdC.triggered.connect(self.jdcRegles)
@@ -619,7 +641,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionCode.triggered.connect(self.aideCode)
 
 
-    def Deplier(self):
+    def handleDeplier(self):
         self.viewmanager.handleDeplier()
 
     def ajoutCommentaire(self):
@@ -631,11 +653,11 @@ class Appli(Ui_Eficas,QMainWindow):
         self.dir=cwd
         for study in session.d_env.studies:
             os.chdir(cwd)
-            d=session.get_unit(study,self)
+            d=session.getUnit(study,self)
             self.viewmanager.handleOpen(fichier=study["comm"],units=d)
 
 
-    def  get_source(self,file):
+    def  getSource(self,file):
     # appele par Editeur/session.py
         import convert
         p=convert.plugins['python']()
@@ -714,7 +736,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def sauveRecents(self) :
        try :
-         rep=self.CONFIGURATION.rep_user
+         rep=self.maConfiguration.rep_user
          monFichier=rep+"/listefichiers_"+self.code
        except :
          return
@@ -737,15 +759,15 @@ class Appli(Ui_Eficas,QMainWindow):
 
     def traductionV11V12(self):
         from .gereTraduction import traduction
-        traduction(self.CONFIGURATION.repIni,self.viewmanager,"V11V12")
+        traduction(self.maConfiguration.repIni,self.viewmanager,"V11V12")
 
     def traductionV10V11(self):
         from .gereTraduction import traduction
-        traduction(self.CONFIGURATION.repIni,self.viewmanager,"V10V11")
+        traduction(self.maConfiguration.repIni,self.viewmanager,"V10V11")
 
     def traductionV9V10(self):
         from .gereTraduction import traduction
-        traduction(self.CONFIGURATION.repIni,self.viewmanager,"V9V10")
+        traduction(self.maConfiguration.repIni,self.viewmanager,"V9V10")
 
     def version(self) :
         from .monVisu import DVisu
@@ -803,12 +825,12 @@ class Appli(Ui_Eficas,QMainWindow):
         #else :
            QMessageBox.critical( self, tr("Parametrage"), tr("Pas de possibilite de personnalisation de la configuration "))
            return
-        monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
+        monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.maConfiguration)
         monOption.show()
 
     def optionPdf(self) :
         from monOptionsPdf import OptionPdf
-        monOption=OptionPdf(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
+        monOption=OptionPdf(parent=self,modal = 0 ,configuration=self.maConfiguration)
         monOption.show()
 
     def handleSortieLegere(self):
@@ -928,7 +950,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.viewmanager.handleViewJdcRegles()
 
     def gestionParam(self):
-        self.viewmanager.handlegestionParam()
+        self.viewmanager.handleGestionParam()
 
     def visuJdcPy(self):
         self.viewmanager.handleViewJdcPy()
@@ -939,7 +961,7 @@ class Appli(Ui_Eficas,QMainWindow):
     def fermeArbre(self):
         self.viewmanager.fermeArbre()
 
-    def NewInclude(self):
+    def newInclude(self):
         self.viewmanager.newIncludeEditor()
 
     def cleanPath(self):
@@ -960,19 +982,35 @@ class Appli(Ui_Eficas,QMainWindow):
       res=self.fileExit()
       if res==2 : event.ignore()
 
+ 
+    def remplitIconesCommandes(self):
+        if self.maConfiguration.boutonDsMenuBar == False : return
+        if not hasattr(self, 'readercata') : return
+        from monLayoutBouton import MonLayoutBouton
+        if hasattr(self,'monLayoutBoutonRempli') : 
+           print ('double passage dans le readerCata')
+           self.monLayoutBoutonRempli.close()
+        self.monLayoutBoutonRempli=MonLayoutBouton(self)
+        #for 
+        #self.toolBarCommande.close()
+        
+    def handleAjoutEtape(self,nomEtape):
+        self.viewmanager.handleAjoutEtape(nomEtape)
+     
 
 if __name__=='__main__':
 
     # Modules Eficas
-    rep=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__),'..','ASTER')))
+    rep=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__),'..','Adao')))
     sys.path.append(rep)
-    from Aster import prefsCode
-    if hasattr(prefsCode,'encoding'):
+    from Adao import prefs
+    from Adao import prefs_Adao
+    #if hasattr(prefsCode,'encoding'):
        # Hack pour changer le codage par defaut des strings
-       import sys
-       reload(sys)
-       sys.setdefaultencoding(prefsCode.encoding)
-       del sys.setdefaultencoding
+       #import sys
+       #reload(sys)
+       #sys.setdefaultencoding(prefsCode.encoding)
+       #del sys.setdefaultencoding
        # Fin hack
 
     from Editeur import import_code

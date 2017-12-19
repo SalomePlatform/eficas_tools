@@ -52,7 +52,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     # parent ne peut etre qu'un objet de type JDC
     import Accas
     self.Accas_EVAL=Accas.EVAL
-    self.valeur = self.interprete_valeur(valeur)
+    self.valeur = self.interpreteValeur(valeur)
     self.val    = valeur
     self.nom = nom
     self.jdc = self.parent = CONTEXT.get_current_step()
@@ -76,7 +76,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     """
     return self.nom
 
-  def interprete_valeur(self,val):
+  def interpreteValeur(self,val):
     """
     Essaie d'interpreter val (chaine de caracteres ou None) comme :
     une instance de Accas.EVAL
@@ -95,21 +95,21 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
         print(("Le texte %s n'est pas celui d'un parametre evalue" %val))
         return None
 
-  def set_valeur(self,new_valeur):
+  def setValeur(self,new_valeur):
     """
     Remplace la valeur de self par new_valeur interpretee.
     """
-    self.valeur = self.interprete_valeur(new_valeur)
+    self.valeur = self.interpreteValeur(new_valeur)
     self.val = new_valeur
-    self.init_modif()
+    self.initModif()
 
-  def get_nom(self) :
+  def getNom(self) :
     """
     Retourne le nom du parametre
     """
     return self.nom
 
-  def get_valeur(self):
+  def getValeur(self):
     """
     Retourne la valeur de self, cad le texte de l'objet class_eval.EVAL
     """
@@ -118,7 +118,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     else:
         return ''
 
-  def verif_eval(self,exp_eval=None,cr='non'):
+  def verifEval(self,exp_eval=None,cr='non'):
     """
     Cette methode a pour but de verifier si l'expression EVAL
     est syntaxiquement correcte.
@@ -144,14 +144,14 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
         if cr == 'oui' :
           if not verificateur.cr.estvide():
             self.cr.fatal(verificateur.cr.get_mess_fatal())
-        return verificateur.isvalid(),''.join(verificateur.cr.crfatal)
+        return verificateur.isValid(),''.join(verificateur.cr.crfatal)
     else:
         # pas d'expression EVAL --> self non valide
         if cr == 'oui' : 
            self.cr.fatal(tr("Le parametre EVAL %s ne peut valoir None") , self.nom)
         return 0,tr("Le parametre EVAL ne peut valoir None")
 
-  def verif_nom(self,nom=None,cr='non'):
+  def verifNom(self,nom=None,cr='non'):
     """
     Verifie si le nom passe en argument (si aucun prend le nom courant)
     est un nom valide pour un parametre EVAL
@@ -187,8 +187,8 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
             param = (self.nom,self.valeur.valeur)
         else:
             param = (self.nom,None)
-    test_nom,erreur_nom   = self.verif_nom(param[0],cr=cr)
-    test_eval,erreur_eval = self.verif_eval(param[1],cr=cr)
+    test_nom,erreur_nom   = self.verifNom(param[0],cr=cr)
+    test_eval,erreur_eval = self.verifEval(param[1],cr=cr)
     # test global = produit des tests partiels
     test = test_nom*test_eval
     # message d'erreurs global = concatenation des messages partiels
@@ -205,11 +205,11 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     par les nouvelles valeurs passees dans le tuple formule.
     On stocke les valeurs SANS verifications.
     """
-    self.init_modif()
-    self.set_nom(param[0])
-    self.set_valeur('EVAL("""'+param[1]+'""")')
+    self.initModif()
+    self.setNom(param[0])
+    self.setValeur('EVAL("""'+param[1]+'""")')
 
-  def isvalid(self,cr='non'):
+  def isValid(self,cr='non'):
     """
     Retourne 1 si self est valide, 0 sinon
     Un parametre evalue est considere comme valide si :
@@ -224,10 +224,10 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
         Genere l'objet rapport (classe CR)
     """
     self.cr = CR()
-    self.isvalid(cr='oui')
+    self.isValid(cr='oui')
     return self.cr
 
-  def set_nom(self,new_nom):
+  def setNom(self,new_nom):
     """
     Remplace le nom de self par new_nom
     """

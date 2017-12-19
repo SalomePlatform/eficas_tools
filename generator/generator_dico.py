@@ -80,9 +80,8 @@ class DicoGenerator(PythonGenerator):
 
    def writeDefault(self,fn) :
        fileDico = fn[:fn.rfind(".")] + '.py'
-       f = open( str(fileDico), 'wb')
-       f.write( self.texteDico )
-       print((self.texteDico))
+       f = open( str(fileDico), 'w')
+       f.write('Dico = '+str(self.Dico))
        f.close()
 
 #----------------------------------------------------------------------------------------
@@ -93,11 +92,10 @@ class DicoGenerator(PythonGenerator):
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
         courant=self.Dico
-        for p in obj.get_genealogie_precise()[0:-1]:
+        for p in obj.getGenealogie_precise()[0:-1]:
             if not (p in courant.keys()) : courant[p]={}
             courant=courant[p]
         courant[obj.nom]=obj.val
         self.texteDico+=obj.nom+ "=" + s[0:-1]+ "\n"
         return s
 
-  

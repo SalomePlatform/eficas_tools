@@ -52,6 +52,7 @@ class CONFIG_BASE(object):
   #         par celui de l utilisateur
   # le fichier de catalogue va etre lu dans la directory de l utilisateur s il exite
   # dans le fichier general sinon
+
       self.appli   = appli  
       self.code    = appli.code
       self.salome  = appli.salome
@@ -64,13 +65,16 @@ class CONFIG_BASE(object):
       else :
               self.rep_user   = os.path.join('C:/','.config/Eficas',appli.code)
 
-     
 
       self.setValeursParDefaut()
       
       self.lecture_fichier_ini_standard()
       self.lecture_fichier_ini_integrateur()
       self.lecture_fichier_ini_utilisateur()
+
+      if self.boutonDsMenuBar:
+         self.closeAutreCommande = True
+         self.closeFrameRechercheCommande = True
 
       #Particularite des schemas MAP
       if hasattr(self,'make_ssCode'): self.make_ssCode(self.ssCode)
@@ -98,7 +102,7 @@ class CONFIG_BASE(object):
         self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
       else:
         self.savedir = os.path.abspath('C:/')
-      self.mode_nouv_commande='initial'
+      self.modeNouvCommande='initial'
       self.affiche="alpha"
       self.closeAutreCommande = False
       self.closeFrameRechercheCommande = False
@@ -112,6 +116,11 @@ class CONFIG_BASE(object):
       self.simpleClic= False
       self.afficheOptionnelVide=False
       self.afficheListesPliees=True
+      self.boutonDsMenuBar=False
+      self.ficIcones=None
+      self.repIcones=None
+      self.differencieSiDefaut=True
+
 
  
   #--------------------------------------

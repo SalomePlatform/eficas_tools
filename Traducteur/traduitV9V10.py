@@ -697,7 +697,7 @@ def traduc(infile,outfile,flog=None):
 
     # non fait CALC_NO OPTION=FORC_NODA_NONL
 
-    ########## Traitement MACRO_MISS_3D --> CALC_MISS
+    ########## traitement MACRO_MISS_3D --> CALC_MISS
     renameCommandeSiRegle(jdc,"MACRO_MISS_3D","CALC_MISS",((("OPTION","MODULE","MISS_IMPE",jdc),"MCsousMCFaPourValeur"),(("PARAMETRE","ISSF"),"nexistepasMCsousMCF"),(("PARAMETRE","DIRE_ONDE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_LISTE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_NB"),"nexistepasMCsousMCF"),))
     renameCommandeSiRegle(jdc,"MACRO_MISS_3D","CALC_MISS",((("OPTION","MODULE","MISS_IMPE",jdc),"MCsousMCFaPourValeur"),(("PARAMETRE","ISSF","NON",jdc),"MCsousMCFaPourValeur"),(("PARAMETRE","DIRE_ONDE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_LISTE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_NB"),"nexistepasMCsousMCF"),))
     removeMotCleInFact(jdc,"CALC_MISS","PARAMETRE","FICH_RESU_IMPE",pasDeRegle(),0)

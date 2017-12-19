@@ -19,41 +19,41 @@
 #
 # Modules Python
 from __future__ import absolute_import
+try :
+   from builtins import str
+except : pass
+
 import types,os
 
 # Modules Eficas
-from PyQt5.QtWidgets import QRadioButton
 from Extensions.i18n import tr
 
 from .feuille               import Feuille
-from desWidgetSimpBool     import Ui_WidgetSimpBool 
 from .politiquesValidation  import PolitiqueUnique
 from .qtSaisie              import SaisieValeur
+from desWidgetCBIntoSug     import Ui_WidgetCBIntoSug
 
+from PyQt5.QtWidgets import QComboBox, QCompleter
+from PyQt5.QtCore import Qt
 
-class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
+from monWidgetCB            import MonWidgetCBCommun
+from monWidgetIntoSug       import GereAjoutDsPossible
 
+      
+class MonWidgetCBIntoSug (MonWidgetCBCommun, Ui_WidgetCBIntoSug,GereAjoutDsPossible):
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-        self.politique=PolitiqueUnique(self.node,self.editor)
-        self.RBTrue.clicked.connect(self.boutonTrueClic)
-        self.RBFalse.clicked.connect(self.boutonFalseClic)
-        self.parentQt.commandesLayout.insertWidget(-1,self)
-        self.maCommande.listeAffichageWidget.append(self.RBTrue)
-        self.AAfficher=self.RBTrue
+      self.maListeDeValeur=monSimpDef.into
+      if node.item.hasIntoSug() : self.maListeDeValeur=node.item.getListePossibleAvecSug([])
+      if hasattr(node.item,'suggestion') : self.maListeDeValeur+=  node.item.suggestion
+      MonWidgetCBCommun. __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+      self.lineEditVal.returnPressed.connect(self.LEValeurAjouteDsPossible)
 
-  def setValeurs(self):
-       valeur=self.node.item.getValeur()
-       if valeur == None  : return
-       if valeur == True  : self.RBTrue.setChecked(True)
-       if valeur == False : self.RBFalse.setChecked(True)
-
-
-  def boutonTrueClic(self):
-      SaisieValeur.LEvaleurPressed(self,True)
-      self.reaffiche()
-
-  def boutonFalseClic(self):
-      SaisieValeur.LEvaleurPressed(self,False)
-      self.reaffiche()
+  def ajouteValeurPossible(self,valeur):
+      self.CBChoix.addItem(valeur)
+      # on ne sait pas si on a deja ajouté une valeur
+      try : self.node.item.suggestion.append(valeur)
+      except : self.node.item.suggestion=(valeur,)
+      self.lineEditVal.setText('')
+      self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur));
+      
 

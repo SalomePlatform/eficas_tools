@@ -38,21 +38,21 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
-        self.Decommente = QAction(tr("Decommenter"),self.tree)
-        self.Decommente.triggered.connect(self.Decommenter)
+        self.Decommente = QAction(tr("decommenter"),self.tree)
+        self.Decommente.triggered.connect(self.decommenter)
         self.Decommente.setStatusTip(tr("Decommente la commande "))
 
-        if hasattr(self.item,'uncomment'):
+        if hasattr(self.item,'unComment'):
            self.menu.addAction(self.Decommente)
 
-    def Decommenter(self) :
+    def decommenter(self) :
         item= self.tree.currentItem()
         item.unCommentIt()
 
-    def update_node_label(self) :
+    def updateNodeLabel(self) :
         """
         """
-        debComm=self.item.GetText()
+        debComm=self.item.getText()
         self.setText(1,debComm)
 
 
@@ -61,9 +61,9 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     itemNode=Node    
 
     def init(self):
-      self.setfunction = self.set_valeur
+      self.setFunction = self.setValeur
 
-    def GetIconName(self):
+    def getIconName(self):
       """
       Retourne le nom de l'icone associee au noeud qui porte self,
       dependant de la validite de l'objet
@@ -71,7 +71,7 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       return "ast-white-percent"
 
-    def GetLabelText(self):
+    def getLabelText(self):
         """ Retourne 3 valeurs :
         - le texte a afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
@@ -79,13 +79,13 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
         """
         return tr('Commentaire'),None,None
 
-    def get_valeur(self):
+    def getValeur(self):
       """
       Retourne la valeur de l'objet Commentaire cad son texte
       """
-      return self.object.get_valeur() or ''
+      return self.object.getValeur() or ''
     
-    def GetText(self):
+    def getText(self):
         texte = self.object.valeur
         texte = texte.split('\n')[0]
         if len(texte) < 25 :
@@ -93,23 +93,23 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
         else :
             return texte[0:24]
 
-    def set_valeur(self,valeur):
+    def setValeur(self,valeur):
       """
       Affecte valeur a l'objet COMMENTAIRE
       """
-      self.object.set_valeur(valeur)
+      self.object.setValeur(valeur)
       
-    def GetSubList(self):
+    def getSubList(self):
       """
       Retourne la liste des fils de self
       """
       return []
 
 
-    def get_objet_commentarise(self):
+    def getObjetCommentarise(self):
        """
-           La methode get_objet_commentarise() de la classe compocomm.COMMTreeItem
-           surcharge la methode get_objet_commentarise de la classe Objecttreeitem.ObjectTreeItem
+           La methode getObjetCommentarise() de la classe compocomm.COMMTreeItem
+           surcharge la methode getObjetCommentarise de la classe Objecttreeitem.ObjectTreeItem
            elle a pour but d'empecher l'utilisateur final de commentariser un commentaire.
        """
        raise EficasException( 'Impossible de commentariser un commentaire' )

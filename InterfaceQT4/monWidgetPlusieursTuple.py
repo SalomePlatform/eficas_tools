@@ -44,8 +44,12 @@ from Tuple2                import Ui_Tuple2
 from Tuple3                import Ui_Tuple3
 
 
+#--------------------------
 class TupleCustom(object) :
+#--------------------------
+
   def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------------------------------------
       QWidget.__init__(self,parent)
       self.setupUi(self)
       self.tailleTuple=tailleTuple
@@ -67,8 +71,9 @@ class TupleCustom(object) :
 
 
   def valueChange(self):
+  #----------------------
+
       listeVal=[]
-    
       for i in range(self.tailleTuple):
          nomLE="lineEditVal_"+str(i+1)
          courant=getattr(self,nomLE)
@@ -77,11 +82,12 @@ class TupleCustom(object) :
          if str(val)=="" or val==None : 
             if not self.inFocusOutEvent : courant.setFocus()
             return
+
          try :
              valeur=eval(val,{})
          except :
            try :
-             d=self.parentQt.objSimp.jdc.get_contexte_avant(self.parentQt.objSimp. etape)
+             d=self.parentQt.objSimp.jdc.getContexte_avant(self.parentQt.objSimp. etape)
              valeur=eval(val,d)
            except :
              valeur=val
@@ -91,6 +97,8 @@ class TupleCustom(object) :
 
 
   def setValeur(self,value):
+  #----------------------
+
       listeVal=[]
       valeurNulle=True
       for i in range(self.tailleTuple):
@@ -110,7 +118,7 @@ class TupleCustom(object) :
            valeur=eval(val,{})
          except :
            try :
-             d=self.parentQt.objSimp.jdc.get_contexte_avant(self.parentQt.objSimp. etape)
+             d=self.parentQt.objSimp.jdc.getContexte_avant(self.parentQt.objSimp. etape)
              valeur=eval(val,d)
            except :
              valeur=val
@@ -119,15 +127,19 @@ class TupleCustom(object) :
       else                    : self.valeur=listeVal
 
   def getValeur(self):
+  #----------------------
       return self.valeur
 
   def text(self):
+  #--------------
       return self.valeur
 
   def setText(self,value):
+  #-----------------------
       self.setValeur(value)
 
   def clean(self):
+  #-------------------
       self.valeur=None
       for i in range(self.tailleTuple):
          nomLE="lineEditVal_"+str(i+1)
@@ -135,23 +147,35 @@ class TupleCustom(object) :
          courant.setText("")
 
   def finCommentaire(self):
+  #-------------------
         return self.finCommentaireListe()
 
 
+#-------------------------------------------------
 class TupleCustom2(QWidget,Ui_Tuple2,TupleCustom):
+#-------------------------------------------------
+
   def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
       TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
 
+#-------------------------------------------------
 class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
+#-------------------------------------------------
+
   def __init__(self,tailleTuple,parent,parentQt,index):
+  #-----------------------------------------------------
       TupleCustom. __init__(self,tailleTuple,parent,parentQt,index)
       
-# ---------------------------- #
 
 
+# -------------------------------------------- #
 class MonWidgetPlusieursTuple(Feuille,GereListe):
+# -------------------------------------------- #
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+  #-----------------------------------------------------
+
         self.indexDernierLabel=0
         self.nomLine="TupleVal"
         self.listeAffichageWidget=[]
@@ -160,6 +184,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
         self.finCommentaireListe()
         self.politique=PolitiquePlusieurs(self.node,self.editor)
         self.parentQt.commandesLayout.insertWidget(-1,self)
+
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
           fichier=os.path.join(repIcon, 'arrow_up.png')
@@ -179,6 +204,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
 
   def ajoutLineEdit(self,valeur=None,inInit=False):
+  #------------------------------------------------
       self.indexDernierLabel=self.indexDernierLabel+1
       nomLineEdit=self.nomLine+str(self.indexDernierLabel)
       if hasattr(self,nomLineEdit) :
@@ -195,6 +221,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       self.listeAffichageWidget.append(nouveauLE.lineEditVal_1)
       self.listeAffichageWidget.append(nouveauLE.lineEditVal_2)
       if self.nbValeurs == 3 : self.listeAffichageWidget.append(nouveauLE.lineEditVal_3)
+
       self.etablitOrdre()
 
       # deux lignes pour que le ensureVisible fonctionne
@@ -202,6 +229,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       if inInit==False :QTimer.singleShot(1, self.rendVisibleLigne)
 
   def etablitOrdre(self):
+  # ---------------------
       i=0
       while(i +1 < len(self.listeAffichageWidget)):
          self.listeAffichageWidget[i].setFocusPolicy(Qt.StrongFocus)
@@ -210,9 +238,10 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
 
   def setValeurs(self):
+  # ---------------------
        self.RBListePush()
-       valeurs=self.node.item.get_valeur()
-       min,max=self.node.item.GetMinMax()
+       valeurs=self.node.item.getValeur()
+       min,max=self.node.item.getMinMax()
        if max == "**" or max > 5 : aCreer=5
        else : aCreer=max 
 
@@ -226,16 +255,18 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
        for i in range(len(valeurs),aCreer) : self.ajoutLineEdit(inInit=True)
 
   def rendVisibleLigne(self):
+  # -------------------------
       QApplication.processEvents()
       self.estVisible.setFocus(True)
       self.scrollArea.ensureWidgetVisible(self.estVisible,0,0)
 
    
   def changeValeur(self,changeDePlace=False,oblige=True):
+  # -----------------------------------------------------
       #Pour compatibilite signature
+
       aLeFocus=self.focusWidget()
       listeComplete=[]
-
       libre=False
       for i in range(self.indexDernierLabel) :
           nom=self.nomLine+str(i+1)
@@ -244,18 +275,18 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           if valeurTuple == None or valeurTuple== "": 
              libre=True
              continue
-          validite,comm,comm2,listeRetour= self.politique.AjoutTuple(valeurTuple,listeComplete)
+          validite,comm,comm2,listeRetour= self.politique.ajoutTuple(valeurTuple,listeComplete)
           if not validite:
              if comm2 != '' : comm += " " + comm2
-             self.editor.affiche_infos(comm+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
+             self.editor.afficheInfos(comm+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
              return
           listeComplete.append(tuple(courant.valeur))
       if listeComplete == [] : listeComplete=None
-      self.node.item.set_valeur(listeComplete)
+      self.node.item.setValeur(listeComplete)
 
       if changeDePlace : return
-      min,max=self.node.item.GetMinMax()
-      if self.indexDernierLabel == max  : self.editor.affiche_infos(tr('Nb maximum de valeurs atteint'))
+      min,max=self.node.item.getMinMax()
+      if self.indexDernierLabel == max  : self.editor.afficheInfos(tr('Nb maximum de valeurs atteint'))
       if self.indexDernierLabel < max and libre==False :
           self.ajoutLineEdit()
           self.listeAffichageWidget[-2].setFocus(True)
@@ -269,40 +300,64 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
            pass
           
   def ajoutNValeur(self,liste):
+  #----------------------------
+  # attention quand on charge par un fichier, on ne peut pas se contenter d ajouter N fois 1 valeur
+  # car alors le temps de verification devient prohibitif  reconstructu=ion et verification a 
+  # chaque valeur. d ou l ajout de ajoutNTuple a politique plusieurs
+
         if len(liste)%self.nbValeurs != 0 :
            texte="Nombre incorrect de valeurs"
-           self.editor.affiche_infos(tr(texte),Qt.red)
-        i=0
-        min,max=self.node.item.GetMinMax()
-        if self.objSimp.valeur == None : l = len(liste) and self.objSimp.valeur
-        else : l = len(liste)+len(self.objSimp.valeur)
-        if l > max : 
-           texte=tr("Nombre maximum de valeurs ")+str(max)+tr(" atteint")
-           self.editor.affiche_infos(texte,Qt.red)
+           self.editor.afficheInfos(tr(texte),Qt.red)
            return
+
+        i=0
+        longueur=len(liste)//self.nbValeurs
+        increment=self.nbValeurs
+        listeFormatee=[liste[k*increment:(k+1)*increment] for k in range(longueur)]
+        listeFormatee=tuple(listeFormatee)
+
+        min,max=self.node.item.getMinMax()
+        if self.objSimp.valeur == None : listeComplete=listeFormatee
+        else : listeComplete =self.objSimp.valeur + listeFormatee
+
+        if len(listeComplete) > max : 
+           texte=tr("Nombre maximum de valeurs ")+str(max)+tr(" atteint")
+           self.editor.afficheInfos(texte,Qt.red)
+           return
+
+        validite,comm,comm2,listeRetour= self.politique.ajoutNTuple(listeComplete)
+        if not validite : 
+           self.editor.afficheInfos(texte,Qt.red)
+           return
+
+        # on calcule le dernier lineedit rempli avant de changer la valeur
+        if self.objSimp.valeur != None : indexDernierRempli=len(self.objSimp.valeur)
+        else : indexDernierRempli=0
+
+        self.politique.recordValeur(listeComplete)
+
         while ( i < len(liste) ) :
-            if self.objSimp.valeur != None : indexDernierRempli=len(self.objSimp.valeur)
-            else : indexDernierRempli=0
             try :
               t=tuple(liste[i:i+self.nbValeurs])
-              i=i+self.nbValeurs
             except:
               t=tuple(liste[i:len(liste)])
+            i=i+self.nbValeurs
             if indexDernierRempli < self.indexDernierLabel:
                nomLineEdit=self.nomLine+str(indexDernierRempli+1)
                LEARemplir=getattr(self,nomLineEdit) 
                LEARemplir.lineEditVal_1.setText(str(t[0]))
                LEARemplir.lineEditVal_2.setText(str(t[1]))
                if self.nbValeurs== 3 : LEARemplir.lineEditVal_3.setText(str(t[2]))
-               LEARemplir.valueChange()
             else : 
                self.ajoutLineEdit(t,False)
-               nomLineEdit=self.nomLine+str(self.indexDernierLabel)
-               LEARemplir=getattr(self,nomLineEdit) 
-               LEARemplir.valueChange()
+            indexDernierRempli = indexDernierRempli + 1
+        
 
   def RBListePush(self):
+  #----------------------
   # PN a rendre generique avec un truc tel prerempli
+  # pour l instant specifique PSEN
+
       if self.editor.code == 'VP' : return
       if self.objSimp.valeur != None and self.objSimp.valeur != [] : return
       if not hasattr(self.editor.readercata.cata[0],'sd_ligne') : self.editor.readercata.cata[0].sd_ligne=None
@@ -319,7 +374,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
                val.append((valeur,0))
               except :
                pass
-         self.node.item.set_valeur(val)
+         self.node.item.setValeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_generateur :
          val=[]
          if  hasattr(self.objSimp.jdc,'MachineDico'):
@@ -329,7 +384,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
                val.append((valeur,0))
               except :
                pass
-         self.node.item.set_valeur(val)
+         self.node.item.setValeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_transfo :
          val=[]
          if  hasattr(self.objSimp.jdc,'TransfoDico'):
@@ -339,7 +394,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
                val.append((valeur,0))
               except :
                pass
-         self.node.item.set_valeur(val)
+         self.node.item.setValeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_charge :
          val=[]
          if  hasattr(self.objSimp.jdc,'LoadDico'):
@@ -349,7 +404,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
                val.append((valeur,0))
               except :
                pass
-         self.node.item.set_valeur(val)
+         self.node.item.setValeur(val)
       if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_moteur :
          val=[]
          if  hasattr(self.objSimp.jdc,'MotorDico'):
@@ -359,5 +414,5 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
                val.append((valeur,0))
               except :
                pass
-         self.node.item.set_valeur(val)
+         self.node.item.setValeur(val)
 

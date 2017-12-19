@@ -48,7 +48,7 @@ class appliEficasSSIhm(object):
 
        nameConf='configuration_'+self.code
        configuration=__import__(nameConf)
-       self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
+       self.maConfiguration = configuration.make_config(self,prefsCode.repIni)
         
 class QWParentSSIhm(object):
    def __init__(self,code,version_code):

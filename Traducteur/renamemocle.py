@@ -165,9 +165,9 @@ def renameCommande(jdc,command,new_name,ensemble=regles.SansRegle):
     boolChange=0
     if debug :
         if ensemble != regles.SansRegle :
-          logging.info("Traitement de %s renomme en %s sous conditions", command, new_name)
+          logging.info("traitement de %s renomme en %s sous conditions", command, new_name)
         else  :
-          logging.info("Traitement de %s renomme en %s ", command, new_name)
+          logging.info("traitement de %s renomme en %s ", command, new_name)
     for c in jdc.root.childNodes:
         if c.name != command:continue
         if ensemble.verif(c) == 0 : continue

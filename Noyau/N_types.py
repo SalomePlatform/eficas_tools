@@ -60,7 +60,7 @@ def is_str(obj):
     return isinstance(obj, (str, six.text_type))
 
 
-def is_list(obj):
+def isList(obj):
     return type(obj) is list
 
 
@@ -75,7 +75,7 @@ def is_array(obj):
 
 def is_sequence(obj):
     """a sequence (allow iteration, not a string) ?"""
-    return is_list(obj) or is_tuple(obj) or is_array(obj)
+    return isList(obj) or is_tuple(obj) or is_array(obj)
 
 
 def is_assd(obj):

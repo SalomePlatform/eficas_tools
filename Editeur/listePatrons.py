@@ -40,9 +40,9 @@ class listePatrons(object) :
           self.sous_menu=sous_menus[code]
        self.code=code
        self.liste={}
-       self.traite_liste()
+       self.traiteListe()
 
-    def traite_liste(self):
+    def traiteListe(self):
         if not (self.code in sous_menus) : return
         if not (os.path.exists(self.rep_patrons)) : return
         for file in os.listdir(self.rep_patrons):

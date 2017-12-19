@@ -86,7 +86,7 @@ class CARMEL3DGenerator(PythonGenerator):
 
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
-      if obj.isvalid() : 
+      if obj.isValid() : 
            # constitution du bloc VERSION du fichier PHYS (existe toujours)
            try :
              self.generBLOC_VERSION(obj)
@@ -561,14 +561,14 @@ class CARMEL3DGenerator(PythonGenerator):
       # constitution du bloc VERSION du fichier PHYS
       # creation d une entite  VERSION ; elle sera du type PROC car decrit ainsi
       # dans le du catalogue
-      version=obj.addentite('VERSION',pos=None)
+      version=obj.addEntite('VERSION',pos=None)
       self.generPROC_ETAPE(obj.etapes[0])
       self.texteCarmel3D+="["+obj.etapes[0].nom+"\n"
       for cle in obj.etapes[0].valeur :
           self.texteCarmel3D+="   "+cle+" "+str(obj.etapes[0].valeur[cle])+"\n"
       self.texteCarmel3D+="]\n"
       # destruction de l entite creee 
-      obj.suppentite(version)
+      obj.suppEntite(version)
 
 #----------------------------------------------------------------------------------------
    def generBLOC_MATERIALS(self) :

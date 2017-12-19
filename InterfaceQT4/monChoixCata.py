@@ -38,10 +38,13 @@ class MonChoixCata(Ui_DChoixCata,QDialog):
       self.TLNb.setText(tr("%d versions du catalogue sont disponibles", len(listeCata)))
       if title is not None:
           self.setWindowTitle(tr(title))
+      self.buttonOk.clicked.connect(self.cataChoisi)
+      self.buttonCancel.clicked.connect(self.sortSansChoix)
 
-  def on_buttonCancel_clicked(self):
+
+  def sortSansChoix(self):
       QDialog.reject(self)
 
-  def on_buttonOk_clicked(self):
+  def cataChoisi(self):
       QDialog.accept(self)
 

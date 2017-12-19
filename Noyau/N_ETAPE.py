@@ -88,7 +88,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         enregistrements necessaires
         """
         if self.parent:
-            self.jdc = self.parent.get_jdc_root()
+            self.jdc = self.parent.getJdcRoot()
             self.id = self.parent.register(self)
             self.niveau = None
         else:
@@ -132,7 +132,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                     self.definition.op_init(*(
                         self, self.parent.g_context))
             else:
-                sd = self.get_sd_prod()
+                sd = self.getSdProd()
                 # On n'utilise pas self.definition.op_init car self.parent
                 # n'existe pas
                 if sd != None and self.reuse == None:
@@ -162,7 +162,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         """
         return
 
-    def get_sd_prod(self):
+    def getSdProd(self):
         """
             Retourne le concept resultat de l'etape
             Deux cas :
@@ -176,7 +176,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                        et on le retourne
         """
         if type(self.definition.sd_prod) == types.FunctionType:
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mc_liste)
             try:
                 sd_prod = self.definition.sd_prod(*(), **d)
             except EOFError:
@@ -207,13 +207,13 @@ Causes possibles :
    Developpeur : La fonction "sd_prod" retourne un type invalide.""")
         return self.sd
 
-    def get_type_produit(self):
+    def getType_produit(self):
         try:
-            return self.get_type_produit_brut()
+            return self.getType_produit_brut()
         except:
             return None
 
-    def get_type_produit_brut(self):
+    def getType_produit_brut(self):
         """
             Retourne le type du concept resultat de l'etape
             Deux cas :
@@ -225,7 +225,7 @@ Causes possibles :
                 et on retourne son resultat
         """
         if type(self.definition.sd_prod) == types.FunctionType:
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mc_liste)
             sd_prod = self.definition.sd_prod(*(), **d)
         else:
             sd_prod = self.definition.sd_prod
@@ -256,7 +256,7 @@ Causes possibles :
     def __del__(self):
         pass
 
-    def get_created_sd(self):
+    def getCreated_sd(self):
         """Retourne la liste des sd reellement produites par l'etape.
         Si reuse est present, `self.sd` a ete creee avant, donc n'est pas dans
         cette liste."""
@@ -264,7 +264,7 @@ Causes possibles :
             return [self.sd, ]
         return []
 
-    def isactif(self):
+    def isActif(self):
         """
            Indique si l'etape est active (1) ou inactive (0)
         """
@@ -306,13 +306,13 @@ Causes possibles :
         """
         return 0
 
-    def get_file(self, unite=None, fic_origine='', fname=None):
+    def getFile(self, unite=None, fic_origine='', fname=None):
         """
             Retourne le nom du fichier correspondant a un numero d'unite
             logique (entier) ainsi que le source contenu dans le fichier
         """
         if self.jdc:
-            return self.jdc.get_file(unite=unite, fic_origine=fic_origine, fname=fname)
+            return self.jdc.getFile(unite=unite, fic_origine=fic_origine, fname=fname)
         else:
             if unite != None:
                 if os.path.exists("fort." + str(unite)):
@@ -336,7 +336,7 @@ Causes possibles :
         """
         visitor.visitETAPE(self)
 
-    def update_context(self, d):
+    def updateContext(self, d):
         """
             Cette methode doit updater le contexte fournit par
             l'appelant en argument (d) en fonction de sa definition
@@ -380,7 +380,7 @@ Causes possibles :
             Cette methode sert a reinitialiser la parente de l'objet
         """
         self.parent = parent
-        self.jdc = parent.get_jdc_root()
+        self.jdc = parent.getJdcRoot()
         self.etape = self
         for mocle in self.mc_liste:
             mocle.reparent(self)

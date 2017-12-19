@@ -38,7 +38,7 @@ class MonWidgetInfo (Ui_WidgetInformative,QWidget):
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         QWidget.__init__(self,None)
         self.setupUi(self)
-        valeur=node.item.get_valeur()
+        valeur=node.item.getValeur()
         self.lineEditVal.setText(str(valeur))
         self.lineEditVal.setReadOnly(True)
         parentQt.commandesLayout.insertWidget(-1,self)

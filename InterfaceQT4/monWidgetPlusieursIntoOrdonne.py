@@ -56,7 +56,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         GereListe.__init__(self)
         #self.finCommentaireListe()
         self.gereIconePlier()
-        self.listeValeursCourantes=self.node.item.GetListeValeurs()
+        self.listeValeursCourantes=self.node.item.getListeValeurs()
         try :
           self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         except :
@@ -91,19 +91,19 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
        for i in self.listeLE: i.close()
        self.listeLE=[]
        self.vScrollBar = self.scrollArea.verticalScrollBar()
-       self.listeValeursCourantes=self.node.item.GetListeValeurs()
+       self.listeValeursCourantes=self.node.item.getListeValeurs()
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
             self.node.item.definition.validators.set_MCSimp(obj)
-            if self.node.item.isvalid() == 0 :
+            if self.node.item.isValid() == 0 :
                liste=[]
                for item in self.listeValeursCourantes:
                    if self.node.item.definition.validators.verif_item(item)==1: liste.append(item)
-               self.listeAAfficher=self.node.item.get_liste_possible(liste)
+               self.listeAAfficher=self.node.item.getListePossible(liste)
             else: 
-               self.listeAAfficher=self.node.item.get_liste_possible([])
+               self.listeAAfficher=self.node.item.getListePossible([])
        else :
-            self.listeAAfficher=self.node.item.get_liste_possible(self.listeValeursCourantes)
+            self.listeAAfficher=self.node.item.getListePossible(self.listeValeursCourantes)
 
        if self.listeAAfficher==[] : 
           self.ajoutLE(0)
@@ -124,7 +124,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
        
       
   def setValeurs(self,first=True):
-       self.listeValeursCourantes=self.node.item.GetListeValeurs()
+       self.listeValeursCourantes=self.node.item.getListeValeurs()
        if first : 
           if self.monSimpDef.max == "**" or self.monSimpDef.max == float('inf') : aConstruire=7
           else : aConstruire=self.monSimpDef.max
@@ -224,13 +224,13 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         if liste ==[]    : return
         listeVal=[]
 
-        self.listeValeursCourantes=self.node.item.GetListeValeurs()
-        min,max = self.node.item.GetMinMax()
+        self.listeValeursCourantes=self.node.item.getListeValeurs()
+        min,max = self.node.item.getMinMax()
         if len(self.listeValeursCourantes) +1 > max : 
-           self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
+           self.editor.afficheInfos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
            return
         else :
-           self.editor.affiche_infos("")
+           self.editor.afficheInfos("")
 
         affiche=False
         for i in range(1,self.indexDernierLabel+1):
@@ -263,23 +263,23 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
            liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
            listeVal.append(str(valeur))
 
-        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(listeVal,-1,[])
+        validite,comm,comm2,listeRetour=self.politique.ajoutValeurs(listeVal,-1,[])
         
 
-        self.listeValeursCourantes=self.node.item.GetListeValeurs()
-        min,max = self.node.item.GetMinMax()
+        self.listeValeursCourantes=self.node.item.getListeValeurs()
+        min,max = self.node.item.getMinMax()
         if len(self.listeValeursCourantes) < min : 
-           self.editor.affiche_infos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
+           self.editor.afficheInfos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
         else :
-           self.editor.affiche_infos("")
+           self.editor.afficheInfos("")
     
         if len(listeRetour) == 0 :
-           self.node.item.set_valeur(None)
+           self.node.item.setValeur(None)
         elif validite :
-           self.node.item.set_valeur(listeRetour)
+           self.node.item.setValeur(listeRetour)
         else :
            commentaire=comm+" "+comm2
-           self.editor.affiche_infos(commentaire,Qt.red)
+           self.editor.afficheInfos(commentaire,Qt.red)
         self.setValide()
 #
   def rendVisibleLigneRE(self):

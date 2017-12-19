@@ -82,7 +82,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         self.RBVoisListe.setIcon(icon)
 
 
-        self.listeValeursCourantes=self.node.item.GetListeValeurs()
+        self.listeValeursCourantes=self.node.item.getListeValeurs()
         if self.monSimpDef.max != "**"  and self.monSimpDef.max < 7: 
            hauteurMax=dicoLongueur[self.monSimpDef.max]
         else :
@@ -109,10 +109,10 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
            self.ajoutLineEdit()
        QApplication.processEvents()
        self.scrollArea.ensureWidgetVisible(self.lineEditVal1)
-       self.listeValeursCourantes=self.node.item.GetListeValeurs()
+       self.listeValeursCourantes=self.node.item.getListeValeurs()
        index=1
        for valeur in self.listeValeursCourantes :
-           val=self.politique.GetValeurTexte(valeur)
+           val=self.politique.getValeurTexte(valeur)
            nomLineEdit="lineEditVal"+str(index)
            if hasattr(self,nomLineEdit) : 
               courant=getattr(self,nomLineEdit)
@@ -176,12 +176,12 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         if liste ==[]    : return
         listeVal=[]
         for valeur in self.listeValeursCourantes : listeVal.append(valeur)
-        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,-1,listeVal)
+        validite,comm,comm2,listeRetour=self.politique.ajoutValeurs(liste,-1,listeVal)
         if (comm2 != "" and comm != None) : return comm2
         if validite : 
            self.listeValeursCourantes=self.listeValeursCourantes+listeRetour
            if len(self.listeValeursCourantes) > self.monSimpDef.min :
-              self.node.item.set_valeur(self.listeValeursCourantes)
+              self.node.item.setValeur(self.listeValeursCourantes)
               self.reaffiche()
            return None
         else :
@@ -191,28 +191,68 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       # A priori, on ne fait rien
       pass
 
-  def ajoutNValeur(self,liste) :
-      for val in liste :
-         i=1
-         ajoute=False
-         while i <  self.indexDernierLabel+1:
-            nomLineEdit="lineEditVal"+str(i)
-            courant=getattr(self,nomLineEdit)
-            valeur=courant.text()
-            if valeur == None or valeur == "" :
-              ajoute=True
-              courant.setText(str(val))
-              commentaire=self.ajout1Valeur(val)
-              if (commentaire != None ):
-                 self.editor.affiche_infos(commentaire,Qt.red)
-                 courant.setText("")
-              break
-            else : 
-              i=i+1
-         if ajoute : continue
-         self.ajoutLineEdit(valeur=str(val))
-         self.changeValeur()
+  #def ajoutNValeur(self,liste) :
+  #    for val in liste :
+  #       i=1
+  #       ajoute=False
+  #       while i <  self.indexDernierLabel+1:
+  #          nomLineEdit="lineEditVal"+str(i)
+  #          courant=getattr(self,nomLineEdit)
+  #          valeur=courant.text()
+  #          if valeur == None or valeur == "" :
+  #            ajoute=True
+  #            courant.setText(str(val))
+  #            commentaire=self.ajout1Valeur(val)
+  #            if (commentaire != None ):
+  #               self.editor.afficheInfos(commentaire,Qt.red)
+  #               courant.setText("")
+  #            break
+  #          else : 
+  #            i=i+1
+  #       if ajoute : continue
+  #       self.ajoutLineEdit(valeur=str(val))
+  #       self.changeValeur()
                 
+  def ajoutNValeur(self,liste):
+  #----------------------------
+  # attention quand on charge par un fichier, on ne peut pas se contenter d ajouter N fois 1 valeur
+  # car alors le temps de verification devient prohibitif  reconstructu=ion et verification a 
+  # chaque valeur. d ou l ajout de ajoutNTuple a politique plusieurs
+
+           
+        listeFormatee=list(liste)
+
+        min,max=self.node.item.getMinMax()
+        if self.objSimp.valeur == None : listeComplete=listeFormatee
+        else : listeComplete =self.objSimp.valeur + listeFormatee
+
+        if len(listeComplete) > max : 
+           texte=tr("Nombre maximum de valeurs ")+str(max)+tr(" atteint")
+           self.editor.affiche_infos(texte,Qt.red)
+           return
+
+        validite,comm,comm2,listeRetour= self.politique.ajoutNTuple(listeComplete)
+        if not validite : 
+           self.editor.affiche_infos(texte,Qt.red)
+           return
+
+        # on calcule le dernier lineedit rempli avant de changer la valeur
+        if self.objSimp.valeur != None : indexDernierRempli=len(self.objSimp.valeur)
+        else : indexDernierRempli=0
+
+        self.politique.recordValeur(listeComplete)
+
+        indexDernierRempli=0
+        while ( indexDernierRempli < len(liste) ) :
+         texte=liste[indexDernierRempli]
+         if indexDernierRempli < self.indexDernierLabel:
+            nomLineEdit="lineEditVal"+str(indexDernierRempli+1)
+            courant=getattr(self,nomLineEdit)
+            courant.setText(str(texte))
+         else : 
+            self.ajoutLineEdit(texte)
+         indexDernierRempli = indexDernierRempli + 1
+        
 
   def changeValeur(self,changeDePlace=True,oblige=False):
       donneFocus=None
@@ -245,13 +285,13 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
           if valeur != None and valeur != "" : 
              commentaire=self.ajout1Valeur(valeur)
              if (commentaire != None ):
-                 self.editor.affiche_infos(commentaire,Qt.red)
+                 self.editor.afficheInfos(commentaire,Qt.red)
                  courant.setText("")
                  donneFocus=courant
                  self.reaffiche()
                  return
              else :
-                 self.editor.affiche_infos("")
+                 self.editor.afficheInfos("")
           elif donneFocus==None : donneFocus=courant
 
       nomDernierLineEdit="lineEditVal"+str(self.indexDernierLabel)
@@ -264,14 +304,14 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
          elif self.indexDernierLabel < self.monSimpDef.max  : 
            self.ajoutLineEdit()
       if self.listeValeursCourantes == [] : return
-      min,max = self.node.item.GetMinMax()
+      min,max = self.node.item.getMinMax()
       if len(self.listeValeursCourantes) < self.monSimpDef.min  :
-        self.editor.affiche_infos(tr('nb min de valeurs : ')+str( self.monSimpDef.min))
+        self.editor.afficheInfos(tr('nb min de valeurs : ')+str( self.monSimpDef.min))
       if len(self.listeValeursCourantes) < min and oblige==True: return
       if len(self.listeValeursCourantes) > max : return
-      self.node.item.set_valeur(self.listeValeursCourantes)
+      self.node.item.setValeur(self.listeValeursCourantes)
       if len(self.listeValeursCourantes) == self.monSimpDef.max  :
-        self.editor.affiche_infos(tr('nb max de valeurs atteint'))
+        self.editor.afficheInfos(tr('nb max de valeurs atteint'))
       self.setValide()
       self.reaffiche()
 

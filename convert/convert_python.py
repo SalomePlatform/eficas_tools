@@ -117,7 +117,7 @@ class PythonParser(object):
             #import cProfile, pstats, StringIO
             #pr = cProfile.Profile()
             #pr.enable()            
-            l= PARSEUR_PYTHON(self.text).get_texte(appli)
+            l= PARSEUR_PYTHON(self.text).getTexte(appli)
 
             #pr.disable()
             #s = StringIO.StringIO()

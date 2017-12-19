@@ -58,7 +58,7 @@ class ViewText(Ui_dView,QDialog):
     def saveFile(self):
         #recuperation du nom du fichier
         if self.editor != None :
-           dir=self.editor.appliEficas.CONFIGURATION.savedir
+           dir=self.editor.appliEficas.maConfiguration.savedir
         else:
            dir='/tmp'
         fn = QFileDialog.getSaveFileName(None,
@@ -70,7 +70,7 @@ class ViewText(Ui_dView,QDialog):
 
         ulfile = os.path.abspath(six.text_type(fn))
         if self.editor != None :
-           self.editor.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+           self.editor.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
         try:
            f = open(fn, 'w')
            f.write(str(self.view.toPlainText()))

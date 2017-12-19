@@ -30,7 +30,7 @@ import traceback
 
 import six
 from six.moves import range
-from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QSplitter
+from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QSplitter, QLabel
 from PyQt5.QtGui import QPalette
 from PyQt5.QtCore import QProcess, QFileInfo, QTimer, Qt, QDir, QSize
 import time
@@ -93,7 +93,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            print ("dans JDC pas d appli ????????")
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
-        self.code   = self.appliEficas.CONFIGURATION.code
+        self.code   = self.appliEficas.maConfiguration.code
         self.initSplitterSizes()
 
         #self.afficheListesPliees=False
@@ -101,16 +101,16 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if self.code == "ASTER" or self.code == "monCode" : self.afficheListesPliees =True
         if self.code == 'PSEN_N1' : self.afficheListesPliees = False
 
-        self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
-        self.closeAutreCommande=self.appliEficas.CONFIGURATION.closeAutreCommande
-        self.closeFrameRechercheCommande=self.appliEficas.CONFIGURATION.closeFrameRechercheCommande
-        self.closeArbre=self.appliEficas.CONFIGURATION.closeArbre
-        self.affiche=self.appliEficas.CONFIGURATION.affiche
-        self.afficheOptionnelVide=self.appliEficas.CONFIGURATION.afficheOptionnelVide
-        self.nombreDeBoutonParLigne = self.appliEficas.CONFIGURATION.nombreDeBoutonParLigne
-        self.dicoImages = self.appliEficas.CONFIGURATION.dicoImages
-        self.simpleClic = self.appliEficas.CONFIGURATION.simpleClic
-        #self.taille = self.appliEficas.taille
+        self.maConfiguration=self.appliEficas.maConfiguration
+        self.closeAutreCommande=self.appliEficas.maConfiguration.closeAutreCommande
+        self.closeFrameRechercheCommande = self.appliEficas.maConfiguration.closeFrameRechercheCommande
+        self.closeArbre=self.appliEficas.maConfiguration.closeArbre
+        self.affiche=self.appliEficas.maConfiguration.affiche
+        self.afficheOptionnelVide=self.appliEficas.maConfiguration.afficheOptionnelVide
+        self.nombreDeBoutonParLigne = self.appliEficas.maConfiguration.nombreDeBoutonParLigne
+        self.dicoImages = self.appliEficas.maConfiguration.dicoImages
+        self.simpleClic = self.appliEficas.maConfiguration.simpleClic
+        self.boutonDsMenuBar = self.appliEficas.maConfiguration.boutonDsMenuBar
 
         #if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
         if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
@@ -126,8 +126,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
            self.readercata  = readercata.READERCATA( self, self.appliEficas )
            self.appliEficas.readercata=self.readercata
            self.appliEficas.code=self.code
+           if self.boutonDsMenuBar : self.appliEficas.remplitIconesCommandes()
         else :
            self.readercata=self.appliEficas.readercata
+
         if self.readercata.fic_cata == None : return    #Sortie Salome
         self.titre=self.readercata.titre
         self.Ordre_Des_Commandes=self.readercata.Ordre_Des_Commandes
@@ -143,21 +145,21 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
-        self.CONFIGURATION = self.appliEficas.CONFIGURATION
+        self.maConfiguration = self.appliEficas.maConfiguration
         self.CONFIGStyle =   self.appliEficas.CONFIGStyle
 
         try:
-          self.CONFIGURATION.generator_module
-          _module = __import__(self.CONFIGURATION.generator_module)
+          self.maConfiguration.generator_module
+          _module = __import__(self.maConfiguration.generator_module)
           info = _module.entryPoint()
           generator.plugins.addEntryPoint(info)
         except:
           pass
 
         try:
-          self.CONFIGURATION.convert_module
-          #print self.CONFIGURATION.convert_module
-          _module = __import__(self.CONFIGURATION.convert_module)
+          self.maConfiguration.convert_module
+          #print self.maConfiguration.convert_module
+          _module = __import__(self.maConfiguration.convert_module)
           info = _module.entryPoint()
           convert.plugins.addEntryPoint(info)
         except :
@@ -193,7 +195,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
             self.fileInfo = QFileInfo(self.fichier)
             self.fileInfo.setCaching(0)
             if jdc==None :
+               print ('attention chgt try en if')
                try :
+               #if 1 :
                    self.jdc = self.readFile(self.fichier)
                    if self.salome : self.appliEficas.addJdcInSalome( self.fichier)
                except :
@@ -210,6 +214,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
                 else :
                    self.jdc = self._newJDCInclude(units=units)
                 self.nouveau=1
+        #import cProfile, pstats, StringIO
+	#pr = cProfile.Profile()
+        #pr.enable()
 
         if self.jdc:
             self.jdc.appli = self # a resorber
@@ -223,17 +230,22 @@ class JDCEditor(Ui_baseWidget,QWidget):
             if txt_exception:
                 self.jdc = None
                 QApplication.restoreOverrideCursor()
-                self.affiche_infos(tr("Erreur fatale au chargement de %s",str(fichier)),Qt.red)
+                self.afficheInfos(tr("Erreur fatale au chargement de %s",str(fichier)),Qt.red)
                 if (self.appliEficas.ssIhm == False) : QMessageBox.critical( self, tr("Erreur fatale au chargement d'un fichier"), txt_exception)
             else:
-                comploader.charger_composants("QT")
-                jdc_item=Objecttreeitem.make_objecttreeitem( self, "nom", self.jdc )
-                if (not self.jdc.isvalid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
+                comploader.chargerComposants("QT")
+                jdc_item=Objecttreeitem.makeObjecttreeitem( self, "nom", self.jdc )
+                if (not self.jdc.isValid()) and (not self.nouveau) and (self.appliEficas.ssIhm == False):
                     self.viewJdcRapport()
  
+        #pr.disable()
+        #s = StringIO.StringIO()
+        #sortby = 'cumulative'
+        #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        #ps.print_stats()
+        #print (s.getvalue())
 
-
-        if jdc_item and self.appliEficas.ssIhm==False:
+        if jdc_item and self.appliEficas.ssIhm==False :
             self.tree = browser.JDCTree( jdc_item,  self )
         self.appliEficas.construitMenu()
 
@@ -267,7 +279,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       path1 = os.path.abspath(os.path.join(os.path.abspath(__file__), '../','../','ProcessOutputs_Eficas','TreatOutputs'))
       sys.path.append(path1)
 
-      if not(self.jdc.isvalid()):
+      if not(self.jdc.isValid()):
          QMessageBox.information( self, tr( "Unvalid JDC"),tr("incorrect keywords will be ignored"))
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
@@ -302,7 +314,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
-         dico=self.get_Dico() #generator.Dico
+         dico=self.getDico() #generator.Dico
 
 
          for k in dico['CONTINGENCY_PROCESSING']:
@@ -321,7 +333,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          ###
          return dico
 
-        #return self.get_Dico()
+        #return self.getDico()
 
     #-------------------#  Pour execution avec output et error dans le bash
     def process_VP(self):
@@ -329,7 +341,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
-         dico=self.get_Dico() #generator.Dico
+         dico=self.getDico() #generator.Dico
          return dico
 
    
@@ -341,7 +353,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           return 
         noeudAvantCommentaire=self.tree.selectedItems()[0]
         if noeudAvantCommentaire ==self.tree.racine : 
-            self.tree.racine.append_child("COMMENTAIRE",pos=0)
+            self.tree.racine.appendChild("COMMENTAIRE",pos=0)
             return
         noeudAvantCommentaire.addComment(True)
         
@@ -372,7 +384,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                                          appli=self,
                                          cata=self.readercata.cata,
                                          cata_ord_dico=self.readercata.cata_ordonne_dico,
-                                         rep_mat=self.CONFIGURATION.rep_mat
+                                         rep_mat=self.maConfiguration.rep_mat
                                         )
         jdc.lang    = self.appli.langue
         if units is not None:
@@ -396,7 +408,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                                appli=self,
                                cata=self.readercata.cata,
                                cata_ord_dico=self.readercata.cata_ordonne_dico,
-                               rep_mat=self.CONFIGURATION.rep_mat,
+                               rep_mat=self.maConfiguration.rep_mat,
                               )
         jaux.analyse()
 
@@ -405,7 +417,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                    cata=self.readercata.cata,
                    cata_ord_dico=self.readercata.cata_ordonne_dico,
                    jdc_pere=jaux,
-                   rep_mat=self.CONFIGURATION.rep_mat,
+                   rep_mat=self.maConfiguration.rep_mat,
                    )
         J.analyse()
         if units is not None:
@@ -433,11 +445,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
              # Le convertisseur existe on l'utilise
              #appli = self
              p=convert.plugins[self.appliEficas.format_fichier_in]()
-             
+
+ 
              p.readfile(fn)
 
              if p.text=="" : self.nouveau=1
-             pareil,texteNew=self.verifieCHECKSUM(p.text)
+             pareil,texteNew=self.verifieChecksum(p.text)
              #if texteNew == ""
              if pareil == False and (self.appliEficas.ssIhm == False) :
                 QMessageBox.warning( self, tr("fichier modifie"),tr("Attention! fichier change hors EFICAS"))
@@ -451,17 +464,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
              #pr.enable()
 
              text=p.convert('exec',self.appliEficas)
-             #pr.disable()
-             #s = StringIO.StringIO()
-             #sortby = 'cumulative'
-             #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-             #ps.print_stats()
-             #print (s.getvalue())
 
              if not p.cr.estvide():
-                self.affiche_infos("Erreur a la conversion",Qt.red)
+                self.afficheInfos("Erreur a la conversion",Qt.red)
         else :
-            self.affiche_infos("Type de fichier non reconnu",Qt.red)
+            self.afficheInfos("Type de fichier non reconnu",Qt.red)
             if self.appliEficas.ssIhm == False:
                     QMessageBox.critical( self, tr("Type de fichier non reconnu"),
                     tr("EFICAS ne sait pas ouvrir le type de fichier %s" ,self.appliEficas.format_fichier_in))
@@ -473,7 +480,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                                     cata=self.readercata.cata,
                                     cata_ord_dico=self.readercata.cata_ordonne_dico,
                                     nom=jdcName,
-                                    rep_mat=self.CONFIGURATION.rep_mat
+                                    rep_mat=self.maConfiguration.rep_mat
                                    )
         # ----------------------------------------------------
         #      charge le JDC fin
@@ -487,11 +494,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
            self.lastModified = 1
         nouveauTitre=self.titre+"              "+os.path.basename(self.fichier)
         self.appliEficas.setWindowTitle(nouveauTitre)
+
         return jdc
 
 
     #-----------------------#
-    def get_source(self,file):
+    def getSource(self,file):
     #-----------------------#
 
         # Il faut convertir le contenu du fichier en fonction du format
@@ -501,11 +509,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
             p.readfile(file)
             text=p.convert('execnoparseur')
             if not p.cr.estvide():
-                self.affiche_infos("Erreur a la conversion",Qt.red)
+                self.afficheInfos("Erreur a la conversion",Qt.red)
             return text
         else:
             # Il n'existe pas c'est une erreur
-            self.affiche_infos("Type de fichier non reconnu",Qt.red)
+            self.afficheInfos("Type de fichier non reconnu",Qt.red)
             QMessageBox.critical( self, tr("Type de fichier non reconnu"),tr("EFICAS ne sait pas ouvrir ce type de fichier"))
             return None
 
@@ -592,7 +600,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------#
     def viewJdcPy(self):
     #-----------------------#
-        strSource = str( self.get_text_JDC(self.format) )
+        strSource = str( self.getTextJDC(self.format) )
         self._viewText(strSource, "JDC_RESULTAT")
 
     #-----------------------#
@@ -606,7 +614,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------#
     def viewJdcRegles(self):
     #-----------------------#
-        if self.tree :self.tree.AppelleBuildLBRegles()
+        if self.tree :self.tree.appellebuildLBRegles()
 
 
     #----------------#
@@ -620,7 +628,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.close()
 
     #----------------------------------------------#
-    def affiche_infos(self,message,couleur=Qt.black):
+    def afficheInfos(self,message,couleur=Qt.black):
     #----------------------------------------------#
         if self.sb:
            mapalette=self.sb.palette()
@@ -630,13 +638,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
            self.couleur=couleur
 
     #------------------------------#
-    def affiche_alerte(self,titre,message):
+    def afficheAlerte(self,titre,message):
     #------------------------------#
     # appele par I_MACRO_ETAPE
         QMessageBox.information( self, titre, message)
 
     #-----------------------------------#
-    def affiche_commentaire(self,message):
+    def afficheCommentaire(self,message):
     #-----------------------------------#
         self.labelCommentaire.setText(message)
         QTimer.singleShot(6000, self.rendInvisible)
@@ -647,7 +655,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.labelCommentaire.setText("")
 
     #-------------------#
-    def init_modif(self):
+    def initModif(self):
     #-------------------#
       """
           Met l'attribut modified a 'o' : utilise par Eficas pour savoir
@@ -730,8 +738,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
       """
       self.chercheNoeudSelectionne()
       if len(self.node_selected) == 0 : return
-      if len(self.node_selected) == 1 : self.node_selected[0].update_node_label_in_blue()
-      else :  self.node_selected[0].update_plusieurs_node_label_in_blue(self.node_selected)
+      if len(self.node_selected) == 1 : self.node_selected[0].updateNodeLabelInBlue()
+      else :  self.node_selected[0].updatePlusieursNodeLabelInBlue(self.node_selected)
       self.QWParent.edit="copier"
       self.QWParent.noeud_a_editer = self.node_selected
 
@@ -773,21 +781,21 @@ class JDCEditor(Ui_baseWidget,QWidget):
            if child==None or child==0:
                QMessageBox.critical( self,tr( "Copie refusee"),tr('Eficas n a pas reussi a copier l objet'))
                self.message = ''
-               self.affiche_infos("Copie refusee",Qt.red)
+               self.afficheInfos("Copie refusee",Qt.red)
            if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
                try :
                  nom=noeudACopier.item.sd.nom
-                 child.item.nomme_sd(nom)
+                 child.item.nommeSd(nom)
                except :
                  pass
            return
-           self.init_modif()
+           self.initModif()
            child.select()
         except  :
            traceback.print_exc()
            QMessageBox.critical( self,tr( "Copie refusee"),tr('Copie refusee pour ce type d objet'))
            self.message = ''
-           self.affiche_infos("Copie refusee",Qt.red)
+           self.afficheInfos("Copie refusee",Qt.red)
            return
 
       # il faut declarer le JDCDisplay_courant modifie
@@ -804,7 +812,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            # indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
             indexNoeudACopier=self.getTreeIndex(noeudACopier)
             noeudACopier.treeParent.item.deplaceEntite(indexNoeudACopier,indexNoeudOuColler,pos)
-            noeudACopier.treeParent.build_children()
+            noeudACopier.treeParent.buildChildren()
 
          #else:
          except:
@@ -880,10 +888,31 @@ class JDCEditor(Ui_baseWidget,QWidget):
          listeASupprimer.append(noeud)
 
      for i in range(len(listeChild)):
-         self.tree.item.suppitem(listeItem[i])
+         self.tree.item.suppItem(listeItem[i])
          listeChild[i].item.update(listeItem[i])
 
      self.QWParent.noeud_a_editer = []
+
+    #----------------------------------#
+    def handleAjoutEtape(self,nomEtape):
+    #----------------------------------#
+      self.chercheNoeudSelectionne()
+      if len(self.node_selected) == 0 or self.node_selected[0] == self.tree.racine : 
+         nodeOuAjouter=self.tree.racine
+         nouveau=nodeOuAjouter.appendChild(nomEtape,pos='first')
+      else :               
+         nodeOuAjouter=self.node_selected[0]
+         if nodeOuAjouter != self.tree.racine :
+            while  nodeOuAjouter.treeParent != self.tree.racine:
+                   print (nodeOuAjouter)
+                   nodeOuAjouter=nodeOuAjouter.treeParent
+                   print (nodeOuAjouter.parent == self.tree.racine)
+         nouveau=nodeOuAjouter.appendBrother(nomEtape)
+      try : 
+        self.node_selected[0].setSelected(False)
+      except : pass
+      nouveau.setSelected(True)
+      nouveau.affichePanneau()
 
 
     #---------------------#
@@ -892,7 +921,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       return self.fichier
 
     #---------------------------#
-    def get_file_variable(self) :
+    def getFileVariable(self) :
     #---------------------------#
      titre = tr("Choix d'un fichier XML")
      texte = tr("Le fichier contient une commande MODEL\n")
@@ -901,7 +930,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
      fichier = QFileDialog.getOpenFileName(self.appliEficas,
                    tr('Ouvrir Fichier'),
-                   self.appliEficas.CONFIGURATION.savedir,
+                   self.appliEficas.maConfiguration.savedir,
                    tr('Wrapper Files (*.xml);;''All Files (*)'))
      return  fichier
 
@@ -918,7 +947,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         fn = six.text_type(fn)
        
         if txt == None :
-            txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
+            txt = self.getTextJDC(self.format,formatLigne=formatLigne)
             eol = '\n'
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
@@ -926,7 +955,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             else:
                 txt += eol
             txt=self.ajoutVersionCataDsJDC(txt)
-            if self.code != 'PSEN' and self.code != 'PSEN_N1' : checksum=self.get_checksum(txt)
+            if self.code != 'PSEN' and self.code != 'PSEN_N1' : checksum=self.getChecksum(txt)
             else : checksum=''
             txt=txt+checksum
         if self.code=="TELEMAC" : return 1
@@ -944,7 +973,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             return 0
 
     #-----------------------------------------------------------#
-    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie"):
+    def getTextJDC(self,format,pourRun=0,formatLigne="beautifie"):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
       if format in generator.plugins:
@@ -952,7 +981,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
-            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
+            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
             if pourRun : jdc_formate=self.generator.textePourRun
             if self.code == 'TELEMAC' : jdc_formate=self.generator.texteDico
          except ValueError as e:
@@ -960,19 +989,19 @@ class JDCEditor(Ui_baseWidget,QWidget):
             return
 
          if not self.generator.cr.estvide():
-            self.affiche_infos(tr("Erreur a la generation"),Qt.red)
+            self.afficheInfos(tr("Erreur a la generation"),Qt.red)
             QMessageBox.critical( self, tr("Erreur a la generation"),tr("EFICAS ne sait pas convertir ce JDC"))
             return ""
          else:
             return jdc_formate
       else:
          # Il n'existe pas c'est une erreur
-         self.affiche_infos(tr("Format %s non reconnu" , self.format),Qt.red)
+         self.afficheInfos(tr("Format %s non reconnu" , self.format),Qt.red)
          QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
          return ""
 
     #----------------------#
-    def get_Dico(self):
+    def getDico(self):
     #---------------------#
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
@@ -980,7 +1009,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          dico=self.generator.Dico 
          return dico
       else : 
-         self.affiche_infos(tr("Format %s non reconnu" , self.format),Qt.red)
+         self.afficheInfos(tr("Format %s non reconnu" , self.format),Qt.red)
          QMessageBox.critical( self, "Format  non reconnu" ,tr("EFICAS ne sait pas convertir le JDC selon le format "+ self.format))
          return ""
 
@@ -1002,7 +1031,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def runMAP(self):
     #---------------#
 
-      if not(self.jdc.isvalid()):
+      if not(self.jdc.isValid()):
          QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution MAP"))
          return
       if len(self.jdc.etapes) != 1 :
@@ -1010,7 +1039,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          return
       if self.modified or self.fichier==None  :
          self.fichierMapInput = self.__generateTempFilename(prefix = "map_run", suffix = ".map")
-         texte=self.get_text_JDC("MAP")
+         texte=self.getTextJDC("MAP")
          self.writeFile( self.fichierMapInput, txt = texte)
       else :
          self.fichierMapInput=self.fichier
@@ -1041,13 +1070,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------#
     def runZCRACKS(self):
     #-------------------#
-      if not(self.jdc.isvalid()):
+      if not(self.jdc.isValid()):
          QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution "))
          return
       if self.modified or self.fichier==None  :
       #if 1:
          self.fichierZcracksInput = self.__generateTempFilename(prefix = "zcracks_run", suffix = ".z7p")
-         texte=self.get_text_JDC("ZCRACKS",pourRun=1)
+         texte=self.getTextJDC("ZCRACKS",pourRun=1)
          self.writeFile( self.fichierZcracksInput, txt = texte)
       else :
          self.fichierZcracksInput=self.fichier
@@ -1062,13 +1091,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-------------------#
     def runCARMELCND(self):
     #-------------------#
-      #if not(self.jdc.isvalid()):
+      #if not(self.jdc.isValid()):
       #   QMessageBox.critical( self, tr( "Execution impossible "),tr("le JDC doit etre valide pour une execution "))
       #   return
       if self.modified or self.fichier==None  :
          QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
          return
-      if not hasattr(self,'generator'): texte=self.get_text_JDC(self.format)
+      if not hasattr(self,'generator'): texte=self.getTextJDC(self.format)
       from PrepareRunCarmel import prepareRunCarmel
       fichierGenerique=os.path.basename(self.fichier).split(".")[0]
       repMed=os.path.dirname(self.fichier)
@@ -1127,7 +1156,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def saveRunMAP(self):
     #-----------------#
         extension=".input"
-        if not(self.jdc.isvalid()):
+        if not(self.jdc.isValid()):
            QMessageBox.critical( self, tr( "Sauvegarde de l'input impossible "),
                                 tr("Un JdC valide est necessaire pour creer un .input")
                                  )
@@ -1139,7 +1168,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                                 tr("Choix du composant obligatoire")
                                  )
            return
-        if hasattr(self.CONFIGURATION, "savedir"): path=self.CONFIGURATION.savedir
+        if hasattr(self.maConfiguration, "savedir"): path=self.maConfiguration.savedir
         else : path='C:/'
 
         monNomFichier=""
@@ -1174,7 +1203,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         if not hasattr(self, 'fichierMapInput') or not self.fichierMapInput or not os.path.exists(self.fichierMapInput):
             self.fichierMapInput = self.__generateTempFilename(prefix = "map_run", suffix = ".map")
-            texte=self.get_text_JDC("MAP")
+            texte=self.getTextJDC("MAP")
             self.writeFile( self.fichierMapInput, txt = texte)
 
         cmd = ("map gen -t dat -n " + composant + " -i " + self.fichierMapInput + " -o " + fn)
@@ -1190,20 +1219,20 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
     #-----------------------------------------#
-    def cherche_Groupes(self):
+    def chercheGroupes(self):
     #-----------------------------------------#
-        listeMA,listeNO=self.get_text_JDC("GroupMA")
+        listeMA,listeNO=self.getTextJDC("GroupMA")
         return listeMA,listeNO
 
     #-----------------------------------------#
-    def cherche_Dico(self):
+    def chercheDico(self):
     #-----------------------------------------#
         dicoCourant={}
         format =  self.appliEficas.format_fichier
         if format in generator.plugins:
            # Le generateur existe on l'utilise
            self.generator=generator.plugins[format]()
-           jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.CONFIGURATION)
+           jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.maConfiguration)
            dicoCourant=self.generator.dico
         return dicoCourant
 
@@ -1238,20 +1267,20 @@ class JDCEditor(Ui_baseWidget,QWidget):
         #saveas=True # Pour forcer le nom
         self.generator=generator.plugins[self.format]()
         if self.fichier is None or saveas:
-          if path is None: path=self.CONFIGURATION.savedir
+          if path is None: path=self.maConfiguration.savedir
           bOK, fn=self.determineNomFichier(path,extension)
           if bOK == 0 : return (0, None)
           if fn == None : return (0, None)
           if fn== '' : return (0, None)
 
           ulfile = os.path.abspath(six.text_type(fn))
-          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+          self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
           fn = six.text_type(QDir.toNativeSeparators(fn))
 
         self.fichier = os.path.splitext(fn)[0]+extension
 
         if hasattr(self.generator, "writeLeger"):
-            self.generator.writeLeger(self.fichier,self.jdc,config=self.appliEficas.CONFIGURATION,appli=self.appliEficas)
+            self.generator.writeLeger(self.fichier,self.jdc,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
 
         if self.salome : self.appliEficas.addJdcInSalome( self.fichier)
 
@@ -1283,14 +1312,14 @@ class JDCEditor(Ui_baseWidget,QWidget):
         newName = None
         fn = self.fichier
         if self.fichier is None or saveas:
-          if path is None: path=self.CONFIGURATION.savedir
+          if path is None: path=self.maConfiguration.savedir
           bOK, fn=self.determineNomFichier(path,extension)
           if bOK == 0 : return (0, None)
           if fn == None : return (0, None)
           if fn== '' : return (0, None)
 
           ulfile = os.path.abspath(six.text_type(fn))
-          self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+          self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
           fn = six.text_type(QDir.toNativeSeparators(fn))
           newName = fn
 
@@ -1305,12 +1334,28 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if newName is not None:
            self.appliEficas.addToRecentList(newName)
            self.tree.racine.item.getObject().nom=os.path.basename(newName)
-           self.tree.racine.update_node_label()
+           self.tree.racine.updateNodeLabel()
 
-        if self.jdc.isvalid() != 0 and hasattr(self.generator, "writeDefault"):
+        print ('Attention chgt du if pour test')
+        print (self.generator)
+
+        #if self.jdc.isValid() != 0 and hasattr(self.generator, "writeDefault"):
+        if hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fn)
         elif self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
-            self.generator.writeDefault(fn)
+            msgBox = QMessageBox(None)
+            msgBox.setWindowTitle(tr("Fichier Cas invalide"))
+            msgBox.setText(tr("Le fichier cas est invalide"))
+            msgBox.addButton(tr("&Sauvegarder"),1)
+            msgBox.addButton(tr("&Quitter sans sauvegarder"),0)
+            msgBox.addButton(tr("&Annuler"),2)
+            res=msgBox.exec_()
+            if res == 0 :
+               self.generator.writeDefault(fn)
+               return (1, self.fichier)
+            if res == 2 : return (0, None)
+            if self.appliEficas.salome : self.appliEficas.close()
+            else : sys.exit(1)
 
         if self.salome :
                self.appliEficas.addJdcInSalome( self.fichier)
@@ -1346,7 +1391,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
     #---------------------------------------------#
-    def get_file(self,unite=None,fic_origine = ''):
+    def getFile(self,unite=None,fic_origine = ''):
     #---------------------------------------------#
     # appele par I_JDC
         ulfile  = None
@@ -1367,18 +1412,18 @@ class JDCEditor(Ui_baseWidget,QWidget):
         QMessageBox.information( self, titre,texte)
         fn = QFileDialog.getOpenFileName(self.appliEficas,
                    titre,
-                   self.appliEficas.CONFIGURATION.savedir)
+                   self.appliEficas.maConfiguration.savedir)
 
-        # ce retour est impose par le get_file d'I_JDC
+        # ce retour est impose par le getFile d'I_JDC
         if fn== '' : return None," "
         if not fn : return (0, " ")
         fn=fn[0]
 
         ulfile = os.path.abspath(six.text_type(fn))
-        self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+        self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
 
         # On utilise le convertisseur defini par format_fichier
-        source=self.get_source(ulfile)
+        source=self.getSource(ulfile)
         if source:
             # On a reussia convertir le fichier self.ulfile
             jdcText = source
@@ -1395,7 +1440,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         etape=monItem.item.object
         CONTEXT.set_current_step(etape)
         etape.build_includeInclude(texte)
-        self.tree.racine.build_children()
+        self.tree.racine.buildChildren()
 
     #-----------------------------------#
     def updateJdcEtape(self, itemApres,texte):
@@ -1412,7 +1457,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            QMessageBox.information( self,
                       tr("Import texte"),
                       tr("Impossible d importer le texte"))
-        self.tree.racine.build_children()
+        self.tree.racine.buildChildren()
         return ok
 
 
@@ -1421,7 +1466,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     def deleteEtape(self,etape):
     #-------------------------------------#
     # dans le JDC
-        self.jdc.suppentite(etape)
+        self.jdc.suppEntite(etape)
 
     #-------------------------------------#
     def deleteMC(self,etape,MCFils,listeAvant=()):
@@ -1431,9 +1476,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
         monMC=ouChercher.get_child(MCFils,restreint="oui")
-        if monMC != None :  ouChercher.suppentite(monMC)
+        if monMC != None :  ouChercher.suppEntite(monMC)
         ouChercher.state='changed'
-        ouChercher.isvalid()
+        ouChercher.isValid()
 
     #-------------------------------------#
     def ajoutMC(self,etape,MCFils,valeurs,listeAvant=()):
@@ -1443,11 +1488,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
         monMC=etape.get_child(ouChercher,restreint="oui")
-        if monMC== None : monMC= ouChercher.addentite(MCFils)
+        if monMC== None : monMC= ouChercher.addEntite(MCFils)
         monMC.valeur=valeurs
         monMC.val=valeurs
         monMC.state='changed'
-        monMC.isvalid()
+        monMC.isValid()
 
     #----------------------------------------------#
     def ajoutMCFact(self,etape,MCFils,listeAvant=()):
@@ -1461,8 +1506,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
               print (mot)
               print (ouChercher)
         monMC=etape.get_child(ouChercher,restreint="oui")
-        if monMC== None : monMC= ouChercher.addentite(MCFils)
-        monMC.isvalid()
+        if monMC== None : monMC= ouChercher.addEntite(MCFils)
+        monMC.isValid()
 
     #-------------------------------------------------#
     def getValeur(self,nomEtape,MCFils,listeAvant=()):
@@ -1497,8 +1542,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
               #print (mot, ouChercher)
               if ouChercher==None : return None
         monMC=ouChercher.get_child(MCFils,restreint="oui")
-        monMC.set_valeur(valeur)
-        monMC.isvalid()
+        monMC.setValeur(valeur)
+        monMC.isValid()
 
     #-----------------------------------------------------------#
     def changeIntoMC(self,etape,MCFils,valeurs, listeAvant=()):
@@ -1515,13 +1560,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
               ouChercher=ouChercher.get_child(mot,restreint="oui")
               if ouChercher==None : return 
         monMC=ouChercher.get_child(MCFils,restreint="oui")
-        if monMC== None : monMC= ouChercher.addentite(MCFils)
+        if monMC== None : monMC= ouChercher.addEntite(MCFils)
 
         monMC.definition.into=valeurs
         from Noyau.N_VALIDATOR import  IntoProtocol
         monMC.definition.intoProto = IntoProtocol("into", into=monMC.definition.into, val_min=monMC.definition.val_min, val_max=monMC.definition.val_max)
         monMC.state='changed'
-        monMC.isvalid()
+        monMC.isValid()
 
     #-------------------------------------------------------------------#
     def reCalculeValiditeMCApresChgtInto(self,nomEtape,MCFils,listeAvant=()):
@@ -1656,8 +1701,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
         nouveauFact=A_FACT.FACT(**args)
         nouveauFact.pere=ouChercher
         nouveauFact.nom=nomDuMC
-        from Editeur.autre_analyse_cata import traite_entite
-        traite_entite(nouveauFact,[])
+        from Editeur.autre_analyse_cata import traiteEntite
+        traiteEntite(nouveauFact,[])
         ouChercher.entites[nomDuMC]=nouveauFact
         ouChercher.ordre_mc.append(nomDuMC)
         self.dicoNouveauxFact[nomDuMC]=('ajoutDefinitionMC',nomEtape,listeAvant,nomDuMC,listeMC,args)
@@ -1683,13 +1728,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
             if ouChercher==None : return 
         MCFils=listeMC[-1]
         monMC=ouChercher.get_child(MCFils,restreint="oui")
-        if monMC== None : monMC= etape.addentite(MCFils)
+        if monMC== None : monMC= etape.addEntite(MCFils)
 
         monMC.definition.into=into
         monMC.valeur=valeurs
         monMC.val=valeurs
         monMC.state='changed'
-        monMC.isvalid() 
+        monMC.isValid() 
 
     #-------------------------------------#
     def ajoutVersionCataDsJDC(self,txt):
@@ -1733,7 +1778,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
     #------------------------------#
-    def verifieCHECKSUM(self,text):
+    def verifieChecksum(self,text):
     #------------------------------#
         indexDeb=text.find("#CHECKSUM:")
         if indexDeb < 0 :
@@ -1742,7 +1787,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         checkAvant=text[indexDeb:indexFin+13]
         textJDC=text[0:indexDeb]+text[indexFin+13:-1]
         if self.code != 'PSEN'  and self.code != 'PSEN_N1':
-           checksum=self.get_checksum(textJDC)
+           checksum=self.getChecksum(textJDC)
            pareil=(checkAvant==checksum)
         else :
            pareil=1
@@ -1750,7 +1795,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         return pareil, textJDC
 
     #---------------------------#
-    def get_checksum(self,texte):
+    def getChecksum(self,texte):
     #---------------------------#
         newtexte=texte.replace('"','\\"')
         commande='echo "'+newtexte+'"|md5sum'
@@ -1836,22 +1881,22 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
     #---------------------------#
-    def  BoutonFileSelected(self):
+    #def  boutonFileSelected(self):
     #---------------------------#
 
-      QSfichier=self.openfile.selectedFiles()[0]
-      self.fichierMED=str(QSfichier)
-      from acquiertGroupes import getGroupes
-      erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichierMED)
-      if erreur != "" : print ("a traiter")
+    #  QSfichier=self.openfile.selectedFiles()[0]
+    #  self.fichierMED=str(QSfichier)
+    #  from acquiertGroupes import getGroupes
+    #  erreur,self.listeGroupes,self.nomMaillage=getGroupes(self.fichierMED)
+    #  if erreur != "" : print ("a traiter")
 
     #-----------------------------
-    def BoutonSalomePressed(self):
+    #def boutonSalomePressed(self):
     #----------------------------
-      Msg,self.listeGroupes=self.appliEficas.ChercheGrpMailleInSalome()
-      self.fichierMED="A_partir_de_SMESH"
-      self.nomMaillage="A_partir_de_SMESH"
-      self.openfile.close()
+    #  Msg,self.listeGroupes=self.appliEficas.ChercheGrpMailleInSalome()
+    #  self.fichierMED="A_partir_de_SMESH"
+    #  self.nomMaillage="A_partir_de_SMESH"
+    #  self.openfile.close()
 
 
     #-----------------------------------------
@@ -1954,26 +1999,4 @@ class JDCEditor(Ui_baseWidget,QWidget):
       return indexNoeud
 
 if __name__ == "__main__":
-    self.code='ASTER'
-    name='prefs_'+prefs.code
-    prefsCode=__import__(name)
-
-
-    if hasattr(prefsCode,'encoding'):
-       # Hack pour changer le codage par defaut des strings
-       import sys
-       reload(sys)
-       sys.setdefaultencoding(prefs.encoding)
-       del sys.setdefaultencoding
-       # Fin hack
-
-#    code=options.code
-#
-    app = QApplication(sys.argv)
-    mw = JDCEditor(None,'azAster.comm')
-    app.setMainWidget(mw)
-    app.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
-    mw.show()
-
-    res = app.exec_loop()
-    sys.exit(res)
+    print ('in main')

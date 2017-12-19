@@ -42,7 +42,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
-        self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
+        self.lineEditVal.returnPressed.connect(self.LEvaleurPressed)
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
         self.lineEditVal.focusInEvent=self.monFocusInEvent
@@ -56,7 +56,7 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
   def monFocusOutEvent(self,event):
       if self.oldValeurTexte != self.lineEditVal.text():
          self.oldValeurTexte= self.lineEditVal.text()
-         self.LEValeurPressed()
+         self.LEvaleurPressed()
       QLineEdit.focusOutEvent(self.lineEditVal,event)
 
   #def showEvent(self, event):
@@ -69,8 +69,8 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
   def setValeurs(self):
        #print ("dans setValeurs")
        self.politique=PolitiqueUnique(self.node,self.editor)
-       valeur=self.node.item.get_valeur()
-       valeurTexte=self.politique.GetValeurTexte(valeur)
+       valeur=self.node.item.getValeur()
+       valeurTexte=self.politique.getValeurTexte(valeur)
        chaine=""
 
        if valeurTexte != None :
@@ -107,18 +107,18 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
       return commentaire
 
 
-  def LEValeurPressed(self):
+  def LEvaleurPressed(self):
       # pour les soucis d encoding
       try :
         if str(self.lineEditVal.text())=="" or str(self.lineEditVal.text())==None : return
       except : pass
-      SaisieValeur.LEValeurPressed(self)
+      SaisieValeur.LEvaleurPressed(self)
       self.parentQt.donneFocus()
       self.setValeurs()
       self.reaffiche()
       
       #if self.objSimp.parent.nom == "MODEL" :
-      #   if self.objSimp.isvalid():
+      #   if self.objSimp.isValid():
       #      self.objSimp.parent.change_fichier="1"
             #self.node.item.parent.build_include(None,"")
 

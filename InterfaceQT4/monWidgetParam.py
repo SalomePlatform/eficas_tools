@@ -54,7 +54,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       self.repIcon=self.appliEficas.repIcon
 
       self.setIconePoubelle()
-      if not(self.node.item.object.isvalid()) :
+      if not(self.node.item.object.isValid()) :
          icon=QIcon(self.repIcon+"/ast-red-ball.png")
          self.RBValide.setIcon(icon)
 
@@ -63,7 +63,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       if self.editor.code in ['MAP','CARMELCND'] : self.bCatalogue.close()
       else : self.bCatalogue.clicked.connect(self.afficheCatalogue)
 
-      self.lineEditVal.returnPressed.connect(self.LEValeurPressed)
+      self.lineEditVal.returnPressed.connect(self.LEvaleurPressed)
       self.lineEditNom.returnPressed.connect(self.LENomPressed)
       self.bAvant.clicked.connect(self.afficheAvant)
       self.bApres.clicked.connect(self.afficheApres)
@@ -78,10 +78,10 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
       else : self.node.tree.racine.select()
 
   def remplit(self):
-      nom=self.node.item.get_nom()
+      nom=self.node.item.getNom()
       self.lineEditNom.setText(nom)
 
-      valeur=self.node.item.get_valeur()
+      valeur=self.node.item.getValeur()
       if valeur == None : 
          self.lineEditVal.clear()
       elif type(valeur) == list :
@@ -97,17 +97,17 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
   def donnePremier(self):
       self.lineEditVal.setFocus(7)
 
-  def LEValeurPressed(self):
+  def LEvaleurPressed(self):
       if self.verifiePressed() == False :
          QMessageBox.warning( self,tr( "Modification Impossible"),tr( "le parametre n'est pas valide"))
       nom=str(self.lineEditNom.text())
       val=str(self.lineEditVal.text())
-      self.node.item.set_nom(nom)
-      self.node.item.set_valeur(val)
-      self.node.update_texte()
+      self.node.item.setNom(nom)
+      self.node.item.setValeur(val)
+      self.node.updateTexte()
 
   def LENomPressed(self):
-      self.LEValeurPressed()
+      self.LEvaleurPressed()
 
   def verifiePressed(self):
         nomString=str(self.lineEditNom.text())
@@ -119,7 +119,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
 
         contexte={}
         exec("from math import *", contexte)
-        jdc=self.node.item.get_jdc()
+        jdc=self.node.item.getJdc()
         for p in jdc.params :
            try:
               tp=p.nom+'='+str(repr(p.valeur))

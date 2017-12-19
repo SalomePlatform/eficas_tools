@@ -163,10 +163,10 @@ def traduc(infile,outfile,flog=None):
     #Parse les mocles des commandes
     parseKeywords(root)
     
-    ####   Traitement de DEFI_PART_PA_OPS   ##############################
+    ####   traitement de DEFI_PART_PA_OPS   ##############################
     GenereErreurPourCommande(jdc,"DEFI_PART_PA_OPS")
 
-    ####   Traitement de AFFE_CARA_ELEM   ##############################
+    ####   traitement de AFFE_CARA_ELEM   ##############################
     ChangementValeurDsMCFSiRegle(jdc,"AFFE_CARA_ELEM","POUTRE","CARA",{"R1":"R_DEBUT","R2":"R_FIN",
                                         "EP1":"EP_DEBUT","EP2":"EP_FIN"},
                                     ((("POUTRE","MAILLE",),"nexistepasMCsousMCF"),
@@ -175,7 +175,7 @@ def traduc(infile,outfile,flog=None):
                                     ),
                         )
 
-    ####   Traitement de AFFE_CHAR_MECA   ##############################
+    ####   traitement de AFFE_CHAR_MECA   ##############################
     # Suppression du mot-clé METHODE
     removeMotCle(jdc,"AFFE_CHAR_MECA","METHODE",pasDeRegle(),0)    
     # Suppression des mot-clés LIAISON_XFEM
@@ -189,7 +189,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","LIAISON_SOLIDE","ANGL_NAUT",pasDeRegle(),0)
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","LIAISON_SOLIDE","CENTRE",pasDeRegle(),0)
 
-    ####   Traitement de AFFE_CHAR_MECA_F   ##############################
+    ####   traitement de AFFE_CHAR_MECA_F   ##############################
     # Suppression du mot-clé METHODE
     removeMotCle(jdc,"AFFE_CHAR_MECA_F","METHODE",pasDeRegle(),0)
     # Résorption des mot-clés ANGLE_NAUT et CENTRE
@@ -198,11 +198,11 @@ def traduc(infile,outfile,flog=None):
 
     GenereErreurMotCleInFact(jdc,"AFFE_CHAR_MECA_F","ONDE_PLANE","DIRECTION")
 
-    ####   Traitement de AFFE_CHAR_THER   ##############################
+    ####   traitement de AFFE_CHAR_THER   ##############################
     # Suppression du mot-clé METHODE
     removeMotCle(jdc,"AFFE_CHAR_THER","METHODE",pasDeRegle(),0)
 
-    ####   Traitement de AFFE_MODELE   ##############################
+    ####   traitement de AFFE_MODELE   ##############################
     # Suppression des mot-clés GRILLE et VERIF
     removeMotCle(jdc,"AFFE_MODELE","GRILLE",pasDeRegle(),0)
     removeMotCle(jdc,"AFFE_MODELE","VERIF",pasDeRegle(),0)
@@ -222,52 +222,52 @@ def traduc(infile,outfile,flog=None):
     dINCO.update(dDPLAN)
     ChangementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dINCO)
 
-    ####   Traitement de ASSEMBLAGE   ##############################
+    ####   traitement de ASSEMBLAGE   ##############################
     GenereErreurValeurDsMCF(jdc,"ASSEMBLAGE","MATR_ASSE","OPTION",("'MASS_THER'",))
 
-    ####   Traitement de CALC_ESSAI_GEOMECA   ##############################
+    ####   traitement de CALC_ESSAI_GEOMECA   ##############################
     renameMotCleInFact(jdc,"CALC_ESSAI_GEOMECA","ESSAI_CISA_C","EPSI_IMPOSE","GAMMA_IMPOSE",pasDeRegle(),0)
     renameMotCleInFact(jdc,"CALC_ESSAI_GEOMECA","ESSAI_CISA_C","EPSI_ELAS","GAMMA_ELAS",pasDeRegle(),0)
 
-    ####   Traitement de CALC_EUROPLEXUS   ##############################
+    ####   traitement de CALC_EUROPLEXUS   ##############################
     removeMotCle(jdc,"CALC_EUROPLEXUS","DIME",pasDeRegle(),0)
     GenereErreurMCF(jdc,"CALC_EUROPLEXUS","FONC_PARASOL")
     removeMotCleInFact(jdc,"CALC_EUROPLEXUS","ARCHIVAGE","CONT_GENER")
 
-    ####   Traitement de CALC_FERRAILLAGE   ##############################
+    ####   traitement de CALC_FERRAILLAGE   ##############################
     GenereErreurPourCommande(jdc,"CALC_FERRAILLAGE")
 
-    ####   Traitement de CALC_FONCTION   ##############################
+    ####   traitement de CALC_FONCTION   ##############################
     AjouteMotClefDansFacteur(jdc,"CALC_FONCTION","CORR_ACCE","METHODE='POLYNOME'",pasDeRegle(),0)
     GenereErreurMotCleInFact(jdc,"CALC_FONCTION","DSP","FREQ")
 
-    ####   Traitement de CALC_G   ##############################
+    ####   traitement de CALC_G   ##############################
     removeMotCleInFact(jdc,"CALC_G","COMP_ELAS","RESI_INTE_RELA",pasDeRegle(),0)
     removeMotCleInFact(jdc,"CALC_G","COMP_ELAS","ITER_INTE_MAXI",pasDeRegle(),0)
 
-    ####   Traitement de CALC_FATIGUE   ##############################
+    ####   traitement de CALC_FATIGUE   ##############################
     ChangementValeur(jdc,"CALC_FATIGUE","COURBE_GRD_VIE",{"MANSON_C":"MANSON_COFFIN",})
 
-    ####   Traitement de CALC_IFS_DNL   ##############################
+    ####   traitement de CALC_IFS_DNL   ##############################
     removeMotCle(jdc,"CALC_IFS_DNL","ENERGIE",pasDeRegle(),0)
 
-    ####   Traitement de CALC_MAC3COEUR   ##############################
+    ####   traitement de CALC_MAC3COEUR   ##############################
     AjouteMotClefDansFacteur(jdc,"CALC_MAC3COEUR","DEFORMATION","ARCHIMEDE = 'OUI'",pasDeRegle())
 
-    ####   Traitement de CALC_MATR_ELEM   ##############################
+    ####   traitement de CALC_MATR_ELEM   ##############################
     GenereErreurValeur(jdc,"CALC_MATR_ELEM","OPTION",("'MASS_THER'",))
 
-    ####   Traitement de CALC_MISS   ##############################
+    ####   traitement de CALC_MISS   ##############################
     GenereErreurValeurDsMCF(jdc,"CALC_MISS","PARAMETRE","ISSF",("'OUI'",))
 
-    ####   Traitement de CALC_MODAL   ##############################
+    ####   traitement de CALC_MODAL   ##############################
     # renameCommande(jdc,"CALC_MODAL","CALC_MODES", )
     GenereErreurPourCommande(jdc,"CALC_MODAL")
 
-    ####   Traitement de CALC_VECT_ELEM   ##############################
+    ####   traitement de CALC_VECT_ELEM   ##############################
     GenereErreurValeur(jdc,"CALC_VECT_ELEM","OPTION",("'FORC_NODA'",))
 
-    ####   Traitement de CREA_MAILLAGE   ##############################
+    ####   traitement de CREA_MAILLAGE   ##############################
     renameMotCle(jdc,"CREA_MAILLAGE","CREA_GROUP_MA","CREA_MAILLE")
     GenereErreurMCF(jdc,"CREA_MAILLAGE","ECLA_PG")
     
@@ -279,25 +279,25 @@ def traduc(infile,outfile,flog=None):
     renameMotCleInFactSiRegle(jdc,"CREA_MAILLAGE","DETR_GROUP_MA","GROUP_MA","NOM",((lMCLEF,"nexistepasMCFParmi"),))
     renameCommandeSiRegle(jdc,"CREA_MAILLAGE","DEFI_GROUP",((lMCLEF,"nexistepasMCFParmi"),))
 
-    ####   Traitement de DEBUT   ##############################
+    ####   traitement de DEBUT   ##############################
     # GenereErreurPourCommande(jdc,("DEBUT",))
     removeMotCleInFact(jdc,"DEBUT","CODE","NOM",pasDeRegle(),0)
 
-    ####   Traitement de DEFI_COMPOR   ##############################
+    ####   traitement de DEFI_COMPOR   ##############################
     GenereErreurValeur(jdc,"DEFI_COMPOR","LOCALISATION",["'RL'",]) 
     GenereErreurValeur(jdc,"DEFI_COMPOR","RELATION_KIT",["'RVMIS_ISOT_CINE'",])
     GenereErreurValeurDsMCF(jdc,"DEFI_COMPOR","MULTIFIBRE","RELATION",["'LABORD_1D'"])
     GenereErreurMCF(jdc,"DEFI_COMPOR","POLYCRISTAL")
 
-    ####   Traitement de DEFI_FISS_XFEM   ##############################
+    ####   traitement de DEFI_FISS_XFEM   ##############################
     GenereErreurPourCommande(jdc,("DEFI_FISS_XFEM",))
     removeMotCle(jdc,"DEFI_FISS_XFEM","MODELE",pasDeRegle(),0)
     removeMotCle(jdc,"DEFI_FISS_XFEM","MODELE_GRILLE",pasDeRegle(),0)
 
-    ####   Traitement de DEFI_LIST_INST   ##############################
+    ####   traitement de DEFI_LIST_INST   ##############################
     ChangementValeurDsMCF(jdc,"DEFI_LIST_INST","ECHEC","ACTION",{"REAC_PRECOND":"DECOUPE"})
 
-    ####   Traitement de DEFI_MATER_GC   ##############################
+    ####   traitement de DEFI_MATER_GC   ##############################
     AjouteMotClefDansFacteur(jdc,"DEFI_MATER_GC","MAZARS","CODIFICATION='ESSAI'",pasDeRegle(),0)
 
     removeMotCleInFactSiRegle(jdc,"DEFI_MATER_GC","MAZARS","UNITE_LONGUEUR",
@@ -308,7 +308,7 @@ def traduc(infile,outfile,flog=None):
 
     GenereErreurMCF(jdc,"DEFI_MATER_GC","MAZARS")
 
-    ####   Traitement de DEFI_MATERIAU   ##############################
+    ####   traitement de DEFI_MATERIAU   ##############################
     lMLA=["F_MRR_RR", "C_MRR_RR", "F_MTT_TT", "C_MTT_TT", "F_MZZ_ZZ", 
            "C_MZZ_ZZ", "F_MRT_RT", "C_MRT_RT", "F_MRZ_RZ", "C_MRZ_RZ", 
            "F_MTZ_TZ", "C_MTZ_TZ",]
@@ -354,7 +354,7 @@ def traduc(infile,outfile,flog=None):
     GenereErreurMCF(jdc,"DEFI_MATERIAU","THER_COQUE_FO")
 
 
-    ####   Traitement de DEFI_OBSTACLE   ##############################
+    ####   traitement de DEFI_OBSTACLE   ##############################
     lMCLE=("CRAYON_900","CRAYON_1300","GUID_A_CARTE_900",
     "GUID_B_CARTE_900","GUID_C_CARTE_900","GUID_D_CARTE_900","GUID_E_CARTE_900",
     "GUID_F_CARTE_900","GUID_A_CARTE_1300","GUID_B_CARTE_1300","GUID_C_CARTE_1300",
@@ -370,25 +370,25 @@ def traduc(infile,outfile,flog=None):
     "GUID_D_GCOMB_1300","GUID_E_GCOMB_1300","GUID_F_GCOMB_1300",)
     GenereErreurValeur(jdc,"DEFI_OBSTACLE","TYPE",lMCLE)
 
-    ####   Traitement de DYNA_TRAN_MODAL   ##############################
+    ####   traitement de DYNA_TRAN_MODAL   ##############################
     removeMotCle(jdc,"DYNA_TRAN_MODAL","LAME_FLUIDE",pasDeRegle(),0)
     removeMotCle(jdc,"DYNA_TRAN_MODAL","PARA_LAME_FLUI",pasDeRegle(),0)
     removeMotCle(jdc,"DYNA_TRAN_MODAL","RELA_TRANSIS",pasDeRegle(),0)
 
-    ####   Traitement de DYNA_VIBRA   ##############################
+    ####   traitement de DYNA_VIBRA   ##############################
     removeMotCle(jdc,"DYNA_VIBRA","LAME_FLUIDE",pasDeRegle(),0)
     removeMotCle(jdc,"DYNA_VIBRA","PARA_LAME_FLUI",pasDeRegle(),0)
     removeMotCle(jdc,"DYNA_VIBRA","RELA_TRANSIS",pasDeRegle(),0)
 
-    ####   Traitement de EXTR_TABLE   ##############################
+    ####   traitement de EXTR_TABLE   ##############################
     ChangementValeurDsMCF(jdc,"EXTR_TABLE","FILTRE","VALE_K",{"MATR_ELEM":"MATR_TANG_ELEM"})
     ChangementValeurDsMCF(jdc,"EXTR_TABLE","FILTRE","VALE_K",{"CODE_RETOUR":"CODE_RETOUR_INTE"})
     
-    ####   Traitement de FACTORISER   ##############################
+    ####   traitement de FACTORISER   ##############################
     renameMotCle(jdc,"FACTORISER","ELIM_LAGR2","ELIM_LAGR")
     ChangementValeur(jdc,"FACTORISER","ELIM_LAGR",{"OUI":"LAGR2",})
 
-    ####   Traitement de GENE_ACCE_SEISME   ##############################
+    ####   traitement de GENE_ACCE_SEISME   ##############################
     GenereErreurMCF(jdc,"GENE_ACCE_SEISME","MODULATION")
     moveMotCleFromFactToFather(jdc,"GENE_ACCE_SEISME","MODULATION","DUREE_PHASE_FORTE")
 
@@ -398,48 +398,48 @@ def traduc(infile,outfile,flog=None):
 
     removeMotCleInFact(jdc,"GENE_ACCE_SEISME","DSP","FREQ_PENTE")
 
-    ####   Traitement de IMPR_MISS_3D   ##############################
+    ####   traitement de IMPR_MISS_3D   ##############################
     GenereErreurPourCommande(jdc,"IMPR_MISS_3D")
     # removeCommande(jdc,"IMPR_MISS_3D")
 
-    ####   Traitement de IMPR_RESU   ##############################
+    ####   traitement de IMPR_RESU   ##############################
     removeMotCle(jdc,"IMPR_RESU","RESTREINT",pasDeRegle(),0)
 
-    ####   Traitement de INFO_FONCTION   ##############################
+    ####   traitement de INFO_FONCTION   ##############################
     GenereErreurMCF(jdc,"INFO_FONCTION","NOCI_SEISME")
 
-    ####   Traitement de LIRE_MAILLAGE   ##############################
+    ####   traitement de LIRE_MAILLAGE   ##############################
     removeMotCle(jdc,"LIRE_MAILLAGE","ABSC_CURV",pasDeRegle(),0)
 
-    ####   Traitement de LIRE_MISS_3D   ##############################
+    ####   traitement de LIRE_MISS_3D   ##############################
     GenereErreurPourCommande(jdc,"LIRE_MISS_3D")
 
-    ####   Traitement de MACR_ASCOUF_CALC   ##############################
+    ####   traitement de MACR_ASCOUF_CALC   ##############################
     removeMotCle(jdc,"MACR_ASCOUF_CALC","CL_BOL_P2_GV",pasDeRegle(),0)
     # GenereErreurMCF(jdc,"MACR_ASCOUF_CALC","COMP_ELAS")
 
-    ####   Traitement de MACR_ASCOUF_MAIL   ##############################
+    ####   traitement de MACR_ASCOUF_MAIL   ##############################
     GenereErreurValeurDsMCF(jdc,"MACR_ASCOUF_MAIL","COUDE","BOL_P2",("'GV'",))
 
-    ####   Traitement de MACR_ASPIC_CALC   ##############################
+    ####   traitement de MACR_ASPIC_CALC   ##############################
     # GenereErreurMCF(jdc,"MACR_ASPIC_CALC","COMP_ELAS")
 
-    ####   Traitement de MACR_ECREVISSE   ##############################
+    ####   traitement de MACR_ECREVISSE   ##############################
     GenereErreurMCF(jdc,"MACR_ECREVISSE","COMP_INCR")
 
-    ####   Traitement de MACR_INFO_MAIL   ##############################    
+    ####   traitement de MACR_INFO_MAIL   ##############################    
     ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V10_6":"V11_2"})
     ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V10_N":"V11_N"})
     ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V10_N_PERSO":"V11_N_PERSO"})
 
-    ####   Traitement de MACRO_BASCULE_SCHEMA   ##############################
+    ####   traitement de MACRO_BASCULE_SCHEMA   ##############################
     renameMotCle(jdc,"MACRO_BASCULE_SCHEMA","COMP_INCR_IMPL","COMPORTEMENT_IMPL",pasDeRegle())
     renameMotCle(jdc,"MACRO_BASCULE_SCHEMA","COMP_INCR_EXPL","COMPORTEMENT_EXPL",pasDeRegle())
 
-    ####   Traitement de MACRO_MISS_3D   ##############################
+    ####   traitement de MACRO_MISS_3D   ##############################
     GenereErreurPourCommande(jdc,"MACRO_MISS_3D")
 
-    ####   Traitement de MACRO_MODE_MECA   ##############################
+    ####   traitement de MACRO_MODE_MECA   ##############################
     # insereMotCleDansCommande(jdc,"MACRO_MODE_MECA","TYPE_RESU='DYNAMIQUE'")
     chercheOperInsereFacteur(jdc,"MACRO_MODE_MECA","SOLVEUR_MODAL",)
     chercheOperInsereFacteur(jdc,"MACRO_MODE_MECA","OPTION='BANDE'",pasDeRegle(),0)
@@ -453,7 +453,7 @@ def traduc(infile,outfile,flog=None):
     moveMotCleFromFactToFact(jdc,"MACRO_MODE_MECA","CALC_FREQ","DIM_SOUS_ESPACE","SOLVEUR_MODAL")
     renameCommande(jdc,"MACRO_MODE_MECA","CALC_MODES", )
 
-    ####   Traitement de MODE_ITER_INV   ##############################
+    ####   traitement de MODE_ITER_INV   ##############################
     chercheOperInsereFacteur(jdc,"MODE_ITER_INV","SOLVEUR_MODAL",)
     moveMotCleFromFactToFather(jdc,"MODE_ITER_INV","CALC_FREQ","OPTION")
     moveMotCleFromFactToFather(jdc,"MODE_ITER_INV","CALC_CHAR_CRIT","OPTION")
@@ -475,7 +475,7 @@ def traduc(infile,outfile,flog=None):
 
     renameCommande(jdc,"MODE_ITER_INV","CALC_MODES", )
 
-    ####   Traitement de MODE_ITER_SIMULT   ##############################
+    ####   traitement de MODE_ITER_SIMULT   ##############################
     chercheOperInsereFacteur(jdc,"MODE_ITER_SIMULT","SOLVEUR_MODAL",)
     removeMotCleSiRegle(jdc,"MODE_ITER_SIMULT","OPTION",((("METHODE","TRI_DIAG",jdc),"MCnaPasPourValeur"),),)
     removeMotCleSiRegle(jdc,"MODE_ITER_SIMULT","OPTION",((("OPTION","SANS",jdc),"MCaPourValeur"),),)
@@ -514,17 +514,17 @@ def traduc(infile,outfile,flog=None):
 
     renameCommande(jdc,"MODE_ITER_SIMULT","CALC_MODES", )
 
-    ####   Traitement de MODI_MAILLAGE   ##############################
+    ####   traitement de MODI_MAILLAGE   ##############################
     GenereErreurValeurDsMCF(jdc,"MODI_MAILLAGE","DEFORME","OPTION",("'TRAN_APPUI'",))
     removeMotCleInFact(jdc,"MODI_MAILLAGE","DEFORME",["GROUP_NO_APPUI"],pasDeRegle(),0)
     removeMotCleInFact(jdc,"MODI_MAILLAGE","DEFORME",["GROUP_NO_STRU"],pasDeRegle(),0)
 
-    ####   Traitement de MODI_MODELE_XFEM   ##############################
+    ####   traitement de MODI_MODELE_XFEM   ##############################
     ChangementValeur(jdc,"MODI_MODELE_XFEM","CONTACT",{"P1P1":"STANDARD",})
     ChangementValeur(jdc,"MODI_MODELE_XFEM","CONTACT",{"P2P1":"STANDARD",})
 
 
-    ####   Traitement de POST_DYNA_ALEA   ##############################
+    ####   traitement de POST_DYNA_ALEA   ##############################
     chercheOperInsereFacteurSiRegle(jdc,"POST_DYNA_ALEA","INTERSPECTRE",((("INTE_SPEC",),"existe"),),1)
     lPDA=["INTE_SPEC", "NUME_ORDRE_I", "NOEUD_I", "OPTION", "NUME_ORDRE_J",
           "NOEUD_J", "NOM_CMP_I", "NOM_CMP_J", "MOMENT", "DUREE"]
@@ -534,20 +534,20 @@ def traduc(infile,outfile,flog=None):
 
     AjouteMotClefDansFacteur(jdc,"POST_DYNA_ALEA","FRAGILITE","METHODE = 'EMV'",pasDeRegle())
 
-    ####   Traitement de POST_ELEM   ##############################
+    ####   traitement de POST_ELEM   ##############################
     AjouteMotClefDansFacteurSiRegle(jdc,"POST_ELEM","VOLUMOGRAMME","NB_INTERV=5",
                                 ((("VOLUMOGRAMME","NB_INTERV",),"nexistepasMCsousMCF"),),)
 
-    ####   Traitement de POST_FATIGUE   ##############################
+    ####   traitement de POST_FATIGUE   ##############################
     ChangementValeur(jdc,"POST_FATIGUE","DOMMAGE",{"MANSON_C":"MANSON_COFFIN",})
 
-    ####   Traitement de POURSUITE   ##############################
+    ####   traitement de POURSUITE   ##############################
     removeMotCle(jdc,"POURSUITE","CODE",)#"NOM",pasDeRegle(),0)
 
-    ####   Traitement de RECU_FONCTION   ##############################
+    ####   traitement de RECU_FONCTION   ##############################
     GenereErreurMCF(jdc,"RECU_FONCTION","TABLE")
 
-    ####   Traitement de C_COMP_INCR et C_COMP_ELAS   ##############################
+    ####   traitement de C_COMP_INCR et C_COMP_ELAS   ##############################
     lCOM=["CALCUL","STAT_NON_LINE","CALC_G", "CALC_PRECONT","DYNA_NON_LINE","CALC_META",
           "TEST_COMPOR","SIMU_POINT_MAT","CALC_ESSAI_GEOMECA","CALC_FORC_NONL","LIRE_RESU",
           "MACR_ASCOUF_CALC","MACR_ASPIC_CALC","CALC_EUROPLEXUS","MACR_ECREVISSE",]
@@ -566,13 +566,13 @@ def traduc(infile,outfile,flog=None):
         removeMotCleInFactSiRegle(jdc,com,"COMPORTEMENT","NB_VARI",((("COMPORTEMENT","RELATION","'MFRONT'",jdc),"MCsousMCFaPourValeur"),))
         
 
-    ####   Traitement de TEST_COMPOR   ##############################
+    ####   traitement de TEST_COMPOR   ##############################
     GenereErreurPourCommande(jdc,"TEST_COMPOR")
 
-    ####   Traitement de THER_NON_LINE   ##############################
+    ####   traitement de THER_NON_LINE   ##############################
     renameMotCle(jdc,"THER_NON_LINE","COMP_THER_NL","COMPORTEMENT")
 
-    ####   Traitement de C_SOLVEUR   ##############################
+    ####   traitement de C_SOLVEUR   ##############################
     lCOM=['CALC_ERREUR', 'CALC_FORC_AJOU', 'CALC_IFS_DNL', 'CALC_MATR_AJOU', 'CALC_PRECONT',
         'CREA_ELEM_SSD', 'DEFI_BASE_MODALE', 'DYNA_LINE_HARM', 'DYNA_LINE_TRAN', 'DYNA_NON_LINE', 
         'DYNA_TRAN_MODAL', 'INFO_MODE', 'MACR_ASCOUF_CALC', 'MACR_ASPIC_CALC', 'MACRO_BASCULE_SCHEMA', 
@@ -590,7 +590,7 @@ def traduc(infile,outfile,flog=None):
         for mocle in lMCLE:
             GenereErreurMotCleInFact(jdc,com,"SOLVEUR",mocle)
     
-    ####   Traitement de DEFI_PART_FETI   ##############################
+    ####   traitement de DEFI_PART_FETI   ##############################
     GenereErreurMCF(jdc,"DEFI_PART_FETI","EXCIT")
     removeMotCle(jdc,"DEFI_PART_FETI","EXCIT",pasDeRegle(),0)
     removeMotCle(jdc,"DEFI_PART_FETI","CORRECTION_CONNEX",pasDeRegle(),0)    

@@ -60,6 +60,7 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None,appli=None,statut="Entier"):
 
+      print ('je suis dans le gener pour ', obj)
       self.statut=statut
       self.langue=appli.langue
       self.DicoEnumCasEnInverse={}
@@ -161,6 +162,7 @@ class TELEMACGenerator(PythonGenerator):
 
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
+        print ('je genere MCSIMP  pour', obj.nom)
         s=PythonGenerator.generMCSIMP(self,obj)
 
 
@@ -177,6 +179,7 @@ class TELEMACGenerator(PythonGenerator):
         #if nom in listeSupprime or s == "" : return s
         if s == "None," : s=None 
         if s == "" or s==None : return s
+        print ('je genere MCSIMP  22 pour', obj.nom)
 
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (tuple,list) ):
@@ -228,9 +231,16 @@ class TELEMACGenerator(PythonGenerator):
         #if obj.nom in ('PRESCRIBED_FLOWRATES','PRESCRIBED_VELOCITIES','PRESCRIBED_ELEVATIONS') :
         #   return s
 
+        # cas des Tuples
+        if obj.waitTuple()  and s3 != '' and s3  != 'None':
+           s3=s
+           if s3[-1] == ',': s3=s3[:-1] 
+
+
         if obj.nom not in self.dicoCataToCas :
            if obj.nom == 'Consigne' : return ""
            return s
+        print ('apres')
 
         nom=self.dicoCataToCas[obj.nom]
         if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
@@ -242,6 +252,7 @@ class TELEMACGenerator(PythonGenerator):
         if s3 == "" or s3 == " " : s3 = " "
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3)
+        print ('fin pour ', obj.nom, ligne)
         self.texteDico+=ligne
 
    def generMCFACT(self,obj):
@@ -255,7 +266,7 @@ class TELEMACGenerator(PythonGenerator):
 
 #  def LIQUID_BOUNDARIES(self,obj):
 #     print ('jkljklj')
-#     if 'BOUNDARY_TYPE' in  obj.liste_mc_presents() :
+#     if 'BOUNDARY_TYPE' in  obj.listeMcPresents() :
 #         objForme=obj.get_child('BOUNDARY_TYPE')
 #         valForme=objForme.valeur
 #         if valForme == None : return
@@ -263,11 +274,11 @@ class TELEMACGenerator(PythonGenerator):
 
 #         if valForme == 'Prescribed Unknown':
 #            nomBloc='b_'+valForme.split(" ")[1]
-#            if nomBloc in  obj.liste_mc_presents() :
+#            if nomBloc in  obj.listeMcPresents() :
 #               objBloc=obj.get_child(nomBloc)
-#               valeurPE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0]).valeur
-#               valeurFE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[1]).valeur
-#               valeurVE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[2]).valeur
+#               valeurPE = objValeur=objBloc.get_child(objBloc.listeMcPresents()[0]).valeur
+#               valeurFE = objValeur=objBloc.get_child(objBloc.listeMcPresents()[1]).valeur
+#               valeurVE = objValeur=objBloc.get_child(objBloc.listeMcPresents()[2]).valeur
 #               if valeurPE== None : valeurPE="0."
 #               if valeurFE== None : valeurPE="0."
 #               if valeurVE== None : valeurPE="0."
@@ -279,9 +290,9 @@ class TELEMACGenerator(PythonGenerator):
 #            self.textVE += str(valeurVE) +"; "
 #         else:
 #            nomBloc='b_'+valForme.split(" ")[1]
-#            if nomBloc in  obj.liste_mc_presents() :
+#            if nomBloc in  obj.listeMcPresents() :
 #               objBloc=obj.get_child(nomBloc)
-#               objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0])
+#               objValeur=objBloc.get_child(objBloc.listeMcPresents()[0])
 #               valeur=objValeur.valeur
 #               if valeur== None : valeur="0."
 #            if valForme == 'Prescribed Elevations' :
@@ -309,7 +320,7 @@ class TELEMACGenerator(PythonGenerator):
 
    def NAME_OF_TRACER(self,obj):
        print((dir(obj) ))
-       print((obj.get_genealogie_precise()))
+       print((obj.getGenealogie_precise()))
 
    def Validation(self,obj):
        self.texteDico += "VALIDATION : True \n"
@@ -351,9 +362,9 @@ class TELEMACGenerator(PythonGenerator):
        self.texteDico += "UPWIND COEFFICIENTS = "+ str(listeUpwind) + "\n"
 
    def chercheChildren(self,obj):
-       for c in obj.liste_mc_presents():
+       for c in obj.listeMcPresents():
            objc=obj.get_child(c)
-           if hasattr(objc,'liste_mc_presents') and objc.liste_mc_presents() != [] : self.chercheChildren(objc)
+           if hasattr(objc,'listeMcPresents') and objc.listeMcPresents() != [] : self.chercheChildren(objc)
            else : self.listeMCAdvection.append(objc)
 
 
@@ -369,7 +380,7 @@ class TELEMACGenerator(PythonGenerator):
          lval=valeur.split(";")
          ligne="   "
          for v in lval :
-           if len(ligne) < 70 : ligne += str(v)+'; '
+           if len(ligne+ str(v)+'; ') < 72 : ligne += str(v)+'; '
            else :
               text+= ligne+"\n"
               ligne="   "+str(v)+'; '

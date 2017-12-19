@@ -28,7 +28,7 @@ import re,os
 
 from Extensions.i18n import tr
 #
-__Id__="$Id: analyse_catalogue_initial.py,v 1.2.4.1.2.2.2.4 2017-04-09 14:04:44 pnoyret Exp $"
+__Id__="$Id: analyseCatalogue_initial.py,v 1.2.4.1.2.2.2.4 2017-04-09 14:04:44 pnoyret Exp $"
 __version__="$Name: V7_main $"
 #
 
@@ -39,7 +39,7 @@ class Catalogue_initial(object):
                 self.lignes=[]
                 self.fichier=fichier
                 self.ouvrir_fichier()
-                self.constr_list_txt_cmd()
+                self.constrListTxtCmd()
 
         def ouvrir_fichier(self):
                 try :
@@ -49,7 +49,7 @@ class Catalogue_initial(object):
                 except :
                         print(tr("Impossible d'ouvrir le fichier : %s", str(self.fichier)))
 
-        def constr_list_txt_cmd(self):
+        def constrListTxtCmd(self):
                 pattern = '^# Ordre Catalogue '
                 for i in self.lignes :
                     if (re.search(pattern,i)):
@@ -58,14 +58,14 @@ class Catalogue_initial(object):
                         self.liste_commandes.append(i)
 
 
-def analyse_catalogue(nom_cata):
+def analyseCatalogue(nom_cata):
         cata = Catalogue_initial(nom_cata)
         return cata.liste_commandes
 
 
 if __name__ == "__main__" :
         monCata="/local/noyret/Install_Eficas/EficasQT4/Openturns_StudyOpenTURNS_Cata_Study_V4.py"
-        analyse_catalogue(monCata)
+        analyseCatalogue(monCata)
 
 
 

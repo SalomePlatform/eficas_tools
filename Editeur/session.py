@@ -94,7 +94,7 @@ d_env={}
 # sont stockees hierarchiquement
 #
 
-def check_comm(option, opt_str, value, parser):
+def checkComm(option, opt_str, value, parser):
     if not hasattr(parser.values,"studies"):
        parser.values.studies=[]
        parser.values.comm=[]
@@ -105,7 +105,7 @@ def check_comm(option, opt_str, value, parser):
     parser.values.current=d_study
     parser.values.studies.append(d_study)
 
-def check_poursuite(option, opt_str, value, parser):
+def checkPoursuite(option, opt_str, value, parser):
     if parser.values.comm is None:
        raise OptionValueError(tr("un fichier de commandes doit etre defini avant une poursuite %s", value))
     if not os.path.isfile(value):
@@ -116,7 +116,7 @@ def check_poursuite(option, opt_str, value, parser):
     comm["pours"]=d_study
     parser.values.current=d_study
 
-def check_include(option, opt_str, value, parser):
+def checkInclude(option, opt_str, value, parser):
     try:
        args=[int(parser.rargs[0]),parser.rargs[1]]
     except:
@@ -134,7 +134,7 @@ def check_include(option, opt_str, value, parser):
     comm[args[0]]=args[1]
 
 
-def check_jdc(config,jdc,parser,fich):
+def checkJdc(config,jdc,parser,fich):
     """
         Fonction : analyse une section de fichier .ini pour en extraire
         les informations sur les fichiers poursuite et includes
@@ -161,7 +161,7 @@ def check_jdc(config,jdc,parser,fich):
                                       de commandes %(v_2)s n'existe pas", \
                                       {'v_1': fich, 'v_2': comm}))
 
-          pours=check_jdc(config,p,parser,fich)
+          pours=checkJdc(config,p,parser,fich)
           pours["comm"]=comm
           d_study["pours"]=pours
           continue
@@ -213,7 +213,7 @@ def check_fich(option, opt_str, fich, parser):
                                 %(v_2)s n'existe pas", {'v_1': fich, 'v_2': comm}))
     parser.values.comm.append(comm)
 
-    d_study=check_jdc(config,jdc,parser,fich)
+    d_study=checkJdc(config,jdc,parser,fich)
     d_study["comm"]=comm
     parser.values.studies.append(d_study)
 
@@ -234,21 +234,21 @@ def print_d_env():
        print((tr("nom etude : %s", study["comm"])))
        print_pours(study,dec="++")
 
-def create_parser():
+def createParser():
     # creation du parser des options de la ligne de commande
     #import prefs
     parser=optparse.OptionParser(usage=tr("utilisation : %prog [options]"), version="%prog 1.13")
 
     parser.add_option(u"-j","--jdc",dest="comm",type='string',
-                    action="callback",callback=check_comm,
+                    action="callback",callback=checkComm,
                     help=tr("nom du fichier de commandes"))
 
     parser.add_option(u"-p","--poursuite", type="string",dest="pours",
-                  action="callback", callback=check_poursuite,
+                  action="callback", callback=checkPoursuite,
                   help=tr("nom du fichier poursuite"))
 
     parser.add_option(u"-i","--include", 
-                  action="callback", callback=check_include,
+                  action="callback", callback=checkInclude,
                   nargs=2, help=tr("numero d'unite suivi du nom du fichier include"))
 
     parser.add_option(u"-f","--fich", type="string",dest="fich",
@@ -274,7 +274,7 @@ def create_parser():
     return parser
 
 def parse(args):
-    parser=create_parser()
+    parser=createParser()
     (options,args)=parser.parse_args(args[1:])
     if not hasattr(options,"studies"):
        options.studies=[]
@@ -306,7 +306,7 @@ def parse(args):
     #print_d_env()
     return options
 
-def get_unit(d_study,appli):
+def getUnit(d_study,appli):
     """
        Fonction : construit et retourne un dictionnaire contenant les informations
        sur les fichiers poursuite et includes sous la forme adaptee
@@ -317,22 +317,22 @@ def get_unit(d_study,appli):
                     ...] 
 
        d_study : dictionnaire de l'etude
-       appli : objet application EFICAS (permet d'acceder aux services comme get_source)
+       appli : objet application EFICAS (permet d'acceder aux services comme getSource)
     """
-    return get_dunit(d_study,appli)
+    return getDunit(d_study,appli)
 
-def get_dunit(d_unit,appli):
+def getDunit(d_unit,appli):
     d={}
     if 'pours' in d_unit:
        # on a une poursuite
        comm=d_unit["pours"]["comm"]
-       g=get_dunit(d_unit["pours"],appli)
-       text=appli.get_source(comm)
+       g=getDunit(d_unit["pours"],appli)
+       text=appli.getSource(comm)
        d[None]=comm,text,g
 
     for k,v in list(d_unit.items()):
        if k in (u"pours","comm"): continue
-       text=appli.get_source(v)
+       text=appli.getSource(v)
        d[k]=v,text,d
 
     return d

@@ -43,19 +43,19 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         self.treeParent.tree.openPersistentEditor(self,1)
         self.monWidgetNom=self.treeParent.tree.itemWidget(self,1)
         self.monWidgetNom.returnPressed.connect(self.nomme)
-        if self.item.GetIconName() == "ast-red-square" : self.monWidgetNom.setDisabled(True)
+        if self.item.getIconName() == "ast-red-square" : self.monWidgetNom.setDisabled(True)
         #else : self.monWidgetNom.setFocus()  ;self.monWidgetNom.setDisabled(False)
 
     def nomme(self):
         nom=str(self.monWidgetNom.text())
-        self.editor.init_modif()
-        test,mess = self.item.nomme_sd(nom)
+        self.editor.initModif()
+        test,mess = self.item.nommeSd(nom)
         if (test== 0):
-           self.editor.affiche_infos(mess,Qt.red)
-           old=self.item.GetText()
+           self.editor.afficheInfos(mess,Qt.red)
+           old=self.item.getText()
            self.monWidgetNom.setText(old)
         else :
-           self.editor.affiche_commentaire(tr("Nommage du concept effectue"))
+           self.editor.afficheCommentaire(tr("Nommage du concept effectue"))
            self.onValid()
            try :
              self.fenetre.LENom.setText(nom)
@@ -69,21 +69,21 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNode.createPopUpMenu(self)
-        if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome: 
+        if ("AFFE_CARA_ELEM" in self.item.getGenealogie()) and self.editor.salome: 
            self.ViewElt = QAction(tr('View3D'),self.tree)
            self.tree.connect(self.ViewElt,SIGNAL("triggered()"),self.view3D)
            self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
-           if self.item.isvalid() :
+           if self.item.isValid() :
               self.ViewElt.setEnabled(1)
            else:
               self.ViewElt.setEnabled(0)
-        if  self.item.get_nom() == "DISTRIBUTION" :
+        if  self.item.getNom() == "DISTRIBUTION" :
            self.Graphe = QAction(tr('Graphique'),self.tree)
            self.Graphe.triggered.connect(self.viewPng)
            self.Graphe.setStatusTip(tr("affiche la distribution "))
            self.menu.addAction(self.Graphe)
-           if self.item.isvalid() :
+           if self.item.isValid() :
               self.Graphe.setEnabled(1)
            else:
               self.Graphe.setEnabled(0)
@@ -136,17 +136,17 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """
   itemNode=Node
   
-  def IsExpandable(self):
+  def isExpandable(self):
       return 1
 
-  def GetIconName(self):
+  def getIconName(self):
       """
       Retourne le nom de l'icone a afficher dans l'arbre
       Ce nom depend de la validite de l'objet
       """
-      if not self.object.isactif():
+      if not self.object.isActif():
          return "ast-white-square"
-      elif self.object.isvalid():
+      elif self.object.isValid():
          return "ast-green-square"
       else:
          valid=self.valid_child()
@@ -165,55 +165,52 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
               pass
             return "ast-yellow-square"
 
-  def GetLabelText(self):
+  def getLabelText(self):
       """ Retourne 3 valeurs :
       - le texte a afficher dans le noeud représentant l'item
       - la fonte dans laquelle afficher ce texte
       - la couleur du texte
       """
       return self.labeltext,None,None
-      #if self.object.isactif():
+      #if self.object.isActif():
         # None --> fonte et couleur par défaut
       #  return self.labeltext,None,None
       #else:
       #  return self.labeltext, None, None #CS_pbruno todo
       
-  def get_objet(self,name) :
-      for v in self.object.mc_liste:
-          if v.nom == name : return v
-      return None
+  #def get_objet(self,name) :
+  #    for v in self.object.mc_liste:
+  #        if v.nom == name : return v
+  #    return None
       
-  def get_type_sd_prod(self):
+  def getType_sd_prod(self):
       """
          Retourne le nom du type du concept résultat de l'étape
       """
-      sd_prod=self.object.get_type_produit()
+      sd_prod=self.object.getType_produit()
       if sd_prod:
          return sd_prod.__name__
       else:
          return ""
 
-  def additem(self,name,pos):      
-      mcent = self._object.addentite(name,pos)
+  def addItem(self,name,pos):      
+      mcent = self._object.addEntite(name,pos)
       return mcent
       
 
-  def suppitem(self,item) :
+  def suppItem(self,item) :
       # item : item du MOCLE de l'ETAPE a supprimer
       # item.getObject() = MCSIMP, MCFACT, MCBLOC ou MCList 
       itemobject=item.getObject()
-      if itemobject.isoblig() :
-          #self.editor.affiche_infos(tr('Impossible de supprimer un mot-clef obligatoire '),Qt.red)
+      if itemobject.isOblig() :
           return (0,tr('Impossible de supprimer un mot-clef obligatoire '))
-      if self.object.suppentite(itemobject):
+      if self.object.suppEntite(itemobject):
           message = tr("Mot-clef %s supprime " , itemobject.nom)
-          #self.editor.affiche_commentaire(message)
           return (1,message)
       else :
-          #self.editor.affiche_commentaire(tr('Pb interne : impossible de supprimer ce mot-clef'),Qt.red)
           return (0,tr('Pb interne : impossible de supprimer ce mot-clef'))
 
-  def GetText(self):
+  def getText(self):
       try:
           return self.object.get_sdname()
       except:
@@ -224,11 +221,11 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   #    keys=self.object.mc_dict
   #    return keys
 
-  def GetSubList(self):
+  def getSubList(self):
       """
          Reactualise la liste des items fils stockes dans self.sublist
       """
-      if self.isactif():
+      if self.isActif():
          liste=self.object.mc_liste
       else:
          liste=[]
@@ -248,19 +245,19 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       for obj in liste:
          if sublist[pos] is None:
             # nouvel objet : on cree un nouvel item
-            def setfunction(value, object=obj):
+            def setFunction(value, object=obj):
                 object.setval(value)
-            item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj, setfunction)
+            item = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj, setFunction)
             sublist[pos]=item
          pos=pos+1
 
       self.sublist=sublist
       return self.sublist
 
-  def isvalid(self):
-      return self.object.isvalid()
+  def isValid(self):
+      return self.object.isValid()
 
-  def iscopiable(self):
+  def isCopiable(self):
       """
       Retourne 1 si l'objet est copiable, 0 sinon
       """
@@ -273,35 +270,35 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def update(self,item):
       if item.sd and item.sd.nom:
-         self.nomme_sd(item.sd.nom)
+         self.nommeSd(item.sd.nom)
 
-  def nomme_sd(self,nom):
+  def nommeSd(self,nom):
       """ Lance la méthode de nommage de la SD """
       oldnom=""
       if self.object.sd != None :
          oldnom=self.object.sd.nom
-      test,mess= self.object.nomme_sd(nom)
-      if test:self.object.parent.reset_context()
+      test,mess= self.object.nommeSd(nom)
+      if test:self.object.parent.resetContext()
       if (test and oldnom in self.appli.dict_reels ):
               self.appli.dict_reels[nom]=self.appli.dict_reels[oldnom]
       return test,mess
 
-  def is_reentrant(self):
-      return self.object.is_reentrant()
+  def isReentrant(self):
+      return self.object.isReentrant()
     
-  def get_noms_sd_oper_reentrant(self):
-      return self.object.get_noms_sd_oper_reentrant()
+  def getNomsSdOperReentrant(self):
+      return self.object.getNomsSdOperReentrant()
 
-  def get_objet_commentarise(self):
+  def getObjetCommentarise(self):
       """
           Cette méthode retourne un objet commentarisé
           représentatif de self.object
       """
       # Format de fichier utilisé
       format=self.appli.appliEficas.format_fichier
-      return self.object.get_objet_commentarise(format)
+      return self.object.getObjetCommentarise(format)
 
-  def get_objet_commentarise_BAK(self):
+  def getObjetCommentarise_BAK(self):
       """
           Cette méthode retourne un objet commentarisé
           représentatif de self.object
@@ -323,8 +320,8 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
       pos=self.object.parent.etapes.index(self.object)
       parent=self.object.parent
-      self.object.parent.suppentite(self.object)
-      parent.addentite(commande_comment,pos)
+      self.object.parent.suppEntite(self.object)
+      parent.addEntite(commande_comment,pos)
 
       return commande_comment
 

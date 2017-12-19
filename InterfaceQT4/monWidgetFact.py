@@ -36,7 +36,7 @@ class MonWidgetFactCommun(Groupe):
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
       #print "fact : ",node.item.nom
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
-      labeltext,fonte,couleur = self.node.item.GetLabelText()
+      labeltext,fonte,couleur = self.node.item.getLabelText()
       self.GroupBox.setText(tr(labeltext))
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
       self.parentQt.commandesLayout.insertWidget(insertIn,self)
@@ -44,13 +44,13 @@ class MonWidgetFactCommun(Groupe):
       self.doitAfficherOptionnel=False
 
   def enterEvent(self,event):
-      #print "enterEvent ", self.node.item.GetLabelText()[0]
+      #print "enterEvent ", self.node.item.getLabelText()[0]
       self.doitAfficherOptionnel=True
       QWidget.enterEvent(self,event)
       QTimer.singleShot(500, self.delayAffiche)
 
   def leaveEvent(self,event):
-      #print "leaveEvent", self.node.item.GetLabelText()[0]
+      #print "leaveEvent", self.node.item.getLabelText()[0]
       self.doitAfficherOptionnel=False
       QWidget.leaveEvent(self,event)
 

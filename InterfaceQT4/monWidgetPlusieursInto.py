@@ -50,7 +50,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
         self.alpha=0
         self.listeCB=[]
         self.listeCbRouge=[]
-        self.listeValeursCourantes=node.item.GetListeValeurs()
+        self.listeValeursCourantes=node.item.getListeValeurs()
         if self.listeValeursCourantes == None : self.listeValeursCourantes=[]
 
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
@@ -86,13 +86,14 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
   def changeTout(self,int):
+       print ('changeTout')
        if self.inhibe : return
        self.inhibe=True
        if not(self.CBCheck.isChecked()) : 
-          min,max = self.node.item.GetMinMax()
+          min,max = self.node.item.getMinMax()
           if max < len(self.listeAAfficher) :
              commentaire=tr('impossible de tout selectionner : max =')+str(max)
-             self.editor.affiche_infos(commentaire,Qt.red)
+             self.editor.afficheInfos(commentaire,Qt.red)
              self.inhibe=False
              return
           for i in range(len(self.listeAAfficher)):
@@ -110,38 +111,39 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
        self.changeValeur()
 
   def setValeurs(self):
-       self.listeValeursCourantes =self.node.item.get_valeur()
+       print ('setValeurs')
+       self.listeValeursCourantes =self.node.item.getValeur()
        if self.listeValeursCourantes ==  None : self.listeValeursCourantes=[]
-       #print "ds set Valeur", self.listeValeursCourantes, self.node.item.get_valeur()
+       #print "ds set Valeur", self.listeValeursCourantes, self.node.item.getValeur()
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        self.vScrollBar = self.scrollArea.verticalScrollBar()
 
        if hasattr(self.node.item.definition.validators,'set_MCSimp'):
             obj=self.node.item.getObject()
             self.node.item.definition.validators.set_MCSimp(obj)
-            if self.node.item.isvalid() == 0 :
+            if self.node.item.isValid() == 0 :
                liste=[]
                for item in self.listeValeursCourantes:
                    if self.node.item.definition.validators.verif_item(item)==1:
                       liste.append(item)
-               self.listeAAfficher=self.node.item.get_liste_possible(liste)
+               self.listeAAfficher=self.node.item.getListePossible(liste)
             else: 
-               self.listeAAfficher=self.node.item.get_liste_possible([])
+               self.listeAAfficher=self.node.item.getListePossible([])
        else :
-               self.listeAAfficher=self.node.item.get_liste_possible([])
+               self.listeAAfficher=self.node.item.getListePossible([])
 
-       if self.node.item.has_intoSug() : self.listeAAfficher=self.node.item.get_liste_possible_avecSug([])
+       if self.node.item.hasIntoSug() : self.listeAAfficher=self.node.item.getListePossibleAvecSug([])
                
 
-       if self.objSimp.wait_assd() : 
-          self.listeAAfficher=self.node.item.get_sd_avant_du_bon_type()
+       if self.objSimp.waitAssd() : 
+          self.listeAAfficher=self.node.item.getSdAvantDuBonType()
        if self.listeAAfficher== None or self.listeAAfficher==[] : self.listeAAfficher=[]
 
        #if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
        #else : self.setMinimumHeight(len(self.listeAAfficher)*30)
 
        self.PourEtreCoche=[]
-       if self.objSimp.wait_assd() : 
+       if self.objSimp.waitAssd() : 
           for concept in self.listeValeursCourantes: self.PourEtreCoche.append(concept.nom)
        else :
           for val in self.listeValeursCourantes: self.PourEtreCoche.append(val)
@@ -166,6 +168,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
        
 
   def ajoutCB(self,index,valeur=None):
+      print ('ajoutCB')
       nomCB="lineEditVal"+str(index)
       if hasattr(self,nomCB) : return
       nouveauCB = QCheckBox(self.scrollArea)
@@ -181,13 +184,14 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
   def ajout1Valeur(self,valeur=None):
+        print ('ajout1Valeur')
         if valeur == None : return
         liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
         if validite == 0 : return
         if liste ==[]    : return
         listeVal=[]
         for valeur in self.listeValeursCourantes : listeVal.append(valeur)
-        validite,comm,comm2,listeRetour=self.politique.AjoutValeurs(liste,-1,listeVal)
+        validite,comm,comm2,listeRetour=self.politique.ajoutValeurs(liste,-1,listeVal)
         if (comm2 != "" and comm != None) : return comm2
         if validite : 
            self.listeValeursCourantes=self.listeValeursCourantes+listeRetour
@@ -198,6 +202,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
   def changeValeur(self):
+      print ('changeValeur')
       if self.inhibe == True: return
       if hasattr(self,'LEFiltre') :self.noircirResultatFiltre()
       self.listeValeursCourantesAvant=self.listeValeursCourantes
@@ -211,25 +216,26 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
           if valeur != None and valeur != "" : 
              commentaire=self.ajout1Valeur(valeur)
              if (commentaire != None ): 
-                 self.editor.affiche_infos(commentaire,Qt.red)
+                 self.editor.afficheInfos(commentaire,Qt.red)
                  self.listeValeursCourantesAvant=self.listeValeursCourantes
                  self.setValeurs()
 
-      min,max = self.node.item.GetMinMax()
+      min,max = self.node.item.getMinMax()
       if len(self.listeValeursCourantes) < min : 
-         self.editor.affiche_infos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
+         self.editor.afficheInfos(tr("Nombre minimal de valeurs : ") + str(min),Qt.red)
       elif len(self.listeValeursCourantes) > max : 
-         self.editor.affiche_infos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
+         self.editor.afficheInfos(tr("Nombre maximal de valeurs : ") + str(max),Qt.red)
 
-      if self.listeValeursCourantes== [] :  self.node.item.set_valeur([])
-      else : self.node.item.set_valeur(self.listeValeursCourantes)
+      if self.listeValeursCourantes== [] :  self.node.item.setValeur([])
+      else : self.node.item.setValeur(self.listeValeursCourantes)
 
       # Exception pour PSEN
-      if min==0 and self.listeValeursCourantes== []: self.node.item.set_valeur([])
+      if min==0 and self.listeValeursCourantes== []: self.node.item.setValeur([])
       self.setValide()
 
 
   def prepareListeResultatFiltre(self):
+      print ('prepareListeResultatFiltre')
       filtre=str(self.LEFiltre.text())
       for cb in self.listeCB:
           texte=cb.text() 
@@ -242,10 +248,12 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
             self.listeCbRouge.append(cb)
 
   def prepareListeResultat(self):
+      print ('prepareListeResultat')
       self.clearAll()
       self.setValeurs()
 
   def clearAll(self):
+      print ('clearAll')
       for cb in self.listeCB :
          cb.setText("")
 

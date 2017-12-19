@@ -44,7 +44,7 @@ class FacultatifOuOptionnel(object):
   def setReglesEtAide(self):
       listeRegles=()
       try :
-         listeRegles     = self.node.item.get_regles()
+         listeRegles     = self.node.item.getRegles()
       except :
          pass
       if hasattr(self,"RBRegle"):
@@ -63,14 +63,14 @@ class FacultatifOuOptionnel(object):
       if isinstance(self,MonWidgetCommande) and self.editor.code =="MAP":
          self.cle_doc = self.chercheDocMAP()
       else :
-         self.cle_doc = self.node.item.get_docu()
+         self.cle_doc = self.node.item.getDocu()
       if self.cle_doc == None  : self.RBInfo.close()
       else : self.RBInfo.clicked.connect (self.viewDoc)
 
 
   def chercheDocMAP(self):
       try :
-        clef=self.editor.CONFIGURATION.adresse+"/"
+        clef=self.editor.maConfiguration.adresse+"/"
       except :
         return None
       for k in self.editor.readercata.cata[0].JdC.dict_groupes:
@@ -90,13 +90,13 @@ class FacultatifOuOptionnel(object):
           QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
   def viewRegles(self):
-      self.node.AppelleBuildLBRegles()
+      self.node.appellebuildLBRegles()
 
 
   def setIconePoubelle(self):
       if not(hasattr(self,"RBPoubelle")):return
 
-      if self.node.item.object.isoblig()  and not( hasattr(self.node.item.object,'isDeletable') ): 
+      if self.node.item.object.isOblig()  and not( hasattr(self.node.item.object,'isDeletable') ): 
          icon=QIcon(self.repIcon+"/deleteRondVide.png")
          self.RBPoubelle.setIcon(icon)
          return
@@ -189,12 +189,10 @@ class FacultatifOuOptionnel(object):
   def setValide(self):
       #print " c est le moment de gerer le passage au suivant"
       if not(hasattr (self,'RBValide')) : return
-      icon = QIcon()
-      if self.node.item.object.isvalid() : 
-         icon=QIcon(self.repIcon+"/ast-green-ball.png")
-      else :
-         icon=QIcon(self.repIcon+"/ast-red-ball.png")
-      self.RBValide.setIcon(icon)
+      couleur=self.node.item.getIconName()
+      if not self.editor.maConfiguration.differencieSiDefaut and couleur == 'ast-green-dark-ball' : couleur="ast-green-ball"
+      monIcone = QIcon(self.repIcon+"/" + couleur + ".png")
+      self.RBValide.setIcon(monIcone)
 
   # il faut chercher la bonne fenetre
   def rendVisible(self):
@@ -267,22 +265,22 @@ class ContientIcones(object):
       if len(mctype) > 2 and mctype[2] == "Sauvegarde":
           fichier = QFileDialog.getSaveFileName(self.appliEficas,
                               tr('Sauvegarder Fichier'),
-                              self.appliEficas.CONFIGURATION.savedir,
+                              self.appliEficas.maConfiguration.savedir,
                               filters)
       else:
           print(filters)
           fichier = QFileDialog.getOpenFileName(self.appliEficas,
                               tr('Ouvrir Fichier'),
-                              self.appliEficas.CONFIGURATION.savedir,
+                              self.appliEficas.maConfiguration.savedir,
                               filters)
 
       fichier=fichier[0]
       if not(fichier == ""):
          ulfile = os.path.abspath(six.text_type(fichier))
-         self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+         self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
-         self.editor.affiche_commentaire(tr("Fichier selectionne"))
-         self.LEValeurPressed()
+         self.editor.afficheCommentaire(tr("Fichier selectionne"))
+         self.LEvaleurPressed()
          if (QFileInfo(fichier).suffix() in listeSuffixe ):
              self.image=fichier
              if (not hasattr(self,"BSelectInFile")):
@@ -316,7 +314,7 @@ class ContientIcones(object):
       self.file_dialog.exec_()
       if self.fileName == "" : return
       self.lineEditVal.setText(self.fileName)
-      self.LEValeurPressed()
+      self.LEvaleurPressed()
      
 
   def explore(self,widget):
@@ -347,14 +345,14 @@ class ContientIcones(object):
 
   def BRepertoirePressed(self):
       directory = QFileDialog.getExistingDirectory(self.appliEficas,
-            directory = self.appliEficas.CONFIGURATION.savedir,
+            directory = self.appliEficas.maConfiguration.savedir,
             options = QFileDialog.ShowDirsOnly)
 
       if not (directory == "") :
          absdir = os.path.abspath(six.text_type(directory))
-         self.appliEficas.CONFIGURATION.savedir = os.path.dirname(absdir)
+         self.appliEficas.maConfiguration.savedir = os.path.dirname(absdir)
          self.lineEditVal.setText(directory)
-         self.LEValeurPressed()
+         self.LEvaleurPressed()
 
   def BSelectInFilePressed(self):
       from monSelectImage import MonSelectImage
@@ -363,10 +361,10 @@ class ContientIcones(object):
           
 
   def BSalomePressed(self):
-        self.editor.affiche_commentaire("")
+        self.editor.afficheCommentaire("")
         selection=[]
         commentaire=""
-        genea=self.node.item.get_genealogie()
+        genea=self.node.item.getGenealogie()
         kwType = self.node.item.get_definition().type[0]
         for e in genea:
             if "GROUP_NO" in e: kwType = "GROUP_NO"
@@ -397,10 +395,10 @@ class ContientIcones(object):
            selection, commentaire = self.appliEficas.selectEntryFromSalome(kwType,editor=self.editor)
 
         if commentaire !="" :
-            self.editor.affiche_infos(tr(str(commentaire)))
+            self.editor.afficheInfos(tr(str(commentaire)))
         if selection == [] : return
 
-        min,max=self.node.item.GetMinMax()
+        min,max=self.node.item.getMinMax()
         if max > 1 : 
            self.ajoutNValeur(selection)
            return
@@ -409,7 +407,7 @@ class ContientIcones(object):
         for geomElt in selection: monTexte=geomElt+","
         monTexte= monTexte[0:-1]
         self.lineEditVal.setText(str(monTexte))
-        self.LEValeurPressed()
+        self.LEvaleurPressed()
 
   def BView2DPressed(self):
         try :
@@ -422,10 +420,10 @@ class ContientIcones(object):
         if valeur :
            ok, msgError = self.appliEficas.displayShape(valeur)
            if not ok:
-              self.editor.affiche_infos(msgError,Qt.red)
+              self.editor.afficheInfos(msgError,Qt.red)
 
   def BParametresPressed(self):
-        liste=self.node.item.get_liste_param_possible()
+        liste=self.node.item.getListeParamPossible()
         from monListeParamPanel import MonListeParamPanel
         MonListeParamPanel(liste=liste,parent=self).show()
 

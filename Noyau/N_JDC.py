@@ -149,7 +149,7 @@ NONE = None
         """
         try:
             if self.appli != None:
-                self.appli.affiche_infos(
+                self.appli.afficheInfos(
                     'Compilation du fichier de commandes en cours ...')
             # Python 2.7 compile function does not accept unicode filename, so we encode it
             # with the current locale encoding in order to have a correct
@@ -211,7 +211,7 @@ Causes possibles :
                         self.sds_dict[sdnom] = sd
 
             if self.appli != None:
-                self.appli.affiche_infos(
+                self.appli.afficheInfos(
                     'Interpretation du fichier de commandes en cours ...')
             # On sauve le contexte pour garder la memoire des constantes
             # En mode edition (EFICAS) ou lors des verifications le contexte
@@ -222,7 +222,7 @@ Causes possibles :
 
             CONTEXT.unset_current_step()
             if self.appli != None:
-                self.appli.affiche_infos('')
+                self.appli.afficheInfos('')
 
         except InterruptParsingError:
             # interrupt the command file parsing used by FIN to ignore the end
@@ -353,7 +353,7 @@ Causes possibles :
                             etape.
             Dans le cas du JDC, le deuxième cas ne peut pas se produire.
         """
-        sd = etape.get_sd_prod()
+        sd = etape.getSdProd()
         if sd != None and (etape.definition.reentrant == 'n' or etape.reuse is None):
             # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation
             # d un concept. Commande non reentrante ou reuse absent.
@@ -390,7 +390,7 @@ Causes possibles :
         """
         return self.o_register(sd)
 
-    def delete_concept_after_etape(self, etape, sd):
+    def deleteConceptAfterEtape(self, etape, sd):
         """
             Met a jour les etapes du JDC qui sont après etape suite a
             la disparition du concept sd
@@ -419,7 +419,7 @@ Causes possibles :
             e.jdc = jdc
             del self.index_etapes[e]
 
-    def get_file(self, unite=None, fic_origine='', fname=None):
+    def getFile(self, unite=None, fic_origine='', fname=None):
         """
             Retourne le nom du fichier correspondant a un numero d'unite
             logique (entier) ainsi que le source contenu dans le fichier
@@ -427,7 +427,7 @@ Causes possibles :
         if self.appli:
             # Si le JDC est relie a une application maitre, on delègue la
             # recherche
-            return self.appli.get_file(unite, fic_origine)
+            return self.appli.getFile(unite, fic_origine)
         else:
             if unite != None:
                 if os.path.exists("fort." + str(unite)):
@@ -454,7 +454,7 @@ Causes possibles :
         En PAR_LOT='NON', il n'y a pas d'ambiguite.
         d'analyse et juste avant la phase d'execution.
         `user_value` : permet de stocker la valeur choisie par l'utilisateur
-        pour l'interroger plus tard (par exemple dans `get_contexte_avant`).
+        pour l'interroger plus tard (par exemple dans `getContexte_avant`).
         """
         if user_value:
             self.par_lot_user = par_lot
@@ -497,7 +497,7 @@ Causes possibles :
             console = None
             CONTEXT.unset_current_step()
 
-    def get_contexte_avant(self, etape):
+    def getContexte_avant(self, etape):
         """
            Retourne le dictionnaire des concepts connus avant etape
            On tient compte des commandes qui modifient le contexte
@@ -517,7 +517,7 @@ Causes possibles :
             if etape is None:
                 return d
             # retirer les sd produites par 'etape'
-            sd_names = [sd.nom for sd in etape.get_created_sd()]
+            sd_names = [sd.nom for sd in etape.getCreated_sd()]
             for nom in sd_names:
                 try:
                     del d[nom]
@@ -547,8 +547,8 @@ Causes possibles :
         for e in liste_etapes:
             if e is etape:
                 break
-            if e.isactif():
-                e.update_context(d)
+            if e.isActif():
+                e.updateContext(d)
         self.index_etape_courante = index_etape
         return d
 
@@ -563,20 +563,20 @@ Causes possibles :
         d.update(self.g_context)
         return d
 
-    def get_contexte_courant(self, etape_courante=None):
+    def getContexte_courant(self, etape_courante=None):
         """
            Retourne le contexte tel qu'il est (ou 'sera' si on est en phase
            de construction) au moment de l'execution de l'etape courante.
         """
         if etape_courante is None:
             etape_courante = CONTEXT.get_current_step()
-        return self.get_contexte_avant(etape_courante)
+        return self.getContexte_avant(etape_courante)
 
     def get_concept(self, nomsd):
         """
             Methode pour recuperer un concept a partir de son nom
         """
-        co = self.get_contexte_courant().get(nomsd.strip(), None)
+        co = self.getContexte_courant().get(nomsd.strip(), None)
         if not isinstance(co, ASSD):
             co = None
         return co
