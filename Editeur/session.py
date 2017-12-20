@@ -34,7 +34,7 @@ qui a lui meme un include (22,ii).
 Le deuxieme bb est un jeu de commandes simple.
 
 Le troisieme est decrit dans le fichier ff de type .ini
-qui est parse par le module ConfigParser.
+qui est parse par le module Configparser.
 Chaque section du fichier decrit un jeu de commandes.
 Un include est specifie par: numero logique=nom du fichier
 Une poursuite est specifiee par: poursuite=reference a un jeu de commande 
@@ -142,7 +142,7 @@ def checkJdc(config,jdc,parser,fich):
 
         parser : objet analyseur de la ligne de commande
         fich : nom du fichier .ini en cours d'analyse
-        config : objet de la classe ConfigParser permettant de parser le fichier fich
+        config : objet de la classe Configparser permettant de parser le fichier fich
         jdc : nom de la section du fichier fich a analyser
     """
     d_study={}
@@ -198,7 +198,7 @@ def check_fich(option, opt_str, fich, parser):
     if not hasattr(parser.values,"studies"):
        parser.values.studies=[]
        parser.values.comm=[]
-    config = six.moves.configparser.ConfigParser()
+    config = six.moves.configparser.configparser()
     config.read([fich])
     if not config.has_option(u"jdc","jdc"):
        raise OptionValueError(tr(" jdc %s manque option jdc dans section jdc", str(fich)))
@@ -234,7 +234,7 @@ def print_d_env():
        print((tr("nom etude : %s", study["comm"])))
        print_pours(study,dec="++")
 
-def createParser():
+def createparser():
     # creation du parser des options de la ligne de commande
     #import prefs
     parser=optparse.OptionParser(usage=tr("utilisation : %prog [options]"), version="%prog 1.13")
@@ -274,7 +274,7 @@ def createParser():
     return parser
 
 def parse(args):
-    parser=createParser()
+    parser=createparser()
     (options,args)=parser.parse_args(args[1:])
     if not hasattr(options,"studies"):
        options.studies=[]

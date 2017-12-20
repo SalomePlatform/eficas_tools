@@ -9,7 +9,7 @@ monDico= { 'Equation_Liste' : ('initiation', 'propagation', 'termination', 'stab
            'Modele_TechnicalUse' : ('cable', 'coating', 'pipes'),
            'Aging_Factor' : { 'predefinedSimulationTime' : ('40years BR top', '40years BR bottom')},
            'Boundary_Conditions' : ('flux_volume','flux_surface','constant_constration','convection_flux'),
-           'postTraitement_Typ' : ('chimique','mecanique','physique'),
+           'posttraitement_Typ' : ('chimique','mecanique','physique'),
          }
 
 monModele=listesDB.sModele().monModele
@@ -278,15 +278,15 @@ Modele = PROC (nom="Modele",
       Commentaire =  SIMP (statut = 'f', typ = 'TXM'),
 ) # Fin Modele
 #---------------------------------
-PostTraitement = PROC (nom="PostTraitement",
+Posttraitement = PROC (nom="Posttraitement",
       op=None,
-      postTraitement_DB=SIMP(statut= 'o',typ= 'TXM', into=("Approved data base", "My data base") ),
-      postTraitement_Type = SIMP(statut= 'o',typ= 'TXM', into=("Show post-traitement database", "post-traitement creation"),),
+      posttraitement_DB=SIMP(statut= 'o',typ= 'TXM', into=("Approved data base", "My data base") ),
+      posttraitement_Type = SIMP(statut= 'o',typ= 'TXM', into=("Show post-traitement database", "post-traitement creation"),),
 #     ---------------------------------------------------------------------------
-      b_post_creation = BLOC(condition = " postTraitement_Type == 'post-traitement creation'",
-        postTraitement_Name=SIMP(statut= 'o',typ= 'TXM',defaut=monPost.nom,),
+      b_post_creation = BLOC(condition = " posttraitement_Type == 'post-traitement creation'",
+        posttraitement_Name=SIMP(statut= 'o',typ= 'TXM',defaut=monPost.nom,),
         generic=SIMP(statut= 'o',typ= bool,defaut=monPost.general,),
-        postTraitement_Typ = SIMP(statut= 'o',typ= 'TXM', into=monDico['postTraitement_Typ'],homo='SansOrdreNiDoublon',max='**',defaut=monPost.type_post),
+        posttraitement_Typ = SIMP(statut= 'o',typ= 'TXM', into=monDico['posttraitement_Typ'],homo='SansOrdreNiDoublon',max='**',defaut=monPost.type_post),
         calculation= FACT(statut='o',
         # il faut un fact horizontal
         calculation_results=SIMP(statut= 'o',typ= 'TXM', min=0,max='**', intoSug=monPost.calculation_results,defaut=monPost.calculation_results),
@@ -300,4 +300,4 @@ PostTraitement = PROC (nom="PostTraitement",
       )# fin b_post_creation
 #         ---------------------------------------------------------------------------
 #---------------------------------
-) #PostTraitement
+) #Posttraitement

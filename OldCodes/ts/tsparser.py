@@ -14,7 +14,7 @@ def get_file_name( theScript, theFileName, theExtension ):
 	else:
 		return theFileName + anExt
 
-class TSParser:
+class TSparser:
 	def __init__( self ):
 		self.data = {}
 		self.check_object = None # the function to check if the object is suitable for translation

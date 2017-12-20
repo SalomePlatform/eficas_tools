@@ -56,7 +56,7 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
         N_ETAPE.ETAPE.__init__(self, oper, reuse=None, args=args, niveau=5)
         self.reuse = None
 
-    def Build_sd(self):
+    def buildSd(self):
         """
             Cette methode applique la fonction op_init au contexte du parent
             et lance l'exécution en cas de traitement commande par commande

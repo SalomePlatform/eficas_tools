@@ -156,7 +156,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          
 
   def creeListeCommande(self,filtre):
-      listeGroupes,dictGroupes=self.jdc.get_groups()
+      listeGroupes,dictGroupes=self.jdc.getGroups()
       sensibleALaCasse=self.RBCasse.isChecked()
       if "CACHE" in dictGroupes:
          aExclure=dictGroupes["CACHE"]
@@ -204,7 +204,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          else :
             self.buttonGroup.buttonClicked.connect(self.rbClique) 
       elif  self.boolGroupe==1 :
-         listeGroupes,dictGroupes=self.jdc.get_groups()
+         listeGroupes,dictGroupes=self.jdc.getGroups()
          for grp in listeGroupes:
            if grp == "CACHE" : continue
            label=QLabel(self)

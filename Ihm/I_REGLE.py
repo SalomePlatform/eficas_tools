@@ -23,13 +23,13 @@ from __future__ import absolute_import
 
 class REGLE:
 
-  def gettext(self):
+  def getText(self):
     text = self.__class__.__name__+ ' :\n'
     for mc in self.mcs :
       text = text + '\t' + mc.strip() + '\n'
     return text
 
-  def purge_liste(self,liste_a_purger,listeMcPresents):
+  def purgeListe(self,liste_a_purger,listeMcPresents):
     """
          Cette methode doit retirer de la liste liste_a_purger
          les elements qui ne doivent plus apparaitre en fonction du contexte
@@ -37,13 +37,13 @@ class REGLE:
     # Dans le cas general on ne touche pas a la liste
     return liste_a_purger
 
-  def has_operande(self,nom):
+  def hasOperande(self,nom):
     # On peut faire aussi try:self.mcs.index(nom);return 1;except:return 0
     for mc in self.mcs:
       if mc==nom : return 1
     return 0
 
-  def verif_condition_regle(self,liste,l_mc_presents):
+  def verifConditionRegle(self,liste,l_mc_presents):
     return []
 
 
@@ -51,7 +51,7 @@ class REGLE:
       import xml.etree.ElementTree as ET
       regleXml=ET.SubElement(root,'regles')
       txt=""
-      for mot in self.gettext().split('\n'):
+      for mot in self.getText().split('\n'):
           mot.replace(' ','') 
           txt=txt + mot + " "
       regleXml.text= txt

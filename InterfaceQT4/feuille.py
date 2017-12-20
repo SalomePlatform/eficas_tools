@@ -150,8 +150,8 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
 
    def setSuggestion(self):
-      if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "":
-         suggere=str('<html><head/><body><p><span style=" font-size:8pt;">suggestion : ')+str(self.monSimpDef.get_sug())+"</span></p></body></html>"
+      if self.monSimpDef.getSug() != None and self.monSimpDef.getSug() != "":
+         suggere=str('<html><head/><body><p><span style=" font-size:8pt;">suggestion : ')+str(self.monSimpDef.getSug())+"</span></p></body></html>"
          if hasattr(self,'lineEditVal'): self.lineEditVal.setToolTip(suggere)
 
    def setCommentaire(self):
@@ -210,8 +210,8 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def setZoneInfo(self):
       # info=str(self.nom)+'  '
-      # if self.monSimpDef.getFr() != None and self.monSimpDef.getFr() != "": info+=self.monSimpDef.get_sug() +" "
-      # if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "": info+="Valeur suggeree : "self.monSimpDef.get_sug()
+      # if self.monSimpDef.getFr() != None and self.monSimpDef.getFr() != "": info+=self.monSimpDef.getSug() +" "
+      # if self.monSimpDef.getSug() != None and self.monSimpDef.getSug() != "": info+="Valeur suggeree : "self.monSimpDef.getSug()
       pass
 
    def reaffiche(self):

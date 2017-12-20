@@ -23,7 +23,7 @@ import re
 from Extensions.i18n import tr
 
 
-from .convert_python import PythonParser
+from .convert_python import Pythonparser
 import six
 from six.moves import range
 try:
@@ -80,12 +80,12 @@ def entryPoint():
    """
    return {
           'name' : 'TELEMAC',
-          'factory' : TELEMACParser
+          'factory' : TELEMACparser
           }
 
-class TELEMACParser(PythonParser):
+class TELEMACparser(Pythonparser):
    """
-   This converter works like PythonParser, except that it also initializes all
+   This converter works like Pythonparser, except that it also initializes all
    model variables to None in order to avoid Python syntax errors when loading
    a file with a different or inexistent definition of variables.
    """
@@ -237,7 +237,7 @@ class TELEMACParser(PythonParser):
 
       dicoParMC={}
       for simp in self.dictSimp:
-          if simp in TELEMACParser.__dict__ : TELEMACParser.__dict__[simp](self,)
+          if simp in TELEMACparser.__dict__ : TELEMACparser.__dict__[simp](self,)
 
       for simp in self.dictSimp:
           if simp not in self.dicoInverse :
@@ -317,8 +317,8 @@ class TELEMACParser(PythonParser):
 
    def convertFACT(self,obj,nom,valeur):
        # traitement LIQUID_BOUNDARIES
-       if nom in TELEMACParser.__dict__ :
-          TELEMACParser.__dict__[nom](self,)
+       if nom in TELEMACparser.__dict__ :
+          TELEMACparser.__dict__[nom](self,)
           return
        self.textePy +=  nom + "=_F( "
        self.traiteMC(valeur)

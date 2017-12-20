@@ -1,13 +1,12 @@
 #NetworkFile = r"C:\Users\J15773\Documents\GTDosier\PSENdocs\Victoria ALL - EFICAS PSEN\Data\2030Conv_HFP2.sav"
 #PSSE_PATH = "C:/Program Files/PTI/PSSE33/PSSBIN" #emplacement de PSSE
 
+
 def ExtractGeneratorLoadLineandTransfoDico(NetworkFile,PSSE_PATH):
 
     import os
     import sys
 
-    print NetworkFile
-    print PSSE_PATH
     sys.path.append(PSSE_PATH)
     os.environ['PATH'] +=  ';' + PSSE_PATH + ';'
 
@@ -160,13 +159,15 @@ def ExtractGeneratorLoadLineandTransfoDico(NetworkFile,PSSE_PATH):
 
  
 def ExtractGeneratorLoadLineandTransfoDico2(NetworkFile,PSSE_PATH):
+    print ('jjjjjjjjjjjjjjjjjjjjjj')
+#def ExtractGeneratorLoadLineandTransfoDico(NetworkFile,PSSE_PATH):
     MachineDico={'M1':'M1','M2':'M2','M3':'M3','M4':'M4','B6_BUS13__1':'AZ','CSPRING__1':'DD','GT12B__1':'ER','BSTMB__1':'JJ'}
     LoadDico={'C1':'C1','C2':'C2','C3':'C3','C4':'C4'}
     LineDico={'L1':'L1','L2':'L2','L3':'L3','L4':'L4'}
     TfoDico={'T1':'T1','T2':'T2','T3':'T3','T4':'T4'}
     MDico={'MZ1':'MZ1','MZ2':'MZ2','MZ3':'MZ3','MZ4':'MZ4'}
     if NetworkFile == '/home/A96028/PSEN/PSEN_V8/Code/PSEN_Eficas/faux2.sav': 
-       print "sans T1"
+       print ("sans T1")
        TfoDico={'T2':'T2','T3':'T3','T4':'T4'}
 
 

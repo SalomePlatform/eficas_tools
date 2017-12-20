@@ -127,7 +127,7 @@ class JDC_POURSUITE(JDC):
            # Il existe un autre concept de meme nom produit par une etape apres self 
            # on detruit ce concept pour pouvoir inserer les etapes du jdc_include
            if sd.etape:
-              sd.etape.supprime_sdprod(sd)
+              sd.etape.supprimeSdprod(sd)
 
       return contexte
 
@@ -163,13 +163,13 @@ class JDC_POURSUITE(JDC):
          return JDC.getListeCmd(self)
       return self.jdc_pere.getListeCmd()
 
-   def get_groups(self):
+   def getGroups(self):
       """
           Retourne la liste des commandes du catalogue par groupes
       """
       if self.jdc_pere is None:
-         return JDC.get_groups(self)
-      return self.jdc_pere.get_groups()
+         return JDC.getGroups(self)
+      return self.jdc_pere.getGroups()
 
    def initModif(self):
       """
@@ -178,7 +178,7 @@ class JDC_POURSUITE(JDC):
 
          Attention : initModif doit etre appele avant de realiser une modification
          La validite devra etre recalculee apres cette modification
-         mais par un appel a fin_modif pour preserver l'etat modified
+         mais par un appel a finModif pour preserver l'etat modified
          de tous les objets entre temps
       """
       #print "jdc_include.initModif",self,self.etape_include
@@ -186,16 +186,16 @@ class JDC_POURSUITE(JDC):
       if self.etape_include:
          self.etape_include.initModif()
 
-   def fin_modif(self):
+   def finModif(self):
       """
           Methode appelee une fois qu'une modification a ete faite afin de
           declencher d'eventuels traitements post-modification
           ex : INCLUDE et POURSUITE
       """
-      #print "jdc_include.fin_modif",self,self.etape_include
+      #print "jdc_include.finModif",self,self.etape_include
       CONNECTOR.Emit(self,"valid")
       if self.etape_include:
-         self.etape_include.fin_modif()
+         self.etape_include.finModif()
 
    def supprime(self):
       """
@@ -311,10 +311,10 @@ class JDC_POURSUITE(JDC):
       if self.etape_include:
          self.etape_include.parent.replaceConceptAfterEtape(self.etape_include,old_sd,sd)
 
-   def changefichier(self,fichier):
+   def changeFichier(self,fichier):
       if self.etape_include:
          self.etape_include.fichier_ini=fichier
-      self.fin_modif()
+      self.finModif()
 
    def controlContextApres(self,etape):
       """
@@ -327,7 +327,7 @@ class JDC_POURSUITE(JDC):
       """
       #print "jdc_include.controlContextApres",self,etape
       #Regularise les etapes du jdc apres l'etape etape
-      self.control_jdc_context_apres(etape)
+      self.controlJdcContextApres(etape)
       if self.etape_include:
          #print "CONTROL_INCLUDE:",self.etape_include,self.etape_include.nom
          # il existe un jdc pere. On propage la regularisation

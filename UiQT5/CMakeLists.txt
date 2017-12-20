@@ -66,6 +66,7 @@ eficas_compile_ui ( desPBOptionnelMT.ui )
 #
 eficas_compile_ui ( desWidgetBloc.ui )
 eficas_compile_ui ( desWidgetCB.ui )
+eficas_compile_ui ( desWidgetCBIntoSug.ui )
 eficas_compile_ui ( desWidgetCommentaire.ui )
 eficas_compile_ui ( desWidgetDate.ui )
 eficas_compile_ui ( desWidgetFact.ui )

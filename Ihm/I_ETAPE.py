@@ -32,7 +32,7 @@ from Extensions.eficas_exception import EficasException
 # Objet re pour controler les identificateurs Python
 concept_re=re.compile(r'[a-zA-Z_]\w*$')
 
-# import rajoute suite a l'ajout de Build_sd --> a resorber
+# import rajoute suite a l'ajout de buildSd --> a resorber
 import traceback
 import Noyau
 from Noyau import N_Exception
@@ -50,7 +50,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
    def ident(self):
       return self.nom
 
-   def get_sdname(self):
+   def getSdname(self):
       #print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
       if CONTEXT.debug : 
           print(("SDNAME ",  self.reuse,  self.sd,  self.sd.get_name()))
@@ -77,14 +77,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       # initModif doit etre appele avant de realiser une modification
       # La validite devra etre recalculee apres cette modification
-      # mais dans l'appel a fin_modif pour preserver l'etat modified
+      # mais dans l'appel a finModif pour preserver l'etat modified
       # de tous les objets entre temps
       #print "initModif",self,self.parent
       self.state = 'modified'
       if self.parent:
         self.parent.initModif()
 
-   def fin_modif(self):
+   def finModif(self):
       """
           Methode appelee une fois qu'une modification a ete faite afin de 
           declencher d'eventuels traitements post-modification
@@ -93,7 +93,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       """
       CONNECTOR.Emit(self,"valid")
       if self.parent:
-        self.parent.fin_modif()
+        self.parent.finModif()
 
    def nommeSd(self,nom) :
       """
@@ -125,10 +125,10 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # Cas particulier des operateurs obligatoirement reentrants
       #
       if self.definition.reentrant == 'o':
-        self.sd = self.reuse = self.jdc.get_sd_avant_etape(nom,self)
+        self.sd = self.reuse = self.jdc.getSdAvantEtape(nom,self)
         if self.sd != None :
           self.sdnom=self.sd.nom
-          self.fin_modif()
+          self.finModif()
           return 1, tr("Concept existant")
         else:
           return 0, tr("Operateur reentrant mais concept non existant")
@@ -137,12 +137,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       #
       old_reuse=None
       if self.definition.reentrant == 'f' :
-        sd = self.jdc.get_sd_avant_etape(nom,self)
+        sd = self.jdc.getSdAvantEtape(nom,self)
         if sd != None :
           if isinstance(sd,self.getType_produit()) :
              self.sd = self.reuse = sd
              self.sdnom = sd.nom
-             self.fin_modif()
+             self.finModif()
              return 1, tr("Operateur reentrant et concept existant trouve")
           else:
              return 0, tr("Concept deja existant et de mauvais type")
@@ -159,7 +159,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       #
       if self.sd == None :
           #Pas de concept produit preexistant
-          if self.parent.get_sd_autour_etape(nom,self):
+          if self.parent.getSdAutourEtape(nom,self):
             # Un concept de ce nom existe dans le voisinage de l'etape courante
             # On retablit l'ancien concept reentrant s'il existait
             if old_reuse:
@@ -176,7 +176,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
                self.sd.nom = nom
                self.sdnom=nom
                self.parent.updateConceptAfterEtape(self,self.sd)
-               self.fin_modif()
+               self.finModif()
                return 1, tr("Nommage du concept effectue")
             except:
                return 0, tr("Nommage impossible %s", str(sys.exc_info()[1]))
@@ -187,27 +187,27 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             # Dans le cas ou old_nom == sansnom, isValid retourne 0 alors que ...
             # par contre si le concept existe et qu'il s'appelle sansnom c'est que l'etape est valide
             # on peut donc le nommer sans test prealable
-            if self.parent.get_sd_autour_etape(nom,self):
+            if self.parent.getSdAutourEtape(nom,self):
               return 0, tr("Nommage du concept refuse : un concept de meme nom existe deja")
             else:
               # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
               self.sd.nom=nom
               self.sdnom=nom
               self.parent.updateConceptAfterEtape(self,self.sd)
-              self.fin_modif()
+              self.finModif()
               return 1, tr("Nommage du concept effectue")
           if self.isValid() :
             # Normalement l appel de isValid a mis a jour le concept produit (son type)
             # Il suffit de specifier l attribut nom de sd pour le nommer si le nom n est pas
             # deja attribue
-            if self.parent.get_sd_autour_etape(nom,self):
+            if self.parent.getSdAutourEtape(nom,self):
               return 0, tr("Nommage du concept refuse : un concept de meme nom existe deja")
             else:
               # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
               self.sd.nom=nom
               self.sdnom=nom
               self.parent.updateConceptAfterEtape(self,self.sd)
-              self.fin_modif()
+              self.finModif()
               return 1, tr("Nommage du concept effectue")
           else:
             # Normalement on ne devrait pas passer ici
@@ -232,7 +232,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       self.initModif()
       if self.sd :
         try:
-          self.jdc.append_sdprod(self.sd)
+          self.jdc.appendSdProd(self.sd)
         except:
           pass
       CONNECTOR.Emit(self,"add",None)
@@ -247,7 +247,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       self.actif = 0
       self.initModif()
       if self.sd :
-         self.jdc.del_sdprod(self.sd)
+         self.jdc.delSdprod(self.sd)
          self.jdc.deleteConceptAfterEtape(self,self.sd)
       CONNECTOR.Emit(self,"supp",None)
       CONNECTOR.Emit(self,"valid")
@@ -274,18 +274,18 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
               self.sd=self.reuse=self.sdnom=None
               #supprime les references a sd dans les etapes suivantes
               self.parent.deleteConceptAfterEtape(self,sd)
-              self.fin_modif()
+              self.finModif()
 
-   def supprime_sdprod(self,sd):
+   def supprimeSdprod(self,sd):
       """
          Supprime le concept produit sd s'il est produit par l'etape
       """
       if sd is not self.sd:return
       if self.sd != None :
          self.initModif()
-         self.parent.del_sdprod(sd)
+         self.parent.delSdprod(sd)
          self.sd=None
-         self.fin_modif()
+         self.finModif()
          self.parent.deleteConcept(sd)
 
    def supprimeSdProds(self):
@@ -302,7 +302,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       # le concept retourne par l'etape est a supprimer car il etait 
       # cree par l'etape
       if self.sd != None :
-         self.parent.del_sdprod(self.sd)
+         self.parent.delSdprod(self.sd)
          self.parent.deleteConcept(self.sd)
 
    def close(self):
@@ -368,7 +368,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       l_noms.sort()
       return l_noms
 
-   def getGenealogie_precise(self):
+   def getGenealogiePrecise(self):
       return [self.nom]
 
    def getGenealogie(self):
@@ -387,7 +387,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
      for motcle in self.mc_liste :
          motcle.verifExistenceSd()
 
-   def update_mc_global(self):
+   def updateMcGlobal(self):
      """
         Met a jour les mots cles globaux enregistres dans l'etape
         et dans le jdc parent.
@@ -396,7 +396,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
         des mots cles globaux.
      """
      self.mc_globaux={}
-     I_MCCOMPO.MCCOMPO.update_mc_global(self)
+     I_MCCOMPO.MCCOMPO.updateMcGlobal(self)
 
    def updateConditionBloc(self):
      """
@@ -436,13 +436,13 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
      
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
-   def Build_sd(self,nom):
+   def buildSd(self,nom):
       """
            Methode de Noyau surchargee pour poursuivre malgre tout
            si une erreur se produit pendant la creation du concept produit
       """
       try:
-         sd=Noyau.N_ETAPE.ETAPE.Build_sd(self,nom)
+         sd=Noyau.N_ETAPE.ETAPE.buildSd(self,nom)
       except AsException as e :
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme
@@ -458,12 +458,12 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       return self.sd
 
 #ATTENTION SURCHARGE: cette methode doit etre gardee en synchronisation avec Noyau
-   def make_register(self):
+   def makeRegister(self):
       """
          Initialise les attributs jdc, id, niveau et realise les
          enregistrements necessaires
          Pour EFICAS, on tient compte des niveaux
-         Surcharge la methode make_register du package Noyau
+         Surcharge la methode makeRegister du package Noyau
       """
       if self.parent :
          self.jdc = self.parent.getJdcRoot()

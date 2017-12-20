@@ -2,22 +2,22 @@ def processXLS(listeparam) :
     print "dans processXLS"
     item=listeparam[0]
     fileNameObj=item.object.get_child('XLS_file')
-    if fileNameObj : fileName=fileNameObj.get_valeur()
+    if fileNameObj : fileName=fileNameObj.getValeur()
     else : fileName = ""
     if fileName == "" : return 0, 'Nom de fichier invalide'
 
     ongletListObj=item.object.get_child('Onglets')
-    if ongletListObj : ongletList= ongletListObj.get_valeur()
+    if ongletListObj : ongletList= ongletListObj.getValeur()
     else : ongletList = [] 
     if ongletList == [] : return 0, 'ongletList invalide'
 
     busListObj=item.object.get_child('BusList')
-    if busListObj : busList= busListObj.get_valeur()
+    if busListObj : busList= busListObj.getValeur()
     else : busList = [] 
     if busList == [] : return 0, 'BusList invalide'
 
     contListObj=item.object.get_child('ContList')
-    if contListObj : contList=contListObj.get_valeur()
+    if contListObj : contList=contListObj.getValeur()
     else : contList = []
     if contList == [] : return 0, 'ContList invalide'
 

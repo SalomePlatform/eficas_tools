@@ -46,7 +46,7 @@ class CONCEPT_SENSIBLE(REGLE):
       self._modes = { 'ENSEMBLE' : 0, 'SEPARE' : 1 }
       self.mode = self._modes.get(mode, self._modes['ENSEMBLE'])
 
-   def gettext(self):
+   def getText(self):
       """Pour EFICAS
       """
       return ''
@@ -97,7 +97,7 @@ class REUSE_SENSIBLE(REGLE):
       REGLE.__init__(self)
       self.mocle = mocle
 
-   def gettext(self):
+   def getText(self):
       """Pour EFICAS
       """
       return ''
@@ -144,7 +144,7 @@ class DERIVABLE(REGLE):
       REGLE.__init__(self)
       self.mocle = mocle
 
-   def gettext(self):
+   def getText(self):
       """Pour EFICAS
       """
       return ''

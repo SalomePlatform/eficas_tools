@@ -111,7 +111,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
                 valid = 0
 
             if valid:
-                valid = self.update_sdprod(cr)
+                valid = self.updateSdprod(cr)
 
             # Si la macro comprend des etapes internes, on teste leur validite
             for e in self.etapes:
@@ -123,7 +123,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
 
             return self.valid
 
-    def update_sdprod(self, cr='non'):
+    def updateSdprod(self, cr='non'):
         """
              Cette methode met a jour le concept produit en fonction des conditions initiales :
 

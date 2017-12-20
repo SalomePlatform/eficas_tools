@@ -552,9 +552,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             # pos est un item. Il faut inserer name apres pos
             index = self.item.getIndex(pos) +1
         elif type(name) == types.InstanceType:
-            index = self.item.getIndex_child(name.nom)
+            index = self.item.getIndexChild(name.nom)
         else:
-            index = self.item.getIndex_child(name)
+            index = self.item.getIndexChild(name)
 
         # si on essaye d inserer a la racine
         if (isinstance(self.treeParent,JDCTree) and index==0) :
@@ -604,7 +604,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.treeParent.buildChildren()
         if self.treeParent.childrenComplete : toselect=self.treeParent.childrenComplete[index]
         else: toselect=self.treeParent
-        if recalcule : jdc.recalcule_etat_correlation()
+        if recalcule : jdc.recalculeEtatCorrelation()
         if ret==0 :
             if self.treeParent.childrenComplete :
                 notdeleted=self.treeParent.childrenComplete[index+1]
@@ -649,7 +649,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             noeud.treeParent.item.suppItem(noeud.item)
 
         jdc.buildChildren()
-        if recalcule : jdc.recalcule_etat_correlation()
+        if recalcule : jdc.recalculeEtatCorrelation()
         try    : toselect=parentPosition.children[index]
         except : toselect=jdc
         toselect.select()
@@ -668,7 +668,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             pass
 
         if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isValid():
-           self.item.jdc.recalcule_etat_correlation()
+           self.item.jdc.recalculeEtatCorrelation()
         if hasattr(self.item,'forceRecalcul'):
            self.forceRecalculChildren(self.item.forceRecalcul)
         self.editor.initModif()

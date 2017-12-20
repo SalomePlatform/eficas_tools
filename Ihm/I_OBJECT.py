@@ -54,17 +54,17 @@ class OBJECT:
     if self.parent:
       self.parent.initModif()
 
-  def fin_modif(self):
+  def finModif(self):
       """
       Methode appelee apres qu'une modification a ete faite afin de declencher
       d'eventuels traitements post-modification
       """
-      #print "fin_modif",self
+      #print "finModif",self
       # pour les objets autres que les commandes, aucun traitement specifique 
       # on remonte l'info de fin de modif au parent
       CONNECTOR.Emit(self,"valid")
       if self.parent:
-        self.parent.fin_modif()
+        self.parent.finModif()
 
   def isRepetable(self):
     """
@@ -81,7 +81,7 @@ class OBJECT:
   def getDocu(self):
     return self.definition.getDocu()
 
-  def get_liste_mc_inconnus(self):
+  def getListeMcInconnus(self):
      """
      Retourne la liste des mots-cles inconnus dans self
      """
@@ -94,7 +94,7 @@ class OBJECT:
     """
     liste=[]
     for regle in self.definition.regles:
-        liste=regle.verif_condition_regle(liste,liste_presents)
+        liste=regle.verifConditionRegle(liste,liste_presents)
     return liste
 
   def verifConditionBloc(self):
@@ -107,9 +107,9 @@ class OBJECT:
     """
     return [],[]
 
-  def getGenealogie_precise(self):
+  def getGenealogiePrecise(self):
     if self.parent:
-       l=self.parent.getGenealogie_precise()
+       l=self.parent.getGenealogiePrecise()
        l.append(self.nom.strip())
        return l
     else:
@@ -154,10 +154,10 @@ class OBJECT:
      """
      return self
 
-  def delete_mc_global(self):
+  def deleteMcGlobal(self):
      return
 
-  def update_mc_global(self):
+  def updateMcGlobal(self):
      return
 
   #def __del__(self):

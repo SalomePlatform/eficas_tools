@@ -99,7 +99,7 @@ class DicoImbriqueGenerator(PythonGenerator):
         if obj.isInformation() : return s
         if not obj.isValid() :  return s 
 
-        liste=obj.getGenealogie_precise() 
+        liste=obj.getGenealogiePrecise() 
 
         if obj.etape.nom=='MODIFICATION_CATALOGUE' : return s
         nom = obj.etape.nom

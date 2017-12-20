@@ -43,7 +43,7 @@ class Validation(object)  :
                   return valeur,validite,commentaire
          if self.node.item.waitTxm() and not( type(valeur) == str) : valeur=str(valeur) 
 
-         testtype,commentaire = self.node.item.object.verif_type(valeur)
+         testtype,commentaire = self.node.item.object.verifType(valeur)
          if not testtype :
                   return valeur,0,commentaire
 
@@ -70,7 +70,7 @@ class Validation(object)  :
                         clef=eval(texteValeur)
                         if str(clef) != str(texteValeur) :
                            self.node.item.object.initModif()
-                           clefobj=self.node.item.object.GetNomConcept()
+                           clefobj=self.node.item.object.getNomConcept()
                            if not clefobj in self.parent.appliEficas.dict_reels:
                               self.parent.appliEficas.dict_reels[clefobj] = {}
                            self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
@@ -79,7 +79,7 @@ class Validation(object)  :
                               if not self.node.item.object.etape in self.parent.appliEficas.dict_reels :
                                  self.parent.appliEficas.dict_reels[self.node.item.object.etape] = {}
                               self.parent.appliEficas.dict_reels[self.node.item.object.etape][clef]=texteValeur
-                           self.node.item.object.fin_modif()
+                           self.node.item.object.finModif()
          except:
             pass
 
@@ -91,7 +91,7 @@ class Validation(object)  :
              if self.node.waitTxm() and not self.isParam(valeur) : return "'"+str(valeur)+"'"
              else : return(valeur)
          if "R" in self.node.item.object.definition.type:
-                  clefobj=self.node.item.object.GetNomConcept()
+                  clefobj=self.node.item.object.getNomConcept()
                   if clefobj in self.parent.appliEficas.dict_reels:
                      if valeur in self.parent.appliEficas.dict_reels[clefobj] :
                         valeurTexte=self.parent.appliEficas.dict_reels[clefobj][valeur]
@@ -122,7 +122,7 @@ class Validation(object)  :
                 if str(texteValeur)[0] != "'":
                    clef=eval(texteValeur)
                    if str(clef) != str(texteValeur) :
-                      clefobj=self.node.item.object.GetNomConcept()
+                      clefobj=self.node.item.object.getNomConcept()
                       if not clefobj in self.parent.appliEficas :
                           self.parent.appliEficas.dict_reels[clefobj] = {}
                       self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
@@ -209,7 +209,7 @@ class PolitiquePlusieurs(Validation):
              if not valide :
                 try :
                    valeur,valide=self.node.item.evalValeur(valeur)
-                   valide,commentaire2 = self.node.item.object.verif_type(valeur)
+                   valide,commentaire2 = self.node.item.object.verifType(valeur)
                 except :
                    #return testtype,commentaire,"",listeRetour
                    pass

@@ -1752,7 +1752,7 @@ class CreeMotClef(object):
         if parent.get_child(self.MotClef) == None : longueur=0
         else : longueur=len(parent.get_child(self.MotClef))
 
-        pos=parent.getIndex_child(self.MCSimp.nom)+1
+        pos=parent.getIndexChild(self.MCSimp.nom)+1
         while longueur < valeur : 
            parent.inhibeValidator=1
            parent.addEntite(self.MotClef,pos)

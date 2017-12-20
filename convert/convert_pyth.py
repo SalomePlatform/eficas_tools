@@ -69,11 +69,11 @@ def entryPoint():
         # Le nom du plugin
           'name' : 'pyth',
         # La factory pour creer une instance du plugin
-          'factory' : PythParser,
+          'factory' : Pythparser,
           }
 
 
-class PythParser(object):
+class Pythparser(object):
    """
        Ce convertisseur lit un fichier au format pyth avec la 
        methode readfile : convertisseur.readfile(nom_fichier)

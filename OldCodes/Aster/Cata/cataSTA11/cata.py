@@ -347,7 +347,7 @@ class post_comp_cham_el :
 class cham_mater(ASSD):
     cata_sdj = "SD.sd_cham_mater.sd_cham_mater"
 
-    def get_vale_ref(self, nom_varc):
+    def getVale_ref(self, nom_varc):
         """Retourne la valeur de référence de `nom_varc`."""
         from SD.sd_carte import sd_carte
         nom_varc = nom_varc.strip()
@@ -11557,7 +11557,7 @@ def calc_table_prod(self, TABLE, ACTION, **kargs):
    """
    l_typ = [AsType(TABLE),]
    for mcf in ACTION:
-      dmc = mcf.cree_dict_valeurs(mcf.mc_liste)
+      dmc = mcf.creeDictValeurs(mcf.mc_liste)
       if dmc.get('TABLE') != None:
          l_typ.append(AsType(dmc['TABLE']))
    # une table_fonction étant une table
@@ -23996,7 +23996,7 @@ IMPR_TABLE=MACRO(nom="IMPR_TABLE",
 # person_in_charge: mathieu.courtois at edf.fr
 
 INCLUDE=MACRO(nom="INCLUDE",
-              op=OPS("Cata.ops.build_include"),
+              op=OPS("Cata.ops.buildInclude"),
               UIinfo={"groupes":("Gestion du travail",)},
               fr="Débranchement vers un fichier de commandes secondaires",
               sd_prod=ops.INCLUDE,
@@ -29620,7 +29620,7 @@ POST_DECOLLEMENT=MACRO(nom="POST_DECOLLEMENT",
 POST_DYNA_ALEA=MACRO(nom="POST_DYNA_ALEA",
                      op=OPS('Macro.post_dyna_alea_ops.post_dyna_alea_ops'),
                      sd_prod=table_sdaster,
-                     fr="Traitements statistiques de résultats de type interspectre " \
+                     fr="traitements statistiques de résultats de type interspectre " \
                         "et impression sur fichiers",
                      reentrant='n',
                      UIinfo={"groupes":("Post-traitements","Dynamique",)},
@@ -31531,7 +31531,7 @@ POST_USURE=OPER(nom="POST_USURE",op=153,sd_prod=table_sdaster,reentrant='f',
 # person_in_charge: j-pierre.lefebvre at edf.fr
 
 POURSUITE=MACRO(nom="POURSUITE",
-                op=OPS("Cata.ops.build_poursuite"),
+                op=OPS("Cata.ops.buildPoursuite"),
                 repetable='n',
                 fr="Poursuite d'une étude à partir de la sauvegarde au format JEVEUX " \
                    "ou HDF de sa base globale",

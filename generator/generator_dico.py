@@ -92,7 +92,7 @@ class DicoGenerator(PythonGenerator):
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
         courant=self.Dico
-        for p in obj.getGenealogie_precise()[0:-1]:
+        for p in obj.getGenealogiePrecise()[0:-1]:
             if not (p in courant.keys()) : courant[p]={}
             courant=courant[p]
         courant[obj.nom]=obj.val

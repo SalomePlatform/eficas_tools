@@ -555,7 +555,7 @@ class _TestResult(TestResult):
             sys.stderr = self.stderr0
             self.stdout0 = None
             self.stderr0 = None
-        return self.outputBuffer.getvalue()
+        return self.outputBuffer.getValue()
 
 
     def stopTest(self, test):

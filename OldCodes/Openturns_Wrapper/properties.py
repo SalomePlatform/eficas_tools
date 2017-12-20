@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #@ MODIF properties Accas DATE 10/10/2002 AUTEUR gcbhhhh M.ADMINISTRATEUR
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
+#            maConfiguration MANAGEMENT OF EDF VERSION
 # RESPONSABLE D6BHHHH J-P.LEFEBVRE
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG

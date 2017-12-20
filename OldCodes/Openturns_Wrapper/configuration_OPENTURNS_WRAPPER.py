@@ -25,7 +25,7 @@ import configuration
 import os
 
 
-class CONFIG(configuration.CONFIG_BASE):
+class CONFIG(configuration.configBase):
 
   #-----------------------------------
   def __init__(self,appli,repIni):
@@ -35,18 +35,18 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_user=['exec_acrobat', 'catalogues','savedir','path_doc']
       self.labels_eficas=["OpenTURNS_path","path_doc","exec_acrobat"]
       self.labels_eficas=self.labels_eficas+["rep_cata","lang","catalogues"]
-      configuration.CONFIG_BASE.__init__(self,appli,repIni)
+      configuration.configBase.__init__(self,appli,repIni)
 
   #---------------------------------------
   def lecture_fichier_ini_standard(self):
   #---------------------------------------
-       configuration.CONFIG_BASE.lecture_fichier_ini_standard(self)
+       configuration.configBase.lecture_fichier_ini_standard(self)
        if hasattr(self,'OpenTURNS_path') : self.oldOTPath=self.OpenTURNS_path
 
   #---------------------------------------
   def lecture_fichier_ini_integrateur(self):
   #---------------------------------------
-       configuration.CONFIG_BASE.lecture_fichier_ini_utilisateur(self)
+       configuration.configBase.lecture_fichier_ini_utilisateur(self)
        if hasattr(self,'OpenTURNS_path') :
           if hasattr(self,'oldOTPath') and (self.OpenTURNS_path != self.oldOTPath):
                import sys

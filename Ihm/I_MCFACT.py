@@ -42,7 +42,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     if len(objet) > 1 : return 0
     else : return 1
 
-  def getlabeltext(self):
+  def getLabelText(self):
     """
        Retourne le label de self suivant qu'il s'agit d'un MCFACT
        isole ou d'un MCFACT appartenant a une MCList :
@@ -62,11 +62,11 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     except:
       return tr("Erreur - mot cle facteur de nom : %s", self.nom)
 
-  def getGenealogie_precise(self):
-    nom=self.getlabeltext() 
+  def getGenealogiePrecise(self):
+    nom=self.getLabelText() 
     if nom[-1]==':' : nom=nom[0:-1]
     if self.parent:
-       l=self.parent.getGenealogie_precise()
+       l=self.parent.getGenealogiePrecise()
        l.append(nom.strip())
        return l
     else:
@@ -83,18 +83,18 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     if parent:
        parent.initModif()
 
-  def fin_modif(self):
+  def finModif(self):
     """
       Methode appelee apres qu'une modification a ete faite afin de declencher
       d'eventuels traitements post-modification
     """
-    #print "fin_modif",self
+    #print "finModif",self
     # pour les objets autres que les commandes, aucun traitement specifique
     # on remonte l'info de fin de modif au parent
     CONNECTOR.Emit(self,"valid")
     parent= hasattr(self,"alt_parent") and self.alt_parent or self.parent
     if parent:
-       parent.fin_modif()
+       parent.finModif()
 
   def normalize(self):
     """ Retourne le MCFACT normalise. Pour un MCFACT isole, l'objet normalise

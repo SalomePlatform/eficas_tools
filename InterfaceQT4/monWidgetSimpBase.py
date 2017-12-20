@@ -120,5 +120,5 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
       #if self.objSimp.parent.nom == "MODEL" :
       #   if self.objSimp.isValid():
       #      self.objSimp.parent.change_fichier="1"
-            #self.node.item.parent.build_include(None,"")
+            #self.node.item.parent.buildInclude(None,"")
 

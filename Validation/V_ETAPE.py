@@ -151,13 +151,13 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                 valid = valid * self.valid_sdnom(cr)
 
             if valid:
-                valid = self.update_sdprod(cr)
+                valid = self.updateSdprod(cr)
 
             self.set_valid(valid)
 
             return self.valid
 
-    def update_sdprod(self, cr='non'):
+    def updateSdprod(self, cr='non'):
         """
              Cette methode met a jour le concept produit en fonction des conditions initiales :
 

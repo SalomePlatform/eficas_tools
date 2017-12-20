@@ -212,7 +212,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
 
   def getText(self):
       try:
-          return self.object.get_sdname()
+          return self.object.getSdname()
       except:
           return ''
 

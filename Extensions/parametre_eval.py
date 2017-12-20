@@ -136,7 +136,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
         formule=(self.nom,'',None,exp_eval)
         # on recupere la liste des constantes et des autres fonctions predefinies
         # et qui peuvent etre utilisees dans le corps de la formule courante
-        l_ctes,l_form = self.jdc.get_parametres_fonctions_avant_etape(self)
+        l_ctes,l_form = self.jdc.getParametresFonctionsAvantEtape(self)
         # on cree un objet verificateur
         verificateur = interpreteur_formule.Interpreteur_Formule(formule=formule,
                                                                  constantes = l_ctes,
@@ -167,7 +167,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     if len(nom) > 8 :
         if cr == 'oui' : self.cr.fatal(tr("Un nom de parametre ne peut depasser 8 caracteres"))
         return 0,"Un nom de parametre ne peut depasser 8 caracteres"
-    sd = self.parent.get_sd_autour_etape(nom,self)
+    sd = self.parent.getSdAutourEtape(nom,self)
     if sd :
         if cr == 'oui' : self.cr.fatal(tr("Un concept de nom %s existe deja !"), nom)
         return 0,"Un concept de nom %s existe deja !" %nom

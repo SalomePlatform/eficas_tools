@@ -111,7 +111,7 @@ class PROC(N_ENTITE.ENTITE):
             self.niveau.enregistre(self)
         self.UIinfo = UIinfo
         self.affecter_parente()
-        self.check_definition(self.nom)
+        self.checkDefinition(self.nom)
 
     def __call__(self, **args):
         """
@@ -120,7 +120,7 @@ class PROC(N_ENTITE.ENTITE):
         """
         etape = self.class_instance(oper=self, args=args)
         etape.McBuild()
-        return etape.Build_sd()
+        return etape.buildSd()
 
     def make_objet(self, mc_list='oui'):
         """

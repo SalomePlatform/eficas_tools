@@ -19,7 +19,7 @@
 #
 from Traducteur.utils import lineToDict
 import logging
-from Traducteur.dictErreurs import EcritErreur
+from Traducteur.dictErreurs import ecritErreur
 from Traducteur.load import jdcSet 
 from Traducteur.renamemocle import decaleLignesdeNBlancs
 from Traducteur.removemocle import removeMotCleInFact
@@ -27,7 +27,7 @@ from Traducteur import regles
 
 
 #--------------------------------------------------------------------------
-def ChangementValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
+def changementValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
 #--------------------------------------------------------------------------
     if command  not in jdcSet : return
     boolChange=0
@@ -61,18 +61,18 @@ def ChangementValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
                    MaLigneTexte=Nouveau # raccourci honteux mais ...
                    MaLigneGlob=Nouveau
                    if Valeur in liste :
-                      EcritErreur((command,motcle,Valeur),indexLigneGlob)
+                      ecritErreur((command,motcle,Valeur),indexLigneGlob)
                    else :
                       logging.info("Changement de %s par %s dans %s ligne %d",Valeur,DictNouvVal[Valeur],command,indexLigneGlob)
                    boolChange=1
              indexLigneGlob=indexLigneGlob+1
              indexTexteMC=indexTexteMC+1
        if (trouveUnMC == 0) and ( defaut == 1):
-          EcritErreur((command,motcle,"DEFAUT"),c.lineno)
+          ecritErreur((command,motcle,"DEFAUT"),c.lineno)
     if boolChange : jdc.reset(jdc.getSource())
              
 #--------------------------------------------------------------------------------
-def ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste=(),ensemble=regles.SansRegle,defaut=0):
+def changementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste=(),ensemble=regles.SansRegle,defaut=0):
 #--------------------------------------------------------------------------------
 
     if command  not in jdcSet : return
@@ -113,7 +113,7 @@ def ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste=(),ensemble=
                                 MaLigneTexte=Nouveau # raccourci honteux mais ...
                                 MaLigneGlob=Nouveau
                                 if Valeur in liste :
-                                   EcritErreur((command,fact,motcle,Valeur),indexLigneGlob)
+                                   ecritErreur((command,fact,motcle,Valeur),indexLigneGlob)
                                 else :
                                    logging.info("Changement de %s par %s dans %s ligne %d",Valeur,DictNouvVal[Valeur],command,indexLigneGlob)
                         boolChange=1
@@ -121,37 +121,37 @@ def ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste=(),ensemble=
                         indexTexteMC=indexTexteMC+1
                 if (trouveUnMC == 0) and ( defaut == 1):
                    logging.warning("OPTION  (defaut) de CALCG à verifier ligne %s" ,c.lineno )                     
-                   EcritErreur((command,fact,motcle,"DEFAUT"),c.lineno)
+                   ecritErreur((command,fact,motcle,"DEFAUT"),c.lineno)
     if boolChange : jdc.reset(jdc.getSource())
              
 #--------------------------------------------------------------------------------
-def ChangementValeurDsMCFSiRegle(jdc,command,fact,motcle,DictNouvVal,liste_regles,defaut=0):
+def changementValeurDsMCFSiRegle(jdc,command,fact,motcle,DictNouvVal,liste_regles,defaut=0):
 #--------------------------------------------------------------------------------
     if command not in jdcSet : return
     mesRegles=regles.ensembleRegles(liste_regles)
     liste=()
-    ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste,mesRegles,defaut)
+    changementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste,mesRegles,defaut)
              
 #---------------------------------------------------------------------------------------
-def ChangementValeurDsMCFAvecAvertissement(jdc, command, fact,motcle,DictNouvVal,liste):
+def changementValeurDsMCFAvecAvertissement(jdc, command, fact,motcle,DictNouvVal,liste):
 #---------------------------------------------------------------------------------------
     if command  not in jdcSet : return
     defaut=0
     if liste[-1] == "defaut" : 
        defaut=1
-    ChangementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste,defaut)
+    changementValeurDsMCF(jdc,command,fact,motcle,DictNouvVal,liste,defaut)
 
 #--------------------------------------------------------------------------
-def ChangementValeurAvecAvertissement(jdc, command,motcle,DictNouvVal,liste):
+def changementValeurAvecAvertissement(jdc, command,motcle,DictNouvVal,liste):
 #--------------------------------------------------------------------------
     if command  not in jdcSet : return
     defaut=0
     if liste[-1] == "defaut" : 
        defaut=1
-    ChangementValeur(jdc,command,motcle,DictNouvVal,liste,defaut)
+    changementValeur(jdc,command,motcle,DictNouvVal,liste,defaut)
 
 #--------------------------------------------------------------------------
-def SuppressionValeurs(jdc, command,motcle,liste):
+def suppressionValeurs(jdc, command,motcle,liste):
 #--------------------------------------------------------------------------
 
     if command not in jdcSet : return
@@ -206,7 +206,7 @@ def SuppressionValeurs(jdc, command,motcle,liste):
     if boolChange : jdc.reset(jdc.getSource())
 
 #----------------------------------------------
-def AppelleMacroSelonValeurConcept(jdc,macro,genea):
+def appelleMacroSelonValeurConcept(jdc,macro,genea):
 #----------------------------------------------
     if macro  not in jdcSet : return
     boolChange=0
@@ -311,7 +311,7 @@ def AppelleMacroSelonValeurConcept(jdc,macro,genea):
     if boolChange : jdc.reset(jdc.getSource())
 
 #----------------------------------------------
-def ChangeTouteValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
+def changeTouteValeur(jdc,command,motcle,DictNouvVal,liste=(),defaut=0):
 #----------------------------------------------
     if macro  not in jdcSet : return
     boolChange=0

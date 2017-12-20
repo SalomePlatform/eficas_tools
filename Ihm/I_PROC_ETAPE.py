@@ -21,7 +21,7 @@ from __future__ import absolute_import
 from . import I_ETAPE
 
 
-# import rajoutes suite a l'ajout de Build_sd --> a resorber
+# import rajoutes suite a l'ajout de buildSd --> a resorber
 import sys
 import traceback,types
 import Noyau
@@ -30,7 +30,7 @@ from Noyau.N_Exception import AsException
 from Extensions.eficas_exception import EficasException
 
 class PROC_ETAPE(I_ETAPE.ETAPE):
-   def get_sdname(self):
+   def getSdname(self):
       return ""
 
    def getSdprods(self,nom_sd):
@@ -74,13 +74,13 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
         child.replaceConcept(old_sd,sd)
 
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
-   def Build_sd(self):
+   def buildSd(self):
       """
            Methode de Noyau surchargee pour poursuivre malgre tout
            si une erreur se produit pendant la creation du concept produit
       """
       try:
-         sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.Build_sd(self)
+         sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.buildSd(self)
       except AsException  :
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme

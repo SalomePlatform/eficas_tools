@@ -22,7 +22,7 @@ import logging
 from Traducteur.load import jdcSet 
 
 
-def EcritErreur(listeGena,ligne=None) :
+def ecritErreur(listeGena,ligne=None) :
     from sys import dict_erreurs
     maCle=""
     for Mot in listeGena :
@@ -49,19 +49,19 @@ def EcritErreur(listeGena,ligne=None) :
     #except :
     #    pass
 
-def GenereErreurPourCommande(jdc,listeCommande) :
+def genereErreurPourCommande(jdc,listeCommande) :
     commands= jdc.root.childNodes[:]
     commands.reverse()
     for c in commands:
         if type(listeCommande)==list: 
             for Mot in listeCommande :
                if c.name != Mot :continue
-               EcritErreur((Mot,),c.lineno)
+               ecritErreur((Mot,),c.lineno)
         else:
             if c.name != listeCommande :continue
-            EcritErreur((listeCommande,),c.lineno)
+            ecritErreur((listeCommande,),c.lineno)
 
-def GenereErreurMotCleInFact(jdc,command,fact,mocle):
+def genereErreurMotCleInFact(jdc,command,fact,mocle):
     for c in jdc.root.childNodes:
         if c.name != command:continue
         for mc in c.childNodes:
@@ -72,18 +72,18 @@ def GenereErreurMotCleInFact(jdc,command,fact,mocle):
                     if n.name != mocle:
                        continue
  		    else :
-                       EcritErreur((command,fact,mocle,),c.lineno)
+                       ecritErreur((command,fact,mocle,),c.lineno)
 
-def GenereErreurMCF(jdc,command,fact):
+def genereErreurMCF(jdc,command,fact):
     for c in jdc.root.childNodes:
         if c.name != command:continue
         for mc in c.childNodes:
             if mc.name != fact:
                 continue
             else : 
-                EcritErreur((command,fact,),c.lineno)
+                ecritErreur((command,fact,),c.lineno)
 
-def GenereErreurValeur(jdc,command,fact,list_valeur):
+def genereErreurValeur(jdc,command,fact,list_valeur):
     for c in jdc.root.childNodes:
         if c.name != command:continue
         for mc in c.childNodes:
@@ -94,7 +94,7 @@ def GenereErreurValeur(jdc,command,fact,list_valeur):
                if trouve > -1 :  
                   logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,mc.lineno)
 
-def GenereErreurValeurDsMCF(jdc,command,fact,mocle,list_valeur):
+def genereErreurValeurDsMCF(jdc,command,fact,mocle,list_valeur):
     for c in jdc.root.childNodes:
         if c.name != command:continue
         for mc in c.childNodes:

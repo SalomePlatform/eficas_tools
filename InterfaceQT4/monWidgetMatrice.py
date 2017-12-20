@@ -143,7 +143,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
   def  nbDeVariables(self):
        jdc=self.node.item.object.jdc
        etape=self.node.item.object.etape
-       self.listeVariables=jdc.get_variables(etape)
+       self.listeVariables=jdc.getVariables(etape)
        if self.listeVariables == [] :
            QMessageBox.critical( self, tr("Mauvaise Commande "),tr( "Aucune variable connue"))
            return
@@ -155,7 +155,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
   def  nNbDeDistributions(self):
        jdc=self.node.item.object.jdc
        etape=self.node.item.object.etape
-       self.listeVariables=jdc.get_distributions(etape)
+       self.listeVariables=jdc.getDistributions(etape)
        if self.listeVariables == [] :
            QMessageBox.critical( self, tr("Mauvaise Commande "),tr( "Aucune variable connue"))
            return

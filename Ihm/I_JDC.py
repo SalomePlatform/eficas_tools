@@ -75,12 +75,12 @@ class JDC(I_OBJECT.OBJECT):
         # On considere que seul assd indique un type quelconque pas CO
         elif self.assd in types_permis :
            if v.etape.sdnom != "sansnom" : l.append(k)
-        elif self.est_permis(v,types_permis):
+        elif self.estPermis(v,types_permis):
            if v.etape.sdnom != "sansnom" : l.append(k)
       l.sort()
       return l
 
-   def get_variables(self,etape):
+   def getVariables(self,etape):
       etapeStop=etape
       l=[]
       for etapeTraitee in self.etapes :
@@ -92,7 +92,7 @@ class JDC(I_OBJECT.OBJECT):
                 l.append(variable.nom)
       return l
 
-   def get_distributions(self,etape):
+   def getDistributions(self,etape):
       etapeStop=etape
       l=[]
       for etapeTraitee in self.etapes :
@@ -110,7 +110,7 @@ class JDC(I_OBJECT.OBJECT):
    #             if Correlation !=None : Correlation.state='arecalculer'
              #   Matrix.state='arecalculer'
      
-   #def recalcule_etat_correlation(self):
+   #def recalculeEtatCorrelation(self):
    #   for etapeTraitee in self.etapes :
    #       if etapeTraitee.nom == 'CORRELATION' :
              #Matrix=etapeTraitee.get_child('Matrix')
@@ -123,7 +123,7 @@ class JDC(I_OBJECT.OBJECT):
    #             etapeTraitee.state='arecalculer'
    #          if etapeTraitee.state=='arecalculer': etapeTraitee.isValid()
                 
-   def recalcule_etat_correlation(self):
+   def recalculeEtatCorrelation(self):
       for etapeTraitee in self.etapes :
           if etapeTraitee.nom == 'CORRELATION' :
              Correlation=etapeTraitee.get_child('CorrelationMatrix')
@@ -132,8 +132,8 @@ class JDC(I_OBJECT.OBJECT):
                   Correlation.isValid()
              etapeTraitee.isValid()
 
-   def recalcule_validite_apres_changement_global_jdc(self):
-        #print "je passe dans recalcule_validite_apres_changement_global_jdc"
+   def recalculeValiditeApresChangementGlobalJdc(self):
+        #print "je passe dans recalculeValiditeApresChangementGlobalJdc"
         try :
           liste=self.getJdcRoot().cata[0].liste_condition
         except :
@@ -174,7 +174,7 @@ class JDC(I_OBJECT.OBJECT):
       l.sort()
       return l
 
-   def cherche_list_avant(self,etape,valeur):
+   def chercheListAvant(self,etape,valeur):
        d=self.getContexte_avant(etape)
        for k,v in d.items():
           if issubclass(v.__class__,LASSD):
@@ -185,7 +185,7 @@ class JDC(I_OBJECT.OBJECT):
                 return v
        return None
 
-   def est_permis(self,v,types_permis):
+   def estPermis(self,v,types_permis):
       for type_ok in types_permis:
           if type_ok in ('R','I','C','TXM') and v in self.params : 
              return 1
@@ -215,7 +215,7 @@ class JDC(I_OBJECT.OBJECT):
       if name == "COMMENTAIRE" :
         from Extensions import commentaire
         # ajout d'un commentaire
-        self.set_current_step()
+        self.setCurrentStep()
         ind = 1
         for child in self.etapes :
           if isinstance(child,commentaire.COMMENTAIRE):
@@ -228,11 +228,11 @@ class JDC(I_OBJECT.OBJECT):
         self.editmode=0
         self.activeEtapes()
         CONNECTOR.Emit(self,"add",objet)
-        self.fin_modif()
+        self.finModif()
         return objet
       elif name == "PARAMETRE":
         # ajout d'un parametre
-        self.set_current_step()
+        self.setCurrentStep()
         nom_param = '_param_'+str(len(self.params)+1)
         objet = parametre.PARAMETRE(nom=nom_param)
         if pos == None : pos = 0
@@ -241,11 +241,11 @@ class JDC(I_OBJECT.OBJECT):
         self.editmode=0
         self.activeEtapes()
         CONNECTOR.Emit(self,"add",objet)
-        self.fin_modif()
+        self.finModif()
         return objet
       elif name == "PARAMETRE_EVAL":
         # ajout d'un parametre EVAL
-        self.set_current_step()
+        self.setCurrentStep()
         nom_param = '_param_'+str(len(self.params)+1)
         objet = parametre_eval.PARAMETRE_EVAL(nom=nom_param)
         if pos == None : pos = 0
@@ -254,7 +254,7 @@ class JDC(I_OBJECT.OBJECT):
         self.editmode=0
         self.activeEtapes()
         CONNECTOR.Emit(self,"add",objet)
-        self.fin_modif()
+        self.finModif()
         return objet
       elif not( isinstance(name, basestring)):
       #elif type(name)==types.InstanceType:
@@ -267,7 +267,7 @@ class JDC(I_OBJECT.OBJECT):
         from Extensions import commentaire
         if not( isinstance (objet,commentaire.COMMENTAIRE)):
            objet.reparent(self)
-        self.set_current_step()
+        self.setCurrentStep()
         if isinstance(objet,ETAPE):
           if objet.nom_niveau_definition == 'JDC':
             # l'objet depend directement du JDC
@@ -282,39 +282,39 @@ class JDC(I_OBJECT.OBJECT):
         # il faut verifier que les concepts utilises par objet existent bien
         # a ce niveau d'arborescence
         objet.verifExistenceSd()
-        objet.update_mc_global()
+        objet.updateMcGlobal()
         self.editmode=0
         self.activeEtapes()
         CONNECTOR.Emit(self,"add",objet)
-        self.fin_modif()
+        self.finModif()
         return objet
       else :
         # On veut ajouter une nouvelle commande
         try:
-          self.set_current_step()
+          self.setCurrentStep()
           cmd=self.get_cmd(name)
           # L'appel a make_objet n'a pas pour effet d'enregistrer l'etape
           # aupres du step courant car editmode vaut 1
-          # Par contre elle a le bon parent grace a set_current_step
+          # Par contre elle a le bon parent grace a setCurrentStep
           e=cmd.make_objet()
           if pos == None : pos = 0
           self.etapes.insert(pos,e)
-          self.reset_current_step()
+          self.resetCurrentStep()
           self.resetContext()
           self.editmode=0
           self.activeEtapes()
           CONNECTOR.Emit(self,"add",e)
-          self.fin_modif()
+          self.finModif()
           return e
         except AsException as e:
           traceback.print_exc()
-          self.reset_current_step()
+          self.resetCurrentStep()
           self.editmode=0
           raise AsException(tr("Impossible d'ajouter la commande")+name + '\n')
         except:
         #else :
           traceback.print_exc()
-          self.reset_current_step()
+          self.resetCurrentStep()
           self.editmode=0
           raise AsException(tr("Impossible d ajouter la commande")+name)
 
@@ -324,17 +324,17 @@ class JDC(I_OBJECT.OBJECT):
           if hasattr(etape,"close"):etape.close()
       CONNECTOR.Emit(self,"close")
 
-   def set_current_step(self):
-      CONTEXT.unset_current_step()
-      CONTEXT.set_current_step(self)
+   def setCurrentStep(self):
+      CONTEXT.unsetCurrentStep()
+      CONTEXT.setCurrentStep(self)
 
-   def reset_current_step(self):
-      CONTEXT.unset_current_step()
+   def resetCurrentStep(self):
+      CONTEXT.unsetCurrentStep()
 
    def listeMcPresents(self):
       return []
 
-   def get_sd_avant_etape(self,nom_sd,etape):
+   def getSdAvantEtape(self,nom_sd,etape):
       return self.getContexte_avant(etape).get(nom_sd,None)
 
    def getSdApresEtapeAvecDetruire(self,nom_sd,sd,etape,avec='non'):
@@ -390,7 +390,7 @@ class JDC(I_OBJECT.OBJECT):
               return sd
       return None
 
-   def get_sd_autour_etape(self,nom_sd,etape,avec='non'):
+   def getSdAutourEtape(self,nom_sd,etape,avec='non'):
       """
            Fonction: retourne la SD de nom nom_sd qui est eventuellement
            definie avant ou apres etape
@@ -398,7 +398,7 @@ class JDC(I_OBJECT.OBJECT):
            d'une etape
            Si avec vaut 'non' exclut etape de la recherche
       """
-      sd=self.get_sd_avant_etape(nom_sd,etape)
+      sd=self.getSdAvantEtape(nom_sd,etape)
       if sd:return sd
       return self.getSdApresEtape(nom_sd,etape,avec)
 
@@ -457,7 +457,7 @@ class JDC(I_OBJECT.OBJECT):
          self.etapes2=self.etapes[0:indexNoeudOuColler+1]+[etapeACopier,]+self.etapes[indexNoeudOuColler+1:indexNoeudACopier]+self.etapes[indexNoeudACopier+1:]
       self.etapes=self.etapes2
       if indexNoeudACopier < indexNoeudOuColler :
-        self.deleteConcept_entre_etapes(indexNoeudACopier,indexNoeudOuColler,sd)
+        self.deleteConceptEntreEtapes(indexNoeudACopier,indexNoeudOuColler,sd)
       self.resetContext()
       for e in self.etapes :
          e.state = 'modified'
@@ -501,7 +501,7 @@ class JDC(I_OBJECT.OBJECT):
      
       self.resetContext()
       CONNECTOR.Emit(self,"supp",etape)
-      self.fin_modif()
+      self.finModif()
       return 1
 
    def controlContextApres(self,etape):
@@ -515,14 +515,14 @@ class JDC(I_OBJECT.OBJECT):
       """
       #print "controlContextApres",self,etape
       #Regularise les etapes du jdc apres l'etape etape
-      self.control_jdc_context_apres(etape)
+      self.controlJdcContextApres(etape)
 
-   def control_jdc_context_apres(self,etape):
+   def controlJdcContextApres(self,etape):
       """
           Methode semblable a controlContextApres mais ne travaille
           que sur les etapes et sous etapes du jdc
       """
-      #print "control_jdc_context_apres",self,etape
+      #print "controlJdcContextApres",self,etape
       if etape is None:
          # on demarre de la premiere etape
          index_etape=0
@@ -547,19 +547,19 @@ class JDC(I_OBJECT.OBJECT):
       self.exec_compile()
       self.activeEtapes()
 
-   def register_parametre(self,param):
+   def registerParametre(self,param):
       """
           Cette methode sert a ajouter un parametre dans la liste des parametres
       """
       self.params.append(param)
 
-   def register_fonction(self,fonction):
+   def registerFonction(self,fonction):
       """
           Cette methode sert a ajouter une fonction dans la liste des fonctions
       """
       self.fonctions.append(fonction)
 
-   def delete_param(self,param):
+   def deleteParam(self,param):
       """
           Supprime le parametre param de la liste des parametres
           et du contexte gobal
@@ -567,7 +567,7 @@ class JDC(I_OBJECT.OBJECT):
       if param in self.params : self.params.remove(param)
       if param.nom in self.g_context : del self.g_context[param.nom]
 
-   def get_parametres_fonctions_avant_etape(self,etape):
+   def getParametresFonctionsAvantEtape(self,etape):
       """
           Retourne deux elements :
           - une liste contenant les noms des parametres (constantes ou EVAL) 
@@ -588,7 +588,7 @@ class JDC(I_OBJECT.OBJECT):
       for form in self.fonctions:
         nom = form.nom
         if not nom : continue
-        if nom in d: l_fonctions.append(form.get_formule())
+        if nom in d: l_fonctions.append(form.getFormule())
 
       # on ajoute les concepts produits par DEFI_VALEUR
       # XXX On pourrait peut etre faire plutot le test sur le type
@@ -600,7 +600,7 @@ class JDC(I_OBJECT.OBJECT):
       # on retourne les deux listes
       return l_constantes,l_fonctions
 
-   def get_nb_etapes_avant(self,niveau):
+   def getNbEtapesAvant(self,niveau):
       """ 
           Retourne le nombre d etapes avant le debut de niveau
       """
@@ -618,22 +618,22 @@ class JDC(I_OBJECT.OBJECT):
       #print "initModif",self
       self.state = 'modified'
 
-   def fin_modif(self):
-      #print "fin_modif",self
+   def finModif(self):
+      #print "finModif",self
       CONNECTOR.Emit(self,"valid")
       self.isValid()
       pass
 
-   def deep_updateConditionBloc(self):
+   def deepUpdateConditionBloc(self):
       # pour le moment, on ne fait rien
-      self.getJdcRoot().recalcule_validite_apres_changement_global_jdc()
+      self.getJdcRoot().recalculeValiditeApresChangementGlobalJdc()
       #raise EficasException(tr("Pas implemente"))
 
    def updateConditionBloc(self):
       # pour le moment, on ne fait rien
       raise EficasException(tr("Pas implemente"))
 
-   def get_liste_mc_inconnus(self):
+   def getListeMcInconnus(self):
      """
      Retourne une liste contenant les mots-cles inconnus a la relecture du JDC
      """
@@ -642,11 +642,11 @@ class JDC(I_OBJECT.OBJECT):
      for etape in self.etapes :
          if etape.isActif() :
             if not etape.isValid() :
-               l = etape.get_liste_mc_inconnus()
+               l = etape.getListeMcInconnus()
                if l : l_mc.extend(l)
      return l_mc    
 
-   def getGenealogie_precise(self):
+   def getGenealogiePrecise(self):
       return []
 
    def getGenealogie(self):
@@ -662,13 +662,13 @@ class JDC(I_OBJECT.OBJECT):
       """
       return self.niveau.definition.getListeCmd()
 
-   def get_groups(self):
+   def getGroups(self):
       """
           Retourne la liste des groupes
       """
       return self.niveau.definition.liste_groupes,self.niveau.definition.dict_groupes
 
-   def set_etape_context(self,etape):
+   def setEtapeContext(self,etape):
       """
           Positionne l'etape qui sera utilisee dans NommerSdProd pour
           decider si le concept passe pourra etre  nomme
@@ -692,19 +692,19 @@ class JDC(I_OBJECT.OBJECT):
    #   for etape in self.etapes:
    #       etape.resetContext()
 
-   def del_sdprod(self,sd):
+   def delSdprod(self,sd):
       """
           Supprime la SD sd de la liste des sd et des dictionnaires de contexte
       """
-      #print "del_sdprod",self,sd
-      #print "del_sdprod",self.sds
-      #print "del_sdprod",self.g_context
-      #print "del_sdprod",self.sds_dict
+      #print "delSdprod",self,sd
+      #print "delSdprod",self.sds
+      #print "delSdprod",self.g_context
+      #print "delSdprod",self.sds_dict
       #if sd in self.sds : self.sds.remove(sd)
       if sd.nom in self.g_context : del self.g_context[sd.nom]
       if sd.nom in self.sds_dict : del self.sds_dict[sd.nom]
 
-   def del_param(self,param):
+   def delParam(self,param):
       """
           Supprime le parametre param de la liste des paramatres
           et du contexte gobal
@@ -712,7 +712,7 @@ class JDC(I_OBJECT.OBJECT):
       if param in self.params : self.params.remove(param)
       if param.nom in self.g_context : del self.g_context[param.nom]
 
-   def del_fonction(self,fonction):
+   def delFonction(self,fonction):
       """
           Supprime la fonction fonction de la liste des fonctions
           et du contexte gobal
@@ -720,7 +720,7 @@ class JDC(I_OBJECT.OBJECT):
       if fonction in self.fonctions : self.fonctions.remove(fonction)
       if fonction.nom in self.g_context: del self.g_context[fonction.nom]
 
-   def append_sdprod(self,sd):
+   def appendSdProd(self,sd):
       """
           Ajoute la SD sd a la liste des sd en verifiant au prealable qu'une SD de
           meme nom n'existe pas deja
@@ -734,7 +734,7 @@ class JDC(I_OBJECT.OBJECT):
       self.g_context[sd.nom] = sd
       #if sd not in self.sds : self.sds.append(sd)
 
-   def append_param(self,param):
+   def appendParam(self,param):
       """
           Ajoute le parametre param a la liste des params
           et au contexte global
@@ -743,7 +743,7 @@ class JDC(I_OBJECT.OBJECT):
       if param not in self.params : self.params.append(param)
       self.g_context[param.nom]=param
 
-   def append_fonction(self,fonction):
+   def appendFonction(self,fonction):
       """
           Ajoute la fonction fonction a la liste des fonctions
           et au contexte global
@@ -765,7 +765,7 @@ class JDC(I_OBJECT.OBJECT):
       for etape in self.etapes :
         etape.deleteConcept(sd)
         #PN PN PN pour les matrices ????
-        #self.get_variables_avant(etape)
+        #self.getVariables_avant(etape)
 
    def replaceConceptAfterEtape(self,etape,old_sd,sd):
       """
@@ -793,20 +793,20 @@ class JDC(I_OBJECT.OBJECT):
       for child in self.etapes[index:]:
         child.updateConcept(sd)
 
-   def dump_state(self):
+   def dumpState(self):
       print(("JDC.state: ",self.state))
       for etape in self.etapes :
          print((etape.nom+".state: ",etape.state))
       
-   def change_unit(self,unit,etape,old_unit):
-      #print "change_unit",unit,etape,old_unit
+   def changeUnit(self,unit,etape,old_unit):
+      #print "changeUnit",unit,etape,old_unit
       #print id(self.recorded_units),self.recorded_units
       #if self.recorded_units.has_key(old_unit):del self.recorded_units[old_unit]
-      self.record_unit(unit,etape)
+      self.recordUnit(unit,etape)
 
-   def record_unit(self,unit,etape):
+   def recordUnit(self,unit,etape):
       """Enregistre les unites logiques incluses et les infos relatives a l'etape"""
-      #print "record_unit",unit,etape
+      #print "recordUnit",unit,etape
       if unit is None:
          # Cas de POURSUITE
          self.recorded_units[None]=(etape.fichier_ini ,etape.fichier_text,etape.recorded_units)
@@ -816,10 +816,10 @@ class JDC(I_OBJECT.OBJECT):
       #print self.recorded_units.get(None,(None,"",{}))[2]
       #print self.recorded_units.get(None,(None,"",{}))[2].get(None,(None,"",{}))
 
-   def changefichier(self,fichier):
-       self.fin_modif()
+   def changeFichier(self,fichier):
+       self.finModif()
 
-   def eval_in_context(self,valeur,etape):
+   def evalInContext(self,valeur,etape):
       """ Tente d'evaluer valeur dans le contexte courant de etape
           Retourne le parametre valeur inchange si l'evaluation est impossible
       """
@@ -893,7 +893,7 @@ class JDC(I_OBJECT.OBJECT):
       # Il faut utiliser getContexte_avant avec indication de l'etape
       # traitee.
       # Cette etape est indiquee par l'attribut _etape_context qui a ete
-      # positionne prealablement par un appel a set_etape_context
+      # positionne prealablement par un appel a setEtapeContext
 
       if CONTEXT.debug : print(("JDC.NommerSdprod ",sd,sdnom))
 
@@ -914,7 +914,7 @@ class JDC(I_OBJECT.OBJECT):
       if restrict == 'non':
          self.g_context[sdnom]=sd
 
-   def deleteConcept_entre_etapes(self,index1,index2,sd):
+   def deleteConceptEntreEtapes(self,index1,index2,sd):
       if index2 <= index1 :return
       for child in self.etapes[index1:index2]:
         child.deleteConcept(sd)

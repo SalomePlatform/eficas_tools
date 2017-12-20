@@ -84,7 +84,7 @@ implicitContinuationChars = (('(', ')'), ('[', ']'), ('{', '}'))
 linecontinueRE = re.compile(r"\\\s*(#.*)?$")
 emptyHangingBraces = [0,0,0,0,0]
 
-class ParserException(Exception): pass
+class parserException(Exception): pass
 class FatalError(Exception): pass
 
 #commentaire double precede d'un nombre quelconque de blancs (pas multiligne)
@@ -400,7 +400,7 @@ class PARSEUR_PYTHON(object):
             hangingComments ^= line.count(u"'''") % 2
             #print (hangingComments,hangingBraces)
             if hangingBraces[0] < 0 or hangingBraces[1] < 0 or hangingBraces[2] < 0: 
-                raise ParserException()
+                raise parserException()
 
             if ligne.strip() == '':
                 # il s'agit d'un saut de ligne
@@ -471,7 +471,7 @@ class PARSEUR_PYTHON(object):
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
                     #la commande est terminee 
-                    self.analyse_reel(commande_courante.texte)
+                    self.analyseReel(commande_courante.texte)
                     commande_courante = None
 
                 #on passe a la ligne suivante
@@ -539,7 +539,7 @@ class PARSEUR_PYTHON(object):
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
                     #la commande est terminee 
-                    self.analyse_reel(commande_courante.texte)
+                    self.analyseReel(commande_courante.texte)
                     commande_courante = None
                 #on passe a la ligne suivante
                 continue
@@ -635,7 +635,7 @@ class PARSEUR_PYTHON(object):
         # c est un ; 
         return dict_reel_concept
 
-    def analyse_reel(self,commande) :
+    def analyseReel(self,commande) :
         nomConcept=None
         # On verifie qu on a bien un OPER
         # et pas une MACRO
@@ -672,7 +672,7 @@ class PARSEUR_PYTHON(object):
             for obj in self.l_objets:
                 txt = txt+str(obj)
         #else :
-        except  ParserException:
+        except  parserException:
             #Impossible de convertir le texte, on le retourne tel que
             txt=self.texte
         return txt

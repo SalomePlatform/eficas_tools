@@ -128,7 +128,7 @@ class ENTITE(object):
                 self.cr.fatal(
                     _(u"Argument(s) non permis : %r pour la règle : %s"), l, txt)
 
-    def check_definition(self, parent):
+    def checkDefinition(self, parent):
         """Verifie la definition d'un objet composite (commande, fact, bloc)."""
         args = self.entites.copy()
         mcs = set()
@@ -139,7 +139,7 @@ class ENTITE(object):
                 # if val.max != 1 and val.type == 'TXM':
                     # print "#CMD", parent, nom
             elif val.label == 'FACT':
-                val.check_definition(parent)
+                val.checkDefinition(parent)
                 # CALC_SPEC !
                 # assert self.label != 'FACT', \
                    #'Commande %s : Mot-clef facteur present sous un mot-clef facteur : interdit !' \
@@ -151,7 +151,7 @@ class ENTITE(object):
         # niveau
         for nom, val in list(args.items()):
             if val.label == 'BLOC':
-                mcbloc = val.check_definition(parent)
+                mcbloc = val.checkDefinition(parent)
                 # XXX
                 # print "#BLOC", parent, re.sub('\s+', ' ', val.condition)
                 assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \

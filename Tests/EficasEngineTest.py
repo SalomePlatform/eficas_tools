@@ -136,7 +136,7 @@ class EficasEngineTestCase(unittest.TestCase):
         if ( obj==None ):
             return None
     
-        if ( hasattr( obj, 'get_sdname' ) and obj.get_sdname() == name ):
+        if ( hasattr( obj, 'getSdname' ) and obj.getSdname() == name ):
             return obj
 
         list=[]
@@ -178,7 +178,7 @@ class EficasEngineTestCase(unittest.TestCase):
         if ( obj != None and hasattr( obj, 'parent' ) ):
             p=obj.parent
             if ( p != None ):
-                p.suppentite(obj)
+                p.suppEntite(obj)
 
     def compare_files(self, orig, test):
         origlines = open(orig, 'U').readlines()

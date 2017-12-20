@@ -183,7 +183,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         context_ini = self.jdc.getContexte_avant(self)
         try:
             # on essaie de creer un objet JDC...
-            CONTEXT.unset_current_step()
+            CONTEXT.unsetCurrentStep()
             if re.search('Fin Commentaire',self.valeur) :
                self.valeur=self.valeur.replace('Fin Commentaire','')
             J=self.jdc.__class__(procedure=self.valeur,

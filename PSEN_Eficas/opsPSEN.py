@@ -38,12 +38,12 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
        if hasattr(self,'old_context_fichier_init' ):
          toClean=True
          for concept in self.old_context_fichier_init.values():
-             #self.jdc.delete_concept(concept)
+             #self.jdc.deleteConcept(concept)
              listeADeTruire.append(concept)
          self.jdc_aux=None
          self.contexte_fichier_init={}
-         #self.reevalue_sd_jdc()
-         self.jdc.reset_context()
+         #self.reevalueSdJdc()
+         self.jdc.resetContext()
 
    self.fichier_ini=sav_file
    self.contexte_fichier_init = {}
@@ -59,7 +59,7 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
    else :
    #except :
      if self.jdc.appli is not None:
-        self.jdc.appli.affiche_alerte("Error", 'An error happened in ExtractGeneratorandLoadList execution ')
+        self.jdc.appli.afficheAlerte("Error", 'An error happened in ExtractGeneratorandLoadList execution ')
         self.g_context = {}
         self.etapes = []
         self.jdc_aux = None
@@ -89,9 +89,9 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
 
    import Extensions.jdc_include
    self.JdC_aux = Extensions.jdc_include.JDC_CATA_INCLUDE(code='PSEN', execmodul=None)
-   self.make_contexte_include(None, self.fichier_text)
+   self.makeContexteInclude(None, self.fichier_text)
    self.old_context_fichier_init = self.contexte_fichier_init
-   self.parent.record_unit(unite, self)
+   self.parent.recordUnit(unite, self)
 
    self.jdc.MachineDico=MachineDico
    self.jdc.LoadDico=LoadDico
@@ -101,8 +101,8 @@ def INCLUDE(self,PSSE_path,sav_file,**args):
 
    if toClean:
     for concept in listeADeTruire :
-      if concept.nom not in listeNouveau: self.jdc.delete_concept(concept)
-    self.reevalue_sd_jdc()
+      if concept.nom not in listeNouveau: self.jdc.deleteConcept(concept)
+    self.reevalueSdJdc()
 
 def INCLUDE_context(self,d):
    """ 

@@ -190,7 +190,7 @@ class MonWidgetFormule(QWidget,Ui_WidgetFormule,FacultatifOuOptionnel):
          self.editor.afficheInfos(erreur,Qt.red)
          return
 
-      test=self.node.item.object.update_formule_python(formule=(nomFormule,"REEL",arguments,expression))
+      test=self.node.item.object.updateFormulePython(formule=(nomFormule,"REEL",arguments,expression))
       test,erreur = self.node.item.saveFormule(nomFormule,"REEL",arguments,expression)
       if test :
          self.node.onValid()

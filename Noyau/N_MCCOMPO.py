@@ -142,9 +142,9 @@ class MCCOMPO(N_OBJECT.OBJECT):
            Seulement pour IHM graphique
         """
         if self.jdc and self.jdc.cata_ordonne_dico != None:
-            liste_noms_mc_ordonnee = self.getListeMcOrdonnee_brute(
+            liste_noms_mc_ordonnee = self.getListeMcOrdonneeBrute(
                 self.getGenealogie(), self.jdc.cata_ordonne_dico)
-            return self.ordonne_liste_mc(mc_liste, liste_noms_mc_ordonnee)
+            return self.ordonneListeMc(mc_liste, liste_noms_mc_ordonnee)
         else:
             return mc_liste
 

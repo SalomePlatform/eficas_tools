@@ -24,7 +24,7 @@ from __future__ import absolute_import
 from . import I_REGLE
 
 class PRESENT_ABSENT(I_REGLE.REGLE):
-  def purge_liste(self,liste_a_purger,listeMcPresents):
+  def purgeListe(self,liste_a_purger,listeMcPresents):
      regle_active=0
      if self.mcs[0] in listeMcPresents:regle_active=1
      if not regle_active : return liste_a_purger

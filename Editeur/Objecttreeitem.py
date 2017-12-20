@@ -225,7 +225,7 @@ class ObjectTreeItem(TreeItem,Delegate):
     def getVal(self):
         """ Retourne le nom de la valeur de l'objet pointe par self dans le cas
             ou celle-ci est un objet (ASSD) """
-        return self.object.getval()
+        return self.object.getVal()
     
     def get_definition(self):
         """ 
@@ -241,13 +241,13 @@ class ObjectTreeItem(TreeItem,Delegate):
             presents ne doivent plus etre proposes, regles ...)"""
         return self.object.getListeMcOrdonnee(liste,dico)
 
-    def getListeMcOrdonnee_brute(self,liste,dico):
+    def getListeMcOrdonneeBrute(self,liste,dico):
         """
         retourne la liste ordonnee (suivant le catalogue) BRUTE des mots-cles
         d'une entite composee dont le chemin complet est donne sous forme
         d'une liste du type :ETAPE + MCFACT ou MCBLOC + ...
         """
-        return self.object.getListeMcOrdonnee_brute(liste,dico)
+        return self.object.getListeMcOrdonneeBrute(liste,dico)
    
     def getGenealogie(self):
         """
@@ -256,21 +256,21 @@ class ObjectTreeItem(TreeItem,Delegate):
         """
         return self.object.getGenealogie()
 
-    def getIndex_child(self,nom_fils):
+    def getIndexChild(self,nom_fils):
         """
         Retourne l'index dans la liste des fils de self du nouveau fils de nom nom_fils
         Necessaire pour savoir a quelle position dans la liste des fils il faut ajouter
         le nouveau mot-cle
         """
-        return self.object.getIndex_child(nom_fils)
+        return self.object.getIndexChild(nom_fils)
 
-    def getIndex_child_old(self,nom_fils):
+    def getIndexChild_old(self,nom_fils):
         """
         Retourne l'index dans la liste des fils de self du nouveau fils de nom nom_fils
         Necessaire pour savoir a quelle position dans la liste des fils il faut ajouter
         le nouveau mot-cle
         """
-        liste_noms_mc_ordonnee = self.getListeMcOrdonnee_brute(self.getGenealogie(),self.getJdc().cata_ordonne_dico)
+        liste_noms_mc_ordonnee = self.getListeMcOrdonneeBrute(self.getGenealogie(),self.getJdc().cata_ordonne_dico)
         liste_noms_mc_presents = self.object.listeMcPresents()
         l=[]
         for nom in liste_noms_mc_ordonnee:
@@ -294,9 +294,9 @@ class ObjectTreeItem(TreeItem,Delegate):
             # pos est un item. Il faut inserer name apres pos
             index = self.getIndex(pos) +1
         elif type(name) == types.InstanceType:
-            index = self.getIndex_child(name.nom)
+            index = self.getIndexChild(name.nom)
         else:
-            index = self.getIndex_child(name)
+            index = self.getIndexChild(name)
         return self.addobject(name,index)
 
     def appendBrother(self,name,pos='after'):

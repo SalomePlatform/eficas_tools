@@ -35,11 +35,11 @@ def INCLUDE(self,PSSE_path,**args):
        if self.fichier_ini == CaseFolder : return
        if hasattr(self,'old_context_fichier_init' ):
          for concept in self.old_context_fichier_init.values():
-             self.jdc.delete_concept(concept)
+             self.jdc.deleteConcept(concept)
          self.jdc_aux=None
          self.contexte_fichier_init={}
-         self.reevalue_sd_jdc()
-         self.jdc.reset_context()
+         self.reevalueSdJdc()
+         self.jdc.resetContext()
 
    self.fichier_ini=CaseFolder
    self.contexte_fichier_init = {}
@@ -74,7 +74,7 @@ def PROCESS(self,XLS_file,**args):
        self.OngletsValeurs=[]
     else :
        # On teste si on a modifie la liste des onglets
-       OngletsValeurs= self.get_child('Onglets').getval()
+       OngletsValeurs= self.get_child('Onglets').getVal()
        
 
        if not (hasattr(self,'OngletsValeurs')) : self.OngletsValeurs=OngletsValeurs
@@ -87,8 +87,8 @@ def PROCESS(self,XLS_file,**args):
           self.OngletsValeurs=[]
           return
 
-       OldBusValeurs= self.get_child('BusList').getval()
-       OldContValeurs= self.get_child('ContList').getval()
+       OldBusValeurs= self.get_child('BusList').getVal()
+       OldContValeurs= self.get_child('ContList').getVal()
        if OldBusValeurs ==  None : OldBusValeurs=[]
        if OldContValeurs ==  None : OldContValeurs=[]
 

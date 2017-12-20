@@ -43,10 +43,10 @@ class FORM_ETAPE(MACRO_ETAPE):
         self.l_types_autorises = list(self.definition.entites.keys())
         # en plus de la construction traditionnelle des fils de self
         # il faut pour les FORMULE decortiquer l'expression ...
-        self.type_retourne,self.arguments,self.corps = self.analyse_formule()
+        self.type_retourne,self.arguments,self.corps = self.analyseFormule()
 
 
-    def analyse_formule(self):
+    def analyseFormule(self):
         """
         Cette methode decortique l'expression de la FORMULE.
         Elle retourne 3 valeurs:
@@ -60,12 +60,12 @@ class FORM_ETAPE(MACRO_ETAPE):
         type_retourne="REEL"
         if len(self.mc_liste) > 0:
            child = self.mc_liste[0] # child est un MCSIMP 
-           corps = child.getval()
+           corps = child.getVal()
         else:
            corps = None
         if len(self.mc_liste) > 1:
            child = self.mc_liste[1]
-           l_args= child.getval()
+           l_args= child.getVal()
         else :
            l_args=None
         return type_retourne,l_args,corps
@@ -80,12 +80,12 @@ class FORM_ETAPE(MACRO_ETAPE):
         else:
             return ''
 
-    def get_formule(self):
+    def getFormule(self):
         """
         Retourne un tuple decrivant la formule :
         (nom,type_retourne,arguments,corps)
         """
-        t,a,c = self.analyse_formule()
+        t,a,c = self.analyseFormule()
         n = self.getNom()
         return (n,t,a,c)
 
@@ -117,7 +117,7 @@ class FORM_ETAPE(MACRO_ETAPE):
             if not re.match(identifier,str(a)) : return 0, str(a)+" n est pas un identifiant"
         return test,erreur
 
-    def verif_corps(self,corps=None,arguments=None):
+    def verifCorps(self,corps=None,arguments=None):
         """
         Cette methode a pour but de verifier si le corps de la FORMULE
         est syntaxiquement correct.
@@ -132,7 +132,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         formule=(self.getNom(),self.type_retourne,arguments,corps)
         # on recupere la liste des constantes et des autres fonctions predefinies
         # et qui peuvent etre utilisees dans le corps de la formule courante
-        l_ctes,l_form = self.jdc.get_parametres_fonctions_avant_etape(self)
+        l_ctes,l_form = self.jdc.getParametresFonctionsAvantEtape(self)
         # on cree un objet verificateur
         try:
             verificateur = self.interpreteur(formule=formule,
@@ -159,12 +159,12 @@ class FORM_ETAPE(MACRO_ETAPE):
             return 0,tr("Un nom de FORMULE ne peut depasser 8 caracteres")
         if nom[0] > "0" and nom[0] < "9" :
             return 0,tr("Un nom de FORMULE ne peut pas commencer par un chiffre")
-        sd = self.parent.get_sd_autour_etape(nom,self)
+        sd = self.parent.getSdAutourEtape(nom,self)
         if sd :
             return 0,tr("Un concept de nom %s existe deja !" %nom)
         return 1,''
 
-    def verif_type(self,type=None):
+    def verifType(self,type=None):
         """
         Verifie si le type passe en argument (si aucun prend le type courant)
         est un type valide pour une FORMULE.
@@ -192,13 +192,13 @@ class FORM_ETAPE(MACRO_ETAPE):
         if not formule :
             formule = (None,None,None,None)
         test_nom,erreur_nom = self.verifNom(formule[0])
-        test_type,erreur_type = self.verif_type(formule[1])
+        test_type,erreur_type = self.verifType(formule[1])
         if formule[2]:
             args = '('+formule[2]+')'
         else:
             args = None
         test_arguments,erreur_arguments = self.verifArguments(args)
-        test_corps,erreur_corps = self.verif_corps(corps = formule[3], arguments = args)
+        test_corps,erreur_corps = self.verifCorps(corps = formule[3], arguments = args)
         # test global = produit des tests partiels
         test = test_nom*test_type*test_arguments*test_corps
         # message d'erreurs global = concatenation des messages partiels
@@ -265,7 +265,7 @@ class FORM_ETAPE(MACRO_ETAPE):
     # parametres
     # corps de la fonction
     # il faut aussi que les arguments soient sous forme de tuple
-    def update_formule_python(self,formule):
+    def updateFormulePython(self,formule):
         self.build_mc()
         self.mc_liste=[]
         if len(formule) < 4 :
@@ -308,7 +308,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         nom = self.getNom()
         if nom == '' : return
         try:
-            self.jdc.append_fonction(self.sd)
+            self.jdc.appendFonction(self.sd)
         except:
             pass
 
@@ -320,7 +320,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         self.actif = 0
         self.initModif()
         if not self.sd : return
-        self.jdc.del_fonction(self.sd)
+        self.jdc.delFonction(self.sd)
 
     def updateConcept(self,sd):
         return

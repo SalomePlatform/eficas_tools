@@ -244,7 +244,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         #sortby = 'cumulative'
         #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
         #ps.print_stats()
-        #print (s.getvalue())
+        #print (s.getValue())
 
         if jdc_item and self.appliEficas.ssIhm==False :
             self.tree = browser.JDCTree( jdc_item,  self )
@@ -367,7 +367,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         Initialise un nouveau JDC vierge
         """
         self.modified=1
-        CONTEXT.unset_current_step()
+        CONTEXT.unsetCurrentStep()
 
         texte=""
         if self.code == "CARMELCND" : texte=self._newJDCCND()
@@ -403,7 +403,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         """
         import Extensions.jdc_include
         JdC_aux=Extensions.jdc_include.JdC_include
-        CONTEXT.unset_current_step()
+        CONTEXT.unsetCurrentStep()
 
         jaux=self.readercata.cata[0].JdC( procedure="",
                                appli=self,
@@ -475,7 +475,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                     tr("EFICAS ne sait pas ouvrir le type de fichier %s" ,self.appliEficas.format_fichier_in))
             return None
 
-        CONTEXT.unset_current_step()
+        CONTEXT.unsetCurrentStep()
         jdc=self.readercata.cata[0].JdC(procedure=text,
                                     appli=self,
                                     cata=self.readercata.cata,
@@ -1439,8 +1439,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     # ajoute une etape  de JdC a partir d un texte
         monItem=itemApres
         etape=monItem.item.object
-        CONTEXT.set_current_step(etape)
-        etape.build_includeInclude(texte)
+        CONTEXT.setCurrentStep(etape)
+        etape.buildIncludeInclude(texte)
         self.tree.racine.buildChildren()
 
     #-----------------------------------#
@@ -1449,9 +1449,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
     # ajoute une etape  de JdC a partir d un texte
         monItem=itemApres
         etape=monItem.item.object
-        CONTEXT.set_current_step(etape)
+        CONTEXT.setCurrentStep(etape)
         try :
-          ok=etape.build_includeEtape(texte)
+          ok=etape.buildIncludeEtape(texte)
         except :
           ok=0
         if not ok :

@@ -21,7 +21,7 @@
 import logging
 from Traducteur import removemocle
 from Traducteur import inseremocle
-from Traducteur.parseur import lastparen
+from Traducteur.parseur import lastParen
 from Traducteur.load import jdcSet
 debug=0
 
@@ -214,7 +214,7 @@ def moveMCFToCommand(jdc,command,factsource,commandcible,factcible):
         jdcSet.add(commandcible)
 
 #-----------------------------------------------------
-def FusionMotCleToFact(jdc,command,liste_mc,factcible,defaut=0):
+def fusionMotCleToFact(jdc,command,liste_mc,factcible,defaut=0):
 #-----------------------------------------------------
     if command  not in jdcSet : return
     boolChange=0
@@ -243,7 +243,7 @@ def FusionMotCleToFact(jdc,command,liste_mc,factcible,defaut=0):
            jdc.reset(jdc.getSource())
 
 #-----------------------------------------------------
-def FusionMotCleInFact(jdc,command,fact,liste_mc,new_name,defaut=0):
+def fusionMotCleInFact(jdc,command,fact,liste_mc,new_name,defaut=0):
 #-----------------------------------------------------
     if command  not in jdcSet : return
     boolChange=0
@@ -273,7 +273,7 @@ def FusionMotCleInFact(jdc,command,fact,liste_mc,new_name,defaut=0):
            jdc.reset(jdc.getSource())
 
 #-----------------------------------------------------
-def FusionMCFToMCF(jdc,command,liste_mcf,factcible,defaut=0):
+def fusionMCFToMCF(jdc,command,liste_mcf,factcible,defaut=0):
 #-----------------------------------------------------
     if command  not in jdcSet : return
     boolChange=0
@@ -319,7 +319,7 @@ def FusionMCFToMCF(jdc,command,liste_mcf,factcible,defaut=0):
 
 
 #--------------------------------------------------------------------
-def EclaMotCleToFact(jdc,command,motcle,mot1,mot2,defaut=0):
+def eclaMotCleToFact(jdc,command,motcle,mot1,mot2,defaut=0):
 #--------------------------------------------------------------------------
 #  exemple STA10 pesanteur devient MCF avec eclatement des valeurs dans les MC
 # On suppose que le MC est sur une seule ligne
@@ -338,7 +338,7 @@ def EclaMotCleToFact(jdc,command,motcle,mot1,mot2,defaut=0):
            motcle1=mot1+"="+Ligne[0]
            motcle2=mot2+"=("+Ligne[1]+','+Ligne[2]+','+Ligne[3]+')'
            texte=motcle+'=_F('+motcle1+','+motcle2+')'
-           num=lastparen(TexteMC)
+           num=lastParen(TexteMC)
            Nouveau=MaLigneGlob.replace(TexteMC[0:num],texte)
            jdc.getLines()[indexLigneGlob]=Nouveau
            logging.info("Transformation de %s dans %s ligne %s",motcle,command,c.lineno)

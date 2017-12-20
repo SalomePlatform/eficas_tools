@@ -181,7 +181,7 @@ Causes possibles :
            Cette methode execute le jeu de commandes compile dans le contexte
            self.g_context de l'objet JDC
         """
-        CONTEXT.set_current_step(self)
+        CONTEXT.setCurrentStep(self)
         # Le module nommage utilise le module linecache pour acceder
         # au source des commandes du jeu de commandes.
         # Dans le cas d'un fichier, on accède au contenu de ce fichier
@@ -220,7 +220,7 @@ Causes possibles :
             self.const_context = self.g_context
             exec(self.proc_compile, self.g_context)
 
-            CONTEXT.unset_current_step()
+            CONTEXT.unsetCurrentStep()
             if self.appli != None:
                 self.appli.afficheInfos('')
 
@@ -234,7 +234,7 @@ Causes possibles :
             # de commandes avant la fin
             # Fonctionnement normal, ne doit pas etre considere comme une
             # erreur
-            CONTEXT.unset_current_step()
+            CONTEXT.unsetCurrentStep()
             self.affiche_fin_exec()
             self.traiter_fin_exec('commande')
 
@@ -248,7 +248,7 @@ Causes possibles :
             if txt.find('MemoryError') >= 0:
                 txt = MemoryErrorMsg
             self.cr.exception(txt)
-            CONTEXT.unset_current_step()
+            CONTEXT.unsetCurrentStep()
 
         except NameError as e:
             etype, value, tb = sys.exc_info()
@@ -258,11 +258,11 @@ Causes possibles :
             if CONTEXT.debug:
                 traceback.print_exc()
             self.cr.exception(msg)
-            CONTEXT.unset_current_step()
+            CONTEXT.unsetCurrentStep()
 
        # except self.UserError as exc_val:
        #     self.traiter_user_exception(exc_val)
-       #     CONTEXT.unset_current_step()
+       #     CONTEXT.unsetCurrentStep()
        #     self.affiche_fin_exec()
        #     self.traiter_fin_exec('commande')
 
@@ -280,7 +280,7 @@ Causes possibles :
             self.cr.exception(
                 "erreur non prevue et non traitee prevenir la maintenance " + '\n' + ''.join(l))
             del exc_typ, exc_val, exc_fr
-            CONTEXT.unset_current_step()
+            CONTEXT.unsetCurrentStep()
 
     def affiche_fin_exec(self):
         """
@@ -477,7 +477,7 @@ Causes possibles :
             Cette methode a pour fonction d'ouvrir un interpreteur
             pour que l'utilisateur entre des commandes interactivement
         """
-        CONTEXT.set_current_step(self)
+        CONTEXT.setCurrentStep(self)
         try:
             # Le module nommage utilise le module linecache pour acceder
             # au source des commandes du jeu de commandes.
@@ -495,7 +495,7 @@ Causes possibles :
             console.interact(banner)
         finally:
             console = None
-            CONTEXT.unset_current_step()
+            CONTEXT.unsetCurrentStep()
 
     def getContexte_avant(self, etape):
         """

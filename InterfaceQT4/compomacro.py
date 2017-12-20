@@ -98,7 +98,7 @@ class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):
     
         if not hasattr(self.item.object,"jdc_aux") or self.item.object.jdc_aux is None:
                #L'include n'est pas initialise
-               self.item.object.build_include(None,"")
+               self.item.object.buildInclude(None,"")
     
         # On cree un nouvel onglet dans le bureau
         self.editor.vm.displayJDC( self.item.object.jdc_aux , self.item.object.jdc_aux.nom )
@@ -130,7 +130,7 @@ class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):
         if not hasattr(self.item.object,"jdc_aux") or self.item.object.jdc_aux is None:
             text="""DEBUT()
                     FIN()"""
-            self.object.build_poursuite(None,text)
+            self.object.buildPoursuite(None,text)
     
         # On cree un nouvel onglet dans le bureau
         self.editor.vm.displayJDC( self.item.object.jdc_aux , self.item.object.jdc_aux.nom)

@@ -69,11 +69,11 @@ def entryPoint():
         # Le nom du plugin
           'name' : 'python',
         # La factory pour creer une instance du plugin
-          'factory' : PythonParser,
+          'factory' : Pythonparser,
           }
 
 
-class PythonParser(object):
+class Pythonparser(object):
    """
        Ce convertisseur lit un fichier au format python avec la 
        methode readfile : convertisseur.readfile(nom_fichier)
@@ -124,7 +124,7 @@ class PythonParser(object):
             #sortby = 'cumulative'
             #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
             #ps.print_stats()
-            #print (s.getvalue())
+            #print (s.getValue())
 
             return l
          except EficasException:

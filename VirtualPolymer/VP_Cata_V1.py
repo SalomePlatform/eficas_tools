@@ -30,11 +30,11 @@ class Tuple:
 #class ObjetUtilisateur(ASSD): pass
 
 class classeVisuEquation :
-   def __init__(self,dicoListeAffiche, listEquation, listModele,listPostTraitement):
+   def __init__(self,dicoListeAffiche, listEquation, listModele,listPosttraitement):
       self.dicoListeAffiche=dicoListeAffiche
       self.listEquation=listEquation
       self.listModele=listModele
-      self.listPostTraitement=listPostTraitement
+      self.listPosttraitement=listPosttraitement
    
 
 def maFunc():
@@ -64,13 +64,13 @@ def recupereDicoGenerique(monMC):
     if valeurDB == None : valeurDB=editor.getValeur('Modele','Modele_DB',())
     correspond=pckdb.DBRENAME
     if valeurDB != None :
-       listEquation, listModele,listPostTraitement=pckdb.read_pckdb(correspond[valeurDB])
+       listEquation, listModele,listPosttraitement=pckdb.read_pckdb(correspond[valeurDB])
     monMC.dsMaFunct = False
-    return listEquation, listModele,listPostTraitement
+    return listEquation, listModele,listPosttraitement
 
 def recupereDicoEquation(monMC):
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
-    listEquation, listModele,listePostTraitement=recupereDicoGenerique(monMC)
+    listEquation, listModele,listePosttraitement=recupereDicoGenerique(monMC)
     editor=monMC.jdc.editor
 
     valeurEquationListe=editor.getValeur('Equation','Equation_Liste',('b_type_show',))
@@ -97,7 +97,7 @@ def recupereDicoEquation(monMC):
     if change :
        editor.reCalculeValiditeMCApresChgtInto('Equation', 'listeEquation', ('b_type_show',)) 
        if editor.fenetreCentraleAffichee : editor.fenetreCentraleAffichee.node.affichePanneau()
-    editor.maClasseVisuEquation = classeVisuEquation(dicoListeAffiche,listEquation, listModele,listPostTraitement)
+    editor.maClasseVisuEquation = classeVisuEquation(dicoListeAffiche,listEquation, listModele,listPosttraitement)
     monMC.dsMaFunct = False
 
 def afficheValeurEquation(monMC):
@@ -164,9 +164,9 @@ def recupereDicoModele(monMC):
     if monMC.valeur == None: return
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
     print ('je passe dans recupereDicoModele')
-    listEquation, listModele,listPostTraitement=recupereDicoGenerique(monMC)
+    listEquation, listModele,listPosttraitement=recupereDicoGenerique(monMC)
     editor=monMC.jdc.editor
-    editor.maClasseVisuEquation = classeVisuEquation({},listEquation, listModele,listPostTraitement)
+    editor.maClasseVisuEquation = classeVisuEquation({},listEquation, listModele,listPosttraitement)
     monMC.dsMaFunct = False
 
 

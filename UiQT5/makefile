@@ -8,7 +8,7 @@ PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCo
         desChoixLangue.py desRecherche.py  desRechercheCatalogue.py\
 	desSelectVal.py desViewTexte.py desViewRegles.py desVisu.py desWidgetCreeParam.py desWidgetCommande.py \
 	desWidgetOptionnel.py desWidgetOptionnelMC.py Tuple2.py Tuple3.py  \
-	desWidgetBloc.py desWidgetCB.py desWidgetCommentaire.py desWidgetDate.py \
+	desWidgetBloc.py desWidgetCB.py desWidgetCBIntoSug.py desWidgetCommentaire.py desWidgetDate.py \
 	desWidgetFact.py desWidgetFactPlie.py desWidgetFormule.py desGroupeOptionnel.py \
 	desWidgetHeure.py  desWidgetInformation.py desWidgetIntoSug.py desWidgetInactif.py \
 	desWidgetMatrice.py desWidgetParam.py desWidgetPlusieursBase.py desWidgetPlusieursInto.py \
@@ -16,7 +16,8 @@ PY_FILES = myMain.py desBaseWidget.py desChoixCata.py desChoixCode.py desChoixCo
 	desWidget4a6RadioButton.py desWidgetSimpBase.py desWidgetSDCOInto.py desWidgetSimpBool.py \
         desWidgetSimpSalome.py  desPBOptionnelMT.py\
 	desWidgetSimpComplexe.py desWidgetSimpFichier.py desWidgetSimpTxt.py desWidgetTuple2.py \
-	desWidgetTuple3.py desWidgetVide.py desWidgetUniqueSDCO.py desWidgetPlusieursPlie.py
+	desWidgetTuple3.py desWidgetVide.py desWidgetUniqueSDCO.py desWidgetPlusieursPlie.py \
+        desWidgetNiveauFact.py commandeTableau.py dateEtHeure.py
 
 
 

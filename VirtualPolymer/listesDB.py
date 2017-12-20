@@ -40,7 +40,7 @@ class classeListesDB :
    def __init__ (self):
       self.listEquation       = None
       self.listModele         = None
-      self.listPostTraitement = None
+      self.listPosttraitement = None
       self.dicoListAffiche   = {}
       self.valeurEquationChoisie = None
       self.listeConstantesAAfficher = []
@@ -61,7 +61,7 @@ class classeListesDB :
       print ('metAJour')
       if valeur == None : return
       correspond=pckdb.DBRENAME
-      self.listEquation, self.listModele,self.listPostTraitement=pckdb.read_pckdb(correspond[valeur])
+      self.listEquation, self.listModele,self.listPosttraitement=pckdb.read_pckdb(correspond[valeur])
       self.dicoListeEquation   = {}
       for equation in self.listEquation :
           self.dicoListeEquation[equation.representation]=equation
@@ -72,8 +72,8 @@ class classeListesDB :
    def getListModele(self):
       return self.listModele
 
-   def getListPostTraitement(self):
-      return self.listPostTraitement
+   def getListPosttraitement(self):
+      return self.listPosttraitement
     
    def getdicoListAffiche(self):
       return self.dicoListAffiche

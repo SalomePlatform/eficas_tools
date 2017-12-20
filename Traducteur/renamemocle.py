@@ -22,7 +22,7 @@ import sys
 from Traducteur.parseur import FactNode
 from Traducteur.load import jdcSet 
 from Traducteur import regles
-from Traducteur.dictErreurs import EcritErreur
+from Traducteur.dictErreurs import ecritErreur
 #debug=1
 debug=0
 
@@ -42,7 +42,7 @@ def renameMotCle(jdc,command,mocle,new_name, erreur=0,ensemble=regles.SansRegle)
             boolChange=1
             if debug:print "Renommage de:",c.name,mc.name,mc.lineno,mc.colno
             if erreur :
-               EcritErreur((command,mocle),c.lineno)
+               ecritErreur((command,mocle),c.lineno)
             else :
                logging.info("Renommage de: %s  %s ligne %d en %s",c.name,mc.name,mc.lineno,new_name)
             s=jdc.getLines()[mc.lineno-1]
@@ -116,7 +116,7 @@ def renameMotCleInFact(jdc,command,fact,mocle,new_name, ensemble=regles.SansRegl
                     jdc.getLines()[n.lineno-1]=s[:n.colno]+new_name+s[n.colno+len(mocle):]
                     boolChange=1
                     if erreur :
-                       EcritErreur((command,fact,mocle),c.lineno)
+                       ecritErreur((command,fact,mocle),c.lineno)
                     else :
                        logging.info("Renommage de: %s, ligne %s, en %s",n.name,n.lineno,new_name)
 
@@ -149,7 +149,7 @@ def renameMotCleInFactCourantSiRegle(jdc,command,fact,mocle,new_name,liste_regle
                     jdc.getLines()[n.lineno-1]=s[:n.colno]+new_name+s[n.colno+len(mocle):]
                     boolChange=1
                     if erreur :
-                       EcritErreur((command,fact,mocle),c.lineno)
+                       ecritErreur((command,fact,mocle),c.lineno)
                     else :
                        logging.info("Renommage de: %s, ligne %s, en %s",n.name,n.lineno,new_name)
 

@@ -26,7 +26,7 @@ def INCLUDE(self,FileName,**args):
        delattr(self,'change_fichier')
        delattr(self,'fichier_ini')
 
-   self.make_include2(fichier=FileName)
+   self.makeInclude2(fichier=FileName)
 
 def INCLUDE_context(self,d):
    """ 

@@ -29,7 +29,7 @@
 """
 # Avant toutes choses, on met le module context dans le global de l'interpreteur (__builtin__)
 # sous le nom CONTEXT afin d'avoir acces aux fonctions
-# get_current_step, set_current_step et unset_current_step de n'importe ou
+# get_current_step, setCurrentStep et unsetCurrentStep de n'importe ou
 
 from __future__ import absolute_import
 from . import context

@@ -102,7 +102,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     if type(val) == bytes:
        # on tente l'evaluation dans un contexte fourni par le parent s'il existe
        if self.parent:
-          valeur=self.parent.eval_in_context(val,self)
+          valeur=self.parent.evalInContext(val,self)
        else:
           try :
               valeur = eval(val)
@@ -161,7 +161,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     self.initModif()
     self.nom=new_nom
-    self.fin_modif()
+    self.finModif()
 
   def initModif(self):
     """
@@ -182,7 +182,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     Enregistre le parametre dans la liste des etapes de son parent (JDC)
     """
-    self.parent.register_parametre(self)
+    self.parent.registerParametre(self)
     self.parent.register(self)
 
   def isValid(self,cr='non'):
@@ -235,7 +235,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     self.actif = 1
     try:
-        self.jdc.append_param(self)
+        self.jdc.appendParam(self)
     except:
         pass
     CONNECTOR.Emit(self,"add",None)
@@ -247,7 +247,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     Il faut supprimer le parametre du contexte global du JDC
     """
     self.actif = 0
-    self.jdc.del_param(self)
+    self.jdc.delParam(self)
     self.jdc.deleteConceptAfterEtape(self,self)
     CONNECTOR.Emit(self,"supp",None)
     CONNECTOR.Emit(self,"valid")
@@ -271,7 +271,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     Il faut supprimer le parametre qui a ete entre dans la liste des
     parametres du JDC
     """
-    self.jdc.delete_param(self)
+    self.jdc.deleteParam(self)
     self.parent.deleteConcept(self)
 
   def updateContext(self,d):

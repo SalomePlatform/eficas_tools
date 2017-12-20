@@ -37,7 +37,7 @@ from renamemocle  import *
 from inseremocle  import *
 from changeValeur import *
 from movemocle    import *
-from dictErreurs  import GenereErreurPourCommande,GenereErreurMotCleInFact
+from dictErreurs  import genereErreurPourCommande,genereErreurMotCleInFact
 
 import calcG
 
@@ -87,7 +87,7 @@ def traduc(infile,outfile,flog=None):
     parseKeywords(root)
     
     ####################### traitement erreurs ########################
-    GenereErreurPourCommande(jdc,("POST_RCCM","DEFI_MATERIAU","TEST_FICHIER","DYNA_NON_LINE","DEFI_FISS_XFEM","POST_MAIL_XFEM"))
+    genereErreurPourCommande(jdc,("POST_RCCM","DEFI_MATERIAU","TEST_FICHIER","DYNA_NON_LINE","DEFI_FISS_XFEM","POST_MAIL_XFEM"))
 
     ####################### traitement Sous-Structuration  #######################
     renameMotCleInFact(jdc,"DEFI_MAILLAGE","DEFI_SUPER_MAILLE","MACR_ELEM_STAT","MACR_ELEM")
@@ -106,7 +106,7 @@ def traduc(infile,outfile,flog=None):
 
     ####################### traitement XFEM #######################
     dXFEM={"3D_XFEM":"3D", "C_PLAN_X":"C_PLAN", "D_PLAN_X":"D_PLAN"}
-    ChangementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dXFEM)
+    changementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dXFEM)
     renameMotCleInFact(jdc,"DEFI_FISS_XFEM","ORIE_FOND","PT_ORIGIN","POINT_ORIG")
     removeMotCleAvecErreur(jdc,"DEFI_FISS_XFEM","CONTACT")
     #########################################################################
@@ -134,8 +134,8 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFactSiRegleAvecErreur(jdc,"POST_RCCM","SITUATION","NUME_PASSAGE",((("TYPE_RESU_MECA","TUYAUTERIE",jdc),"MCaPourValeur"),))
     chercheOperInsereFacteurSiRegle(jdc,"POST_RCCM","SEISME", ((("SITUATION","NB_CYCL_SEISME"),"existeMCsousMCF"),))
     moveMotCleFromFactToFact(jdc,"POST_RCCM","SITUATION","NB_CYCL_SEISME","SEISME")
-#    AjouteMotClefDansFacteurSiRegle(jdc,"POST_RCCM","SITUATION", "transferez_au_bloc_SEISME_CHAR_ETAT_NB_OCCUR,NUME_SITU,NUME_GROUP_et_eventuellement_NOM_SITU_et_NUME_RESU_THER",((("SITUATION","NB_CYCL_SEISME"),"existeMCsousMCF"),))
-    AjouteMotClefDansFacteurSiRegle(jdc,"POST_RCCM","SITUATION","supprimez_a_la_main_ce_bloc",((("SITUATION","NB_CYCL_SEISME"),"existeMCsousMCF"),))
+#    ajouteMotClefDansFacteurSiRegle(jdc,"POST_RCCM","SITUATION", "transferez_au_bloc_SEISME_CHAR_ETAT_NB_OCCUR,NUME_SITU,NUME_GROUP_et_eventuellement_NOM_SITU_et_NUME_RESU_THER",((("SITUATION","NB_CYCL_SEISME"),"existeMCsousMCF"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"POST_RCCM","SITUATION","supprimez_a_la_main_ce_bloc",((("SITUATION","NB_CYCL_SEISME"),"existeMCsousMCF"),))
 #    removeMotCleInFactSiRegleAvecErreur(jdc,"POST_RCCM","SITUATION","NB_CYCL_SEISME",((("SITUATION","NB_CYCL_SEISME"),"existeMCsousMCF"),))
     removeMotCleInFactSiRegle(jdc,"POST_RCCM","SITUATION","NB_CYCL_SEISME",((("SITUATION","NB_CYCL_SEISME"),"existeMCsousMCF"),))
     removeMotCleInFact(jdc,"POST_RCCM","CHAR_MECA","TYPE_CHAR",)
@@ -189,8 +189,8 @@ def traduc(infile,outfile,flog=None):
     moveMotCleFromFactToFact(jdc,"DEFI_MATERIAU","CAM_CLAY","PA","BARCELONE")
     renameMotCleInFact(jdc,"DEFI_MATERIAU","CAM_CLAY","PA","KCAM")
     # CAM_CLAY
-#    AjouteMotClefDansFacteur(jdc,"DEFI_MATERIAU","CAM_CLAY","MU=xxx",)
-#    AjouteMotClefDansFacteurSiRegle(jdc,"DEFI_MATERIAU","CAM_CLAY","PTRAC=XXX",((("CAM_CLAY","KCAM"),"existeMCsousMCF"),))
+#    ajouteMotClefDansFacteur(jdc,"DEFI_MATERIAU","CAM_CLAY","MU=xxx",)
+#    ajouteMotClefDansFacteurSiRegle(jdc,"DEFI_MATERIAU","CAM_CLAY","PTRAC=XXX",((("CAM_CLAY","KCAM"),"existeMCsousMCF"),))
     # VENDOCHAB
     renameMotCleInFact(jdc,"DEFI_MATERIAU","VENDOCHAB","S_VP","S")
     renameMotCleInFact(jdc,"DEFI_MATERIAU","VENDOCHAB","N_VP","N")
@@ -215,8 +215,8 @@ def traduc(infile,outfile,flog=None):
 
     ####################### traitement MACR_ADAP/INFO_MAIL ######################
     dadap_mail={ "V8_5":"V9_5", "V8_N":"V9_N", "V8_N_PERSO":"V9_N_PERSO"}
-    ChangementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",dadap_mail)
-    ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",dadap_mail)
+    changementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",dadap_mail)
+    changementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",dadap_mail)
     #########################################################################
 
     ####################### traitement REST_BASE_PHYS ######################
@@ -234,7 +234,7 @@ def traduc(infile,outfile,flog=None):
     #########################################################################
 
     ####################### traitement COMB_SISM_MODAL ######################
-    AjouteMotClefDansFacteurSiRegle(jdc,"COMB_SISM_MODAL","EXCIT","MULTI_APPUI='DECORRELE'", ((("EXCIT","MONO_APPUI"),"nexistepasMCsousMCF"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"COMB_SISM_MODAL","EXCIT","MULTI_APPUI='DECORRELE'", ((("EXCIT","MONO_APPUI"),"nexistepasMCsousMCF"),))
     #########################################################################
 
     ####################### traitement TEST_FICHIER ######################
@@ -260,22 +260,22 @@ def traduc(infile,outfile,flog=None):
 
     ####################### traitement DYNA_TRAN_EXPLI ######################
     renameOper(jdc,"DYNA_TRAN_EXPLI","DYNA_NON_LINE")
-    AjouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","TCHAMWA","FORMULATION='ACCELERATION'")
-    AjouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","DIFF_CENT","FORMULATION='ACCELERATION'")
+    ajouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","TCHAMWA","FORMULATION='ACCELERATION'")
+    ajouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","DIFF_CENT","FORMULATION='ACCELERATION'")
     #########################################################################
 
     ####################### traitement SCHEMA_TEMPS dans DYNA_NON_LINE ######################
-    AjouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","NEWMARK","FORMULATION='DEPLACEMENT'")
-    AjouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","HHT","FORMULATION='DEPLACEMENT'")
-    AjouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","TETA_METHODE","FORMULATION='DEPLACEMENT'")
+    ajouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","NEWMARK","FORMULATION='DEPLACEMENT'")
+    ajouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","HHT","FORMULATION='DEPLACEMENT'")
+    ajouteMotClefDansFacteur(jdc,"DYNA_NON_LINE","TETA_METHODE","FORMULATION='DEPLACEMENT'")
     renameMotCleInFact(jdc,"DYNA_NON_LINE","NEWMARK","ALPHA","BETA",)
     renameMotCleInFact(jdc,"DYNA_NON_LINE","NEWMARK","DELTA","GAMMA",)
     renameMotCleInFact(jdc,"DYNA_NON_LINE","TETA_METHODE","TETA","THETA",)
-    AjouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","NEWMARK","SCHEMA='NEWMARK'",((("NEWMARK",),"existeMCFParmi"),))
-    AjouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","TETA_METHODE","SCHEMA='THETA_METHODE'",((("TETA_METHODE",),"existeMCFParmi"),))
-    AjouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","HHT","SCHEMA='HHT'",((("HHT",),"existeMCFParmi"),))
-    AjouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","TCHAMWA","SCHEMA='TCHAMWA'",((("TCHAMWA",),"existeMCFParmi"),))
-    AjouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","DIFF_CENT","SCHEMA='DIFF_CENT'",((("DIFF_CENT",),"existeMCFParmi"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","NEWMARK","SCHEMA='NEWMARK'",((("NEWMARK",),"existeMCFParmi"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","TETA_METHODE","SCHEMA='THETA_METHODE'",((("TETA_METHODE",),"existeMCFParmi"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","HHT","SCHEMA='HHT'",((("HHT",),"existeMCFParmi"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","TCHAMWA","SCHEMA='TCHAMWA'",((("TCHAMWA",),"existeMCFParmi"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"DYNA_NON_LINE","DIFF_CENT","SCHEMA='DIFF_CENT'",((("DIFF_CENT",),"existeMCFParmi"),))
     renameMotCle(jdc,"DYNA_NON_LINE","NEWMARK","SCHEMA_TEMPS")
     renameMotCle(jdc,"DYNA_NON_LINE","TETA_METHODE","SCHEMA_TEMPS")
     renameMotCle(jdc,"DYNA_NON_LINE","HHT","SCHEMA_TEMPS")
@@ -301,13 +301,13 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"DEFI_MATERIAU","DIS_CONTACT","MOMENT_4")
     removeMotCleInFact(jdc,"DEFI_MATERIAU","DIS_CONTACT","C_PRAGER_MZ")
     dDis_Choc={"DIS_CONTACT":"DIS_CHOC"}
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dDis_Choc)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dDis_Choc)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dDis_Choc)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dDis_Choc)
     renameMotCleInFact(jdc,"STAT_NON_LINE","COMP_INCR","DIS_CONTACT","DIS_CHOC")
     renameMotCleInFact(jdc,"DYNA_NON_LINE","COMP_INCR","DIS_CONTACT","DIS_CHOC")
     dGrilles={"GRILLE_CRAYONS":"DIS_GRICRA"}
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dGrilles)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dGrilles)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dGrilles)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dGrilles)
 
     renameCommandeSiRegle(jdc,"AFFE_CHAR_MECA_F","AFFE_CHAR_MECA",((("CONTACT",),"existeMCFParmi"),))
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","RECHERCHE")
@@ -316,15 +316,15 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","VECT_ORIE_POU")
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","MODL_AXIS")
     dAppariement={"MAIT_ESCL_SYME":"MAIT_ESCL"}
-    ChangementValeurDsMCF(jdc,"AFFE_CHAR_MECA","CONTACT","APPARIEMENT",dAppariement)
+    changementValeurDsMCF(jdc,"AFFE_CHAR_MECA","CONTACT","APPARIEMENT",dAppariement)
 
-    AjouteMotClefDansFacteurSiRegle(jdc,"AFFE_CHAR_MECA","CONTACT","TYPE_APPA='FIXE'",((("CONTACT","DIRE_APPA",),"existeMCsousMCF"),))
+    ajouteMotClefDansFacteurSiRegle(jdc,"AFFE_CHAR_MECA","CONTACT","TYPE_APPA='FIXE'",((("CONTACT","DIRE_APPA",),"existeMCsousMCF"),))
     #########################################################################
 
     ####################### traitement CREA_CHAMP ######################
     chercheOperInsereFacteurSiRegle(jdc,"CREA_CHAMP","PRECISION=1.E-3,", ((("PRECISION",),"nexistepas"),(("CRITERE",),"existe"),),0)
     dTypeChamp={"ELEM_ERREUR":"ELEM_ERRE_R"}
-    ChangementValeur(jdc,"CREA_CHAMP","TYPE_CHAM",dTypeChamp)
+    changementValeur(jdc,"CREA_CHAMP","TYPE_CHAM",dTypeChamp)
     #########################################################################
 
     ####################### traitement CALC_NO ######################
@@ -332,19 +332,19 @@ def traduc(infile,outfile,flog=None):
     #########################################################################
 
     ######### traitement variables de commandes TEMP_CALCULEE/TEMP_REF ##############
-    GenereErreurMotCleInFact(jdc,"AFFE_MATERIAU","AFFE","TEMP_REF")
+    genereErreurMotCleInFact(jdc,"AFFE_MATERIAU","AFFE","TEMP_REF")
     ################################################################################
 
     ################# traitement LIRE_CHAMP  #######################################
 #    dTypeChamp={"ELEM_ERREUR":"ELEM_ERRE_R"}
-    ChangementValeur(jdc,"LIRE_CHAMP","TYPE_CHAM",dTypeChamp)
+    changementValeur(jdc,"LIRE_CHAMP","TYPE_CHAM",dTypeChamp)
     ################################################################################
 
 
     ######### traitement SUIVI_DDL #################################################
 # en pre-traitement il faudrait une methode qui separe tous les mots clefs facteurs en les dupliquant
 # par exemple ici mettre autant de mots clefs facteurs SUIVI_DDL qu'il a de _F
-    AjouteMotClefDansFacteur(jdc,"STAT_NON_LINE","SUIVI_DDL","SUIVI_DDL='OUI'")
+    ajouteMotClefDansFacteur(jdc,"STAT_NON_LINE","SUIVI_DDL","SUIVI_DDL='OUI'")
     renameMotCle(jdc,"STAT_NON_LINE","SUIVI_DDL","OBSERVATION")
 # en post-traitement il faudrait une methode qui fusionne tous les mots clefs facteurs en double
 # par exemple ici les OBSERVATION
@@ -358,7 +358,7 @@ def traduc(infile,outfile,flog=None):
 
     ######### traitement du MODELE GRILLE ##############################################
     dGrille={"GRILLE":"GRILLE_EXCENTRE"}
-    ChangementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dGrille)
+    changementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",dGrille)
     ################################################################################
 
     ######### traitement de MACR_ASPIC/ASCOUF_CALC GRILLE ##########################
@@ -392,26 +392,26 @@ def traduc(infile,outfile,flog=None):
 
     ######### traitement de MACR_LIGN_COUPE  ######################################
 # il y a un probleme s'il y a plusieurs mots clefs facteurs LIGN_COUPE : la regle ne marche qu'une fois par commande
-    AjouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","REPERE='LOCAL'", ((("LIGN_COUPE","VECT_Y",),"existeMCsousMCF"),),0)
+    ajouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","REPERE='LOCAL'", ((("LIGN_COUPE","VECT_Y",),"existeMCsousMCF"),),0)
 # autre probleme : s'il y a plusieurs mots clefs facteurs le traducteur peut, dans l'insertion, se tromper de mot clef facteur
-    AjouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","TYPE='GROUP_NO'", ((("LIGN_COUPE","GROUP_NO",),"existeMCsousMCF"),),0)
-    AjouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","TYPE='GROUP_MA'", ((("LIGN_COUPE","GROUP_MA",),"existeMCsousMCF"),),0)
+    ajouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","TYPE='GROUP_NO'", ((("LIGN_COUPE","GROUP_NO",),"existeMCsousMCF"),),0)
+    ajouteMotClefDansFacteurSiRegle(jdc,"MACR_LIGN_COUPE","LIGN_COUPE","TYPE='GROUP_MA'", ((("LIGN_COUPE","GROUP_MA",),"existeMCsousMCF"),),0)
     ################################################################################
 
     ####################### traitement DRUCKER_PRAGER #######################
     dPRAGER={"DRUCKER_PRAGER":"DRUCK_PRAGER",}
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dPRAGER)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dPRAGER)
-    ChangementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RELATION",dPRAGER)
-    ChangementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RELATION",dPRAGER)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION",dPRAGER)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION",dPRAGER)
+    changementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RELATION",dPRAGER)
+    changementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RELATION",dPRAGER)
     #########################################################################
 
     ####################### traitement RELATION_KIT #######################
     dKIT={"ELAS_THER":"ELAS",}
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION_KIT",dKIT)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION_KIT",dKIT)
-    ChangementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RELATION_KIT",dKIT)
-    ChangementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RELATION_KIT",dKIT)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RELATION_KIT",dKIT)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RELATION_KIT",dKIT)
+    changementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RELATION_KIT",dKIT)
+    changementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RELATION_KIT",dKIT)
     #########################################################################
 
 
@@ -422,7 +422,7 @@ def traduc(infile,outfile,flog=None):
     log.ferme(hdlr)
 
 def main():
-    parser = optparse.OptionParser(usage=usage)
+    parser = optparse.Optionparser(usage=usage)
 
     parser.add_option('-i','--infile', dest="infile", default='toto.comm',
         help="Le fichier à traduire")

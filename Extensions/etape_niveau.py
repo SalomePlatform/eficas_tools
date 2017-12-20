@@ -113,7 +113,7 @@ class ETAPE_NIVEAU(N_OBJECT.OBJECT):
   def addEntite(self,name,pos_rel):
     self.editmode = 1
     try :
-      pos_abs=self.jdc.get_nb_etapes_avant(self)+pos_rel
+      pos_abs=self.jdc.getNbEtapesAvant(self)+pos_rel
       cmd = self.jdc.addEntite(name,pos_abs)
       self.etapes.insert(pos_rel,cmd)
       self.editmode = 0

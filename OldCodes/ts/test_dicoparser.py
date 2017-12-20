@@ -4,7 +4,7 @@ import unittest
 
 class Test1( unittest.TestCase ):
     def runTest(self):
-		d = dicoparser.DicoParser( '', '', '' )
+		d = dicoparser.Dicoparser( '', '', '' )
 		t = d.parse_tokens( """
   / comment
   TYPE = LOGIQUE
@@ -81,7 +81,7 @@ class Test1( unittest.TestCase ):
 
 class Test2( unittest.TestCase ):
     def runTest(self):
-		d = dicoparser.DicoParser( '', '', '' )
+		d = dicoparser.Dicoparser( '', '', '' )
 		self.assertEqual( d.are_equal( 'WIND IN SUMMER', 'Wind_In_Summer' ), True )
 		self.assertEqual( d.are_equal( 'HELLO', 'Bonjour' ), False )
 		self.assertEqual( d.are_equal( 'MAXIMUM NUMBER OF ITERATIONS FOR SOLVER', 'Maximum_Number_Of_Iterations_For_Solver' ), True )
@@ -89,7 +89,7 @@ class Test2( unittest.TestCase ):
 
 class Test3( unittest.TestCase ):
     def runTest(self):
-		d = dicoparser.DicoParser( 'test', 'NOM', 'NOM1' )
+		d = dicoparser.Dicoparser( 'test', 'NOM', 'NOM1' )
 		#print d.data.keys()
 		#for aKey, aValue in d.data['TYPE OF ADVECTION'].iteritems():
 		#	print aKey, aValue 
@@ -101,7 +101,7 @@ class Test3( unittest.TestCase ):
 
 class Test4( unittest.TestCase ):
     def runTest(self):
-		d = dicoparser.DicoParser( 'telemac2dv6p3.dico', 'NOM', 'NOM1' )
+		d = dicoparser.Dicoparser( 'telemac2dv6p3.dico', 'NOM', 'NOM1' )
 		self.assertEqual( d.translate( 'Reference_File_Format', 'NOM' ), 'Format Du Fichier De Reference' )
 		self.assertEqual( d.translate( 'Reference_File_Format', '', 'Serafin', 'CHOIX1', 'CHOIX' ), 'Serafin' )
 		self.assertEqual( d.translate( 'Reference_File_Format', '', 'Serafin', 'DEFAUT1', 'DEFAUT' ), 'Serafin' )
@@ -111,7 +111,7 @@ class Test4( unittest.TestCase ):
 
 class Test5( unittest.TestCase ):
     def runTest(self):
-		d = dicoparser.DicoParser( '', '', '' )
+		d = dicoparser.Dicoparser( '', '', '' )
 		t = d.parse_tokens( """
 CHOIX = '" "="pas de biliotheque"';
 '"$PVM_ROOT/lib/$PVM_ARCH/libpvm3.a"="bibliotheque PVM1"' 

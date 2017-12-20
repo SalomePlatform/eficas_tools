@@ -73,7 +73,7 @@ def main():
                                                            ])
    copyfiles('../Aster/Cata',os.path.join(path_distrib,'Aster'),['aster.py',])
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
-   copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
+   copyfiles('../convert/parserv5',os.path.join(path_distrib,'convert','parserv5'),['*.py'])
 
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
 

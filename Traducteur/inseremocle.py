@@ -20,7 +20,7 @@
 import logging
 from Traducteur.parseur import FactNode
 from Traducteur.load import jdcSet 
-from Traducteur.dictErreurs import EcritErreur
+from Traducteur.dictErreurs import ecritErreur
 from Traducteur import regles
 debug=0
 
@@ -195,7 +195,7 @@ def chercheOperInsereFacteur(jdc,nomcommande,nouveau,ensemble=regles.SansRegle, 
     for c in commands:
         if c.name != nomcommande:continue
         if ensemble.verif(c) == 0 : continue
-        if erreur : EcritErreur((nomcommande,nouveau),c.lineno)
+        if erreur : ecritErreur((nomcommande,nouveau),c.lineno)
         boolChange=1
         insereMotCle(jdc,c,texte)
     if boolChange : jdc.reset(jdc.getSource())
@@ -227,7 +227,7 @@ def chercheOperInsereFacteurSiRegleAvecAvertissement(jdc,nomcommande,nouveau,lis
     chercheOperInsereFacteur(jdc,nomcommande,nouveau,mesRegles,estunFacteur,erreur=1)
 
 #-------------------------------------------------------------------------------------------------
-def AjouteMotClefDansFacteur(jdc,commande,fact,nouveau,ensemble=regles.SansRegle, estunFacteur=0):
+def ajouteMotClefDansFacteur(jdc,commande,fact,nouveau,ensemble=regles.SansRegle, estunFacteur=0):
 #-------------------------------------------------------------------------------------------------
 # Cherche la commande
 # Cherche le MCF
@@ -252,15 +252,15 @@ def AjouteMotClefDansFacteur(jdc,commande,fact,nouveau,ensemble=regles.SansRegle
     if boolChange : jdc.reset(jdc.getSource())
 
 #-------------------------------------------------------------------------------------------
-def AjouteMotClefDansFacteurSiRegle(jdc,commande,fact,nouveau,liste_regles,estunFacteur=0):
+def ajouteMotClefDansFacteurSiRegle(jdc,commande,fact,nouveau,liste_regles,estunFacteur=0):
 #-------------------------------------------------------------------------------------------
 #
     if commande  not in jdcSet : return
     mesRegles=regles.ensembleRegles(liste_regles)
-    AjouteMotClefDansFacteur(jdc,commande,fact,nouveau,mesRegles,estunFacteur)
+    ajouteMotClefDansFacteur(jdc,commande,fact,nouveau,mesRegles,estunFacteur)
 
 #-------------------------------------------------------------------------------------------
-def AjouteMotClefDansFacteurCourantSiRegle(jdc,commande,fact,nouveau,liste_regles):
+def ajouteMotClefDansFacteurCourantSiRegle(jdc,commande,fact,nouveau,liste_regles):
 #-------------------------------------------------------------------------------------------
 #
     if commande  not in jdcSet : return

@@ -62,7 +62,7 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     #sortby = 'cumulative'
     #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
     #ps.print_stats()
-    #print (s.getvalue())
+    #print (s.getValue())
 
     Eficas.show()
 
@@ -128,7 +128,7 @@ def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,o
          sortby = 'cumulative'
          ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
          ps.print_stats()
-         print (s.getvalue())
+         print (s.getValue())
 
     elif not leger : monEditeur.saveFileAs(fileName=fileName)
     else : monEditeur.saveFileLegerAs(fileName=fileName)

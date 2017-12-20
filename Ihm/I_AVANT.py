@@ -67,7 +67,7 @@ class I_AVANT:
       return text,boolOK
 
 
-   def gettext(self):
+   def getText(self):
        text = "Regle de classement "' :\n'
        for mc in self.listeAvant : 
            text = text + mc + ', '

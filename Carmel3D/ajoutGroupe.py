@@ -2,7 +2,7 @@
 
 import re # module interne utilisé pour vérifier la validité du nom du maillage
 
-concept_re=re.compile(r'[a-zA-Z_]\w*$') # nom de maillage valide s'il correspond à un identifiant (variable) Python possible. Basé sur Ihm/I_Etape.py:nomme_sd, qui fait foi
+concept_re=re.compile(r'[a-zA-Z_]\w*$') # nom de maillage valide s'il correspond à un identifiant (variable) Python possible. Basé sur Ihm/I_Etape.py:nommeSd, qui fait foi
 
 def handleAjoutGroupSansFiltre(editor,listeGroup):
         """code_Carmel temporel : obtention des groupes de maille du maillage selectionne dans Salome
@@ -27,8 +27,8 @@ def handleAjoutGroupSansFiltre(editor,listeGroup):
                 if dernier != None:
                     new_node = dernier.append_brother("MESHGROUP",'after')
                 else:
-                    new_node=editor.tree.racine.append_child("MESHGROUP",pos='first')
-                test,mess = new_node.item.nomme_sd(groupe) # precision du nom (de concept) du groupe
+                    new_node=editor.tree.racine.appendChild("MESHGROUP",pos='first')
+                test,mess = new_node.item.nommeSd(groupe) # precision du nom (de concept) du groupe
                 if debug: print u"ce nom de groupe ("+groupe+") est utilise..."
                 dernier=new_node # mise a jour du dernier noeud du JdC, afin de rajouter les autres MESH_GROUPE eventuels a sa suite
             except:
@@ -94,21 +94,21 @@ def handleAjoutGroupAvecFiltre(editor,listeGroup):
                     if dernier != None:
                         new_node = dernier.append_brother("MESHGROUP",'after')
                     else:
-                        new_node=editor.tree.racine.append_child("MESHGROUP",pos='first')
-                    test,mess = new_node.item.nomme_sd(nomReel) # precision du nom (de concept) du groupe
+                        new_node=editor.tree.racine.appendChild("MESHGROUP",pos='first')
+                    test,mess = new_node.item.nommeSd(nomReel) # precision du nom (de concept) du groupe
                     if debug: print u"ce nom de groupe ("+nomReel+") est utilise..."
                     if prefix in listePrefixesMateriaux: # ce groupe est associe a un materiau
-                        new_node.append_child('MATERIAL') # on rajoute la propriete de materiau, qu'il suffit d'associer ensuite a la liste des materiaux presents
+                        new_node.appendChild('MATERIAL') # on rajoute la propriete de materiau, qu'il suffit d'associer ensuite a la liste des materiaux presents
                         if debug: print u" et c'est un materiau."
                     elif prefix in listePrefixesSourcesHorsInducteur: # ce groupe est associe a une source
-                        new_node.append_child('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
+                        new_node.appendChild('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
                         if debug: print u" et c'est une source."
                     elif prefix in listePrefixesInducteurBobine: # ce groupe est associe a une source
-                        new_node.append_child('STRANDED_INDUCTOR_GEOMETRY') # on rajoute la propriete de géométrie de l'inducteur bobiné
+                        new_node.appendChild('STRANDED_INDUCTOR_GEOMETRY') # on rajoute la propriete de géométrie de l'inducteur bobiné
                         if debug: print u" et c'est un inducteur bobine dont on definit la geometrie."
                         if nom not in dictGroupesMultiples.keys(): # il ne fait pas partie d'un macro-groupe. La source est définie ici, ainsi que le domaine.
-                            new_node.append_child('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
-                            new_node.append_child('Domaine') # on rajoute la propriete du domaine (default automatique), qu'il suffit d'associer ensuite a la liste des domaines présents
+                            new_node.appendChild('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
+                            new_node.appendChild('Domaine') # on rajoute la propriete du domaine (default automatique), qu'il suffit d'associer ensuite a la liste des domaines présents
                             if debug: print u" et c'est une source en un seul morceau."
                     else: # ce cas ne devrait pas se produire
                         pass
@@ -129,38 +129,38 @@ def handleAjoutGroupAvecFiltre(editor,listeGroup):
                     if dernier != None:
                         new_node = dernier.append_brother("MACRO_GROUPE",'after')
                     else:
-                        new_node=editor.tree.racine.append_child("MACRO_GROUPE",pos='first')
-                    test,mess = new_node.item.nomme_sd(nomReel) # precision du nom (de concept) du groupe
+                        new_node=editor.tree.racine.appendChild("MACRO_GROUPE",pos='first')
+                    test,mess = new_node.item.nommeSd(nomReel) # precision du nom (de concept) du groupe
                     if debug: print u"ce nom de groupe ("+nomReel+") est utilise..."
                     if debug: print u" et on ajoute la liste LISTE_MESHGROUP."
-                    node_list=new_node.append_child('LISTE_MESHGROUP') # Ajout de la liste des membres du groupe multiple
+                    node_list=new_node.appendChild('LISTE_MESHGROUP') # Ajout de la liste des membres du groupe multiple
                     if debug:
                         print 'Liste possible pour LISTE_MESHGROUP :'
                         print '_____________________'
-                        print node_list.item.get_liste_possible(())
+                        print node_list.item.getListePossible(())
                         print '_____________________'
                         print dir(node_list.item)
-                    listeNom=node_list.item.get_sd_avant_du_bon_type()
+                    listeNom=node_list.item.getSdAvantDuBonType()
                     listeObjet=[]
                     for nom in listeNom: 
                         if nom in dictGroupesMultiples[groupe]['membres']:
                            #--> transformation du nom en objet
-                           obj,valide=node_list.item.eval_valeur(nom)
+                           obj,valide=node_list.item.evalValeur(nom)
                            listeObjet.append(obj)
-                    node_list.item.set_valeur(listeObjet) 
+                    node_list.item.setValeur(listeObjet) 
                     node_list.affichePanneau()             
                     if prefix in listePrefixesMateriaux: # ce groupe est associe a un materiau
-                        new_node.append_child('MATERIAL') # on rajoute la propriete de materiau, qu'il suffit d'associer ensuite a la liste des materiaux presents
+                        new_node.appendChild('MATERIAL') # on rajoute la propriete de materiau, qu'il suffit d'associer ensuite a la liste des materiaux presents
                         if debug: print u" et c'est un materiau."
                     elif prefix in listePrefixesSourcesHorsInducteur: # ce groupe est associe a une source
-                        new_node.append_child('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
+                        new_node.appendChild('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
                         if debug: print u" et c'est une source hors inducteur."
                     elif prefix in listePrefixesInducteurBobine: # ce groupe est associe a une source
-                        new_node.append_child('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
-                        new_node.append_child('Domaine') # on rajoute la propriete du domaine (default automatique), qu'il suffit d'associer ensuite a la liste des domaines présents
+                        new_node.appendChild('SOURCE') # on rajoute la propriete de la source, qu'il suffit d'associer ensuite a la liste des sources presentes
+                        new_node.appendChild('Domaine') # on rajoute la propriete du domaine (default automatique), qu'il suffit d'associer ensuite a la liste des domaines présents
                         if debug: print u" et c'est une source inducteur."
                     elif prefix in listePrefixesTrous: # ce groupe est associe a un trou
-                        new_node.append_child('Domaine') # on rajoute la propriete du domaine (default automatique), qu'il suffit d'associer ensuite a la liste des domaines présents
+                        new_node.appendChild('Domaine') # on rajoute la propriete du domaine (default automatique), qu'il suffit d'associer ensuite a la liste des domaines présents
                         if debug: print u" et c'est un trou."
                     else: # ce cas ne devrait pas se produire
                         pass
@@ -189,7 +189,7 @@ def handleAjoutGroupFiltre(editor,listeGroup):
         #listeGroup= ['BBK_bobine', 'CURRENT_ind_2', 'DIEL_air', 'CURRENT_ind_8', 'CURRENT_ind_6', 'CURRENT_ind_1', 'CURRENT_ind_3', 'CURRENT_ind_7', 'CURRENT_ind_5', 'CURRENT_ind_4', 'BBK_topo', 'COND_plaque', 'TOPO_trou_1', 'TOPO_trou_3', 'TOPO_trou_2', 'TOPO_trou_8', 'TOPO_trou_4', 'TOPO_trou_7', 'TOPO_trou_5', 'TOPO_trou_6'] # cas-test T.E.A.M. Workshop 7
         if debug:
             print "listeGroup=", listeGroup
-        version_catalogue = editor.CONFIGURATION.appli.readercata.version_code # détermination si le catalogue est fréquentiel ou temporel, d'après la deuxième entrée de la liste catalogues dans prefs_CARMEL3D.py
+        version_catalogue = editor.maConfiguration.appli.readercata.version_code # détermination si le catalogue est fréquentiel ou temporel, d'après la deuxième entrée de la liste catalogues dans prefs_CARMEL3D.py
         if debug:
             print "Version catalogue=", version_catalogue
         type_code = version_catalogue.split(' ')[0] # on garde le premier mot de la version du catalogue : 'frequentiel' ou 'temporel'

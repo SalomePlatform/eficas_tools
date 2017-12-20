@@ -82,7 +82,7 @@ class MCList:
       self.updateConditionBloc()
       obj.supprime()
       self.etape.modified()
-      self.fin_modif()
+      self.finModif()
       return 1
 
   def addEntite(self,obj,pos=None):
@@ -115,7 +115,7 @@ class MCList:
       else:
          self.insert(pos,obj)
       CONNECTOR.Emit(self,"add",obj)
-      self.fin_modif()
+      self.finModif()
       self.updateConditionBloc()
       return obj
 
@@ -152,14 +152,14 @@ class MCList:
   def getDocu(self):
     return self.data[0].definition.getDocu()
 
-  def get_liste_mc_inconnus(self):
+  def getListeMcInconnus(self):
      """
      Retourne la liste des mots-cles inconnus dans self
      """
      l_mc = []
      for mcfact in self.data :
         if mcfact.isValid() : continue
-        l_child = mcfact.get_liste_mc_inconnus()
+        l_child = mcfact.getListeMcInconnus()
         for mc in l_child:
            l = [self]
            l.extend(mc)
@@ -174,14 +174,14 @@ class MCList:
     # Sans objet pour une liste de mots cles facteurs
     return []
 
-  def deep_updateConditionBloc(self):
+  def deepUpdateConditionBloc(self):
      """
         Parcourt l'arborescence des mcobject et realise l'update
         des blocs conditionnels par appel de la methode updateConditionBloc
      """
-     #print "deep_updateConditionBloc",self
+     #print "deepUpdateConditionBloc",self
      for mcfact in self.data :
-         mcfact.deep_updateConditionBloc()
+         mcfact.deepUpdateConditionBloc()
 
   def updateConditionBloc(self):
      """
@@ -210,19 +210,19 @@ class MCList:
     if self.parent:
       self.parent.initModif()
 
-  def fin_modif(self):
+  def finModif(self):
     """
       Methode appelee apres qu'une modification a ete faite afin de declencher
       d'eventuels traitements post-modification
     """
-    #print "fin_modif",self
+    #print "finModif",self
     CONNECTOR.Emit(self,"valid")
     if self.parent:
-      self.parent.fin_modif()
+      self.parent.finModif()
 
-  def getGenealogie_precise(self):
+  def getGenealogiePrecise(self):
      if self.parent: 
-        return self.parent.getGenealogie_precise()
+        return self.parent.getGenealogiePrecise()
      else:
         return []
 
@@ -237,7 +237,7 @@ class MCList:
      else:
         return []
 
-  def getListeMcOrdonnee_brute(self,liste,dico):
+  def getListeMcOrdonneeBrute(self,liste,dico):
      """
          Retourne la liste ordonnee (suivant le catalogue) BRUTE des mots-cles
          d'une entite composee dont le chemin complet est donne sous forme
@@ -272,7 +272,7 @@ class MCList:
      """
      return self
 
-  def update_mc_global(self):
+  def updateMcGlobal(self):
      """
         Met a jour les mots cles globaux enregistres dans l'etape parente
         et dans le jdc parent.
@@ -280,11 +280,11 @@ class MCList:
         la requete a ses fils.
      """
      for motcle in self.data :
-         motcle.update_mc_global()
+         motcle.updateMcGlobal()
 
-  def delete_mc_global(self):
+  def deleteMcGlobal(self):
      for motcle in self.data :
-         motcle.delete_mc_global()
+         motcle.deleteMcGlobal()
 
   #def __del__(self):
   #   print "__del__",self

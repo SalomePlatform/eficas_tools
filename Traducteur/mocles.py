@@ -20,9 +20,9 @@
 
 import compiler
 import types
-from Traducteur.parseur  import Keyword, FactNode, lastparen, lastparen2,maskStringsAndComments
+from Traducteur.parseur  import Keyword, FactNode, lastParen, lastParen2,maskStringsAndComments
 from Traducteur.visiteur import KeywordFinder, visitor
-from Traducteur.utils import indexToCoordinates, lineToDict, DictToLine
+from Traducteur.utils import indexToCoordinates, lineToDict, dictToLine
 
 debug=0
 
@@ -30,7 +30,7 @@ debug=0
 def parseFact(match,c,kw):
 #------------------------
     submatch=match[2]
-    lastpar=match[0]+lastparen(c.src[match[0]:])
+    lastpar=match[0]+lastParen(c.src[match[0]:])
     if type(submatch[0][0]) ==types.IntType:
         #mot cle facteur isolé
         no=FactNode()
@@ -57,7 +57,7 @@ def parseFact(match,c,kw):
         #mot cle facteur multiple
         ii=0
         for l in submatch:
-            lastpar=l[0][0]+lastparen2(c.src[l[0][0]:])
+            lastpar=l[0][0]+lastParen2(c.src[l[0][0]:])
             ii=ii+1
             no=FactNode()
             kw.addChild(no)
@@ -125,13 +125,13 @@ def parseKeywords(root):
             # dernier mocle : 
             #   il commence au debut du dernier keyword 
             #   (matchFinder.matches[i+1][0]) et
-            #   finit avant la parenthese fermante de la commande (c.lastparen)
+            #   finit avant la parenthese fermante de la commande (c.lastParen)
 
-            if debug:print "texte:",c.src[matchFinder.matches[i+1][0]:c.lastparen]
+            if debug:print "texte:",c.src[matchFinder.matches[i+1][0]:c.lastParen]
             x,y=indexToCoordinates(c.src,matchFinder.matches[i+1][0])
             lineno=y+c.lineno
             colno=x
-            x,y=indexToCoordinates(c.src,c.lastparen)
+            x,y=indexToCoordinates(c.src,c.lastParen)
             endline=y+c.lineno
             endcol=x
             if debug:print matchFinder.matches[i+1][0],matchFinder.matches[i+1][1],lineno,colno,endline,endcol
@@ -145,12 +145,12 @@ def parseKeywords(root):
             #un seul mocle trouve : 
             # il commence au début du keyword (matchFinder.matches[0][0]) et 
             # finit juste avant la parenthese fermante de la 
-            # commande (c.lastparen)
-            if debug:print "texte:",c.src[matchFinder.matches[0][0]:c.lastparen]
+            # commande (c.lastParen)
+            if debug:print "texte:",c.src[matchFinder.matches[0][0]:c.lastParen]
             x,y=indexToCoordinates(c.src,matchFinder.matches[0][0])
             lineno=y+c.lineno
             colno=x
-            x,y=indexToCoordinates(c.src,c.lastparen)
+            x,y=indexToCoordinates(c.src,c.lastParen)
             endline=y+c.lineno
             endcol=x
             if debug:print matchFinder.matches[0][0],matchFinder.matches[0][1],lineno,colno,endline,endcol

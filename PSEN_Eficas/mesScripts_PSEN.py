@@ -18,7 +18,7 @@ def exportToCsv(listeparam) :
 
     nouvelleVal=[]
     prob=item.object.get_child('Probability')
-    valeur=prob.get_valeur()
+    valeur=prob.getValeur()
     texte=""
     for v in valeur :
         texte+=v[0].nom+";"+str(v[1]).replace('.',',')+"\n"
@@ -56,7 +56,7 @@ def importFromCsv(listeparam) :
     nouvelleVal=[]
     prob=item.object.get_child('Probability')
     monType=prob.definition.validators.typeDesTuples[0]
-    listeObjet=item.object.etape.parent.get_sd_avant_du_bon_type(item.object.etape,(monType,))
+    listeObjet=item.object.etape.parent.getSdAvantDuBonType(item.object.etape,(monType,))
     for ligne in fn.readlines():
       try :
         nom,valeur = ligne.split(';')
@@ -80,7 +80,7 @@ def importFromCsv(listeparam) :
       nouvelleVal.append((concept,valeur))
       #  exec nom in self.jdc
 
-    if nouvelleVal != [] : prob.set_valeur(nouvelleVal)
+    if nouvelleVal != [] : prob.setValeur(nouvelleVal)
     if texte != "" :
        try :
          from  PyQt5.QtWidgets  import QMessageBox

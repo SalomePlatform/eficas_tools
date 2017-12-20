@@ -45,7 +45,7 @@ def main():
    #				______________________
 
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
-   os.system("rm -rf .././convert/Parserv5 ")
+   os.system("rm -rf .././convert/parserv5 ")
    os.system("rm -rf .././convert/convert_asterv5.py ")
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
    copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif'])

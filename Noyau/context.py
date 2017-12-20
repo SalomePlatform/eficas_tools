@@ -30,7 +30,7 @@ debug = 0
 # (Build ne fait rien pour une etape)
 
 
-def set_current_step(step):
+def setCurrentStep(step):
     """
        Fonction qui permet de changer la valeur de l'etape courante
     """
@@ -47,7 +47,7 @@ def get_current_step():
     return _root
 
 
-def unset_current_step():
+def unsetCurrentStep():
     """
        Fonction qui permet de remettre a None l'etape courante
     """

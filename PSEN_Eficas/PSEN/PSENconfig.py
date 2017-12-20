@@ -1,0 +1,7 @@
+MachineDico = {'M4': 'M4', 'M1': 'M1', 'BSTMB__1': 'JJ', 'M3': 'M3', 'M2': 'M2', 'GT12B__1': 'ER', 'B6_BUS13__1': 'AZ', 'CSPRING__1': 'DD'}
+LoadDico = {'C3': 'C3', 'C2': 'C2', 'C1': 'C1', 'C4': 'C4'}
+LineDico = {'L4': 'L4', 'L2': 'L2', 'L3': 'L3', 'L1': 'L1'}
+TransfoDico = {'T4': 'T4', 'T2': 'T2', 'T3': 'T3', 'T1': 'T1'}
+MotorDico = {'MZ4': 'MZ4', 'MZ1': 'MZ1', 'MZ2': 'MZ2', 'MZ3': 'MZ3'}
+
+Dico ={'DIRECTORY': {'PSSE_path': '/home/A96028/QT5GitEficasTravail/eficas/PSEN_Eficas/PSEN', 'sav_file': '/home/A96028/QT5GitEficasTravail/eficas/PSEN_Eficas/faux.sav', 'results_folder': '/home/A96028/QT5GitEficasTravail/eficas/PSEN_Eficas/PSEN'}, 'PSSE_PARAMETERS': {'I_MAX': 'RateA', 'FUEL_COST': True, 'ALGORITHM': 'Optimum Power Flow', 'MVAR_COST': False, 'ITERATION_LIMIT': 20, 'SAVE_CASE_BEFORE_QCONTROL': False, 'LOCK_TAPS': True, 'LOADSHEDDING_COST': False, 'QGEN_CONTROL': True}, 'CORRELATION': {'CorrelationMatrix': ["['load']", '[1.0]']}, 'DISTRIBUTIONload': {'Load': ['C1'], 'FileName': '/home/A96028/QT5GitEficasTravail/eficas/PSEN_Eficas/faux.csv', 'Activated': True, 'Sampling': 'Same sample for all loads', 'ComponentType': 'Load', 'Law': 'TimeSeries_from_file', 'Type': 'Load Level'}, 'SIMULATION': {'NUMBER_PACKAGE': 1, 'SIZE_PACKAGE': 10}}

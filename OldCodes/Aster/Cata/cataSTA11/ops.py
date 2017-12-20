@@ -245,7 +245,7 @@ def POURSUITE(self, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, LANG, INFO, 
      # POURSUITE
      if hasattr(self,'fichier_init'):
         return
-     self.make_poursuite()
+     self.makePoursuite()
 
 def get_pickled_context():
     """
@@ -282,7 +282,7 @@ def POURSUITE_context(self,d):
    # Une commande POURSUITE n'est possible qu'au niveau le plus haut
    # On ajoute directement les concepts dans le contexte du jdc
 
-def build_poursuite(self,**args):
+def buildPoursuite(self,**args):
    """
    Fonction ops pour la macro POURSUITE
    """
@@ -310,13 +310,13 @@ def INCLUDE(self, UNITE, DONNEE, **args):
             fname = osp.join(repdex, fname)
     try:
         if aster_exists:
-            self.make_include(fname=fname)
+            self.makeInclude(fname=fname)
         else:
             # dans eficas
             if UNITE:
-                self.make_include(unite=UNITE)
+                self.makeInclude(unite=UNITE)
             else:
-                self.make_include(fname=fname)
+                self.makeInclude(fname=fname)
     except Accas.AsException:
         if aster_exists:
             UTMESS('F+', 'FICHIER_1', valk=fname)
@@ -328,7 +328,7 @@ def INCLUDE_context(self,d):
     ctxt = self.g_context
     d.update(ctxt)
 
-def build_include(self,**args):
+def buildInclude(self,**args):
     """Fonction ops de la macro INCLUDE appelée lors de la phase de Build"""
     # Pour presque toutes les commandes (sauf FORMULE et POURSUITE)
     # le numéro de la commande n est pas utile en phase de construction
@@ -396,7 +396,7 @@ def build_detruire(self, d):
       # "suppression" du concept
       co.supprime()
       # On signale au parent que le concept n'existe plus après l'étape self
-      self.parent.delete_concept_after_etape(self, co)
+      self.parent.deleteConceptAfterEtape(self, co)
       # marque comme détruit == non executé
       co.executed = 0
 

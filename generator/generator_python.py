@@ -118,17 +118,17 @@ class PythonGenerator(object):
          #import cProfile, pstats, StringIO
          #pr = cProfile.Profile()
          #pr.enable()
-         self.text=jdc_formate.formate_jdc()
+         self.text=jdc_formate.formateJdc()
          #pr.disable()
          #s = StringIO.StringIO()
          #sortby = 'cumulative'
          #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
          #ps.print_stats()
-         #print (s.getvalue())
+         #print (s.getValue())
 
       elif format == 'Ligne':
          jdc_formate = FormatageLigne(liste,mode='.py')
-         self.text=jdc_formate.formate_jdc()
+         self.text=jdc_formate.formateJdc()
       else:
          raise EficasException(tr("Format non implemente ") +format)
       return self.text
@@ -511,7 +511,7 @@ class PythonGenerator(object):
          s = str(valeur)
          if vientDeListe and repr(valeur) != str(valeur) : s=repr(valeur)
          if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.0'
-         clefobj=etape.get_sdname()
+         clefobj=etape.getSdname()
          if self.appli.appliEficas and clefobj in self.appli.appliEficas.dict_reels:
            if valeur in self.appli.appliEficas.dict_reels[clefobj]:
              s=self.appli.appliEficas.dict_reels[clefobj][valeur]

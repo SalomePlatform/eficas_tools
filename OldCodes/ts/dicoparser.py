@@ -3,7 +3,7 @@ import shlex
 
 DICO_EXT = '.dico'
 
-class DicoParser:
+class Dicoparser:
 	def __init__( self, theFileName, theStartAttr, theIndexAttr ):
 		if theFileName=='':
 			return

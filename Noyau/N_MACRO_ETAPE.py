@@ -83,18 +83,18 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         # permet de stocker le nom du dernier concept nomme dans la macro
         self.last = None
 
-    def make_register(self):
+    def makeRegister(self):
         """
         Initialise les attributs jdc, id, niveau et realise les enregistrements
         necessaires
         """
-        N_ETAPE.ETAPE.make_register(self)
+        N_ETAPE.ETAPE.makeRegister(self)
         if self.parent:
             self.UserError = self.jdc.UserError
         else:
             self.UserError = "UserError"
 
-    def Build_sd(self, nom):
+    def buildSd(self, nom):
         """
            Construit le concept produit de l'operateur. Deux cas
            peuvent se presenter :
@@ -111,7 +111,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
             # On positionne la macro self en tant que current_step pour que les
             # etapes creees lors de l'appel a sd_prod et a op_init aient la macro
             #  comme parent
-            self.set_current_step()
+            self.setCurrentStep()
             if self.parent:
                 sd = self.parent.create_sdprod(self, nom)
                 if type(self.definition.op_init) == types.FunctionType:
@@ -123,19 +123,19 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
                     # On ne nomme le concept que dans le cas de non reutilisation
                     # d un concept
                     sd.set_name(nom)
-            self.reset_current_step()
+            self.resetCurrentStep()
         except AsException as e:
-            self.reset_current_step()
+            self.resetCurrentStep()
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1], e)
         #except (EOFError, self.UserError):
         except (EOFError):
             # Le retablissement du step courant n'est pas strictement
             # necessaire. On le fait pour des raisons de coherence
-            self.reset_current_step()
+            self.resetCurrentStep()
             raise
         except:
-            self.reset_current_step()
+            self.resetCurrentStep()
             l = traceback.format_exception(
                 sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
@@ -606,7 +606,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         for co in self.sdprods:
             d[co.nom] = co
 
-    def make_include(self, unite=None, fname=None):
+    def makeInclude(self, unite=None, fname=None):
         """Inclut un fichier dont l'unite logique est `unite` ou de nom `fname`"""
         if unite is not None:
             warn("'unite' is deprecated, please use 'fname' instead",
@@ -618,13 +618,13 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         self.fichier_init = f
         if f == None:
             return
-        self.make_contexte(f, text)
+        self.makeContexte(f, text)
 
-    def make_poursuite(self):
+    def makePoursuite(self):
         """Inclut un fichier poursuite"""
         raise NotImplementedError('this method must be derivated (in Eficas)')
 
-    def make_contexte(self, f, text):
+    def makeContexte(self, f, text):
         """
             Interprete le texte fourni (text) issu du fichier f
             dans le contexte du parent.

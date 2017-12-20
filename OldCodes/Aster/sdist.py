@@ -98,7 +98,7 @@ def main():
    #				______________________
 
    copyfiles('../convert',os.path.join(path_distrib,'convert'),['*.py'])
-   copyfiles('../convert/Parserv5',os.path.join(path_distrib,'convert','Parserv5'),['*.py'])
+   copyfiles('../convert/parserv5',os.path.join(path_distrib,'convert','parserv5'),['*.py'])
    copyfiles('../generator',os.path.join(path_distrib,'generator'),['*.py'])
    copyfiles('../Editeur/icons',os.path.join(path_distrib,'Editeur','icons'),['*.gif','*.png'])
    copyfiles('../Editeur/Patrons',os.path.join(path_distrib,'Editeur','Patrons'),['*.com*'])

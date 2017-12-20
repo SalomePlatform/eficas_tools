@@ -159,7 +159,7 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
                                                        new_exp))
       if test :
           # la formule est bien correcte : on sauve les nouveaux parametres
-          test=self.object.update_formule_python(formule=(new_nom,new_typ,new_exp,new_arg))
+          test=self.object.updateFormulePython(formule=(new_nom,new_typ,new_exp,new_arg))
       return test,erreur
 
 # ---------------------------------------------------------------------------

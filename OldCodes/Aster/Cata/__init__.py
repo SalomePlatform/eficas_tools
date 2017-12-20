@@ -1,6 +1,6 @@
 #@ MODIF __init__ Cata  DATE 20/09/2004   AUTEUR DURAND C.DURAND 
 # -*- coding: iso-8859-1 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
+#            maConfiguration MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY

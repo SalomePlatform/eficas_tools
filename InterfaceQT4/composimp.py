@@ -299,7 +299,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def getMinMax(self):
       """ Retourne les valeurs min et max de la definition de object """
-      return self.object.get_min_max()
+      return self.object.getMinMax()
 
   def getMultiplicite(self):
       """ A preciser.
@@ -317,10 +317,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def getListeValeurs(self) :
       """ Retourne la liste des valeurs de object """
-      valeurs=self.object.get_liste_valeurs()
+      valeurs=self.object.getListeValeurs()
       try :
         if "R" in self.object.definition.type:
-           clef=self.object.GetNomConcept()
+           clef=self.object.getNomConcept()
            if clef in self.appli.dict_reels:
               if type(valeurs) == tuple:
                  valeurs_reelles=[]
@@ -395,7 +395,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def getListeParamPossible(self):
       liste_param=[]
-      l1,l2=self.jdc.get_parametres_fonctions_avant_etape(self.get_etape())
+      l1,l2=self.jdc.getParametresFonctionsAvantEtape(self.get_etape())
       for param in self.object.jdc.params:
           if param.nom not in l1 : continue
           encorevalide=self.valideItem(param.valeur)
@@ -435,10 +435,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       #On protege la liste en entree en la copiant
       valeur=list(listecourante)
       if item : valeur.append(item)
-      return self.object.valid_valeur_partielle(valeur)
+      return self.object.validValeurPartielle(valeur)
 
   def valideListeComplete (self,valeur):
-      return self.object.valid_valeur(valeur)
+      return self.object.validValeur(valeur)
 
   def infoErreurItem(self) :
       commentaire=""
@@ -529,8 +529,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
            il faut propager la destruction aux autres etapes
       """
       if not valeur : valeur=self.object.valeur
-      # XXX faut il vraiment appeler del_sdprod ???
-      #self.object.etape.parent.del_sdprod(valeur)
+      # XXX faut il vraiment appeler delSdprod ???
+      #self.object.etape.parent.delSdprod(valeur)
       self.object.etape.parent.deleteConcept(valeur)
 
   #-----------------------------------------------
@@ -667,7 +667,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
              - retourne l'objet associe si on a pu interpreter (entier, reel, ASSD,...)
              - retourne 'valeur' (chaine de caracteres) sinon
       """
-      newvaleur=self.eval_val(valeur)
+      newvaleur=self.evalVal(valeur)
       return newvaleur,1
 
 

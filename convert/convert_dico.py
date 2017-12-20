@@ -23,7 +23,7 @@ from __future__ import absolute_import
 #from Extensions import localisation
 
 
-from .convert_python import PythonParser
+from .convert_python import Pythonparser
 from Noyau import N_CR
 
 try:
@@ -39,10 +39,10 @@ def entryPoint():
    """
    return {
           'name' : 'dico',
-          'factory' : DicoParser
+          'factory' : Dicoparser
           }
 
-class DicoParser(PythonParser):
+class Dicoparser(Pythonparser):
   """
    This converter initializes model variable from a python dictionnary
   """

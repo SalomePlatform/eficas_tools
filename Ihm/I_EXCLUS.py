@@ -24,7 +24,7 @@ from __future__ import absolute_import
 from . import I_REGLE
 
 class EXCLUS(I_REGLE.REGLE):
-  def purge_liste(self,liste_a_purger,listeMcPresents):
+  def purgeListe(self,liste_a_purger,listeMcPresents):
      regle_active=0
      for mc_present in listeMcPresents:
         if mc_present in self.mcs:

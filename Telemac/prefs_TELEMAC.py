@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
+#            maConfiguration MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
@@ -41,8 +41,11 @@ docPath=repIni
 catalogues=(
    #('TELEMAC','default',os.path.join(repIni,'Telemac_Cata_nouveau.py'),'TELEMAC','python'),
    #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','TELEMAC'),
-   ('2D','cas',os.path.join(repIni,'Telemac2d_Cata_auto.py'),'TELEMAC','TELEMAC'),
+   #('2D','cas',os.path.join(repIni,'Telemac2d_Cata_auto.py'),'TELEMAC','TELEMAC'),
+   ('TELEMAC','pn',os.path.join(repIni,'telemac2d_V6_cata.py'),'TELEMAC','TELEMAC'),
+   #('2222D','cas',os.path.join(repIni,'telemac2d_V6_cata.py'),'TELEMAC','TELEMAC'),
    #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'python','TELEMAC3'),
+   #('YOHAN','cas',os.path.join(repIni,'Cata.py'),'TELEMAC','TELEMAC'),
    #('TELEMAC','comm',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC2','python'),
 )
 mode_nouv_commande="figee"

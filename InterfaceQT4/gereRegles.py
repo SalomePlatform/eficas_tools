@@ -51,7 +51,7 @@ class GereRegles(object) :
        self.liste=[]
        if len(listeRegles) > 0:
           for regle in listeRegles :
-             texteRegle=regle.gettext()
+             texteRegle=regle.getText()
              texteMauvais,test = regle.verif(listeNomsEtapes)
              for ligne in texteRegle.split("\n") :
                 if ligne == "" : continue

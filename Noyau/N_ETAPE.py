@@ -79,10 +79,10 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         self.mc_globaux = {}
         self.sd = None
         self.actif = 1
-        self.make_register()
+        self.makeRegister()
         self.icmd = None
 
-    def make_register(self):
+    def makeRegister(self):
         """
         Initialise les attributs jdc, id, niveau et realise les
         enregistrements necessaires
@@ -112,7 +112,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         """
         self.mc_liste = self.build_mc()
 
-    def Build_sd(self, nom):
+    def buildSd(self, nom):
         """
            Construit le concept produit de l'operateur. Deux cas
            peuvent se presenter :
@@ -270,7 +270,7 @@ Causes possibles :
         """
         return self.actif
 
-    def set_current_step(self):
+    def setCurrentStep(self):
         """
             Methode utilisee pour que l etape self se declare etape
             courante. Utilise par les macros
@@ -280,10 +280,10 @@ Causes possibles :
             raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre le parent de", self.nom, self)
         else:
-            CONTEXT.unset_current_step()
-            CONTEXT.set_current_step(self)
+            CONTEXT.unsetCurrentStep()
+            CONTEXT.setCurrentStep(self)
 
-    def reset_current_step(self):
+    def resetCurrentStep(self):
         """
               Methode utilisee par l'etape self qui remet son etape parent comme
               etape courante
@@ -293,8 +293,8 @@ Causes possibles :
             raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre", self.nom, self)
         else:
-            CONTEXT.unset_current_step()
-            CONTEXT.set_current_step(self.parent)
+            CONTEXT.unsetCurrentStep()
+            CONTEXT.setCurrentStep(self.parent)
 
     def issubstep(self, etape):
         """

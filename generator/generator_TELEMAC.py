@@ -320,7 +320,7 @@ class TELEMACGenerator(PythonGenerator):
 
    def NAME_OF_TRACER(self,obj):
        print((dir(obj) ))
-       print((obj.getGenealogie_precise()))
+       print((obj.getGenealogiePrecise()))
 
    def Validation(self,obj):
        self.texteDico += "VALIDATION : True \n"

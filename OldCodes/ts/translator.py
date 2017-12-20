@@ -16,8 +16,8 @@ def normalize( theTranslation ):
 def translate( theDicoFile, theCataFile, theTSFile, theNotTranslatedFile = '' ):
 	
 	SPECIAL = ['into', 'defaut']
-	DICO = DicoParser( theDicoFile, 'NOM', 'NOM1' )
-	PARSER = TSParser()
+	DICO = Dicoparser( theDicoFile, 'NOM', 'NOM1' )
+	PARSER = TSparser()
 	
 	def is_ok( theName, theObject ):
 		ok = isinstance( theObject, N_ENTITE.ENTITE ) or theName in SPECIAL

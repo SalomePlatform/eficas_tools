@@ -20,7 +20,7 @@
 
 """
    Ce module sert à nommer les concepts produits par les commandes.
-   Le nom du concept est obtenu en appelant la fonction GetNomConceptResultat
+   Le nom du concept est obtenu en appelant la fonction getNomConceptResultat
    du module avec le nom de la commande en argument.
 
    Cette fonction parcourt le source dans lequel la commande se trouve, parse le
@@ -56,7 +56,7 @@ regex1 = '=?\s*%s\s*\('
 pattern_comment = re.compile(r"^\s*#.*")
 
 
-def _GetNomConceptResultat(ope, level=2):
+def _getNomConceptResultat(ope, level=2):
     """
        Cette fonction recherche dans la pile des appels, l'appel à la commande
        qui doit etre situé à 2 niveaux au-dessus (cur_frame(2)).
@@ -166,7 +166,7 @@ class NamingSystem(N_utils.Singleton):
 
     def __init__(self):
         """Initialisation"""
-        self.native = _GetNomConceptResultat
+        self.native = _getNomConceptResultat
         self.use_global_naming()
 
     def use_naming_function(self, function):
@@ -181,4 +181,4 @@ class NamingSystem(N_utils.Singleton):
         """Appel à la fonction de nommage."""
         return self.naming_func(*args)
 
-GetNomConceptResultat = NamingSystem()
+getNomConceptResultat = NamingSystem()

@@ -19,7 +19,7 @@ Typical uses are :
 import sys,types,os
 import sre
 import unittest
-from optparse import OptionParser
+from optparse import Optionparser
 
 import config
 
@@ -176,7 +176,7 @@ class TestProgram(unittest.TestProgram):
         self.runTests()
 
     def parseArgs(self,argv):
-        parser = OptionParser(usage=self.USAGE)
+        parser = Optionparser(usage=self.USAGE)
         parser.add_option("-v","--verbose",action="count",
                           dest="verbosity",default=1,
                           help="Be more verbose. ")

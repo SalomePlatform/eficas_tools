@@ -68,15 +68,15 @@ class MCSIMP(I_OBJECT.OBJECT):
             self.definition.siValide(self)
       return Validation.V_MCSIMP.MCSIMP.isValid(self,cr=cr)
 
-  def GetNomConcept(self):
+  def getNomConcept(self):
       p=self
       while p.parent :
          try :
-            nomconcept=p.get_sdname()
+            nomconcept=p.getSdname()
             return nomconcept
          except:
             try :
-               nomconcept= p.object.get_sdname()
+               nomconcept= p.object.getSdname()
                return nomconcept
             except :
                pass
@@ -94,7 +94,7 @@ class MCSIMP(I_OBJECT.OBJECT):
     elif type(self.valeur) == float : 
       # traitement d'un flottant isole
       txt = str(self.valeur)
-      clefobj=self.GetNomConcept()
+      clefobj=self.getNomConcept()
       if clefobj in self.jdc.appli.appliEficas.dict_reels :
         if self.valeur in self.jdc.appli.appliEficas.dict_reels[clefobj]:
            txt=self.jdc.appli.appliEficas.dict_reels[clefobj][self.valeur]
@@ -105,7 +105,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       sep=''
       for val in self.valeur:
         if type(val) == float : 
-           clefobj=self.GetNomConcept()
+           clefobj=self.getNomConcept()
            if clefobj in self.jdc.appli.appliEficas.dict_reels:
               if val in self.jdc.appli.appliEficas.dict_reels[clefobj]:
                  txt=txt + sep +self.jdc.appli.appliEficas.dict_reels[clefobj][val]
@@ -144,13 +144,13 @@ class MCSIMP(I_OBJECT.OBJECT):
     # Pour le moment on retourne la chaine telle que
     return txt
 
-  def getval(self):
+  def getVal(self):
     """ 
        Retourne une chaine de caractere representant la valeur de self 
     """
     val=self.valeur
     if type(val) == float : 
-      clefobj=self.GetNomConcept()
+      clefobj=self.getNomConcept()
       if clefobj in self.jdc.appli.appliEficas.dict_reels :
         if val in self.jdc.appli.appliEficas.appliEficas.dict_reels[clefobj] :
            return self.jdc.appli.appliEficas.dict_reels[clefobj][val]
@@ -232,7 +232,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       if typ == 'TXM' :return 1
     return 0
 
-  def get_liste_valeurs(self):
+  def getListeValeurs(self):
     """
     """
     if self.valeur == None:
@@ -255,7 +255,7 @@ class MCSIMP(I_OBJECT.OBJECT):
 
 
 
-  def valid_val(self,valeur):
+  def validVal(self,valeur):
       """
         Verifie que la valeur passee en argument (valeur) est valide
         sans modifier la valeur courante 
@@ -278,15 +278,15 @@ class MCSIMP(I_OBJECT.OBJECT):
             valid=0
       return valid,mess
 
-  def valid_valeur(self,new_valeur):
+  def validValeur(self,new_valeur):
       """
         Verifie que la valeur passee en argument (new_valeur) est valide
         sans modifier la valeur courante (evite d'utiliser setValeur et est plus performant)
       """
-      validite,mess=self.valid_val(new_valeur)
+      validite,mess=self.validVal(new_valeur)
       return validite
 
-  def valid_valeur_partielle(self,new_valeur):
+  def validValeurPartielle(self,new_valeur):
       """
         Verifie que la valeur passee en argument (new_valeur) est une liste partiellement valide
         sans modifier la valeur courante du mot cle
@@ -308,9 +308,9 @@ class MCSIMP(I_OBJECT.OBJECT):
       """ Met a jour les blocs conditionnels dependant du mot cle simple self
       """
       if self.definition.position == 'global' : 
-         self.etape.deep_updateConditionBloc()
+         self.etape.deepUpdateConditionBloc()
       elif self.definition.position == 'global_jdc' :
-         self.jdc.deep_updateConditionBloc()
+         self.jdc.deepUpdateConditionBloc()
       else:
          self.parent.updateConditionBloc()
 
@@ -321,7 +321,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.val = new_valeur
         self.updateConditionBloc()
         self.etape.modified()
-        self.fin_modif()
+        self.finModif()
         return 1
 
   def evalValeur(self,new_valeur):
@@ -329,12 +329,12 @@ class MCSIMP(I_OBJECT.OBJECT):
         Essaie d'evaluer new_valeur comme une SD, une declaration Python 
         ou un EVAL: Retourne la valeur evaluee (ou None) et le test de reussite (1 ou 0)
     """
-    sd = self.jdc.get_sd_avant_etape(new_valeur,self.etape)
+    sd = self.jdc.getSdAvantEtape(new_valeur,self.etape)
     #sd = self.jdc.getContexte_avant(self.etape).get(new_valeur,None)
     #print sd
     if sd is not None:
       return sd,1
-    lsd = self.jdc.cherche_list_avant(self.etape,new_valeur) 
+    lsd = self.jdc.chercheListAvant(self.etape,new_valeur) 
     if lsd :
       return lsd,1
     else:
@@ -345,7 +345,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         objet = eval(new_valeur,d)
         return objet,1
       except Exception:
-        itparam=self.cherche_item_parametre(new_valeur)
+        itparam=self.chercheItemParametre(new_valeur)
         if itparam:
              return itparam,1
         try :
@@ -355,33 +355,33 @@ class MCSIMP(I_OBJECT.OBJECT):
         if CONTEXT.debug : traceback.print_exc()
         return None,0
 
-  def eval_val(self,new_valeur):
+  def evalVal(self,new_valeur):
     """
-       Tente d'evaluer new_valeur comme un objet du jdc (par appel a eval_val_item)
+       Tente d'evaluer new_valeur comme un objet du jdc (par appel a evalValItem)
        ou comme une liste de ces memes objets
        Si new_valeur contient au moins un separateur (,), tente l'evaluation sur
        la chaine splittee
     """
     if new_valeur in ('True','False') and 'TXM' in self.definition.type  :
-       valeur=self.eval_val_item(str(new_valeur))
+       valeur=self.evalValItem(str(new_valeur))
        return new_valeur
     if type(new_valeur) in (list,tuple):
        valeurretour=[]
        for item in new_valeur :
-          valeurretour.append(self.eval_val_item(item))
+          valeurretour.append(self.evalValItem(item))
        return valeurretour
     else:
-       valeur=self.eval_val_item(new_valeur)
+       valeur=self.evalValItem(new_valeur)
        return valeur
 
-  def eval_val_item(self,new_valeur):
+  def evalValItem(self,new_valeur):
     """
        Tente d'evaluer new_valeur comme un concept, un parametre, un objet Python
        Si c'est impossible retourne new_valeur inchange
        argument new_valeur : string (nom de concept, de parametre, expression ou simple chaine)
     """
     if self.etape and self.etape.parent:
-       valeur=self.etape.parent.eval_in_context(new_valeur,self.etape)
+       valeur=self.etape.parent.evalInContext(new_valeur,self.etape)
        return valeur
     else:
        try :
@@ -392,7 +392,7 @@ class MCSIMP(I_OBJECT.OBJECT):
            return new_valeur
            pass
 
-  def cherche_item_parametre (self,new_valeur):
+  def chercheItemParametre (self,new_valeur):
         try:
           nomparam=new_valeur[0:new_valeur.find("[")]
           indice=new_valeur[new_valeur.find(u"[")+1:new_valeur.find(u"]")]
@@ -409,11 +409,11 @@ class MCSIMP(I_OBJECT.OBJECT):
     if type(self.valeur) in (list,tuple) :
        if sd in self.valeur:
          self.initModif()
-         self.fin_modif()
+         self.finModif()
     else:
        if sd == self.valeur:
          self.initModif()
-         self.fin_modif()
+         self.finModif()
 
   def deleteConcept(self,sd):
     """ 
@@ -429,18 +429,18 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.initModif()
         self.valeur=list(self.valeur)
         self.valeur.remove(sd)
-        self.fin_modif()
+        self.finModif()
     elif type(self.valeur) == list:
       if sd in self.valeur:
         self.initModif()
         self.valeur.remove(sd)
-        self.fin_modif()
+        self.finModif()
     else:
       if self.valeur == sd:
         self.initModif()
         self.valeur=None
         self.val=None
-        self.fin_modif()
+        self.finModif()
     # Glut Horrible pour les matrices ???
     if sd.__class__.__name__== "variable":
        for type_permis in self.definition.type:
@@ -467,19 +467,19 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.valeur=list(self.valeur)
         i=self.valeur.index(old_sd)
         self.valeur[i]=sd
-        self.fin_modif()
+        self.finModif()
     elif type(self.valeur) == list:
       if old_sd in self.valeur:
         self.initModif()
         i=self.valeur.index(old_sd)
         self.valeur[i]=sd
-        self.fin_modif()
+        self.finModif()
     else:
       if self.valeur == old_sd:
         self.initModif()
         self.valeur=sd
         self.val=sd
-        self.fin_modif()
+        self.finModif()
 
   def setValeurCo(self,nom_co):
       """
@@ -492,7 +492,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       else:
          # Avant de creer un concept il faut s'assurer du contexte : step 
          # courant
-         sd= step.get_sd_autour_etape(nom_co,self.etape,avec='oui')
+         sd= step.getSdAutourEtape(nom_co,self.etape,avec='oui')
          if sd:
             # Si un concept du meme nom existe deja dans la portee de l'etape
             # on ne cree pas le concept
@@ -503,19 +503,19 @@ class MCSIMP(I_OBJECT.OBJECT):
          # Normalement la methode  du Noyau doit etre surchargee
          # On declare l'etape du mot cle comme etape courante pour NommerSdprod
          cs= CONTEXT.get_current_step()
-         CONTEXT.unset_current_step()
-         CONTEXT.set_current_step(step)
-         step.set_etape_context(self.etape)
+         CONTEXT.unsetCurrentStep()
+         CONTEXT.setCurrentStep(step)
+         step.setEtapeContext(self.etape)
          new_objet = Accas.CO(nom_co)
-         CONTEXT.unset_current_step()
-         CONTEXT.set_current_step(cs)
+         CONTEXT.unsetCurrentStep()
+         CONTEXT.setCurrentStep(cs)
       self.initModif()
       self.valeur = new_objet
       self.val = new_objet
       # On force l'enregistrement de new_objet en tant que concept produit 
       # de la macro en appelant getType_produit avec force=1
       self.etape.getType_produit(force=1)
-      self.fin_modif()
+      self.finModif()
       step.resetContext()
       #print "setValeurCo",new_objet
       return 1,tr("Concept cree")
@@ -541,15 +541,15 @@ class MCSIMP(I_OBJECT.OBJECT):
        if len(l) < len(self.valeur):
           self.initModif()
           self.valeur=tuple(l)
-          self.fin_modif()
+          self.finModif()
      else:
        if isinstance(self.valeur,ASSD) :
           if self.valeur not in l_sd_avant_etape and self.etape.getSdprods(self.valeur.nom) is None:
              self.initModif()
              self.valeur = None
-             self.fin_modif()
+             self.finModif()
  
-  def get_min_max(self):
+  def getMinMax(self):
      """
      Retourne les valeurs min et max admissibles pour la valeur de self
      """
@@ -562,7 +562,7 @@ class MCSIMP(I_OBJECT.OBJECT):
      """
      return self.definition.type
 
-  def delete_mc_global(self):
+  def deleteMcGlobal(self):
       """ Retire self des declarations globales
       """
       if self.definition.position == 'global' : 
@@ -572,7 +572,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       elif self.definition.position == 'global_jdc' :
          del self.jdc.mc_globaux[self.nom]
 
-  def update_mc_global(self):
+  def updateMcGlobal(self):
      """
         Met a jour les mots cles globaux enregistres dans l'etape parente
         et dans le jdc parent.
@@ -608,7 +608,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           valid=0
       return valid
 
-  def verif_type(self,item):
+  def verifType(self,item):
       """Verifie le type d'un item de liste"""
       try:
           #on verifie le type
@@ -656,24 +656,24 @@ class MCSIMP(I_OBJECT.OBJECT):
 
 
   def nbDeVariables(self):
-       listeVariables=self.jdc.get_variables(self.etape)
+       listeVariables=self.jdc.getVariables(self.etape)
        self.monType.nbLigs=len(listeVariables)
        self.monType.nbCols=len(listeVariables)
       
   def valideEnteteMatrice(self):
-      if self.jdc.get_distributions(self.etape) == () or self.valeur == None : return 0
-      if self.jdc.get_distributions(self.etape) != self.valeur[0] : return 0
+      if self.jdc.getDistributions(self.etape) == () or self.valeur == None : return 0
+      if self.jdc.getDistributions(self.etape) != self.valeur[0] : return 0
       return 1
      
   def changeEnteteMatrice(self):
-      a=[self.jdc.get_distributions(self.etape),]
+      a=[self.jdc.getDistributions(self.etape),]
       for t in self.valeur[1:]:
          a.append(t)
       self.valeur=a
 
 
   def nNbDeDistributions(self):
-       listeVariables=self.jdc.get_distributions(self.etape)
+       listeVariables=self.jdc.getDistributions(self.etape)
        self.monType.nbLigs=len(listeVariables)
        self.monType.nbCols=len(listeVariables)
       
@@ -683,19 +683,19 @@ class MCSIMP(I_OBJECT.OBJECT):
 # Elles doivent etre reintegrees des que possible
 
 
-  def verif_typeihm(self,val,cr='non'):
+  def verifTypeIhm(self,val,cr='non'):
       try :
          val.eval()
          return 1
       except :
          traceback.print_exc()
          pass
-      return self.verif_type(val,cr)
+      return self.verifType(val,cr)
 
-  def verif_typeliste(self,val,cr='non') :
+  def verifTypeliste(self,val,cr='non') :
       verif=0
       for v in val :
-        verif=verif+self.verif_typeihm(v,cr)
+        verif=verif+self.verifTypeIhm(v,cr)
       return verif
 
   def initModifUp(self):

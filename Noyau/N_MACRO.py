@@ -131,17 +131,17 @@ class MACRO(N_ENTITE.ENTITE):
             self.niveau.enregistre(self)
         self.UIinfo = UIinfo
         self.affecter_parente()
-        self.check_definition(self.nom)
+        self.checkDefinition(self.nom)
 
     def __call__(self, reuse=None, **args):
         """
             Construit l'objet MACRO_ETAPE a partir de sa definition (self),
             puis demande la construction de ses sous-objets et du concept produit.
         """
-        nomsd = self.nommage.GetNomConceptResultat(self.nom)
+        nomsd = self.nommage.getNomConceptResultat(self.nom)
         etape = self.class_instance(oper=self, reuse=reuse, args=args)
         etape.McBuild()
-        return etape.Build_sd(nomsd)
+        return etape.buildSd(nomsd)
 
     def make_objet(self, mc_list='oui'):
         """
