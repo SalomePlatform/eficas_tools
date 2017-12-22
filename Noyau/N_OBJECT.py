@@ -42,7 +42,7 @@ class OBJECT(object):
 
     """
 
-    def get_etape(self):
+    def getEtape(self):
         """
            Retourne l'étape à laquelle appartient self
            Un objet de la catégorie etape doit retourner self pour indiquer que
@@ -51,7 +51,7 @@ class OBJECT(object):
         """
         if self.parent == None:
             return None
-        return self.parent.get_etape()
+        return self.parent.getEtape()
 
     def supprime(self):
         """

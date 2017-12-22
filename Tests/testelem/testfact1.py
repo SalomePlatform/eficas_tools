@@ -67,7 +67,7 @@ Fin Mot cle Facteur :mcs1
    def test032(self):
        cata=FACT(max=3,a=SIMP(typ='I',statut='o'),)
        mcfact=cata({'a':1},'mcf',None)
-       self.assertEqual(mcfact[0].get_mocle('a') , 1)
+       self.assertEqual(mcfact[0].getMocle('a') , 1)
        self.assertEqual(mcfact['a'] , 1)
 
        mcfact=cata(({'a':1},{'a':2}),'mcf',None)

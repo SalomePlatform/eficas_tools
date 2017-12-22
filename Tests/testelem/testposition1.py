@@ -13,10 +13,10 @@ class TestCase(unittest.TestCase):
    def setUp(self):
       self.j=cata3.JdC(procedure="",nom="bidon")
       self.j.actif_status=1
-      CONTEXT.set_current_step(self.j)
+      CONTEXT.setCurrentStep(self.j)
 
    def tearDown(self):
-      CONTEXT.unset_current_step()
+      CONTEXT.unsetCurrentStep()
       self.j.supprime()
 
    def test001(self):

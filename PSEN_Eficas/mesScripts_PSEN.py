@@ -17,7 +17,7 @@ def exportToCsv(listeparam) :
         pass
 
     nouvelleVal=[]
-    prob=item.object.get_child('Probability')
+    prob=item.object.getChild('Probability')
     valeur=prob.getValeur()
     texte=""
     for v in valeur :
@@ -54,7 +54,7 @@ def importFromCsv(listeparam) :
     #fn=open('Classeur1.csv')
     if not fn : return
     nouvelleVal=[]
-    prob=item.object.get_child('Probability')
+    prob=item.object.getChild('Probability')
     monType=prob.definition.validators.typeDesTuples[0]
     listeObjet=item.object.etape.parent.getSdAvantDuBonType(item.object.etape,(monType,))
     for ligne in fn.readlines():
@@ -67,7 +67,7 @@ def importFromCsv(listeparam) :
         texte += nom + " : ignored (not known in Eficas) \n "
         continue
       try :
-        concept=item.jdc.get_concept(nom)
+        concept=item.jdc.getConcept(nom)
       except :
         texte += nom + ": ignored (not known in Eficas) \n "
         continue

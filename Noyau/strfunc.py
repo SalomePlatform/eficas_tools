@@ -33,7 +33,7 @@ import six
 _encoding = None
 
 
-def get_encoding():
+def getEncoding():
     """Return local encoding
     """
     global _encoding
@@ -45,19 +45,19 @@ def get_encoding():
     return _encoding
 
 
-def to_unicode(string):
+def toUnicode(string):
     """Try to convert string into a unicode string."""
     if type(string) is six.text_type:
         return string
     elif type(string) is dict:
         new = {}
         for k, v in list(string.items()):
-            new[k] = to_unicode(v)
+            new[k] = toUnicode(v)
         return new
     elif type(string) is list:
-        return [to_unicode(elt) for elt in string]
+        return [toUnicode(elt) for elt in string]
     elif type(string) is tuple:
-        return tuple(to_unicode(list(string)))
+        return tuple(toUnicode(list(string)))
     elif type(string) is not str:
         return string
     assert type(string) is str, u"unsupported object: %s" % string
@@ -70,7 +70,7 @@ def to_unicode(string):
     return six.text_type(string, 'utf-8', 'replace')
 
 
-#def from_unicode(ustring, encoding, errors='replace'):
+#def fromUnicode(ustring, encoding, errors='replace'):
 #    """Try to encode a unicode string using encoding."""
 #    try:
 #        return ustring.encode(encoding)
@@ -84,23 +84,23 @@ def to_unicode(string):
 #    if type(content) not in (str, six.text_type):
 #        content = six.text_type(content)
 #    if type(content) == str:
-#        content = to_unicode(content)
-#    return from_unicode(content, encoding or get_encoding(), errors)
+#        content = toUnicode(content)
+#    return fromUnicode(content, encoding or getEncoding(), errors)
 #
 #
 #def ufmt(uformat, *args):
 #    """Helper function to format a string by converting all its arguments to unicode"""
 #    if type(uformat) is not six.text_type:
-#        uformat = to_unicode(uformat)
+#        uformat = toUnicode(uformat)
 #    if len(args) == 1 and type(args[0]) is dict:
-#        arguments = to_unicode(args[0])
+#        arguments = toUnicode(args[0])
 #    else:
 #        nargs = []
 #        for arg in args:
 #            if type(arg) in (str, six.text_type, list, tuple, dict):
-#                nargs.append(to_unicode(arg))
+#                nargs.append(toUnicode(arg))
 #            elif type(arg) not in (int, int, float):
-#                nargs.append(to_unicode(str(arg)))
+#                nargs.append(toUnicode(str(arg)))
 #            else:
 #                nargs.append(arg)
 #        arguments = tuple(nargs)

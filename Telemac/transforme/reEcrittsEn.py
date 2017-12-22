@@ -121,7 +121,7 @@ def traite(fichier,fichierDico, fichierTs):
     
 if __name__ == "__main__":
   import optparse
-  parser=optparse.OptionParser(usage="utilisation : %prog [options]")
+  parser=optparse.Optionparser(usage="utilisation : %prog [options]")
   parser.add_option(u"-i","--input",dest="fichierIn",type='string',
                     help=("nom du fichier ts a traduire"))
   parser.add_option(u"-d","--dico",dest="fichierDico",type='string',

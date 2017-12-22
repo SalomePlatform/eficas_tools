@@ -32,4 +32,4 @@ __import__(name)
 
 
 from InterfaceQT4 import eficas_go
-eficas_go.lance_eficas(code=prefs.code)
+eficas_go.lanceEficas(code=prefs.code)

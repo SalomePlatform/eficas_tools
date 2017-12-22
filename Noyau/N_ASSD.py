@@ -48,7 +48,7 @@ class ASSD(object):
         if etape:
             self.parent = etape.parent
         else:
-            self.parent = CONTEXT.get_current_step()
+            self.parent = CONTEXT.getCurrentStep()
         if self.parent:
             self.jdc = self.parent.getJdcRoot()
         else:
@@ -57,7 +57,7 @@ class ASSD(object):
         if not self.parent:
             self.id = None
         elif reg == 'oui':
-            self.id = self.parent.reg_sd(self)
+            self.id = self.parent.regSD(self)
         else:
             self.id = self.parent.o_register(self)
         # permet de savoir si le concept a été calculé (1) ou non (0)
@@ -74,7 +74,7 @@ class ASSD(object):
         # 0 : assd normal, 1 : type CO, 2 : type CO typé
         self._as_co = 0
 
-    def _get_sdj(self):
+    def _getSdj(self):
         """Retourne le catalogue de SD associé au concept."""
         if self.ptr_sdj is None:
             cata_sdj = getattr(self, 'cata_sdj', None)
@@ -82,7 +82,7 @@ class ASSD(object):
                 % self.__class__.__name__
             assert self.nom, "The attribute 'nom' has not been filled!"
             if self.ptr_class_sdj is None:
-                self.ptr_class_sdj = import_object(cata_sdj)
+                self.ptr_class_sdj = importObject(cata_sdj)
             self.ptr_sdj = self.ptr_class_sdj(nomj=self.nom)
         return self.ptr_sdj
 
@@ -93,7 +93,7 @@ class ASSD(object):
             self.ptr_sdj = None
         self.ptr_class_sdj = None
 
-    sdj = property(_get_sdj, None, _del_sdj)
+    sdj = property(_getSdj, None, _del_sdj)
 
     def __getitem__(self, key):
         text_error = "ASSD.__getitem__ est déprécié car la référence a l'objet ETAPE parent sera supprimée."
@@ -101,12 +101,12 @@ class ASSD(object):
         warn(text_error, DeprecationWarning, stacklevel=2)
         return self.etape[key]
 
-    def set_name(self, nom):
+    def setName(self, nom):
         """Positionne le nom de self (et appelle sd_init)
         """
         self.nom = nom
 
-    def is_typco(self):
+    def isTypCO(self):
         """Permet de savoir si l'ASSD est issu d'un type CO.
         Retourne:
            0 : ce n'est pas un type CO
@@ -115,19 +115,19 @@ class ASSD(object):
         """
         return self._as_co
 
-    def change_type(self, new_type):
+    def changeType(self, new_type):
         """Type connu a posteriori (type CO)."""
         self.__class__ = new_type
         assert self._as_co != 0, 'it should only be called on CO object.'
         self._as_co = 2
 
-    def get_name(self):
+    def getName(self):
         """
             Retourne le nom de self, éventuellement en le demandant au JDC
         """
         if not self.nom:
             try:
-                self.nom = self.parent.get_name(self) or self.id
+                self.nom = self.parent.getName(self) or self.id
             except:
                 self.nom = ""
         if self.nom.find('sansnom') != -1 or self.nom == '':
@@ -140,15 +140,15 @@ class ASSD(object):
         'force' est utilisée pour faire des suppressions complémentaires
         (voir les formules dans N_FONCTION).
         """
-        self.supprime_sd()
+        self.supprimeSd()
         self.etape = None
         self.sd = None
         self.jdc = None
         self.parent = None
 
-    def supprime_sd(self):
+    def supprimeSd(self):
         """Supprime la partie du catalogue de SD."""
-        # 'del self.sdj' appellerait la méthode '_get_sdj()'...
+        # 'del self.sdj' appellerait la méthode '_getSdj()'...
         self._del_sdj()
 
 
@@ -183,7 +183,7 @@ class ASSD(object):
         """
         if CONTEXT.debug:
             print(('| accessible ?', self.nom))
-        is_accessible = CONTEXT.get_current_step().sd_accessible()
+        is_accessible = CONTEXT.getCurrentStep().sdAccessible()
         if CONTEXT.debug:
             print(('  `- is_accessible =', repr(is_accessible)))
         return is_accessible
@@ -205,13 +205,13 @@ class ASSD(object):
             ctxt[key] = value
         return ctxt
 
-    def par_lot(self):
+    def parLot(self):
         """Conserver uniquement pour la compatibilite avec le catalogue v9 dans eficas."""
         # XXX eficas
         if not hasattr(self, 'jdc') or self.jdc == None:
             val = None
         else:
-            val = self.jdc.par_lot
+            val = self.jdc.parLot
         return val == 'OUI'
 
     def rebuild_sd(self):

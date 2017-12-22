@@ -33,9 +33,9 @@ class PluginLoader(UserDict):
    def __init__(self,module):
       UserDict.__init__(self)
       self.plugin_dir=module.__path__[0]
-      self.plugin_set_name=module.__name__
+      self.plugin_setName=module.__name__
       _module_list = glob.glob( os.path.join( self.plugin_dir,
-                              '%s*py' % self.plugin_set_name,
+                              '%s*py' % self.plugin_setName,
                                            )
                               )
       _module_list.sort()
@@ -43,7 +43,7 @@ class PluginLoader(UserDict):
       for _module_name in _module_list:
 
         _module_name = os.path.basename(_module_name)[:-3]
-        _import_name = '%s.%s' % ( self.plugin_set_name,
+        _import_name = '%s.%s' % ( self.plugin_setName,
                                    _module_name )
 
         try:

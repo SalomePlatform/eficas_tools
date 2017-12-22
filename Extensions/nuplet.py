@@ -62,7 +62,7 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
       self.idracine="NUPLET"
       self.affecter_parente()
 
-   def verif_cata(self):
+   def verifCata(self):
       """
           Cette methode sert a valider les attributs de l'objet de definition
           de la classe NUPL
@@ -81,7 +81,7 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
         self.cr.fatal(tr("L'attribut 'statut' doit valoir 'o','f','c' ou 'd'"))
       if type(self.docu) != bytes :
         self.cr.fatal(tr("L'attribut 'docu' doit etre une chaine de caracteres"))
-      self.verif_cata_regles()
+      self.verifCataRegles()
 
    def __call__(self,val,nom,parent):
       """
@@ -105,7 +105,7 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
            Methode qui cree le rapport de verification du catalogue du nuplet 
       """
       self.cr = self.CR()
-      self.verif_cata()
+      self.verifCata()
       for v in self.entites :
         cr = v.report()
         cr.debut =tr("Debut ")+v.__class__.__name__+ ' : '

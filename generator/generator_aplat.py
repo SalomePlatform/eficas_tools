@@ -283,7 +283,7 @@ class AplatGenerator(object):
           Convertit un objet derive d'ASSD en une chaine de caracteres a la
           syntaxe aplat 
       """
-      return obj.get_name()
+      return obj.getName()
 
    def generMCList(self,obj):
       """

@@ -86,7 +86,7 @@ class MCCOMPO(object):
             self.cr.fatal(' '.join((self.txt_nat, self.nom, str(e))))
         return self.cr
 
-    def verif_regles(self):
+    def verifRegles(self):
         """
            A partir du dictionnaire des mots-cles presents, verifie si les regles
            de self sont valides ou non.

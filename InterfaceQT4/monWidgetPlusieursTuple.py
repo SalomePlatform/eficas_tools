@@ -87,7 +87,7 @@ class TupleCustom(object) :
              valeur=eval(val,{})
          except :
            try :
-             d=self.parentQt.objSimp.jdc.getContexte_avant(self.parentQt.objSimp. etape)
+             d=self.parentQt.objSimp.jdc.getContexteAvant(self.parentQt.objSimp. etape)
              valeur=eval(val,d)
            except :
              valeur=val
@@ -118,7 +118,7 @@ class TupleCustom(object) :
            valeur=eval(val,{})
          except :
            try :
-             d=self.parentQt.objSimp.jdc.getContexte_avant(self.parentQt.objSimp. etape)
+             d=self.parentQt.objSimp.jdc.getContexteAvant(self.parentQt.objSimp. etape)
              valeur=eval(val,d)
            except :
              valeur=val
@@ -370,7 +370,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          if  hasattr(self.objSimp.jdc,'LineDico'):
           for k in self.objSimp.jdc.LineDico :
               try :
-               valeur=self.objSimp.jdc.get_concept(k)
+               valeur=self.objSimp.jdc.getConcept(k)
                val.append((valeur,0))
               except :
                pass
@@ -380,7 +380,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          if  hasattr(self.objSimp.jdc,'MachineDico'):
           for k in self.objSimp.jdc.MachineDico :
               try :
-               valeur=self.objSimp.jdc.get_concept(k)
+               valeur=self.objSimp.jdc.getConcept(k)
                val.append((valeur,0))
               except :
                pass
@@ -390,7 +390,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          if  hasattr(self.objSimp.jdc,'TransfoDico'):
           for k in self.objSimp.jdc.TransfoDico :
               try :
-               valeur=self.objSimp.jdc.get_concept(k)
+               valeur=self.objSimp.jdc.getConcept(k)
                val.append((valeur,0))
               except :
                pass
@@ -400,7 +400,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          if  hasattr(self.objSimp.jdc,'LoadDico'):
           for k in self.objSimp.jdc.LoadDico :
               try :
-               valeur=self.objSimp.jdc.get_concept(k)
+               valeur=self.objSimp.jdc.getConcept(k)
                val.append((valeur,0))
               except :
                pass
@@ -410,7 +410,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          if  hasattr(self.objSimp.jdc,'MotorDico'):
           for k in self.objSimp.jdc.MotorDico :
               try :
-               valeur=self.objSimp.jdc.get_concept(k)
+               valeur=self.objSimp.jdc.getConcept(k)
                val.append((valeur,0))
               except :
                pass

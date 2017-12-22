@@ -40,7 +40,7 @@ from . import N_OBJECT
 from . import N_CR
 from .N_Exception import AsException, InterruptParsingError
 from .N_ASSD import ASSD
-from .strfunc import get_encoding
+from .strfunc import getEncoding
 from six.moves import range
 
 
@@ -111,8 +111,8 @@ NONE = None
         self.args.update(args)
         self.nstep = 0
         self.nsd = 0
-        self.par_lot = 'OUI'
-        self.par_lot_user = None
+        self.parLot = 'OUI'
+        self.parLot_user = None
         if definition:
             self.regles = definition.regles
             self.code = definition.code
@@ -154,7 +154,7 @@ NONE = None
             # Python 2.7 compile function does not accept unicode filename, so we encode it
             # with the current locale encoding in order to have a correct
             # traceback
-            encoded_filename = self.nom.encode(get_encoding())
+            encoded_filename = self.nom.encode(getEncoding())
             self.proc_compile = compile(
                 self.procedure, encoded_filename, 'exec')
         except SyntaxError as e:
@@ -176,7 +176,7 @@ Causes possibles :
             self.cr.exception("Compilation impossible : " + ''.join(l))
         return
 
-    def exec_compile(self):
+    def execCompile(self):
         """
            Cette methode execute le jeu de commandes compile dans le contexte
            self.g_context de l'objet JDC
@@ -235,8 +235,8 @@ Causes possibles :
             # Fonctionnement normal, ne doit pas etre considere comme une
             # erreur
             CONTEXT.unsetCurrentStep()
-            self.affiche_fin_exec()
-            self.traiter_fin_exec('commande')
+            self.afficheFinExec()
+            self.traiterFinExec('commande')
 
         except AsException as e:
             # une erreur a ete identifiee
@@ -261,10 +261,10 @@ Causes possibles :
             CONTEXT.unsetCurrentStep()
 
        # except self.UserError as exc_val:
-       #     self.traiter_user_exception(exc_val)
+       #     self.traiterUserException(exc_val)
        #     CONTEXT.unsetCurrentStep()
-       #     self.affiche_fin_exec()
-       #     self.traiter_fin_exec('commande')
+       #     self.afficheFinExec()
+       #     self.traiterFinExec('commande')
 
         except:
             # erreur inattendue
@@ -282,7 +282,7 @@ Causes possibles :
             del exc_typ, exc_val, exc_fr
             CONTEXT.unsetCurrentStep()
 
-    def affiche_fin_exec(self):
+    def afficheFinExec(self):
         """
            Cette methode realise l'affichage final des statistiques de temps
            apres l'execution de toutes
@@ -291,7 +291,7 @@ Causes possibles :
         """
         return
 
-    def traiter_fin_exec(self, mode, etape=None):
+    def traiterFinExec(self, mode, etape=None):
         """
            Cette methode realise un traitement final apres l'execution de toutes
            les commandes en mode commande par commande ou par lot
@@ -300,7 +300,7 @@ Causes possibles :
         """
         print ( "FIN D'EXECUTION %s %s" %s( mode, etape))
 
-    def traiter_user_exception(self, exc_val):
+    def traiterUserException(self, exc_val):
         """Cette methode realise un traitement sur les exceptions utilisateur
            Par defaut il n'y a pas de traitement. La methode doit etre
            surchargee pour en introduire un.
@@ -314,7 +314,7 @@ Causes possibles :
         """
         self.etapes.append(etape)
         self.index_etapes[etape] = len(self.etapes) - 1
-        return self.g_register(etape)
+        return self.gRegister(etape)
 
     def o_register(self, sd):
         """
@@ -324,7 +324,7 @@ Causes possibles :
         nom = sd.idracine + self.SEP + repr(self.nsd)
         return nom
 
-    def g_register(self, etape):
+    def gRegister(self, etape):
         """
             Retourne un identificateur pour etape
         """
@@ -332,7 +332,7 @@ Causes possibles :
         idetape = etape.idracine + self.SEP + repr(self.nstep)
         return idetape
 
-    def create_sdprod(self, etape, nomsd):
+    def createSdprod(self, etape, nomsd):
         """
             Cette methode doit fabriquer le concept produit retourne
             par l'etape etape et le nommer.
@@ -374,16 +374,16 @@ Causes possibles :
             raise AsException(
                 "Nom de concept invalide. '%s' est un mot-cle reserve." % sdnom)
 
-        # Ajoute a la creation (appel de reg_sd).
+        # Ajoute a la creation (appel de regSD).
         self.sds_dict[sdnom] = sd
-        sd.set_name(sdnom)
+        sd.setName(sdnom)
 
         # En plus si restrict vaut 'non', on insere le concept dans le contexte
         # du JDC
         if restrict == 'non':
             self.g_context[sdnom] = sd
 
-    def reg_sd(self, sd):
+    def regSD(self, sd):
         """
             Methode appelee dans l __init__ d un ASSD lors de sa creation
             pour s enregistrer
@@ -444,7 +444,7 @@ Causes possibles :
             linecache.cache[fname] = 0, 0, text.split('\n'), fname
             return fname, text
 
-    def set_par_lot(self, par_lot, user_value=False):
+    def set_parLot(self, parLot, user_value=False):
         """
         Met le mode de traitement a PAR LOT
         ou a COMMANDE par COMMANDE
@@ -454,16 +454,16 @@ Causes possibles :
         En PAR_LOT='NON', il n'y a pas d'ambiguite.
         d'analyse et juste avant la phase d'execution.
         `user_value` : permet de stocker la valeur choisie par l'utilisateur
-        pour l'interroger plus tard (par exemple dans `getContexte_avant`).
+        pour l'interroger plus tard (par exemple dans `getContexteAvant`).
         """
         if user_value:
-            self.par_lot_user = par_lot
+            self.parLot_user = parLot
         if self.appli == None:
             # Pas d application maitre
-            self.par_lot = par_lot
+            self.parLot = parLot
         else:
             # Avec application maitre
-            self.par_lot = 'OUI'
+            self.parLot = 'OUI'
 
     def accept(self, visitor):
         """
@@ -497,7 +497,7 @@ Causes possibles :
             console = None
             CONTEXT.unsetCurrentStep()
 
-    def getContexte_avant(self, etape):
+    def getContexteAvant(self, etape):
         """
            Retourne le dictionnaire des concepts connus avant etape
            On tient compte des commandes qui modifient le contexte
@@ -512,7 +512,7 @@ Causes possibles :
         # Si on insère des commandes (par ex, dans EFICAS), il faut prealablement
         # remettre ce pointeur a 0
         # self.current_context.items() if isinstance(v, ASSD)])
-        if self.par_lot_user == 'NON':
+        if self.parLot_user == 'NON':
             d = self.current_context = self.g_context.copy()
             if etape is None:
                 return d
@@ -552,43 +552,43 @@ Causes possibles :
         self.index_etape_courante = index_etape
         return d
 
-    def get_global_contexte(self):
+    def getGlobalContexte(self):
         """Retourne "un" contexte global ;-)"""
         # N'est utilise que par INCLUDE (sauf erreur).
         # g_context est remis a {} en PAR_LOT='OUI'. const_context permet
-        # de retrouver ce qui y a ete mis par exec_compile.
+        # de retrouver ce qui y a ete mis par execCompile.
         # Les concepts n'y sont pas en PAR_LOT='OUI'. Ils sont ajoutes
-        # par get_global_contexte de la MACRO.
+        # par getGlobalContexte de la MACRO.
         d = self.const_context.copy()
         d.update(self.g_context)
         return d
 
-    def getContexte_courant(self, etape_courante=None):
+    def getContexteCourant(self, etape_courante=None):
         """
            Retourne le contexte tel qu'il est (ou 'sera' si on est en phase
            de construction) au moment de l'execution de l'etape courante.
         """
         if etape_courante is None:
-            etape_courante = CONTEXT.get_current_step()
-        return self.getContexte_avant(etape_courante)
+            etape_courante = CONTEXT.getCurrentStep()
+        return self.getContexteAvant(etape_courante)
 
-    def get_concept(self, nomsd):
+    def getConcept(self, nomsd):
         """
             Methode pour recuperer un concept a partir de son nom
         """
-        co = self.getContexte_courant().get(nomsd.strip(), None)
+        co = self.getContexteCourant().get(nomsd.strip(), None)
         if not isinstance(co, ASSD):
             co = None
         return co
 
-    def get_concept_by_type(self, nomsd, typesd, etape):
+    def getConceptByType(self, nomsd, typesd, etape):
         """
             Methode pour recuperer un concept a partir de son nom et de son type.
             Il aura comme père 'etape'.
         """
         assert issubclass(typesd, ASSD), typesd
         co = typesd(etape=etape)
-        co.set_name(nomsd)
+        co.setName(nomsd)
         co.executed = 1
         return co
 
@@ -602,7 +602,7 @@ Causes possibles :
         except:
             pass
 
-    def get_cmd(self, nomcmd):
+    def getCmd(self, nomcmd):
         """
             Methode pour recuperer la definition d'une commande
             donnee par son nom dans les catalogues declares
@@ -620,14 +620,14 @@ Causes possibles :
         self.etapes.append(etape)
         self.index_etapes[etape] = len(self.etapes) - 1
         etape.reparent(self)
-        etape.reset_jdc(self)
+        etape.resetJdc(self)
 
-    def sd_accessible(self):
+    def sdAccessible(self):
         """On peut acceder aux "valeurs" (jeveux) des ASSD si le JDC est en PAR_LOT="NON".
         """
         if CONTEXT.debug:
-            print((' `- JDC sd_accessible : PAR_LOT =', self.par_lot))
-        return self.par_lot == 'NON'
+            print((' `- JDC sdAccessible : PAR_LOT =', self.parLot))
+        return self.parLot == 'NON'
 
     def _build_reserved_kw_list(self):
         """Construit la liste des mots-cles reserves (interdits pour le

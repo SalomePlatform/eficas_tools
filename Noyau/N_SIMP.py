@@ -94,18 +94,18 @@ class SIMP(N_ENTITE.ENTITE):
         if self.min     == '**' : self.min     = float('-inf')
         if self.val_min == '**' : self.val_min = float('-inf')
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Cette methode sert à valider les attributs de l'objet de définition
             de la classe SIMP
         """
-        self.check_min_max()
-        self.check_fr()
-        self.check_statut()
-        self.check_homo()
-        self.check_into()
-        self.check_position()
-        self.check_validators()
+        self.checkMinMax()
+        self.checkFr()
+        self.checkStatut()
+        self.checkHomo()
+        self.checkInto()
+        self.checkPosition()
+        self.checkValidators()
 
     def __call__(self, val, nom, parent=None):
         """

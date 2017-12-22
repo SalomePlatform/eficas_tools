@@ -216,14 +216,14 @@ def _preprocess_atom(string):
     if isinstance(string, (six.text_type, int, float, complex)):
         return string
     elif isinstance(string, str):
-        return _str_to_unicode(string)
+        return _str_toUnicode(string)
     else:
         raise EficasException("TypeError: Expected number, string or\
                               Unicode object!")
 
-def _str_to_unicode(string):
+def _str_toUnicode(string):
     """
-    _str_to_unicode(string) -> unicode
+    _str_toUnicode(string) -> unicode
     Tries to create a Unicode object out of the input string; assumes 
     the string is UTF-8 encoded; if not, then assume the string is 
     Latin-9 encoded.

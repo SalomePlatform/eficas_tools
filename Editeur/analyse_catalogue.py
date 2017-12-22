@@ -80,7 +80,7 @@ def chercheArgs(text):
                                 return text[1:i],''
 
 class ENTITE(object):
-        def cherche_enfants(self):
+        def chercheEnfants(self):
                 try :
                         self.text = self.text.strip()
                         liste = re.split(u'=',self.text,1)
@@ -94,12 +94,12 @@ class ENTITE(object):
                                         self.creeMc(nom_mc,arg_mc,reste[0:4])
                                 else :
                                         self.text = reste
-                                self.cherche_enfants()
+                                self.chercheEnfants()
                         else :
                                 # pas de = rencontre
                                 return
                 except Exception as e:
-                        self.cr.fatal(tr("Erreur rencontree dans recherche_enfants : %s", e.__str()))
+                        self.cr.fatal(tr("Erreur rencontree dans rechercheEnfants : %s", e.__str()))
                 
         def creeMc(self,nom_mc,arg_mc,test):
                 if test in l_noms_composes :
@@ -136,7 +136,7 @@ class COMMANDE_CATA(ENTITE) :
                 self.cr = CR()
                 self.cr.debut = "Debut commande %s" %self.nom
                 self.cr.fin = "Fin commande %s" %self.nom
-                self.cherche_enfants()
+                self.chercheEnfants()
                 self.construitListeDico()
                 parent.cr.add(self.cr)
 
@@ -168,7 +168,7 @@ class FACT_CATA(ENTITE) :
                 self.cr = CR()
                 self.cr.debut = "Debut mot-cle facteur ou bloc %s" %self.nom
                 self.cr.fin = "Fin mot-cle facteur ou bloc %s" %self.nom
-                self.cherche_enfants()
+                self.chercheEnfants()
                 self.construitListeDico()
                 parent.cr.add(self.cr)
 
@@ -187,11 +187,11 @@ class CATALOGUE_CATA(object):
                 self.cr = CR()
                 self.cr.debut = "Debut compte-rendu catalogue %s" %self.fichier
                 self.cr.fin = "Fin compte-rendu catalogue %s" %self.fichier
-                self.ouvrir_fichier()
+                self.ouvrirFichier()
                 self.liste_commandes=[]
                 self.liste_textes_commandes=[]
 
-        def ouvrir_fichier(self):
+        def ouvrirFichier(self):
                 try :
                         f=open(self.fichier,'r')
                         self.texte_complet=f.read()
@@ -289,7 +289,7 @@ def analyseCatalogue(parent,nom_cata):
         cata.analyseTexte(cata.texte_complet)
         return cata
 
-def analyseCatalogue_commande(parent,nom_cata):
+def analyseCatalogueCommande(parent,nom_cata):
         cata = CATALOGUE_CATA(parent,nom_cata)
         cata.analyseCommande(cata.texte_complet)
         cata.construitListeDico()

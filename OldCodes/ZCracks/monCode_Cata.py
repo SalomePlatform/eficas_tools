@@ -42,11 +42,11 @@ MAILLAGES = PROC(nom='MAILLAGES',op=None,
        repertoire=SIMP(typ='Repertoire',fr= "Repertoire ",ang= " Directory",statut= "f",),
     ),
   GROUPES=FACT(statut='f',
-       regles=(AU_MOINS_UN('elset_names','faset_names','liset_names','nset_names'),),
-       elset_names=SIMP(typ=grma,fr="",ang="names of volume element groups to be kept",min=1,max="**",statut="f"),
-       faset_names=SIMP(typ=grma,fr="",ang="names of surface element groups to be kept",min=1,max="**",statut="f"),
-       liset_names=SIMP(typ=grma,fr="",ang="names of line element groups to be kept",min=1,max="**",statut="f"),
-       nset_names=SIMP(typ=grno,fr="" ,ang="names of node element groups to be kept",min=1,max="**",statut="f"),
+       regles=(AU_MOINS_UN('elsetNames','fasetNames','lisetNames','nsetNames'),),
+       elsetNames=SIMP(typ=grma,fr="",ang="names of volume element groups to be kept",min=1,max="**",statut="f"),
+       fasetNames=SIMP(typ=grma,fr="",ang="names of surface element groups to be kept",min=1,max="**",statut="f"),
+       lisetNames=SIMP(typ=grma,fr="",ang="names of line element groups to be kept",min=1,max="**",statut="f"),
+       nsetNames=SIMP(typ=grno,fr="" ,ang="names of node element groups to be kept",min=1,max="**",statut="f"),
 )
 )
 

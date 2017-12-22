@@ -90,9 +90,9 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def updateDelegate(self):
         if len(self._object) > 1:
-           self.setdelegate(self._object)
+           self.setDelegate(self._object)
         else:
-           self.setdelegate(self._object.data[0])
+           self.setDelegate(self._object.data[0])
 
     def panel(self,jdcdisplay,pane,node):
         """ Retourne une instance de l'objet panneau associe a l'item (self)

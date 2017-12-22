@@ -101,13 +101,13 @@ class TreeItem(object):
     def getIconName(self):
         """Return name of icon to be displayed normally."""
 
-    def GetSelectedIconName(self):
+    def getSelectedIconName(self):
         """Return name of icon to be displayed when selected."""
 
     def getSubList(self):
         """Return list of items forming sublist."""
 
-    def OnDoubleClick(self):
+    def onDoubleClick(self):
         """Called on a double-click on the item."""
 
 class Delegate(object):
@@ -115,11 +115,11 @@ class Delegate(object):
         self.object = delegate
         self.__cache = {}
 
-    def setdelegate(self, delegate):
+    def setDelegate(self, delegate):
         self.resetcache()
         self.object = delegate
 
-    def getdelegate(self):
+    def getDelegate(self):
         return self.object
 
     def __getattr__(self, name):

@@ -94,11 +94,11 @@ class Interpreteur_Formule(object):
         self.parent = parent
         self.l_children = []
         if formule :
-            self.set_formule(formule)
+            self.setFormule(formule)
         if self.parent :
             self.parent.enregistre(self)
 
-    def set_formule(self,formule):
+    def setFormule(self,formule):
         """
         Stocke formule (tuple) dans l'attribut t_formule
         Methode externe

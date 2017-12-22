@@ -31,7 +31,7 @@ from Noyau.N_ASSD import ASSD
 from Noyau.N_CO import CO
 from . import N_OBJECT
 from .N_CONVERT import ConversionFactory
-from .N_types import force_list, is_sequence
+from .N_types import forceList, isSequence
 
 
 class MCSIMP(N_OBJECT.OBJECT):
@@ -98,9 +98,9 @@ class MCSIMP(N_OBJECT.OBJECT):
         # par "not has_attr(v, '__iter__')".
         if v is None:
             pass
-        elif is_sequence(v) and len(v) == 1 and self.definition.max == 1:
+        elif isSequence(v) and len(v) == 1 and self.definition.max == 1:
             v = v[0]
-        elif not is_sequence(v) and self.definition.max != 1:
+        elif not isSequence(v) and self.definition.max != 1:
             v = (v, )
         # traitement particulier pour les complexes ('RI', r, i)
         if 'C' in self.definition.type and self.definition.max != 1 and v != None and v[0] in ('RI', 'MP'):
@@ -110,7 +110,7 @@ class MCSIMP(N_OBJECT.OBJECT):
     def getVal(self):
         """
             Une autre méthode qui retourne une "autre" valeur du mot clé simple.
-            Elle est utilisée par la méthode get_mocle
+            Elle est utilisée par la méthode getMocle
         """
         return self.valeur
 
@@ -144,7 +144,7 @@ class MCSIMP(N_OBJECT.OBJECT):
         self.jdc = parent.jdc
         self.etape = parent.etape
 
-    def get_sd_utilisees(self):
+    def getSd_utilisees(self):
         """
             Retourne une liste qui contient la ou les SD utilisée par self si c'est le cas
             ou alors une liste vide
@@ -158,7 +158,7 @@ class MCSIMP(N_OBJECT.OBJECT):
                     l.append(val)
         return l
 
-    def get_sd_mcs_utilisees(self):
+    def getSd_mcs_utilisees(self):
         """
             Retourne la ou les SD utilisée par self sous forme d'un dictionnaire :
               - Si aucune sd n'est utilisée, le dictionnaire est vide.
@@ -169,25 +169,25 @@ class MCSIMP(N_OBJECT.OBJECT):
                         { 'VALE_F': [ <Cata.cata.fonction_sdaster instance at 0x9419854>,
                                       <Cata.cata.fonction_sdaster instance at 0x941a204> ] }
         """
-        l = self.get_sd_utilisees()
+        l = self.getSd_utilisees()
         dico = {}
         if len(l) > 0:
             dico[self.nom] = l
         return dico
 
-    def get_mcs_with_co(self, co):
+    def getMcsWithCo(self, co):
         """
             Cette methode retourne l'objet MCSIMP self s'il a le concept co
             comme valeur.
         """
-        if co in force_list(self.valeur):
+        if co in forceList(self.valeur):
             return [self, ]
         return []
 
-    def get_all_co(self):
+    def getAllCo(self):
         """
             Cette methode retourne la liste de tous les concepts co
             associés au mot cle simple
         """
-        return [co for co in force_list(self.valeur)
-                if isinstance(co, CO) and co.is_typco()]
+        return [co for co in forceList(self.valeur)
+                if isinstance(co, CO) and co.isTypCO()]

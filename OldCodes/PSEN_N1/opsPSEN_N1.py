@@ -74,7 +74,7 @@ def PROCESS(self,XLS_file,**args):
        self.OngletsValeurs=[]
     else :
        # On teste si on a modifie la liste des onglets
-       OngletsValeurs= self.get_child('Onglets').getVal()
+       OngletsValeurs= self.getChild('Onglets').getVal()
        
 
        if not (hasattr(self,'OngletsValeurs')) : self.OngletsValeurs=OngletsValeurs
@@ -87,8 +87,8 @@ def PROCESS(self,XLS_file,**args):
           self.OngletsValeurs=[]
           return
 
-       OldBusValeurs= self.get_child('BusList').getVal()
-       OldContValeurs= self.get_child('ContList').getVal()
+       OldBusValeurs= self.getChild('BusList').getVal()
+       OldContValeurs= self.getChild('ContList').getVal()
        if OldBusValeurs ==  None : OldBusValeurs=[]
        if OldContValeurs ==  None : OldContValeurs=[]
 

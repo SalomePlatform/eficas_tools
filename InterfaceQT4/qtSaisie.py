@@ -63,7 +63,7 @@ class SaisieValeur(object):
               if hasattr(self,"lineEditVal"):self.lineEditVal.setText(valeur)
             nouvelleValeur=valeur
          if self.node.item.definition.validators != None :
-          if self.node.item.definition.validators.verif_item(nouvelleValeur) !=1 :
+          if self.node.item.definition.validators.verifItem(nouvelleValeur) !=1 :
                 commentaire=self.node.item.definition.validators.infoErreurItem()
                 self.editor.afficheInfos(commentaire,Qt.red)
                 self.inSaisieValeur=False
@@ -172,5 +172,5 @@ class SaisieSDCO(object) :
            self.node.updateNodeValid()
         else :
            cr = self.node.item.getCr()
-           commentaire = tr("Valeur du mot-clef non autorisee :")+cr.get_mess_fatal()
+           commentaire = tr("Valeur du mot-clef non autorisee :")+cr.getMessFatal()
                                                                                          

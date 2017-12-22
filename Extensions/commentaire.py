@@ -39,7 +39,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     # parent est un objet de type OBJECT (ETAPE ou MC ou JDC...)
     self.valeur=valeur
     if not parent :
-      self.jdc = self.parent = CONTEXT.get_current_step()
+      self.jdc = self.parent = CONTEXT.getCurrentStep()
     else:
       self.jdc = self.parent = parent
     # La classe COMMENTAIRE n'a pas de definition. On utilise self

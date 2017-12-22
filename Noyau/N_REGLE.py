@@ -66,7 +66,7 @@ class REGLE(object):
         """
         raise NotImplementedError('class REGLE should be derived')
 
-    def liste_to_dico(self, args):
+    def listeToDico(self, args):
         """
            Cette méthode est utilitaire pour les seuls besoins
            des classes dérivées.

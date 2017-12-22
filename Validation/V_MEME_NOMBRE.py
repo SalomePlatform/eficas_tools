@@ -44,7 +44,7 @@ class MEME_NOMBRE(object):
         """
         #  on compte le nombre de mots cles presents
         text = ''
-        args = self.liste_to_dico(args)
+        args = self.listeToDico(args)
         size = -1
 
         for mc in self.mcs:

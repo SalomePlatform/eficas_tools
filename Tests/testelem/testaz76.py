@@ -15,11 +15,11 @@ def add_param(j,pos,nom,valeur):
     return co
 
 def add_mcsimp(obj,nom,valeur):
-    mcs=obj.get_child(nom,restreint='oui')
+    mcs=obj.getChild(nom,restreint='oui')
     if mcs is None:
-       pos=obj.getIndex_child(nom)
+       pos=obj.getIndexChild(nom)
        mcs=obj.addEntite(nom,pos)
-    mcs.set_valeur(mcs.eval_val(valeur))
+    mcs.set_valeur(mcs.evalVal(valeur))
     return mcs
 
 def cdiff(text1,text2):
@@ -30,7 +30,7 @@ class TestCase(unittest.TestCase):
       pass
 
    def tearDown(self):
-      CONTEXT.unset_current_step()
+      CONTEXT.unsetCurrentStep()
 
    def test000(self):
       """ Test de construction du fichier de commandes az.comm de zero"""
@@ -64,18 +64,18 @@ class TestCase(unittest.TestCase):
       co=j.addEntite("LIRE_MAILLAGE",pos)
       test,mess=co.nommeSd("MAILLA2")
       mcs=co.addEntite("UNITE")
-      valeur=mcs.eval_val("P4[1]")
+      valeur=mcs.evalVal("P4[1]")
       test=mcs.set_valeur(valeur)
 # formule
       pos=pos+1
       co=j.addEntite("FORMULE",pos)
-      co.update_formule_python(("aaa","REEL","a+z","(a,z)"))
+      co.updateFormulePython(("aaa","REEL","a+z","(a,z)"))
 # commande LIRE_MAILLAGE
       pos=pos+1
       ma=co=j.addEntite("LIRE_MAILLAGE",pos)
       test,mess=co.nommeSd("MAIL")
       mcs=co.addEntite("UNITE")
-      valeur,validite=mcs.eval_valeur("P3")
+      valeur,validite=mcs.evalValeur("P3")
       test=mcs.set_valeur(valeur)
 #
       pos=pos+1
@@ -84,38 +84,38 @@ class TestCase(unittest.TestCase):
 # formule
       pos=pos+1
       co=j.addEntite("FORMULE",pos)
-      co.update_formule_python(("az","REEL","aaaaa","(ae,inst)"))
+      co.updateFormulePython(("az","REEL","aaaaa","(ae,inst)"))
 # commande AFFE_MODELE
       pos=pos+1
       co=j.addEntite("AFFE_MODELE",pos)
-      mcs=co.get_child("MAILLAGE")
-      valeur,validite=mcs.eval_valeur("MAIL")
+      mcs=co.getChild("MAILLAGE")
+      valeur,validite=mcs.evalValeur("MAIL")
       assert valeur == ma.sd
       test=mcs.set_valeur(valeur)
       assert valeur == co["MAILLAGE"]
       mcf=co.addEntite("AFFE")
-      mcs=mcf[0].get_child("PHENOMENE")
-      valeur=mcs.eval_val_item('MECANIQUE')
+      mcs=mcf[0].getChild("PHENOMENE")
+      valeur=mcs.evalValItem('MECANIQUE')
       assert valeur=='MECANIQUE',str(valeur)
       test=mcs.set_valeur(valeur)
       assert mcf["PHENOMENE"] == 'MECANIQUE'
-      mcs=mcf[0].get_child("b_mecanique").get_child("MODELISATION")
-      mcs.set_valeur(mcs.eval_val_item('DIS_T'))
+      mcs=mcf[0].getChild("b_mecanique").getChild("MODELISATION")
+      mcs.set_valeur(mcs.evalValItem('DIS_T'))
       assert mcf["MODELISATION"] == 'DIS_T'
       mcs=add_mcsimp(mcf[0],"GROUP_MA",('RESSORT','eee',))
 
       mcf=co.addEntite("AFFE")
-      mcs=mcf[1].get_child("PHENOMENE")
-      mcs.set_valeur(mcs.eval_val_item('MECANIQUE'))
-      mcs=mcf[1].get_child("b_mecanique").get_child("MODELISATION")
-      mcs.set_valeur(mcs.eval_val_item('DIS_T'))
+      mcs=mcf[1].getChild("PHENOMENE")
+      mcs.set_valeur(mcs.evalValItem('MECANIQUE'))
+      mcs=mcf[1].getChild("b_mecanique").getChild("MODELISATION")
+      mcs.set_valeur(mcs.evalValItem('DIS_T'))
       mcs=add_mcsimp(mcf[1],"GROUP_MA",'MASSES')
 
       mcf=co.addEntite("AFFE")
-      mcs=mcf[2].get_child("PHENOMENE")
-      mcs.set_valeur(mcs.eval_val_item('ACOUSTIQUE'))
-      mcs=mcf[2].get_child("b_acoustique").get_child("MODELISATION")
-      mcs.set_valeur(mcs.eval_val_item('PLAN'))
+      mcs=mcf[2].getChild("PHENOMENE")
+      mcs.set_valeur(mcs.evalValItem('ACOUSTIQUE'))
+      mcs=mcf[2].getChild("b_acoustique").getChild("MODELISATION")
+      mcs.set_valeur(mcs.evalValItem('PLAN'))
       #mcs=add_mcsimp(mcf[2],"GROUP_NO",'GNP3,GNP5,GNP6,GNP7,GNP8,GNP9,GNP10,GNP11,GNP12')
       mcs=add_mcsimp(mcf[2],"GROUP_NO","'GNP3','GNP5','GNP6','GNP7','GNP8','GNP9','GNP10','GNP11','GNP12'")
 
@@ -123,29 +123,29 @@ class TestCase(unittest.TestCase):
 # commande AFFE_MODELE
       pos=pos+1
       co=j.addEntite("AFFE_MODELE",pos)
-      mcs=co.get_child("MAILLAGE")
-      mcs.set_valeur(mcs.eval_val("MAIL"))
+      mcs=co.getChild("MAILLAGE")
+      mcs.set_valeur(mcs.evalVal("MAIL"))
 
       mcf=co.addEntite("AFFE")
-      mcs=mcf[0].get_child("PHENOMENE")
-      valeur=mcs.eval_val_item('MECANIQUE')
+      mcs=mcf[0].getChild("PHENOMENE")
+      valeur=mcs.evalValItem('MECANIQUE')
       test=mcs.set_valeur(valeur)
-      mcs=mcf[0].get_child("b_mecanique").get_child("MODELISATION")
-      mcs.set_valeur(mcs.eval_val_item('DIS_T'))
+      mcs=mcf[0].getChild("b_mecanique").getChild("MODELISATION")
+      mcs.set_valeur(mcs.evalValItem('DIS_T'))
       mcs=add_mcsimp(mcf[0],"GROUP_MA",'RESSORT')
 
       mcf=co.addEntite("AFFE")
-      mcs=mcf[1].get_child("PHENOMENE")
-      mcs.set_valeur(mcs.eval_val_item('MECANIQUE'))
-      mcs=mcf[1].get_child("b_mecanique").get_child("MODELISATION")
-      mcs.set_valeur(mcs.eval_val_item('DIS_T'))
+      mcs=mcf[1].getChild("PHENOMENE")
+      mcs.set_valeur(mcs.evalValItem('MECANIQUE'))
+      mcs=mcf[1].getChild("b_mecanique").getChild("MODELISATION")
+      mcs.set_valeur(mcs.evalValItem('DIS_T'))
       mcs=add_mcsimp(mcf[1],"GROUP_MA",'MASSES')
 
       mcf=co.addEntite("AFFE")
-      mcs=mcf[2].get_child("PHENOMENE")
-      mcs.set_valeur(mcs.eval_val_item('THERMIQUE'))
-      mcs=mcf[2].get_child("b_thermique").get_child("MODELISATION")
-      mcs.set_valeur(mcs.eval_val_item('COQUE'))
+      mcs=mcf[2].getChild("PHENOMENE")
+      mcs.set_valeur(mcs.evalValItem('THERMIQUE'))
+      mcs=mcf[2].getChild("b_thermique").getChild("MODELISATION")
+      mcs.set_valeur(mcs.evalValItem('COQUE'))
       mcs=add_mcsimp(mcf[2],"TOUT",'OUI')
 
       co.nommeSd("MOD")
@@ -156,17 +156,17 @@ class TestCase(unittest.TestCase):
 #                              VALE=(3.0,P6,),),);
       pos=pos+1
       co=j.addEntite("AFFE_CARA_ELEM",pos)
-      mcs=co.get_child("MODELE")
-      mcs.set_valeur(mcs.eval_val("MOD"))
+      mcs=co.getChild("MODELE")
+      mcs.set_valeur(mcs.evalVal("MOD"))
       mcf=co.addEntite("POUTRE")
-      mcs=mcf[0].get_child("SECTION")
-      mcs.set_valeur(mcs.eval_val('CERCLE'))
+      mcs=mcf[0].getChild("SECTION")
+      mcs.set_valeur(mcs.evalVal('CERCLE'))
       assert mcf[0]["SECTION"] == 'CERCLE'
       mcs=add_mcsimp(mcf[0],"GROUP_MA",'MA')
-      mcs=mcf[0].get_child("b_cercle").get_child("b_constant").get_child("CARA")
-      mcs.set_valeur(mcs.eval_val('R'))
-      mcs=mcf[0].get_child("b_cercle").get_child("b_constant").get_child("VALE")
-      mcs.set_valeur(mcs.eval_val('3.0,P6'))
+      mcs=mcf[0].getChild("b_cercle").getChild("b_constant").getChild("CARA")
+      mcs.set_valeur(mcs.evalVal('R'))
+      mcs=mcf[0].getChild("b_cercle").getChild("b_constant").getChild("VALE")
+      mcs.set_valeur(mcs.evalVal('3.0,P6'))
       co.nommeSd("CARA")
 # commentaire
       pos=pos+1
@@ -180,19 +180,19 @@ class TestCase(unittest.TestCase):
 #                 VALE=(5.0,3.0,P4[1],P3,),);
       pos=pos+1
       co=j.addEntite("DEFI_FONCTION",pos)
-      mcs=co.get_child("NOM_PARA")
-      mcs.set_valeur(mcs.eval_val("DX"))
+      mcs=co.getChild("NOM_PARA")
+      mcs.set_valeur(mcs.evalVal("DX"))
       mcs=co.addEntite("VALE")
-      mcs.set_valeur(mcs.eval_val("5.0,3.0,P4[1],P3"))
+      mcs.set_valeur(mcs.evalVal("5.0,3.0,P4[1],P3"))
       co.nommeSd("F1")
 #F3=DEFI_FONCTION(NOM_PARA='DRX',
 #                 VALE_C=(5.0,7.0,9.0,9.0,8.0,7.0,),);
       pos=pos+1
       co=j.addEntite("DEFI_FONCTION",pos)
-      mcs=co.get_child("NOM_PARA")
-      mcs.set_valeur(mcs.eval_val("DRX"))
+      mcs=co.getChild("NOM_PARA")
+      mcs.set_valeur(mcs.evalVal("DRX"))
       mcs=co.addEntite("VALE_C")
-      mcs.set_valeur(mcs.eval_val("5.0,7.0,9.0,9.0,8.0,7.0"))
+      mcs.set_valeur(mcs.evalVal("5.0,7.0,9.0,9.0,8.0,7.0"))
       co.nommeSd("F3")
 # commentaire
       pos=pos+1
@@ -207,37 +207,37 @@ class TestCase(unittest.TestCase):
       pos=pos+1
       co=j.addEntite("DEFI_MATERIAU",pos)
       mcf=co.addEntite("ELAS")
-      mcs=mcf[0].get_child("E")
-      mcs.set_valeur(mcs.eval_val("100000000000.0"))
-      mcs=mcf[0].get_child("NU")
-      mcs.set_valeur(mcs.eval_val("0.0"))
+      mcs=mcf[0].getChild("E")
+      mcs.set_valeur(mcs.evalVal("100000000000.0"))
+      mcs=mcf[0].getChild("NU")
+      mcs.set_valeur(mcs.evalVal("0.0"))
       mcf=co.addEntite("ECRO_ASYM_LINE")
-      mcs=mcf[0].get_child("DC_SIGM_EPSI")
-      mcs.set_valeur(mcs.eval_val("0.0"))
-      mcs=mcf[0].get_child("DT_SIGM_EPSI")
-      mcs.set_valeur(mcs.eval_val("0.0"))
-      mcs=mcf[0].get_child("SY_C")
-      mcs.set_valeur(mcs.eval_val("200000000.0"))
-      mcs=mcf[0].get_child("SY_T")
-      mcs.set_valeur(mcs.eval_val("50000000.0"))
+      mcs=mcf[0].getChild("DC_SIGM_EPSI")
+      mcs.set_valeur(mcs.evalVal("0.0"))
+      mcs=mcf[0].getChild("DT_SIGM_EPSI")
+      mcs.set_valeur(mcs.evalVal("0.0"))
+      mcs=mcf[0].getChild("SY_C")
+      mcs.set_valeur(mcs.evalVal("200000000.0"))
+      mcs=mcf[0].getChild("SY_T")
+      mcs.set_valeur(mcs.evalVal("50000000.0"))
       co.nommeSd("MATER2")
 #PS1=DEFI_PARA_SENSI(VALE=1.0,);
 #PS2=DEFI_PARA_SENSI(VALE=1.0,);
 #PS3=DEFI_PARA_SENSI(VALE=1.0,);
       pos=pos+1
       co=j.addEntite("DEFI_PARA_SENSI",pos)
-      mcs=co.get_child("VALE")
-      mcs.set_valeur(mcs.eval_val("1.0"))
+      mcs=co.getChild("VALE")
+      mcs.set_valeur(mcs.evalVal("1.0"))
       co.nommeSd("PS1")
       pos=pos+1
       co=j.addEntite("DEFI_PARA_SENSI",pos)
-      mcs=co.get_child("VALE")
-      mcs.set_valeur(mcs.eval_val("1.0"))
+      mcs=co.getChild("VALE")
+      mcs.set_valeur(mcs.evalVal("1.0"))
       co.nommeSd("PS2")
       pos=pos+1
       co=j.addEntite("DEFI_PARA_SENSI",pos)
-      mcs=co.get_child("VALE")
-      mcs.set_valeur(mcs.eval_val("1.0"))
+      mcs=co.getChild("VALE")
+      mcs.set_valeur(mcs.evalVal("1.0"))
       co.nommeSd("PS3")
 #CHMAT2=AFFE_MATERIAU(MAILLAGE=MAIL,
 #                     AFFE=_F(TOUT='OUI',
@@ -245,7 +245,7 @@ class TestCase(unittest.TestCase):
       pos=pos+1
       co=j.addEntite("AFFE_MATERIAU",pos)
       add_mcsimp(co,"MAILLAGE","MAIL")
-      mcf=co.get_child("AFFE")
+      mcf=co.getChild("AFFE")
       add_mcsimp(mcf[0],"TOUT","OUI")
       add_mcsimp(mcf[0],"MATER","MATER2")
       co.nommeSd("CHMAT2")
@@ -267,7 +267,7 @@ class TestCase(unittest.TestCase):
       co=j.addEntite("THER_LINEAIRE",pos)
       add_mcsimp(co,"MODELE","AFFE1")
       add_mcsimp(co,"CHAM_MATER","CHMAT2")
-      mcf=co.get_child("EXCIT")
+      mcf=co.getChild("EXCIT")
       add_mcsimp(mcf[0],"CHARGE","AAAZ")
       add_mcsimp(co,"SENSIBILITE","PS1,PS2")
       co.nommeSd("TH1")
@@ -299,11 +299,11 @@ class TestCase(unittest.TestCase):
       pos=pos+1
       co=j.addEntite("MACRO_MATR_ASSE",pos)
       add_mcsimp(co,"MODELE","AFFE1")
-      mcs=co.get_child("NUME_DDL")
+      mcs=co.getChild("NUME_DDL")
       mcs.set_valeur_co('DDL1')
-      mcf=co.get_child("MATR_ASSE")
+      mcf=co.getChild("MATR_ASSE")
       add_mcsimp(mcf[0],"OPTION","RIGI_THER")
-      mcs=mcf[0].get_child("MATRICE")
+      mcs=mcf[0].getChild("MATRICE")
       mcs.set_valeur_co('MAT1')
 # commentaire
       pos=pos+1
@@ -337,7 +337,7 @@ class TestCase(unittest.TestCase):
 # formule
       pos=pos+1
       co=j.addEntite("FORMULE",pos)
-      co.update_formule_python(("aaa","REEL","a+z","(a,z)"))
+      co.updateFormulePython(("aaa","REEL","a+z","(a,z)"))
 #parametre de formule
       pos=pos+1
       co=add_param(j,pos,"P3","aaa(P1,2.)")

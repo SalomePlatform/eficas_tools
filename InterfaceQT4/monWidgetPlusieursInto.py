@@ -124,7 +124,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
             if self.node.item.isValid() == 0 :
                liste=[]
                for item in self.listeValeursCourantes:
-                   if self.node.item.definition.validators.verif_item(item)==1:
+                   if self.node.item.definition.validators.verifItem(item)==1:
                       liste.append(item)
                self.listeAAfficher=self.node.item.getListePossible(liste)
             else: 

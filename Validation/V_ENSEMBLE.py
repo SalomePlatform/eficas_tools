@@ -46,7 +46,7 @@ class ENSEMBLE(object):
         #  figurant dans la regle
         text = ''
         test = 1
-        args = self.liste_to_dico(args)
+        args = self.listeToDico(args)
         pivot = None
         for mc in self.mcs:
             if mc in args:

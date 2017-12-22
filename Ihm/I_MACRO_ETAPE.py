@@ -82,14 +82,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     """
     #print ("getContexteJdc",self,self.nom)
     # On recupere l'etape courante
-    step=CONTEXT.get_current_step()
+    step=CONTEXT.getCurrentStep()
     try:
     #if 1 :
        # on essaie de creer un objet JDC auxiliaire avec un contexte initial
-       # Attention getContexte_avant retourne un dictionnaire qui contient
+       # Attention getContexteAvant retourne un dictionnaire qui contient
        # le contexte courant. Ce dictionnaire est reactualise regulierement.
        # Si on veut garder l'etat du contexte fige, il faut en faire une copie.
-       context_ini = self.parent.getContexte_avant(self).copy()
+       context_ini = self.parent.getContexteAvant(self).copy()
        #print "getContexteJdc",context_ini.keys()
 
        # Indispensable avant de creer un nouveau JDC
@@ -475,7 +475,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # On ajoute egalement le concept produit dans le sds_dict du parent
     # sans verification car on est sur (verification integree) que
     # le nommage est possible
-    j_context=self.jdc_aux.getContexte_avant(None)
+    j_context=self.jdc_aux.getContexteAvant(None)
     self.g_context.clear()
     context_ini=self.jdc_aux.context_ini
     for k,v in j_context.items():
@@ -783,10 +783,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             self.jdc_aux.context_ini=d.copy()
             self.jdc_aux.current_context={}
             self.jdc_aux.index_etape_courante=0
-            #ATTENTION: il ne faut pas utiliser self.jdc_aux.getContexte_avant
+            #ATTENTION: il ne faut pas utiliser self.jdc_aux.getContexteAvant
             #car cet appel conduit a des remontees multiples incoherentes dans le
             # ou les parents. 
-            #get_context_avant appelle updateContext qui NE DOIT PAS appeler getContexte_avant
+            #get_context_avant appelle updateContext qui NE DOIT PAS appeler getContexteAvant
             #On n'a besoin que d'un update local connaissant
             # le contexte amont : d qui sert a reinitialiser self.context_ini
             for e in self.etapes:
@@ -853,7 +853,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       texte=texteSources+texteCond+texteNoCond+texteVcut
       #print (texte)
       self.buildIncludeInclude(texte)
-      if CONTEXT.get_current_step()==None : CONTEXT.setCurrentStep(self)
+      if CONTEXT.getCurrentStep()==None : CONTEXT.setCurrentStep(self)
       reevalue=0
 
   def makeIncludeCarmel(self,fichier=None):
@@ -874,7 +874,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            self.fichier_err=tr("Le fichier n est pas defini")
            self.parent.recordUnit(999,self)
            try :
-              MCFils=self.get_child('FileName')
+              MCFils=self.getChild('FileName')
               MCFils.setValeur(None)
            except :
               pass
@@ -904,7 +904,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.old_context_fichier_init=self.contexte_fichier_init
          self.parent.recordUnit(unite,self)
          try :
-            MCFils=self.get_child('FileName')
+            MCFils=self.getChild('FileName')
             #MCFils.setValeur(fichier)
             #on appelle pas setValeur qui modifie le contexte ce qui fout le bazar
             #pas de modification de bloc
@@ -939,7 +939,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            self.fichier_err=tr("Le fichier n est pas defini")
            self.parent.recordUnit(999,self)
            try :
-              MCFils=self.get_child('FileName')
+              MCFils=self.getChild('FileName')
               MCFils.setValeur(None)
            except :
               pass
@@ -990,7 +990,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.old_context_fichier_init=self.contexte_fichier_init
          self.parent.recordUnit(unite,self)
          try :
-            MCFils=self.get_child('FileName')
+            MCFils=self.getChild('FileName')
             MCFils.setValeur(fichier)
          except :
             pass
@@ -1003,16 +1003,16 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            if e.nom == "VARIABLE" :
               e.state="modified"
               try :
-                 mc=e.get_child('ModelVariable') 
+                 mc=e.getChild('ModelVariable') 
                  mc.state="modified"
               except :
                  pass
            if e.nom == "CORRELATION" :
               e.state="modified"
               try :
-                 mc=e.get_child('Matrix') 
+                 mc=e.getChild('Matrix') 
                  mc.state="modified"
-                 mcFeuille=mc.get_child('CorrelationMatrix')
+                 mcFeuille=mc.getChild('CorrelationMatrix')
                  mcFeuille.state="modified"
               except :
                  pass
@@ -1036,7 +1036,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.fichier_err = ''.join(l)
          self.contexte_fichier_init={}
          try :
-            MCFils=self.get_child('FileName')
+            MCFils=self.getChild('FileName')
             MCFils.setValeur(None)
          except :
             pass

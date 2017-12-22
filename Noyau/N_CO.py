@@ -40,14 +40,14 @@ class CO(ASSD) :
             try:
                 self.parent.NommerSdprod(self, nom)
             except AsException as e:
-                appel = N_utils.callee_where(niveau=2)
+                appel = N_utils.calleeWhere(niveau=2)
                 raise AsException(
                     "Concept CO, fichier: ", appel[1], " ligne : ", appel[0], '\n', e)
         else:
             self.nom = nom
 
     def __convert__(cls, valeur):
-        if valeur.is_typco():
+        if valeur.isTypCO():
             return valeur
         raise ValError("Pas un concept CO")
     __convert__ = classmethod(__convert__)

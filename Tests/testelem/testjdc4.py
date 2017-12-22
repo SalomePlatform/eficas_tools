@@ -16,11 +16,11 @@ def add_param(j,pos,nom,valeur):
     return co
 
 def add_mcsimp(obj,nom,valeur):
-    mcs=obj.get_child(nom,restreint='oui')
+    mcs=obj.getChild(nom,restreint='oui')
     if mcs is None:
-       pos=obj.getIndex_child(nom)
+       pos=obj.getIndexChild(nom)
        mcs=obj.addEntite(nom,pos)
-    mcs.set_valeur(mcs.eval_val(valeur))
+    mcs.set_valeur(mcs.evalVal(valeur))
     return mcs
 
 def cdiff(text1,text2):
@@ -33,7 +33,7 @@ class TestCase(unittest.TestCase):
       pass
 
    def tearDown(self):
-      CONTEXT.unset_current_step()
+      CONTEXT.unsetCurrentStep()
 
    i=0
    for f in ("params.comm",):

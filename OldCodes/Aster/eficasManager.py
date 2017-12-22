@@ -39,7 +39,7 @@ def start(catalogName=None):
         # The catalogName can be consider as the -c option
         sys.argv.append("-c")
         sys.argv.append(catalogName)
-    eficas_go.lance_eficas(code=prefs.code)
+    eficas_go.lanceEficas(code=prefs.code)
 
 # ===================================================================
 # This part is to manage the data saved from Eficas to comm file.

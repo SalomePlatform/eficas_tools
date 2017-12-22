@@ -51,14 +51,14 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       return self.nom
 
    def getSdname(self):
-      #print "SDNAME ",self.reuse,self.sd,self.sd.get_name()
+      #print "SDNAME ",self.reuse,self.sd,self.sd.getName()
       if CONTEXT.debug : 
-          print(("SDNAME ",  self.reuse,  self.sd,  self.sd.get_name()))
+          print(("SDNAME ",  self.reuse,  self.sd,  self.sd.getName()))
       sdname=''
       if self.reuse != None:
-        sdname= self.reuse.get_name()
+        sdname= self.reuse.getName()
       else:
-        if self.sd:sdname=self.sd.get_name()
+        if self.sd:sdname=self.sd.getName()
       if sdname.find('sansnom') != -1 or sdname.find('SD_') != -1:
         # dans le cas ou la SD est 'sansnom' ou 'SD_' on retourne la chaine vide
         return ''
@@ -353,7 +353,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           Retourne la liste des noms de concepts utilisesa l'interieur de la commande
           qui sont du type que peut retourner cette commande 
       """
-      liste_sd = self.get_sd_utilisees()
+      liste_sd = self.getSd_utilisees()
       l_noms = []
       if type(self.definition.sd_prod) == types.FunctionType:
         d=self.creeDictValeurs(self.mc_liste)

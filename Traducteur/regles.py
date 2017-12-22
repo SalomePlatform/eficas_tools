@@ -210,7 +210,7 @@ class existe :
     def __init__(self, list_arg):
         self.genea = list_arg
 
-    def cherche_mot(self, niveau, commande):
+    def chercheMot(self, niveau, commande):
         """
         Recherche du mot
         """
@@ -220,14 +220,14 @@ class existe :
         for c in commande.childNodes :
             if c.name == texte : 
                 niveau = niveau+1
-                return self.cherche_mot(niveau, c)
+                return self.chercheMot(niveau, c)
         return None
 
     def verif(self, commande):
         """
         Vérification
         """
-        bool = self.cherche_mot(0, commande)
+        bool = self.chercheMot(0, commande)
         if bool == None : bool = 0
         return bool
 
@@ -240,7 +240,7 @@ class nexistepas :
     def __init__(self, list_arg):
         self.genea = list_arg
 
-    def cherche_mot(self, niveau, commande):
+    def chercheMot(self, niveau, commande):
         """
         Recherche du mot
         """
@@ -250,14 +250,14 @@ class nexistepas :
         for c in commande.childNodes :
             if c.name == texte : 
                 niveau = niveau+1
-                return self.cherche_mot(niveau, c)
+                return self.chercheMot(niveau, c)
         return None
 
     def verif(self, commande):
         """
         Vérification
         """
-        bool = self.cherche_mot(0, commande)
+        bool = self.chercheMot(0, commande)
         if bool : return 0
         return 1
 

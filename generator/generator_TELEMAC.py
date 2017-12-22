@@ -60,7 +60,6 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None,appli=None,statut="Entier"):
 
-      print ('je suis dans le gener pour ', obj)
       self.statut=statut
       self.langue=appli.langue
       self.DicoEnumCasEnInverse={}
@@ -80,7 +79,6 @@ class TELEMACGenerator(PythonGenerator):
                  d[valEficas]=valTelemac
               self.DicoEnumCasEnInverse[motClef]=d
       self.initDico()
-      #print (self.DicoEnumCasEnInverse.keys())
       # Pour Simplifier les verifs d ecriture
       if hasattr(appli,'listeTelemac') : self.listeTelemac=appli.listeTelemac
       else : self.listeTelemac = ()
@@ -162,7 +160,6 @@ class TELEMACGenerator(PythonGenerator):
 
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
-        print ('je genere MCSIMP  pour', obj.nom)
         s=PythonGenerator.generMCSIMP(self,obj)
 
 
@@ -179,7 +176,6 @@ class TELEMACGenerator(PythonGenerator):
         #if nom in listeSupprime or s == "" : return s
         if s == "None," : s=None 
         if s == "" or s==None : return s
-        print ('je genere MCSIMP  22 pour', obj.nom)
 
         sTelemac=s[0:-1]
         if not( type(obj.valeur) in (tuple,list) ):
@@ -240,7 +236,6 @@ class TELEMACGenerator(PythonGenerator):
         if obj.nom not in self.dicoCataToCas :
            if obj.nom == 'Consigne' : return ""
            return s
-        print ('apres')
 
         nom=self.dicoCataToCas[obj.nom]
         if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
@@ -252,7 +247,6 @@ class TELEMACGenerator(PythonGenerator):
         if s3 == "" or s3 == " " : s3 = " "
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3)
-        print ('fin pour ', obj.nom, ligne)
         self.texteDico+=ligne
 
    def generMCFACT(self,obj):
@@ -263,56 +257,6 @@ class TELEMACGenerator(PythonGenerator):
 
       return s
 
-
-#  def LIQUID_BOUNDARIES(self,obj):
-#     print ('jkljklj')
-#     if 'BOUNDARY_TYPE' in  obj.listeMcPresents() :
-#         objForme=obj.get_child('BOUNDARY_TYPE')
-#         valForme=objForme.valeur
-#         if valForme == None : return
-
-
-#         if valForme == 'Prescribed Unknown':
-#            nomBloc='b_'+valForme.split(" ")[1]
-#            if nomBloc in  obj.listeMcPresents() :
-#               objBloc=obj.get_child(nomBloc)
-#               valeurPE = objValeur=objBloc.get_child(objBloc.listeMcPresents()[0]).valeur
-#               valeurFE = objValeur=objBloc.get_child(objBloc.listeMcPresents()[1]).valeur
-#               valeurVE = objValeur=objBloc.get_child(objBloc.listeMcPresents()[2]).valeur
-#               if valeurPE== None : valeurPE="0."
-#               if valeurFE== None : valeurPE="0."
-#               if valeurVE== None : valeurPE="0."
-#            self.PE=True
-#            self.textPE += str(valeurPE) +"; "
-#            self.FE=True
-#            self.textFE += str(valeurFE) +"; "
-#            self.VE=True
-#            self.textVE += str(valeurVE) +"; "
-#         else:
-#            nomBloc='b_'+valForme.split(" ")[1]
-#            if nomBloc in  obj.listeMcPresents() :
-#               objBloc=obj.get_child(nomBloc)
-#               objValeur=objBloc.get_child(objBloc.listeMcPresents()[0])
-#               valeur=objValeur.valeur
-#               if valeur== None : valeur="0."
-#            if valForme == 'Prescribed Elevations' :
-#                self.PE=True
-#                self.textPE += str(valeur) +"; "
-#            else : self.textPE += "0.; "
-#            if valForme == 'Prescribed Flowrates' :
-#                self.FE=True
-#                self.textFE += str(valeur) +"; "
-#            else : self.textFE += "0.; "
-#            if valForme == 'Prescribed Velocity'  :
-#                self.VE=True
-#                self.textVE += str(valeur) +"; "
-#            else : self.textVE += "0.; "
-
-#  def BOUNDARY_CONDITIONS(self,obj):
-#      # sans '; '
-#      if self.FE :  self.texteDico += self.textFE[0:-2]+'\n'
-#      if self.PE :  self.texteDico += self.textPE[0:-2]+'\n'
-#      if self.VE :  self.texteDico += self.textVE[0:-2]+'\n'
 
    def TRACERS(self,obj):
        if self.nbTracers != 0 :  self.texteDico += 'NUMBER_OF_TRACERS : '+str(self.nbTracers) + '\n'
@@ -326,15 +270,15 @@ class TELEMACGenerator(PythonGenerator):
        self.texteDico += "VALIDATION : True \n"
 
    def Date_De_L_Origine_Des_Temps (self,obj):
-       an=obj.get_child('Year').valeur
-       mois=obj.get_child('Month').valeur
-       jour=obj.get_child('Day').valeur
+       an=obj.getChild('Year').valeur
+       mois=obj.getChild('Month').valeur
+       jour=obj.getChild('Day').valeur
        self.texteDico += "ORIGINAL DATE OF TIME  :"+ str(an)+ " ,"+str(mois)+ "," +str(jour)+ "\n"
 
    def Original_Hour_Of_Time (self,obj):
-       hh=obj.get_child('Hour').valeur
-       mm=obj.get_child('Minute').valeur
-       ss=obj.get_child('Second').valeur
+       hh=obj.getChild('Hour').valeur
+       mm=obj.getChild('Minute').valeur
+       ss=obj.getChild('Second').valeur
        self.texteDico += "ORIGINAL HOUR OF TIME :"+str(hh)+" ,"+str(mm)+ ","+str(ss)+"\n"
 
    def Type_Of_Advection(self,obj):
@@ -363,7 +307,7 @@ class TELEMACGenerator(PythonGenerator):
 
    def chercheChildren(self,obj):
        for c in obj.listeMcPresents():
-           objc=obj.get_child(c)
+           objc=obj.getChild(c)
            if hasattr(objc,'listeMcPresents') and objc.listeMcPresents() != [] : self.chercheChildren(objc)
            else : self.listeMCAdvection.append(objc)
 
@@ -380,7 +324,7 @@ class TELEMACGenerator(PythonGenerator):
          lval=valeur.split(";")
          ligne="   "
          for v in lval :
-           if len(ligne+ str(v)+'; ') < 72 : ligne += str(v)+'; '
+           if len(ligne+ str(v)+'; ') < 70 : ligne += str(v)+'; '
            else :
               text+= ligne+"\n"
               ligne="   "+str(v)+'; '

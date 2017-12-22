@@ -47,7 +47,7 @@ class PRESENT_ABSENT(object):
         #   les autres sont absents
         text = ''
         test = 1
-        args = self.liste_to_dico(args)
+        args = self.listeToDico(args)
         mc0 = self.mcs[0]
         if mc0 in args :
             for mc in self.mcs[1:len(self.mcs)]:

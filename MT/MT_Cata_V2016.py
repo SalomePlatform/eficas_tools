@@ -68,7 +68,7 @@ class PalTor(ASSD):pass
 ##     """
 ##     """
 ##     if NOEUD is not None:
-##         self.type_sdprod(NOEUD, Noeud)
+##         self.typeSDProd(NOEUD, Noeud)
 ##         pass
 ##     else:
 ##         raise AsException("Impossible de typer les concepts resultats")

@@ -29,4 +29,4 @@
 import prefs
 from InterfaceTK import eficas_go
 
-eficas_go.lance_eficas()
+eficas_go.lanceEficas()

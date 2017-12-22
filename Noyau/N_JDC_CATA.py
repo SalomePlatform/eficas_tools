@@ -67,8 +67,8 @@ class JDC_CATA(N_ENTITE.ENTITE):
             self.d_niveaux[niveau.nom] = niveau
         # On change d'objet catalogue. Il faut d'abord mettre le catalogue
         # courant à None
-        CONTEXT.unset_current_cata()
-        CONTEXT.set_current_cata(self)
+        CONTEXT.unsetCurrentCata()
+        CONTEXT.setCurrentCata(self)
 
     def __call__(self, procedure=None, cata=None, cata_ord_dico=None,
                  nom='SansNom', parent=None, **args):
@@ -89,14 +89,14 @@ class JDC_CATA(N_ENTITE.ENTITE):
         """
         self.commandes.append(commande)
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Méthode de vérification des attributs de définition
         """
-        self.check_regles()
-        self.verif_cata_regles()
+        self.checkRegles()
+        self.verifCataRegles()
 
-    def verif_cata_regles(self):
+    def verifCataRegles(self):
         """
            Cette méthode vérifie pour tous les objets stockés dans la liste entités
            respectent les REGLES associés  à self
@@ -110,7 +110,7 @@ class JDC_CATA(N_ENTITE.ENTITE):
         self.cr = self.CR(
             debut=u"Compte-rendu de validation du catalogue " + self.code,
             fin=u"Fin Compte-rendu de validation du catalogue " + self.code)
-        self.verif_cata()
+        self.verifCata()
         for commande in self.commandes:
             cr = commande.report()
             cr.debut = u"Début Commande :" + commande.nom
@@ -126,7 +126,7 @@ class JDC_CATA(N_ENTITE.ENTITE):
         for commande in self.commandes:
             commande.supprime()
 
-    def get_niveau(self, nom_niveau):
+    def getNiveau(self, nom_niveau):
         """
              Retourne l'objet de type NIVEAU de nom nom_niveau
              ou None s'il n'existe pas

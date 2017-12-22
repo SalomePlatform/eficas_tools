@@ -185,7 +185,7 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
    def getVal(self):
       """
           Une autre methode qui retourne une "autre" valeur du mot cle facteur.
-          Elle est utilisee par la methode get_mocle
+          Elle est utilisee par la methode getMocle
       """
       l=[]
       for v in self.mc_liste:

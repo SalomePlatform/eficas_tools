@@ -71,11 +71,11 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         self.reuse = reuse
         self.valeur = args
         self.nettoiargs()
-        self.parent = CONTEXT.get_current_step()
+        self.parent = CONTEXT.getCurrentStep()
         self.etape = self
         self.nom = oper.nom
         self.idracine = oper.label
-        self.appel = N_utils.callee_where(niveau)
+        self.appel = N_utils.calleeWhere(niveau)
         self.mc_globaux = {}
         self.sd = None
         self.actif = 1
@@ -105,7 +105,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
             if self.valeur[k] == None:
                 del self.valeur[k]
 
-    def McBuild(self):
+    def MCBuild(self):
         """
            Demande la construction des sous-objets et les stocke dans l'attribut
            mc_liste.
@@ -127,7 +127,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         self.sdnom = nom
         try:
             if self.parent:
-                sd = self.parent.create_sdprod(self, nom)
+                sd = self.parent.createSdprod(self, nom)
                 if type(self.definition.op_init) == types.FunctionType:
                     self.definition.op_init(*(
                         self, self.parent.g_context))
@@ -138,7 +138,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                 if sd != None and self.reuse == None:
                     # On ne nomme le concept que dans le cas de non reutilisation
                     # d un concept
-                    sd.set_name(nom)
+                    sd.setName(nom)
         except AsException as e:
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1], e)
@@ -231,7 +231,7 @@ Causes possibles :
             sd_prod = self.definition.sd_prod
         return sd_prod
 
-    def get_etape(self):
+    def getEtape(self):
         """
            Retourne l'etape a laquelle appartient self
            Un objet de la categorie etape doit retourner self pour indiquer que
@@ -275,7 +275,7 @@ Causes possibles :
             Methode utilisee pour que l etape self se declare etape
             courante. Utilise par les macros
         """
-        cs = CONTEXT.get_current_step()
+        cs = CONTEXT.getCurrentStep()
         if self.parent != cs:
             raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre le parent de", self.nom, self)
@@ -288,7 +288,7 @@ Causes possibles :
               Methode utilisee par l'etape self qui remet son etape parent comme
               etape courante
         """
-        cs = CONTEXT.get_current_step()
+        cs = CONTEXT.getCurrentStep()
         if self != cs:
             raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre", self.nom, self)
@@ -363,13 +363,13 @@ Causes possibles :
             etape.mc_liste.append(new_obj)
         return etape
 
-    def copy_reuse(self, old_etape):
+    def copyReuse(self, old_etape):
         """ Methode qui copie le reuse d'une autre etape.
         """
         if hasattr(old_etape, "reuse"):
             self.reuse = old_etape.reuse
 
-    def copy_sdnom(self, old_etape):
+    def copySdnom(self, old_etape):
         """ Methode qui copie le sdnom d'une autre etape.
         """
         if hasattr(old_etape, "sdnom"):
@@ -387,23 +387,23 @@ Causes possibles :
         if self.sd and self.reuse == None:
             self.sd.jdc = self.jdc
 
-    def get_cmd(self, nomcmd):
+    def getCmd(self, nomcmd):
         """
             Methode pour recuperer la definition d'une commande
             donnee par son nom dans les catalogues declares
             au niveau du jdc
             Appele par un ops d'une macro en Python
         """
-        return self.jdc.get_cmd(nomcmd)
+        return self.jdc.getCmd(nomcmd)
 
-    def copy_intern(self, etape):
+    def copyIntern(self, etape):
         """
             Methode permettant lors du processus de recopie de copier
             les elements internes d'une etape dans une autre
         """
         return
 
-    def full_copy(self, parent=None):
+    def fullCopy(self, parent=None):
         """
            Methode permettant d'effectuer une copie complète
            d'une etape (y compris concept produit, elements internes)
@@ -411,8 +411,8 @@ Causes possibles :
            aura cet objet comme parent.
         """
         new_etape = self.copy()
-        new_etape.copy_reuse(self)
-        new_etape.copy_sdnom(self)
+        new_etape.copyReuse(self)
+        new_etape.copySdnom(self)
         if parent:
             new_etape.reparent(parent)
         if self.sd:
@@ -421,34 +421,34 @@ Causes possibles :
             if self.reuse == None:
                 new_etape.parent.NommerSdprod(new_sd, self.sd.nom)
             else:
-                new_sd.set_name(self.sd.nom)
-        new_etape.copy_intern(self)
+                new_sd.setName(self.sd.nom)
+        new_etape.copyIntern(self)
         return new_etape
 
-    def reset_jdc(self, new_jdc):
+    def resetJdc(self, new_jdc):
         """
            Reinitialise le nommage du concept de l'etape lors d'un changement de jdc
         """
         if self.sd and self.reuse == None:
             self.parent.NommerSdprod(self.sd, self.sd.nom)
 
-    def is_include(self):
+    def isInclude(self):
         """Permet savoir si on a affaire a la commande INCLUDE
         car le comportement de ces macros est particulier.
         """
         return self.nom.startswith('INCLUDE')
 
-    def sd_accessible(self):
+    def sdAccessible(self):
         """Dit si on peut acceder aux "valeurs" (jeveux) de l'ASSD produite par l'etape.
         """
         if CONTEXT.debug:
-            print(('`- ETAPE sd_accessible :', self.nom))
-        return self.parent.sd_accessible()
+            print(('`- ETAPE sdAccessible :', self.nom))
+        return self.parent.sdAccessible()
 
-    def get_concept(self, nomsd):
+    def getConcept(self, nomsd):
         """
             Methode pour recuperer un concept a partir de son nom
         """
         # pourrait etre appelee par une commande fortran faisant appel a des fonctions python
         # on passe la main au parent
-        return self.parent.get_concept(nomsd)
+        return self.parent.getConcept(nomsd)

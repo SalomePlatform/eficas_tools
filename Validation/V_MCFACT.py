@@ -66,7 +66,7 @@ class MCFACT(V_MCCOMPO.MCCOMPO):
                     break
             # Apres avoir verifie la validite de tous les sous-objets, on verifie
             # la validite des regles
-            text_erreurs, test_regles = self.verif_regles()
+            text_erreurs, test_regles = self.verifRegles()
             if not test_regles:
                 if cr == 'oui':
                     self.cr.fatal("Regle(s) non respectee(s) : %s" % text_erreurs)

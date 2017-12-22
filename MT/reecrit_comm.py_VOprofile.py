@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
+#            maConfiguration MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
@@ -49,10 +49,10 @@ app = QApplication(sys.argv)
 import cProfile, pstats, StringIO
 pr = cProfile.Profile()
 pr.enable()
-eficas_go.lance_eficas_ssIhm_reecrit(code='MT',fichier = 'gros_modele_MT.comm',ou = 'toto',cr=True)
+eficas_go.lanceEficas_ssIhm_reecrit(code='MT',fichier = 'gros_modele_MT.comm',ou = 'toto',cr=True)
 pr.disable()
 s = StringIO.StringIO()
 sortby = 'cumulative'
 ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
 ps.print_stats()
-print s.getvalue()
+print s.getValue()

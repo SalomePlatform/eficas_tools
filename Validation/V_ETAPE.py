@@ -59,7 +59,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
 
     def valid_regles(self, cr):
         """ Cette methode teste la validite des regles de l'etape """
-        text_erreurs, test_regles = self.verif_regles()
+        text_erreurs, test_regles = self.verifRegles()
         if not test_regles:
             if cr == 'oui':
                 self.cr.fatal( "Regle(s) non respectee(s) : %s" % text_erreurs)
@@ -90,7 +90,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
             self.valid = None
             return None
 
-    def set_valid(self, valid):
+    def setValid(self, valid):
         old_valid = self.getValid()
         self.valid = valid
         self.state = 'unchanged'
@@ -153,7 +153,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
             if valid:
                 valid = self.updateSdprod(cr)
 
-            self.set_valid(valid)
+            self.setValid(valid)
 
             return self.valid
 
@@ -214,7 +214,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                     if CONTEXT.debug:
                         print(("changement de type:", self.sd, sd_prod))
                     if self.sd.__class__ != sd_prod:
-                        self.sd.change_type(sd_prod)
+                        self.sd.changeType(sd_prod)
                 else:
                     # Le sd n existait pas , on ne le cree pas
                     if cr == 'oui':

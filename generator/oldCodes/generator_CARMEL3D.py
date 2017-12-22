@@ -242,9 +242,9 @@ class CARMEL3DGenerator(PythonGenerator):
 
         try:
             if usePrefix:
-                nomGroupeMaillage = self.nomReelGroupeMaillage(obj.get_sdname()) # nom du groupe de maillage, i.e. nom du concept, avec prefixes enleves
+                nomGroupeMaillage = self.nomReelGroupeMaillage(obj.getSdname()) # nom du groupe de maillage, i.e. nom du concept, avec prefixes enleves
             else:
-                nomGroupeMaillage = obj.get_sdname() # nom du groupe de maillage, i.e. nom du concept
+                nomGroupeMaillage = obj.getSdname() # nom du groupe de maillage, i.e. nom du concept
             # test: un et un seul nom de materiau ou source doit etre associe a ce groupe de maillage, via les cles MATERIAL et SOURCE, respectivement.
             # test sur un seul attribut, non pertinent car il peut y en avoir plusieurs.
             #assert len(obj.valeur.keys())==1,"Un et un seul nom de materiau ou source doit etre associe a ce groupe du maillage :"+nomGroupeMaillage
@@ -328,7 +328,7 @@ class CARMEL3DGenerator(PythonGenerator):
              texte+="         ]"+"\n"
        if self.debug: 
            print "texte = %s", texte
-       self.dictMaterConductor[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
+       self.dictMaterConductor[obj.getSdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_DIELECTRIC(self,obj):
        """preparation du sous bloc DIELECTRIC"""
@@ -370,7 +370,7 @@ class CARMEL3DGenerator(PythonGenerator):
              texte+="         ]"+"\n"
        if self.debug: 
            print "texte = %s", texte
-       self.dictMaterDielectric[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
+       self.dictMaterDielectric[obj.getSdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_ZSURFACIC(self,obj):
        """preparation du sous bloc ZSURFACIC"""
@@ -402,7 +402,7 @@ class CARMEL3DGenerator(PythonGenerator):
              texte+="         ]"+"\n"
        if self.debug: 
            print "texte = %s", texte
-       self.dictMaterZsurfacic[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
+       self.dictMaterZsurfacic[obj.getSdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_EMISO(self,obj):
        """preparation du sous bloc EM_ISOTROPIC_FILES.
@@ -415,11 +415,11 @@ class CARMEL3DGenerator(PythonGenerator):
        #from os.path import basename
        #texte ="        CONDUCTIVITY MED "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
        #texte+="        PERMEABILITY MED "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
-       #      print "obj get sdname= ", obj.get_sdname()
-       #   if obj.get_sdname() in self.dictMaterEmIso.keys() :
-       #    self.dictMaterEmIso[obj.get_sdname()].append(texte) 
+       #      print "obj get sdname= ", obj.getSdname()
+       #   if obj.getSdname() in self.dictMaterEmIso.keys() :
+       #    self.dictMaterEmIso[obj.getSdname()].append(texte) 
        # else :
-       self.dictMaterEmIso[obj.get_sdname()]=texte
+       self.dictMaterEmIso[obj.getSdname()]=texte
   
    def generMATERIAL_EMANISO(self,obj):
        """preparation du sous bloc EM_ANISOTROPIC_FILES.
@@ -428,21 +428,21 @@ class CARMEL3DGenerator(PythonGenerator):
        """
        texte ="        CONDUCTIVITY MATER "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
        texte+="        PERMEABILITY MATER "+str(obj.valeur["PERMEABILITY_File"])+"\n"
-       #  print "obj get sdname= ", obj.get_sdname()
-       #  if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
-       #    self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
+       #  print "obj get sdname= ", obj.getSdname()
+       #  if obj.getSdname() in self.dictMaterEmAnIso.keys() :
+       #    self.dictMaterEmAnIso[obj.getSdname()].append(texte) 
        #  else :
-       self.dictMaterEmAnIso[obj.get_sdname()]=texte
+       self.dictMaterEmAnIso[obj.getSdname()]=texte
    
    def generMATERIAL_NILMAT(self,obj):
        """preparation du sous bloc NILMAT"""
        texte=""
-       self.dictMaterNilmat[obj.get_sdname()]=texte
+       self.dictMaterNilmat[obj.getSdname()]=texte
    
    def generMATERIAL_ZINSULATOR(self,obj):
        """"preparation du sous bloc ZINSULATOR"""
        texte=""
-       self.dictMaterZinsulator[obj.get_sdname()]=texte
+       self.dictMaterZinsulator[obj.getSdname()]=texte
 
 #-------------------------------------------------------------------
 
@@ -490,7 +490,7 @@ class CARMEL3DGenerator(PythonGenerator):
             else:
                print tr("ERREUR! Une forme de la source du \
                                type WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
-            self.dictSourceStInd[obj.get_sdname()]=texte
+            self.dictSourceStInd[obj.getSdname()]=texte
             if self.debug: 
                 print texte
         except Exception:
@@ -519,7 +519,7 @@ class CARMEL3DGenerator(PythonGenerator):
             else:
                print tr("ERREUR! Une forme de la source du type \
                                WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
-            self.dictSourceHport[obj.get_sdname()]=texte
+            self.dictSourceHport[obj.getSdname()]=texte
             if self.debug: 
                 print texte
         except:
@@ -547,7 +547,7 @@ class CARMEL3DGenerator(PythonGenerator):
             else:
                print tr("ERREUR! Une forme de la source du type \
                                WAVEFORM_CONSTANT ou WAVEFORM_SINUS est attendue.")
-            self.dictSourceEport[obj.get_sdname()]=texte
+            self.dictSourceEport[obj.getSdname()]=texte
             if self.debug: 
                 print texte
         except:

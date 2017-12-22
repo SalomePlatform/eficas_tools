@@ -46,7 +46,7 @@ from functools import partial
 
 # Modules EFICAS
 from . import N_utils
-from .strfunc import get_encoding
+from .strfunc import getEncoding
 import six
 from six.moves import range
 
@@ -61,7 +61,7 @@ def _getNomConceptResultat(ope, level=2):
        Cette fonction recherche dans la pile des appels, l'appel à la commande
        qui doit etre situé à 2 niveaux au-dessus (cur_frame(2)).
        On retrouve d'abord la frame d'exécution f. Puis le numéro de la ligne
-       dans le source f.f_lineno et le nom du fichier source (f.f_code.co_filename).
+       dans le source f.fLineNo et le nom du fichier source (f.f_code.co_filename).
        A partir de là, on récupère la ligne de source avec linecache.getline
        et on vérifie que cette ligne correspond véritablement à l'appel.
 
@@ -74,10 +74,10 @@ def _getNomConceptResultat(ope, level=2):
 
     """
     f = N_utils.cur_frame(level)
-    lineno = f.f_lineno     # XXX Too bad if -O is used
-    # lineno = f_lineno(f)  # Ne marche pas toujours
+    lineno = f.fLineNo     # XXX Too bad if -O is used
+    # lineno = fLineNo(f)  # Ne marche pas toujours
     co = f.f_code
-    filename = six.text_type(co.co_filename, get_encoding())
+    filename = six.text_type(co.co_filename, getEncoding())
     name = co.co_name
     # pattern pour identifier le debut de la commande
     pattern_oper = re.compile(regex1 % ope)
@@ -138,7 +138,7 @@ def evalnom(text, d):
     return lll
 
 
-def f_lineno(f):
+def fLineNo(f):
     """
        Calcule le numero de ligne courant
        Devrait marcher meme avec -O
@@ -146,7 +146,7 @@ def f_lineno(f):
     """
     c = f.f_code
     if not hasattr(c, 'co_lnotab'):
-        return f.f_lineno
+        return f.fLineNo
     tab = c.co_lnotab
     line = c.co_firstlineno
     stopat = f.f_lasti
@@ -167,13 +167,13 @@ class NamingSystem(N_utils.Singleton):
     def __init__(self):
         """Initialisation"""
         self.native = _getNomConceptResultat
-        self.use_global_naming()
+        self.useGlobalNaming()
 
-    def use_naming_function(self, function):
+    def useNamingFunction(self, function):
         """Utilise une fonction particulière de nommage."""
         self.naming_func = function
 
-    def use_global_naming(self):
+    def useGlobalNaming(self):
         """Utilise la fonction native de nommage."""
         self.naming_func = partial(self.native, level=3)
 

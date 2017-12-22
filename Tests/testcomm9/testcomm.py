@@ -12,11 +12,11 @@ def add_param(j,pos,nom,valeur):
     return co
 
 def add_mcsimp(obj,nom,valeur):
-    mcs=obj.get_child(nom,restreint='oui')
+    mcs=obj.getChild(nom,restreint='oui')
     if mcs is None:
-       pos=obj.getIndex_child(nom)
+       pos=obj.getIndexChild(nom)
        mcs=obj.addEntite(nom,pos)
-    mcs.set_valeur(mcs.eval_val(valeur))
+    mcs.set_valeur(mcs.evalVal(valeur))
     return mcs
 
 def cdiff(text1,text2):
@@ -30,7 +30,7 @@ class TestCase(unittest.TestCase):
       pass
 
    def tearDown(self):
-      CONTEXT.unset_current_step()
+      CONTEXT.unsetCurrentStep()
 
    i=0
    files= os.path.join(os.path.dirname(__file__),"*.comm")
@@ -57,7 +57,7 @@ class TestCase(unittest.TestCase):
           err=f.read()
           f.close()
       j=self.app.openJDC(file=file)
-      assert j.cr.get_mess_exception() == ""
+      assert j.cr.getMessException() == ""
 
       if err == "":
         assert j.isValid(),j.report()
@@ -65,6 +65,6 @@ class TestCase(unittest.TestCase):
         txt=str(j.report())
         assert txt == err,cdiff(err,txt)
 
-      CONTEXT.unset_current_step()
+      CONTEXT.unsetCurrentStep()
       j.supprime()
       assert sys.getrefcount(j) == 2,sys.getrefcount(j)

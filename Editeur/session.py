@@ -181,7 +181,7 @@ def checkJdc(config,jdc,parser,fich):
 
     return d_study
 
-def check_fich(option, opt_str, fich, parser):
+def checkFich(option, opt_str, fich, parser):
     """
         Fonction : parse le fichier fich (format .ini)
         
@@ -217,7 +217,7 @@ def check_fich(option, opt_str, fich, parser):
     d_study["comm"]=comm
     parser.values.studies.append(d_study)
 
-def print_pours(d_pours,dec=''):
+def printPours(d_pours,dec=''):
     # Les fichiers includes d'abord
     for k,v in list(d_pours.items()):
        if k in (u"pours","comm"):continue
@@ -226,13 +226,13 @@ def print_pours(d_pours,dec=''):
     if "pours" in d_pours:
        # Description de la poursuite
        print((tr("%(v_1)s fichier poursuite: %(v_2)s", {'v_1': dec, 'v_2': d_pours["pours"]["comm"]})))
-       print_pours(d_pours["pours"],dec=dec+"++")
+       printPours(d_pours["pours"],dec=dec+"++")
 
-def print_d_env():
+def printDEnv():
     if d_env.studies is None:return
     for study in d_env.studies:
        print((tr("nom etude : %s", study["comm"])))
-       print_pours(study,dec="++")
+       printPours(study,dec="++")
 
 def createparser():
     # creation du parser des options de la ligne de commande
@@ -252,7 +252,7 @@ def createparser():
                   nargs=2, help=tr("numero d'unite suivi du nom du fichier include"))
 
     parser.add_option(u"-f","--fich", type="string",dest="fich",
-                  action="callback", callback=check_fich,
+                  action="callback", callback=checkFich,
                   help=tr("fichier decrivant une etude"))
 
     parser.add_option(u"-c","--cata", action="store", type="string",dest="cata",
@@ -303,7 +303,7 @@ def parse(args):
 
     global d_env
     d_env=options
-    #print_d_env()
+    #printDEnv()
     return options
 
 def getUnit(d_study,appli):

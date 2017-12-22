@@ -8,8 +8,8 @@ import unittest
 
 class CATA:
    def __init__(self):
-      CONTEXT.unset_current_cata()
-      CONTEXT.set_current_cata(self)
+      CONTEXT.unsetCurrentCata()
+      CONTEXT.setCurrentCata(self)
    def enregistre(self,cmd):
       pass
 

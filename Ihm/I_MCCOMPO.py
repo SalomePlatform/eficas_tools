@@ -92,7 +92,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
     # on enleve les mots-cles dont l'occurrence est deja atteinte
     liste_copy = copy(liste)
     for k in liste_copy:
-      objet = self.get_child(k,restreint = 'oui')
+      objet = self.getChild(k,restreint = 'oui')
       if objet != None :
         # l'objet est deja present : il faut distinguer plusieurs cas
         if isinstance(objet,MCSIMP):
@@ -126,7 +126,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
     # on ajoute les mots cles facteurs presents dont l'occurence n'est pas atteinte
     for k in listeMcPresents:
       if k in liste:continue
-      objet = self.get_child(k,restreint = 'oui')
+      objet = self.getChild(k,restreint = 'oui')
       if isinstance(objet,MCFACT):
           # un mot-cle facteur ne peut pas etre repete plus de self.max fois
           if objet.definition.max > 1:
@@ -230,7 +230,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         return 0
 
       # On cherche s'il existe deja un mot cle de meme nom
-      old_obj = self.get_child(objet.nom,restreint = 'oui')
+      old_obj = self.getChild(objet.nom,restreint = 'oui')
       if not old_obj :
          # on normalize l'objet
          objet=objet.normalize()
@@ -355,12 +355,12 @@ class MCCOMPO(I_OBJECT.OBJECT):
      """
         Realise l'update des blocs conditionnels fils de self
      """
-     dict = self.cree_dict_condition(self.mc_liste,condition=1)
+     dict = self.creeDictCondition(self.mc_liste,condition=1)
      for k,v in self.definition.entites.items():
         if v.label != 'BLOC' :continue
         globs= self.jdc and self.jdc.condition_context or {}
-        bloc=self.get_child(k,restreint = 'oui')
-        presence=v.verif_presence(dict,globs)
+        bloc=self.getChild(k,restreint = 'oui')
+        presence=v.verifPresence(dict,globs)
         if presence and not bloc:
            # le bloc doit etre present
            # mais le bloc n'est pas present et il doit etre cree
@@ -383,18 +383,18 @@ class MCCOMPO(I_OBJECT.OBJECT):
     """
     liste_ajouts = []
     liste_retraits = []
-    dict = self.cree_dict_condition(self.mc_liste,condition=1)
+    dict = self.creeDictCondition(self.mc_liste,condition=1)
     for k,v in self.definition.entites.items():
       if v.label=='BLOC' :
         globs= self.jdc and self.jdc.condition_context or {}
-        if v.verif_presence(dict,globs):
+        if v.verifPresence(dict,globs):
           # le bloc doit etre present
-          if not self.get_child(k,restreint = 'oui'):
+          if not self.getChild(k,restreint = 'oui'):
             # le bloc n'est pas present et il doit etre cree
             liste_ajouts.append(k)
         else :
           # le bloc doit etre absent
-          if self.get_child(k,restreint = 'oui'):
+          if self.getChild(k,restreint = 'oui'):
             # le bloc est present : il faut l'enlever
             liste_retraits.append(k)
     return liste_ajouts,liste_retraits

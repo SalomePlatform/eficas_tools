@@ -38,7 +38,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
 
   def isOblig(self):
     if self.definition.statut != 'o' : return 0
-    objet = self.parent.get_child(self.nom)
+    objet = self.parent.getChild(self.nom)
     if len(objet) > 1 : return 0
     else : return 1
 
@@ -48,7 +48,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
        isole ou d'un MCFACT appartenant a une MCList :
        utilisee pour l'affichage dans l'arbre
     """
-    objet = self.parent.get_child(self.nom)
+    objet = self.parent.getChild(self.nom)
     # objet peut-etre self ou une MCList qui contient self ...
     if objet is None or objet is self:
      return tr("Erreur - mclist inexistante : %s", self.nom)

@@ -142,6 +142,8 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
         else :
            if mc.min == mc.max:
                commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])+'\n'
+           elif mc.max == float('inf') :
+               commentaire=tr("Entrez une liste de ") + tr(d_aides[type])+'\n'
            else :
                commentaire=tr("Entrez entre ")+"\n"+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
         aideval=self.node.item.aide()

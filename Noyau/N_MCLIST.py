@@ -74,7 +74,7 @@ class MCList(UserList):
     def getVal(self):
         """
             Une autre méthode qui retourne une "autre" valeur d'une MCList
-            Elle est utilisée par la méthode get_mocle
+            Elle est utilisée par la méthode getMocle
         """
         return self
 
@@ -90,7 +90,7 @@ class MCList(UserList):
         for child in self.data:
             child.supprime()
 
-    def get_child(self, name,restreint='non'):
+    def getChild(self, name,restreint='non'):
         """
             Retourne le fils de nom name s'il est contenu dans self
             Par défaut retourne le fils du premier de la liste
@@ -103,7 +103,7 @@ class MCList(UserList):
         # Phase 2 : on cherche dans les blocs de self
         for child in obj.mc_liste:
             if child.isBLOC():
-                resu = child.get_child(name)
+                resu = child.getChild(name)
                 if resu != None:
                     return resu
         # Phase 3 : on cherche dans les entites possibles pour les défauts
@@ -129,17 +129,17 @@ class MCList(UserList):
         """
         visitor.visitMCList(self)
 
-    def get_sd_utilisees(self):
+    def getSd_utilisees(self):
         """
           Retourne la liste des concepts qui sont utilisés à l'intérieur de self
           ( comme valorisation d'un MCS)
         """
         l = []
         for child in self.data:
-            l.extend(child.get_sd_utilisees())
+            l.extend(child.getSd_utilisees())
         return l
 
-    def get_sd_mcs_utilisees(self):
+    def getSd_mcs_utilisees(self):
         """
             Retourne la ou les SD utilisée par self sous forme d'un dictionnaire :
               - Si aucune sd n'est utilisée, le dictionnaire est vide.
@@ -154,13 +154,13 @@ class MCList(UserList):
         """
         dico = {}
         for child in self.data:
-            daux = child.get_sd_mcs_utilisees()
+            daux = child.getSd_mcs_utilisees()
             for cle in daux:
                 dico[cle] = dico.get(cle, [])
                 dico[cle].extend(daux[cle])
         return dico
 
-    def get_mcs_with_co(self, co):
+    def getMcsWithCo(self, co):
         """
            Cette methode retourne l'objet MCSIMP fils de self
            qui a le concept co comme valeur.
@@ -169,16 +169,16 @@ class MCList(UserList):
         """
         l = []
         for child in self.data:
-            l.extend(child.get_mcs_with_co(co))
+            l.extend(child.getMcsWithCo(co))
         return l
 
-    def get_all_co(self):
+    def getAllCo(self):
         """
            Cette methode retourne tous les concepts instances de CO
         """
         l = []
         for child in self.data:
-            l.extend(child.get_all_co())
+            l.extend(child.getAllCo())
         return l
 
     def copy(self):
@@ -208,7 +208,7 @@ class MCList(UserList):
         for mcfact in self.data:
             mcfact.reparent(parent)
 
-    def get_etape(self):
+    def getEtape(self):
         """
            Retourne l'étape à laquelle appartient self
            Un objet de la catégorie etape doit retourner self pour indiquer que
@@ -217,14 +217,14 @@ class MCList(UserList):
         """
         if self.parent == None:
             return None
-        return self.parent.get_etape()
+        return self.parent.getEtape()
 
     def __getitem__(self, key):
         """
            Dans le cas d un mot cle facteur de longueur 1 on simule un scalaire
         """
         if type(key) != int and len(self) == 1:
-            return self.data[0].get_mocle(key)
+            return self.data[0].getMocle(key)
         else:
             return self.data[key]
 

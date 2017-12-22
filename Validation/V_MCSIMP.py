@@ -80,7 +80,7 @@ class MCSIMP(object):
             self.valid = None
             return None
 
-    def set_valid(self, valid):
+    def setValid(self, valid):
         old_valid = self.getValid()
         self.valid = valid
         self.state = 'unchanged'
@@ -175,7 +175,7 @@ class MCSIMP(object):
                     except ValError as e:
                         valid = 0
 
-            self.set_valid(valid)
+            self.setValid(valid)
             return self.valid
 
     def isOblig(self):

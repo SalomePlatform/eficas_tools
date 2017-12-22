@@ -37,7 +37,7 @@ from Extensions.i18n import tr
 class PROC_ETAPE(V_ETAPE.ETAPE):
 
     """
-       On reutilise les methodes report,verif_regles
+       On reutilise les methodes report,verifRegles
        de ETAPE par heritage.
     """
 
@@ -69,5 +69,5 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
                     self.cr.fatal(
                         tr("unknown keywords : %s") % ','.join(list(self.reste_val.keys())))
                 valid = 0
-            self.set_valid(valid)
+            self.setValid(valid)
             return self.valid

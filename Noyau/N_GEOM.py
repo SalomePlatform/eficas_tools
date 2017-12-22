@@ -42,7 +42,7 @@ class GEOM(ASSD):
         if etape:
             self.parent = etape.parent
         else:
-            self.parent = CONTEXT.get_current_step()
+            self.parent = CONTEXT.getCurrentStep()
         if self.parent:
             self.jdc = self.parent.getJdcRoot()
         else:
@@ -51,10 +51,10 @@ class GEOM(ASSD):
         if not self.parent:
             self.id = None
         elif reg == 'oui':
-            self.id = self.parent.reg_sd(self)
+            self.id = self.parent.regSD(self)
         self.nom = nom
 
-    def get_name(self):
+    def getName(self):
         return self.nom
 
     def __convert__(cls, valeur):

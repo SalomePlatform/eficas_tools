@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
+#            maConfiguration MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
@@ -35,8 +35,10 @@ encoding='iso-8859-1'
 
 #
 catalogues=(
-   ('MT','V2016',os.path.join(repIni,'MT_Cata_V2016.py'),'python','python'),
+   ('MT','V2017',os.path.join(repIni,'MT_Cata_V2017.py'),'python','python'),
 )
-nombreDeBoutonParLigne=4
+#nombreDeBoutonParLigne=4
 simpleClic=True
 closeFrameRechercheCommande=True
+boutonDsMenuBar=True
+ficIcones='images.dicoDesIcones'

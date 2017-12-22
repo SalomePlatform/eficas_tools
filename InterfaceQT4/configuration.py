@@ -71,9 +71,9 @@ class configBase(object):
       self.setValeursParDefaut()
       
       if self.code != '' :
-         self.lecture_fichier_ini_standard()
-         self.lecture_fichier_ini_integrateur()
-         self.lecture_fichier_ini_utilisateur()
+         self.lectureFichierIniStandard()
+         self.lectureFichierIniIntegrateur()
+         self.lectureFichierIniUtilisateur()
 
       if self.boutonDsMenuBar:
          self.closeAutreCommande = True
@@ -127,7 +127,7 @@ class configBase(object):
 
  
   #--------------------------------------
-  def lecture_fichier_ini_standard(self):
+  def lectureFichierIniStandard(self):
   #--------------------------------------
 
       name='prefs_'+self.appli.code
@@ -140,7 +140,7 @@ class configBase(object):
 
 
   #--------------------------------------
-  def lecture_fichier_ini_integrateur(self):
+  def lectureFichierIniIntegrateur(self):
   #--------------------------------------
   # Verifie l'existence du fichier "standard"
   # appelle la lecture de ce fichier
@@ -174,7 +174,7 @@ class configBase(object):
 
 
   #--------------------------------------
-  def lecture_fichier_ini_utilisateur(self):
+  def lectureFichierIniUtilisateur(self):
   #--------------------------------------
   # Surcharge les parametres standards par les parametres utilisateur s'ils existent
       self.fic_ini_utilisateur = os.path.join(self.rep_user,self.name)
@@ -198,7 +198,7 @@ class configBase(object):
              setattr(self,k,d[k])
 
   #--------------------------------------
-  def save_params(self):
+  def saveParams(self):
   #--------------------------------------
   # sauvegarde
   # les nouveaux parametres dans le fichier de configuration utilisateur

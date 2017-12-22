@@ -227,7 +227,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             txt_exception  = None
             if not jdc:
                 self.jdc.analyse()
-                txt_exception = self.jdc.cr.get_mess_exception()
+                txt_exception = self.jdc.cr.getMessException()
             if txt_exception:
                 self.jdc = None
                 QApplication.restoreOverrideCursor()
@@ -772,7 +772,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       noeudACopier=self.QWParent.noeud_a_editer[0]
 
       if (self.QWParent.edit != "couper"):
-        #print   (noeudOuColler.item.parent.get_child(noeudOuColler.item.nom)) 
+        #print   (noeudOuColler.item.parent.getChild(noeudOuColler.item.nom)) 
         try:
            if noeudOuColler == self.tree.racine :
                child=noeudOuColler.doPastePremier(noeudACopier)
@@ -1337,11 +1337,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
            self.tree.racine.item.getObject().nom=os.path.basename(newName)
            self.tree.racine.updateNodeLabel()
 
-        print ('Attention chgt du if pour test')
-        print (self.generator)
 
-        #if self.jdc.isValid() != 0 and hasattr(self.generator, "writeDefault"):
-        if hasattr(self.generator, "writeDefault"):
+        if self.jdc.isValid() != 0 and hasattr(self.generator, "writeDefault"):
+        #if hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fn)
         elif self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
             msgBox = QMessageBox(None)
@@ -1475,8 +1473,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     # dans le JDC
         ouChercher=etape
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC != None :  ouChercher.suppEntite(monMC)
         ouChercher.state='changed'
         ouChercher.isValid()
@@ -1487,8 +1485,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
     # dans le JDC
         ouChercher=etape
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
-        monMC=etape.get_child(ouChercher,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
+        monMC=etape.getChild(ouChercher,restreint="oui")
         if monMC== None : monMC= ouChercher.addEntite(MCFils)
         monMC.valeur=valeurs
         monMC.val=valeurs
@@ -1503,10 +1501,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
         ouChercher=etape
         print (ouChercher)
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
               print (mot)
               print (ouChercher)
-        monMC=etape.get_child(ouChercher,restreint="oui")
+        monMC=etape.getChild(ouChercher,restreint="oui")
         if monMC== None : monMC= ouChercher.addEntite(MCFils)
         monMC.isValid()
 
@@ -1521,10 +1519,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if debug : print ('etape trouvee', ouChercher)
         if ouChercher==None : return None
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
               if debug : print (mot, ouChercher)
               if ouChercher==None : return None
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         if debug : print ('monMC', monMC)
         if monMC== None : return None
         return monMC.valeur
@@ -1539,10 +1537,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
             if e.nom == nomEtape : ouChercher=e; break
         if ouChercher==None : return None
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
               #print (mot, ouChercher)
               if ouChercher==None : return None
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         monMC.setValeur(valeur)
         monMC.isValid()
 
@@ -1558,9 +1556,9 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if ouChercher==None : return
  
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
               if ouChercher==None : return 
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC== None : monMC= ouChercher.addEntite(MCFils)
 
         monMC.definition.into=valeurs
@@ -1578,11 +1576,11 @@ class JDCEditor(Ui_baseWidget,QWidget):
         
         for mot in listeAvant :
             try :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
             # Le mot clef n est pas la
             except : return 0
         try :
-           monMC=ouChercher.get_child(MCFils,restreint="oui")
+           monMC=ouChercher.getChild(MCFils,restreint="oui")
         # Le mot clef n est pas la
         except : return 0
         if monMC == None : return 0
@@ -1725,10 +1723,10 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         ouChercher = etape
         for mot in listeMC[:-1] :
-            ouChercher=ouChercher.get_child(mot,restreint="oui")
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
             if ouChercher==None : return 
         MCFils=listeMC[-1]
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC== None : monMC= etape.addEntite(MCFils)
 
         monMC.definition.into=into

@@ -45,7 +45,7 @@ class AU_PLUS_UN(object):
         #  on compte le nombre de mots cles presents
         text = ''
         count = 0
-        args = self.liste_to_dico(args)
+        args = self.listeToDico(args)
         for mc in self.mcs:
             count = count + args.get(mc, 0)
         if count > 1:
@@ -54,7 +54,7 @@ class AU_PLUS_UN(object):
             return text, 0
         return text, 1
 
-    def liste_to_dico(self, args):
+    def listeToDico(self, args):
         if type(args) is dict:
             return args
         elif type(args) in (list, tuple):

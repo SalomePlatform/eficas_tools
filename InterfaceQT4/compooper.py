@@ -102,7 +102,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
             g.gener(self.item.object, format='beautifie')
             stdGener = g.getGenerateur()
             loi = list(g.dictMCLois.keys())[0]
-            nomLoi = loi.get_name()
+            nomLoi = loi.getName()
             (fd, fichier) = tempfile.mkstemp(prefix = "openturns_graph_", suffix = ".png")
             os.close(fd)
             chemin = os.path.dirname(fichier)

@@ -41,7 +41,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     def __init__(self,texte='',parent=None,reg='oui'):
         self.valeur = texte
         if not parent :
-            self.jdc = self.parent = CONTEXT.get_current_step()
+            self.jdc = self.parent = CONTEXT.getCurrentStep()
         else:
             self.jdc = self.parent = parent
         if hasattr(self.parent,'etape'):
@@ -53,7 +53,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         self.niveau = self.parent.niveau
         self.actif=1
         self.state="unchanged"
-        #self.appel = N_utils.callee_where(niveau=2)
+        #self.appel = N_utils.calleeWhere(niveau=2)
         if reg=='oui' : self.register()
             
     def isValid(self):
@@ -180,7 +180,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
           - le nom de la sdprod eventuellement produite (sinon None)
         """
         # on recupere le contexte avant la commande commentarisee
-        context_ini = self.jdc.getContexte_avant(self)
+        context_ini = self.jdc.getContexteAvant(self)
         try:
             # on essaie de creer un objet JDC...
             CONTEXT.unsetCurrentStep()

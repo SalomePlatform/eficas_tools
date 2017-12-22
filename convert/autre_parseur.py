@@ -152,7 +152,7 @@ class PARSEUR_PYTHON(object):
         self.buffer=[]
         self.buffer_indent=""
 
-    def getoptions(self):
+    def getOptions(self):
         m= self.optionprog.match(self.line)
         if m:
            option=m.group(1)
@@ -168,7 +168,7 @@ class PARSEUR_PYTHON(object):
         self.line= self.texte.readline()
         #print "line:",self.line
         # option ?
-        self.getoptions()
+        self.getOptions()
         return self.line
 
     def getTexte(self,appli=None):

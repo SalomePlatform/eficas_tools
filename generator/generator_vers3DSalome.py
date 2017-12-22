@@ -86,12 +86,12 @@ class vers3DSalomeGenerator(PythonGenerator):
 
       self.dict_traduit={"VARI_SECT":"extrusion","EXCENTREMENT":"Excentre","EPAIS":"Epais","VECTEUR":"Vecteur"}
 
-      self.init_ligne() 
+      self.initLigne () 
 
-   def init_jdc(self,jdc) :
+   def initJdc(self,jdc) :
       self.jdc=jdc
 
-   def init_ligne (self) :
+   def initLigne  (self) :
       self.boolGpMa = 0
       self.commande = ""
       self.dict_attributs = {} 
@@ -105,7 +105,7 @@ class vers3DSalomeGenerator(PythonGenerator):
       return self.list_commandes
 
    def generator(self,obj):
-      if (obj.nom in self.liste_motetat) and (self.calcule_ouinon(obj)):
+      if (obj.nom in self.liste_motetat) and (self.calculeOuiNon(obj)):
          PythonGenerator.generator(self,obj)
       """
         f1=PythonGenerator.generator(self,obj)
@@ -113,7 +113,7 @@ class vers3DSalomeGenerator(PythonGenerator):
         return ""
       """
 
-   def calcule_ouinon(self,obj):
+   def calculeOuiNon(self,obj):
       ouinon=1
       for l in obj.getGenealogie() :
           if not l in self.liste_motetat :
@@ -160,7 +160,7 @@ class vers3DSalomeGenerator(PythonGenerator):
           Convertit un objet MCFACT en une liste de chaines de caracteres a la
           syntaxe python
       """
-      self.init_ligne()
+      self.initLigne ()
       self.commande=self.dict_deb_com[obj.nom]
       for v in obj.mc_liste:
          self.generator(v)

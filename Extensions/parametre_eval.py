@@ -55,13 +55,13 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
     self.valeur = self.interpreteValeur(valeur)
     self.val    = valeur
     self.nom = nom
-    self.jdc = self.parent = CONTEXT.get_current_step()
+    self.jdc = self.parent = CONTEXT.getCurrentStep()
     self.definition=self
     self.niveau = self.parent.niveau
     self.actif=1
     self.state='undetermined'
     # Ceci est-il indispensable ???
-    #self.appel = N_utils.callee_where(niveau=2)
+    #self.appel = N_utils.calleeWhere(niveau=2)
     self.register()
 
   def __repr__(self):
@@ -143,7 +143,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
                                                                  fonctions = l_form)
         if cr == 'oui' :
           if not verificateur.cr.estvide():
-            self.cr.fatal(verificateur.cr.get_mess_fatal())
+            self.cr.fatal(verificateur.cr.getMessFatal())
         return verificateur.isValid(),''.join(verificateur.cr.crfatal)
     else:
         # pas d'expression EVAL --> self non valide
@@ -173,7 +173,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
         return 0,"Un concept de nom %s existe deja !" %nom
     return 1,''
 
-  def verif_parametre_eval(self,param=None,cr='non'):
+  def verifParametreEval(self,param=None,cr='non'):
     """
     Verifie la validite du parametre EVAL passe en argument.
     Ce nouveau parametre est passe sous la forme d'un tuple : (nom,valeur)
@@ -216,7 +216,7 @@ class PARAMETRE_EVAL(parametre.PARAMETRE) :
       - il a un nom
       - il a une valeur qui est interpretable par l'interpreteur de FORMULEs
     """
-    resu,erreur= self.verif_parametre_eval(cr=cr)
+    resu,erreur= self.verifParametreEval(cr=cr)
     return resu
 
   def report(self):

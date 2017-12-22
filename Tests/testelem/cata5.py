@@ -14,7 +14,7 @@ def OP_ops(self,MATR,**args):
   return ier
 
 def op2_prod(self,MATR,**args):
-   self.type_sdprod(MATR,concept2)
+   self.typeSDProd(MATR,concept2)
    return concept
 OP1=MACRO(nom='OP1',op=OP_ops,sd_prod=op2_prod, MATR=SIMP(statut='o',typ=CO),)
 OP2=MACRO(nom='OP2',op=OP_ops,sd_prod=op2_prod, MATR=SIMP(statut='o',typ=(CO,concept2)),)
@@ -26,7 +26,7 @@ OP13=MACRO(nom='OP13',op=OP_ops,sd_prod=concept, MATR=SIMP(statut='o',typ=(CO,co
 def op3_prod(self,MATR,**args):
    for m in MATR:
       t=m['CHAM']
-      if t == 'R':self.type_sdprod(m['MM'],concept)
+      if t == 'R':self.typeSDProd(m['MM'],concept)
    return concept
 OP3=MACRO(nom='OP3',op=OP_ops,sd_prod=op3_prod,
           MATR=FACT(statut='f',min=1,max='**',
@@ -43,7 +43,7 @@ OP4=MACRO(nom='OP4',op=OP_ops,sd_prod=op4_prod,
 OP5=MACRO(nom='OP5',op=OP_ops,sd_prod=op2_prod, MATR=SIMP(statut='o',typ=CO),)
 
 def op6_prod(self,MATR,**args):
-   self.type_sdprod(MATR,concept4)
+   self.typeSDProd(MATR,concept4)
    return concept
 def OP6_ops(self,MATR,**args):
   ier=0
@@ -135,7 +135,7 @@ def poursuite_sdprod(self,PAR_LOT):
   #j.UserError=j.codex.error
   j.actif_status=1
   j.fico=None
-  j.set_par_lot(PAR_LOT)
+  j.set_parLot(PAR_LOT)
   if hasattr(self,'already_init'):return
   self.already_init=None
   context={}
@@ -174,7 +174,7 @@ def debut_sdprod(self,PAR_LOT):
   #j.UserError=j.codex.error
   j.actif_status=1
   j.fico=None
-  j.set_par_lot(PAR_LOT)
+  j.set_parLot(PAR_LOT)
   return None
 
 def debut(self,PAR_LOT):

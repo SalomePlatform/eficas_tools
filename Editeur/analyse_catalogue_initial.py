@@ -38,10 +38,10 @@ class Catalogue_initial(object):
                 self.liste_commandes=[]
                 self.lignes=[]
                 self.fichier=fichier
-                self.ouvrir_fichier()
+                self.ouvrirFichier()
                 self.constrListTxtCmd()
 
-        def ouvrir_fichier(self):
+        def ouvrirFichier(self):
                 try :
                         f=open(self.fichier,'r')
                         self.lignes=f.readlines()

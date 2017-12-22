@@ -108,12 +108,12 @@ class OPER(N_ENTITE.ENTITE):
         # operateur sauf si == None
         self.op_init = op_init
         self.entites = args
-        current_cata = CONTEXT.get_current_cata()
+        current_cata = CONTEXT.getCurrentCata()
         if niveau == None:
             self.niveau = None
             current_cata.enregistre(self)
         else:
-            self.niveau = current_cata.get_niveau(niveau)
+            self.niveau = current_cata.getNiveau(niveau)
             self.niveau.enregistre(self)
         self.UIinfo = UIinfo
         self.affecter_parente()
@@ -126,7 +126,7 @@ class OPER(N_ENTITE.ENTITE):
         """
         nomsd = self.nommage.getNomConceptResultat(self.nom)
         etape = self.class_instance(oper=self, reuse=reuse, args=args)
-        etape.McBuild()
+        etape.MCBuild()
         return etape.buildSd(nomsd)
 
     def make_objet(self, mc_list='oui'):
@@ -138,20 +138,20 @@ class OPER(N_ENTITE.ENTITE):
         """
         etape = self.class_instance(oper=self, reuse=None, args={})
         if mc_list == 'oui':
-            etape.McBuild()
+            etape.MCBuild()
         return etape
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Méthode de vérification des attributs de définition
         """
-        self.check_regles()
-        self.check_fr()
-        self.check_reentrant()
-        self.check_docu()
-        self.check_nom()
-        self.check_op(valmin=0)
-        self.verif_cata_regles()
+        self.checkRegles()
+        self.checkFr()
+        self.checkReentrant()
+        self.checkDocu()
+        self.checkNom()
+        self.checkOp(valmin=0)
+        self.verifCataRegles()
 
     def supprime(self):
         """

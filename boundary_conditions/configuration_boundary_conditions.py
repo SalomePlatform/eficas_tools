@@ -20,15 +20,15 @@
 import os
 
 from Editeur.catadesc import CatalogDescription
-from InterfaceQT4.configuration import CONFIG_BASE
+from InterfaceQT4.configuration import configBase
 
-class CONFIG(CONFIG_BASE):
+class CONFIG(configBase):
 
   def __init__(self, appli, repIni):
     """
     This class stores the configuration parameters for Eficas
     """
-    CONFIG_BASE.__init__(self, appli, repIni)
+    configBase.__init__(self, appli, repIni)
 
     # Configuration parameters
     self.savedir    = os.getenv("HOME")
@@ -38,7 +38,7 @@ class CONFIG(CONFIG_BASE):
     self.lang = 'fr'
     self.generator_module = "generator_boundary_conditions"
 
-  def save_params(self):
+  def saveParams(self):
     pass
 
 def make_config(appli, rep):

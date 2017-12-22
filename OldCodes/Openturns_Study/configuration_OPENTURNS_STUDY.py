@@ -38,15 +38,15 @@ class CONFIG(configuration.configBase):
       configuration.configBase.__init__(self,appli,repIni)
 
   #---------------------------------------
-  def lecture_fichier_ini_standard(self):
+  def lectureFichierIniStandard(self):
   #---------------------------------------
-       configuration.configBase.lecture_fichier_ini_standard(self)
+       configuration.configBase.lectureFichierIniStandard(self)
        if hasattr(self,'OpenTURNS_path') : self.oldOTPath=self.OpenTURNS_path
 
   #---------------------------------------
-  def lecture_fichier_ini_integrateur(self):
+  def lectureFichierIniIntegrateur(self):
   #---------------------------------------
-       configuration.configBase.lecture_fichier_ini_utilisateur(self)
+       configuration.configBase.lectureFichierIniUtilisateur(self)
        if hasattr(self,'OpenTURNS_path') :
           if hasattr(self,'oldOTPath') and (self.OpenTURNS_path != self.oldOTPath):
                import sys

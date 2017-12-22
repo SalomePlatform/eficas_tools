@@ -40,7 +40,7 @@ def setCurrentStep(step):
     _root = step
 
 
-def get_current_step():
+def getCurrentStep():
     """
        Fonction qui permet d'obtenir la valeur de l'etape courante
     """
@@ -55,7 +55,7 @@ def unsetCurrentStep():
     _root = None
 
 
-def set_current_cata(cata):
+def setCurrentCata(cata):
     """
        Fonction qui permet de changer l'objet catalogue courant
     """
@@ -65,14 +65,14 @@ def set_current_cata(cata):
     _cata = cata
 
 
-def get_current_cata():
+def getCurrentCata():
     """
        Fonction qui retourne l'objet catalogue courant
     """
     return _cata
 
 
-def unset_current_cata():
+def unsetCurrentCata():
     """
        Fonction qui permet de remettre a None le catalogue courant
     """

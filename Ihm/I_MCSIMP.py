@@ -156,7 +156,7 @@ class MCSIMP(I_OBJECT.OBJECT):
            return self.jdc.appli.appliEficas.dict_reels[clefobj][val]
     if type(val) != tuple :
       try:
-        return val.get_name()
+        return val.getName()
       except:
         return val
     else :
@@ -164,7 +164,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       s='( '
       for item in val :
         try :
-          s=s+item.get_name()+','
+          s=s+item.getName()+','
         except:
           s=s+repr(item)+','
       s=s+' )'
@@ -231,6 +231,13 @@ class MCSIMP(I_OBJECT.OBJECT):
     for typ in self.definition.type:
       if typ == 'TXM' :return 1
     return 0
+
+  def waitTuple(self):
+    for ss_type in self.definition.type:
+        if repr(ss_type).find('Tuple') != -1 :
+          return 1
+    return 0
+
 
   def getListeValeurs(self):
     """
@@ -330,7 +337,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         ou un EVAL: Retourne la valeur evaluee (ou None) et le test de reussite (1 ou 0)
     """
     sd = self.jdc.getSdAvantEtape(new_valeur,self.etape)
-    #sd = self.jdc.getContexte_avant(self.etape).get(new_valeur,None)
+    #sd = self.jdc.getContexteAvant(self.etape).get(new_valeur,None)
     #print sd
     if sd is not None:
       return sd,1
@@ -502,7 +509,7 @@ class MCSIMP(I_OBJECT.OBJECT):
          # contextes en mode editeur
          # Normalement la methode  du Noyau doit etre surchargee
          # On declare l'etape du mot cle comme etape courante pour NommerSdprod
-         cs= CONTEXT.get_current_step()
+         cs= CONTEXT.getCurrentStep()
          CONTEXT.unsetCurrentStep()
          CONTEXT.setCurrentStep(step)
          step.setEtapeContext(self.etape)
@@ -529,7 +536,7 @@ class MCSIMP(I_OBJECT.OBJECT):
      # Attention : possible probleme avec include
      # A priori il n'y a pas de raison de retirer les concepts non existants
      # avant etape. En fait il s'agit uniquement eventuellement de ceux crees par une macro
-     l_sd_avant_etape = list(self.jdc.getContexte_avant(self.etape).values())  
+     l_sd_avant_etape = list(self.jdc.getContexteAvant(self.etape).values())  
      if type(self.valeur) in (tuple,list) :
        l=[]
        for sd in self.valeur:
@@ -566,7 +573,7 @@ class MCSIMP(I_OBJECT.OBJECT):
       """ Retire self des declarations globales
       """
       if self.definition.position == 'global' : 
-         etape = self.get_etape()
+         etape = self.getEtape()
          if etape :
             del etape.mc_globaux[self.nom]
       elif self.definition.position == 'global_jdc' :
@@ -579,7 +586,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         Un mot cle simple peut etre global. 
      """
      if self.definition.position == 'global' :
-        etape = self.get_etape()
+        etape = self.getEtape()
         if etape :
            etape.mc_globaux[self.nom]=self
      elif self.definition.position == 'global_jdc' :
@@ -602,7 +609,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           self.intoProto.adapt(item)
           #on ne verifie pas la cardinalite
           if self.definition.validators:
-              valid=self.definition.validators.verif_item(item)
+              valid=self.definition.validators.verifItem(item)
       except ValError as e:
           #traceback.print_exc()
           valid=0
@@ -617,7 +624,7 @@ class MCSIMP(I_OBJECT.OBJECT):
           self.intoProto.adapt(item)
           #on ne verifie pas la cardinalite mais on verifie les validateurs
           if self.definition.validators:
-              valid=self.definition.validators.verif_item(item)
+              valid=self.definition.validators.verifItem(item)
           comment=""
           valid=1
       except ValError as e:
@@ -629,7 +636,7 @@ class MCSIMP(I_OBJECT.OBJECT):
   def valideMatrice(self,cr):
        #Attention, la matrice contient comme dernier tuple l ordre des variables
        if self.valideEnteteMatrice()==False :
-           self.set_valid(0)
+           self.setValid(0)
            if cr == "oui" : self.cr.fatal(tr("La matrice n'a pas le bon entete"))
            return 0
        if self.monType.methodeCalculTaille != None :
@@ -643,7 +650,7 @@ class MCSIMP(I_OBJECT.OBJECT):
                   if len(self.valeur[i])!= self.monType.nbCols:
                      ok=0
            if ok: 
-              self.set_valid(1)
+              self.setValid(1)
               return 1 
        except :
        #else :
@@ -651,7 +658,7 @@ class MCSIMP(I_OBJECT.OBJECT):
        if cr == 'oui' :
              self.cr.fatal(tr("La matrice n'est pas une matrice %(n_lign)d sur %(n_col)d", \
              {'n_lign': self.monType.nbLigs, 'n_col': self.monType.nbCols}))
-       self.set_valid(0)
+       self.setValid(0)
        return 0
 
 

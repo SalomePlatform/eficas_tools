@@ -32,8 +32,8 @@ import traceback
 import types,re,os
 from Extensions.i18n import tr
 from .generator_python import PythonGenerator
-#ListeConcatene=('ridge_names','topo_names','geom_names','elset_names','faset_names','liset_names','nset_names','center','normal','dir')
-ListeConcatene=('ridge_names','topo_names','geom_names','elset_names','faset_names','liset_names','nset_names')
+#ListeConcatene=('ridge_names','topo_names','geom_names','elsetNames','fasetNames','lisetNames','nsetNames','center','normal','dir')
+ListeConcatene=('ridge_names','topo_names','geom_names','elsetNames','fasetNames','lisetNames','nsetNames')
 ListeConcatene2=('center','normal','dir')
 ListeConcatene3=('ra','rb')
 if_ellipse=False

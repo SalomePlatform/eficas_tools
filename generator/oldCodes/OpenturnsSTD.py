@@ -382,7 +382,7 @@ class STDGenerateur :
 
     dictVariables = {}
     for variable in self.ListeVariablesIn:
-      nomVar = variable['ModelVariable'].get_name()
+      nomVar = variable['ModelVariable'].getName()
       dictVariables[ nomVar ] = variable['Distribution']
 
     i = 0
@@ -395,7 +395,7 @@ class STDGenerateur :
         marginale = "%s_%d" % (self.variable["marginal"], i)
         txt += "# Definit la loi marginale de la composante %d\n" % i
         txt += "%s = %s\n" % (marginale, apply( STDGenerateur.__dict__[ loi[ 'Kind' ] ], (self, loi) ))
-        txt += "%s.setName( '%s' )\n" % (marginale, conceptloi.get_name())
+        txt += "%s.setName( '%s' )\n" % (marginale, conceptloi.getName())
         txt += "%s[ %d ] = '%s'\n" % (self.variable["description"], i, variable)
         txt += "%s[ %d ] = Distribution( %s )\n" % (self.variable["collection"], i, marginale)
         txt += "\n"
@@ -449,7 +449,7 @@ class STDGenerateur :
     '''
     nomVar = "output"
     for variable in self.ListeVariablesOut:
-      nomVar = variable['ModelVariable'].get_name()
+      nomVar = variable['ModelVariable'].getName()
 
     txt  = "# Definit le vecteur aleatoire de sortie\n"
     txt += "%s = RandomVector( %s, %s )\n" % (self.variable["outputRandomVector"], self.variable["model"], self.variable["inputRandomVector"])

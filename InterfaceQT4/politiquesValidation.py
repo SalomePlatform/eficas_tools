@@ -168,7 +168,7 @@ class PolitiqueUnique(Validation) :
                   self.setValeurTexte(str(valeurentree))
             else:
                   cr = self.node.item.getCr()
-                  commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.get_mess_fatal()
+                  commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.getMessFatal()
                   self.node.item.setValeur(ancienneVal)
          return validite, commentaire 
 
@@ -287,7 +287,7 @@ class PolitiquePlusieurs(Validation):
             commentaire = tr("Valeur du mot-cle enregistree")
          else:
             cr = self.node.item.getCr()
-            commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.get_mess_fatal()
+            commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.getMessFatal()
             self.node.item.setValeur(ancienneVal)
          return validite, commentaire 
 

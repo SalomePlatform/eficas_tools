@@ -98,7 +98,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
             if self.node.item.isValid() == 0 :
                liste=[]
                for item in self.listeValeursCourantes:
-                   if self.node.item.definition.validators.verif_item(item)==1: liste.append(item)
+                   if self.node.item.definition.validators.verifItem(item)==1: liste.append(item)
                self.listeAAfficher=self.node.item.getListePossible(liste)
             else: 
                self.listeAAfficher=self.node.item.getListePossible([])

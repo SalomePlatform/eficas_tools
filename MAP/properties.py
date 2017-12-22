@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#            CONFIGURATION MANAGEMENT OF EDF VERSION
+#            maConfiguration MANAGEMENT OF EDF VERSION
 # RESPONSABLE D6BHHHH J-P.LEFEBVRE
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2001  EDF R&D                  WWW.CODE-ASTER.ORG

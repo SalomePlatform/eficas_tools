@@ -16,11 +16,11 @@ def add_param(j,pos,nom,valeur):
     return co
 
 def add_mcsimp(obj,nom,valeur):
-    mcs=obj.get_child(nom,restreint='oui')
+    mcs=obj.getChild(nom,restreint='oui')
     if mcs is None:
-       pos=obj.getIndex_child(nom)
+       pos=obj.getIndexChild(nom)
        mcs=obj.addEntite(nom,pos)
-    mcs.set_valeur(mcs.eval_val(valeur))
+    mcs.set_valeur(mcs.evalVal(valeur))
     return mcs
 
 def cdiff(text1,text2):
@@ -34,7 +34,7 @@ class TestCase(unittest.TestCase):
       pass
 
    def tearDown(self):
-      CONTEXT.unset_current_step()
+      CONTEXT.unsetCurrentStep()
 
    def test001(self):
       """Test comploader"""
@@ -63,7 +63,7 @@ class TestCase(unittest.TestCase):
         if it.nom in ("AFFE_MODELE","AFFE_MATERIAU") :
            for mc in it.getSubList():
               if mc.nom == "MAILLAGE":
-                 valeur,validite=mc.eval_valeur("MAIL")
+                 valeur,validite=mc.evalValeur("MAIL")
                  test = mc.set_valeur(valeur)
       text1=app.get_text_JDC(j,'python')
       f=open(file)

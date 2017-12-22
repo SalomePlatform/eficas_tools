@@ -28,11 +28,11 @@ from Noyau.N_VALIDATOR import ValError
 class ASSD:
    def __repr__(self):
       return tr("concept %(inst_name)s de type %(class_name)s", \
-                       {'inst_name': self.get_name(), \
+                       {'inst_name': self.getName(), \
                         'class_name': self.__class__.__name__})
 
    def __str__(self):
-      return self.get_name() or "<None>"
+      return self.getName() or "<None>"
 
    #def __del__(self):
    #   print "__del__",self
@@ -53,7 +53,7 @@ class geom(GEOM):
 class CO(ASSD):
    def __convert__(cls,valeur):
       if hasattr(valeur,'_etape') :
-         # valeur est un concept CO qui a ete transforme par type_sdprod
+         # valeur est un concept CO qui a ete transforme par typeSDProd
          if valeur.etape == valeur._etape:
              # le concept est bien produit par l'etape
              return valeur

@@ -84,7 +84,7 @@ class OpenturnsGenerator(PythonGenerator):
        Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
        """
        s=PythonGenerator.generMCSIMP(self,obj)
-       if not( type(obj.valeur) in (list, tuple)) and (obj.get_min_max()[1] != 1):
+       if not( type(obj.valeur) in (list, tuple)) and (obj.getMinMax()[1] != 1):
           valeur=(obj.valeur,)
        else :
           valeur=obj.valeur

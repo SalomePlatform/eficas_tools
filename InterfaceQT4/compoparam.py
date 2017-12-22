@@ -142,7 +142,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       Renomme le parametre
       """
       self.object.setNom(new_nom)
-      #self.object.set_attribut('nom',new_nom)
+      #self.object.setAttribut('nom',new_nom)
 
     def getFr(self):
       """

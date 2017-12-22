@@ -36,7 +36,7 @@ class FORM_ETAPE(MACRO_ETAPE):
 
     interpreteur = interpreteur_formule.Interpreteur_Formule
 
-    def McBuild(self):
+    def MCBuild(self):
         self.mc_liste=self.build_mc()
         # on cree la liste des types autorises (liste des noms de mots-cles
         # simples dans le catalogue de FORMULE)
@@ -76,7 +76,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         la string vide sinon
         """
         if self.sd :
-            return self.sd.get_name()
+            return self.sd.getName()
         else:
             return ''
 
@@ -253,7 +253,7 @@ class FORM_ETAPE(MACRO_ETAPE):
         # du coup on est oblige de modifier le dictionnaire valeur de self ...
         self.valeur = {}
         self.valeur[self.type_retourne] = self.arguments+' = ' + self.corps
-        self.McBuild()
+        self.MCBuild()
         sd = self.getSdProd()
         if sd:
             sd.nom = formule[0]

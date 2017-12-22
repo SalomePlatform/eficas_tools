@@ -114,8 +114,8 @@ def INCLUDE_context(self,d):
 
 def PROCESS_context(self,d):
     print "dans le init du Process"
-    if self.get_child('XLS_file').valeur == "" or self.get_child('XLS_file').valeur== None : return
-    self.OngletsSelectionnes= self.get_child('b_TabList').get_child('TabList').valeur
+    if self.getChild('XLS_file').valeur == "" or self.getChild('XLS_file').valeur== None : return
+    self.OngletsSelectionnes= self.getChild('b_TabList').getChild('TabList').valeur
     print "fin de PROCESS_context"
 
 def PROCESS(self,XLS_file,**args):
@@ -152,7 +152,7 @@ def PROCESS(self,XLS_file,**args):
        # On a selectionne un onglet 
        # On teste si on a modifie la liste des onglets
 
-       nouveauxOngletsSelectionnes= self.get_child('b_TabList').get_child('TabList').valeur
+       nouveauxOngletsSelectionnes= self.getChild('b_TabList').getChild('TabList').valeur
        if  nouveauxOngletsSelectionnes==self.OngletsSelectionnes : return
        if nouveauxOngletsSelectionnes==() or nouveauxOngletsSelectionnes == [] :
           for MC in self.MCAjoutes : self.jdc.editor.deleteMC(self,MC,('b_TabList',))

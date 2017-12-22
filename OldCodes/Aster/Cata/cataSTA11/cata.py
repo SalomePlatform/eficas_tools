@@ -224,7 +224,7 @@ class cham_elem(cham_gd_sdaster):
       if not self.accessible() :
          raise Accas.AsException("Erreur dans cham_elem.EXTR_COMP en PAR_LOT='OUI'")
 
-      ncham=self.get_name()
+      ncham=self.getName()
       ncham=ncham+(8-len(ncham))*' '
       nchams=ncham[0:7]+'S'
       ncmp=comp+(8-len(comp))*' '
@@ -265,7 +265,7 @@ class cham_no_sdaster(cham_gd_sdaster):
       if not self.accessible() :
          raise Accas.AsException("Erreur dans cham_no.EXTR_COMP en PAR_LOT='OUI'")
 
-      ncham=self.get_name()
+      ncham=self.getName()
       ncham=ncham+(8-len(ncham))*' '
       nchams=ncham[0:7]+'S'
       ncmp=comp+(8-len(comp))*' '
@@ -296,7 +296,7 @@ class cham_no_sdaster(cham_gd_sdaster):
       # on recupere le nom du maillage
       __nomMaillage=self.sdj.REFE.get()[0].strip()
       # on recupere l'objet du maillage
-      __maillage=CONTEXT.get_current_step().get_concept(__nomMaillage)
+      __maillage=CONTEXT.getCurrentStep().getConcept(__nomMaillage)
       __CHAM = CREA_CHAMP(OPERATION='ASSE',
                           MAILLAGE=__maillage,
                           TYPE_CHAM=__type,
@@ -675,7 +675,7 @@ class fonction_class(ASSD):
       from Utilitai.Utmess import UTMESS
       if self.accessible():
         TypeProl={'E':'EXCLU', 'L':'LINEAIRE', 'C':'CONSTANT' }
-        objev = '%-19s.PROL' % self.get_name()
+        objev = '%-19s.PROL' % self.getName()
         prol = self.sdj.PROL.get()
         if prol == None:
            UTMESS('F', 'SDVERI_2', valk=[objev])
@@ -735,7 +735,7 @@ class fonction_sdaster(fonction_class):
       """
       from Utilitai.Utmess import UTMESS
       if self.accessible():
-        vale = '%-19s.VALE' % self.get_name()
+        vale = '%-19s.VALE' % self.getName()
         lbl = self.sdj.VALE.get()
         if lbl == None:
           UTMESS('F', 'SDVERI_2', valk=[vale])
@@ -818,7 +818,7 @@ class fonction_c(fonction_class):
       """
       from Utilitai.Utmess import UTMESS
       if self.accessible():
-         vale = '%-19s.VALE' % self.get_name()
+         vale = '%-19s.VALE' % self.getName()
          lbl = self.sdj.VALE.get()
          if lbl == None:
            UTMESS('F', 'SDVERI_2', valk=[vale])
@@ -908,7 +908,7 @@ class nappe_sdaster(fonction_class):
       from Utilitai.Utmess import UTMESS
       if not self.accessible():
          raise Accas.AsException("Erreur dans nappe.Valeurs en PAR_LOT='OUI'")
-      nsd = '%-19s' % self.get_name()
+      nsd = '%-19s' % self.getName()
       dicv=aster.getcolljev(nsd+'.VALE')
       # les cles de dicv sont 1,...,N (indice du parametre)
       lpar=aster.getvectjev(nsd+'.PARA')
@@ -932,7 +932,7 @@ class nappe_sdaster(fonction_class):
       if not self.accessible():
          raise Accas.AsException("Erreur dans nappe.Parametres en PAR_LOT='OUI'")
       TypeProl={'E':'EXCLU', 'L':'LINEAIRE', 'C':'CONSTANT' }
-      objev = '%-19s.PROL' % self.get_name()
+      objev = '%-19s.PROL' % self.getName()
       prol=aster.getvectjev(objev)
       if prol == None:
          UTMESS('F', 'SDVERI_2', valk=[objev])
@@ -1230,7 +1230,7 @@ class macr_elem_dyna(ASSD):
         if not self.accessible():
             raise Accas.AsException("Erreur dans macr_elem_dyna.RECU_MATR_GENE en PAR_LOT='OUI'")
 
-        nommacr=self.get_name()
+        nommacr=self.getName()
         if (typmat=='MASS_GENE') :
             macr_elem = self.sdj.MAEL_MASS
         elif (typmat=='RIGI_GENE') :
@@ -1565,7 +1565,7 @@ class matr_asse_gene_r(matr_asse_gene):
     if not self.accessible():
        raise Accas.AsException("Erreur dans matr_asse_gene.RECU_MATR_GENE en PAR_LOT='OUI'")
 
-    ncham=self.get_name()
+    ncham=self.getName()
     desc=numpy.array(self.sdj.DESC.get())
 
     # On teste si le DESC de la matrice existe
@@ -1638,7 +1638,7 @@ class matr_asse_gene_c(matr_asse_gene):
        raise Accas.AsException("Erreur dans matr_asse_gene_c.RECU_MATR_GENE en PAR_LOT='OUI'")
 
     numpy.asarray(matrice)
-    ncham=self.get_name()
+    ncham=self.getName()
     desc=numpy.array(self.sdj.DESC.get())
 
     # On teste si le DESC de la matrice existe
@@ -1785,7 +1785,7 @@ class modele_gene(ASSD):
          la liste des macro-elements sous-jacents"""
       if not self.accessible():
          raise Accas.AsException("Erreur dans modele_gene.LIST_SOUS_STRUCT en PAR_LOT='OUI'")
-      nommodgen=self.get_name()
+      nommodgen=self.getName()
       ncham=nommodgen+(8-len(nommodgen))*' '
       ssno=aster.getvectjev(ncham+(14-len(ncham))*' '+'.MODG.SSNO')
       ssme=aster.getcolljev(ncham+(14-len(ncham))*' '+'.MODG.SSME')
@@ -1796,7 +1796,7 @@ class modele_gene(ASSD):
          [ (ss1, nom_liais1,  ss2 , nom_liais2), ...] """
       if not self.accessible() :
          raise Accas.AsException("Erreur dans modele_gene.LIST_LIAIS_STRUCT en PAR_LOT='OUI'")
-      nommodgen=self.get_name()
+      nommodgen=self.getName()
       ncham=nommodgen+(8-len(nommodgen))*' '
       lidf=aster.getcolljev(ncham+(14-len(ncham))*' '+'.MODG.LIDF')
       return [([(lidf[ind][indb]) for indb in range(4)]) for ind in lidf]
@@ -1931,29 +1931,29 @@ class resultat_sdaster(ASSD):
    def LIST_CHAMPS (self) :
       if not self.accessible():
          raise Accas.AsException("Erreur dans resultat.LIST_CHAMPS en PAR_LOT='OUI'")
-      return aster.GetResu(self.get_name(), "CHAMPS")
+      return aster.GetResu(self.getName(), "CHAMPS")
 
    def LIST_NOM_CMP (self) :
       if not self.accessible():
          raise Accas.AsException("Erreur dans resultat.LIST_NOM_CMP en PAR_LOT='OUI'")
-      return aster.GetResu(self.get_name(), "COMPOSANTES")
+      return aster.GetResu(self.getName(), "COMPOSANTES")
 
    def LIST_VARI_ACCES (self) :
       if not self.accessible():
          raise Accas.AsException("Erreur dans resultat.LIST_VARI_ACCES en PAR_LOT='OUI'")
-      return aster.GetResu(self.get_name(), "VARI_ACCES")
+      return aster.GetResu(self.getName(), "VARI_ACCES")
 
    def LIST_PARA (self) :
       if not self.accessible():
          raise Accas.AsException("Erreur dans resultat.LIST_PARA en PAR_LOT='OUI'")
-      return aster.GetResu(self.get_name(), "PARAMETRES")
+      return aster.GetResu(self.getName(), "PARAMETRES")
 
 class resultat_jeveux(resultat_sdaster):
    """Classe permettant d'accéder à un resultat jeveux qui n'a pas d'ASSD associée,
    c'est le cas des concepts résultats (table, evol_xxxx) dérivés."""
    def __init__(self, nom_jeveux):
       resultat_sdaster.__init__(self)
-      self.set_name(nom_jeveux)
+      self.setName(nom_jeveux)
 
 class comb_fourier(resultat_sdaster): pass
 class fourier_elas(resultat_sdaster): pass
@@ -2127,7 +2127,7 @@ class table_sdaster(ASSD):
         """
         if not self.accessible():
             raise Accas.AsException("Erreur dans table.TITRE en PAR_LOT='OUI'")
-        #titj = aster.getvectjev('%-19s.TITR' % self.get_name())
+        #titj = aster.getvectjev('%-19s.TITR' % self.getName())
         titj = self.sdj.TITR.get()
         if titj != None:
             titr = '\n'.join(titj)
@@ -2150,7 +2150,7 @@ class table_sdaster(ASSD):
         # titre
         titr = self.TITRE()
         # récupération des paramètres
-        #v_tblp = aster.getvectjev('%-19s.TBLP' % self.get_name())
+        #v_tblp = aster.getvectjev('%-19s.TBLP' % self.getName())
         v_tblp = self.sdj.TBLP.get()
         if v_tblp == None:
             # retourne une table vide
@@ -2197,7 +2197,7 @@ class table_jeveux(table_sdaster):
     c'est le cas des concepts résultats (table, evol_xxxx) dérivés."""
     def __init__(self, nom_jeveux):
         table_sdaster.__init__(self)
-        self.set_name(nom_jeveux)
+        self.setName(nom_jeveux)
 
 class table_fonction(table_sdaster):
     """Table contenant une colonne FONCTION et/ou FONCTION_C dont les
@@ -2261,7 +2261,7 @@ class vect_asse_gene(ASSD):
       import numpy
       if not self.accessible():
          raise Accas.AsException("Erreur dans vect_asse_gene_r.EXTR_VECT_GENE en PAR_LOT='OUI'")
-      #ncham=self.get_name()
+      #ncham=self.getName()
       #ncham=ncham+(8-len(ncham))*' '
       #valeur=numpy.array(aster.getvectjev(ncham+(19-len(ncham))*' '+'.VALE'))
       valeur = numpy.array(self.sdj.VALE.get())
@@ -2275,7 +2275,7 @@ class vect_asse_gene(ASSD):
          raise Accas.AsException("Erreur dans vect_asse_gene_r.RECU_VECT_GENE en PAR_LOT='OUI'")
       import numpy
       numpy.asarray(vecteur)
-      ncham=self.get_name()
+      ncham=self.getName()
       ncham=ncham+(8-len(ncham))*' '
       #desc=numpy.array(aster.getvectjev(ncham+(19-len(ncham))*' '+'.DESC'))
       desc = numpy.array(self.sdj.DESC.get())
@@ -2303,7 +2303,7 @@ class vect_asse_gene(ASSD):
       if not self.accessible():
          raise Accas.AsException("Erreur dans vect_asse_gene_c.EXTR_VECT_GENE en PAR_LOT='OUI'")
 
-      #ncham=self.get_name()
+      #ncham=self.getName()
       #ncham=ncham+(8-len(ncham))*' '
       #valeur=numpy.array(aster.getvectjev(ncham+(19-len(ncham))*' '+'.VALE'), complex)
       valeur=numpy.array(self.sdj.VALE.get(), complex)
@@ -2318,7 +2318,7 @@ class vect_asse_gene(ASSD):
          raise Accas.AsException("Erreur dans vect_asse_gene_c.RECU_VECT_GENE en PAR_LOT='OUI'")
       import numpy
       numpy.asarray(vecteur)
-      ncham=self.get_name()
+      ncham=self.getName()
       ncham=ncham+(8-len(ncham))*' '
       desc=numpy.array(aster.getvectjev(ncham+(19-len(ncham))*' '+'.DESC'))
       # On teste si le DESC de la matrice existe
@@ -7854,7 +7854,7 @@ def asse_elem_ssd_prod(self,RESU_ASSE_SSD,**args):
     for res in RESU_ASSE_SSD:
         for mc, typ in MTYPES.items():
             if res[mc]:
-                self.type_sdprod(res[mc], typ)
+                self.typeSDProd(res[mc], typ)
     return None
 
 ASSE_ELEM_SSD=MACRO(nom="ASSE_ELEM_SSD",
@@ -8087,8 +8087,8 @@ ASSE_VECTEUR=OPER(nom="ASSE_VECTEUR",op=13,sd_prod=cham_no_sdaster,
 def assemblage_prod(self,NUME_DDL,MATR_ASSE,VECT_ASSE,**args):
   if ((not MATR_ASSE) and (not VECT_ASSE)):  raise AsException("Aucun concept a assembler")
   if not NUME_DDL :  raise AsException("Impossible de typer les concepts resultats")
-  if NUME_DDL.is_typco():
-    self.type_sdprod(NUME_DDL,nume_ddl_sdaster)
+  if NUME_DDL.isTypCO():
+    self.typeSDProd(NUME_DDL,nume_ddl_sdaster)
 
   if MATR_ASSE !=None: 
       for m in MATR_ASSE:
@@ -8105,11 +8105,11 @@ def assemblage_prod(self,NUME_DDL,MATR_ASSE,VECT_ASSE,**args):
 
         if opti == "RIGI_MECA_HYST"   : t= matr_asse_depl_c
 
-        self.type_sdprod(m['MATRICE'],t)
+        self.typeSDProd(m['MATRICE'],t)
 
   if VECT_ASSE !=None:
       for v in VECT_ASSE:
-        self.type_sdprod(v['VECTEUR'],cham_no_sdaster)
+        self.typeSDProd(v['VECTEUR'],cham_no_sdaster)
     
   return None
 
@@ -8601,11 +8601,11 @@ CALC_CORR_SSD=OPER(nom="CALC_CORR_SSD",op=  91,sd_prod=table_container,
 
 def calc_ecrevisse_prod(self,CHARGE_MECA,CHARGE_THER1,CHARGE_THER2,TABLE,DEBIT,**args):
 
-  self.type_sdprod(CHARGE_MECA,char_meca)
-  self.type_sdprod(CHARGE_THER1,char_ther)
-  self.type_sdprod(CHARGE_THER2,char_ther)
-  self.type_sdprod(TABLE,table_sdaster)
-  self.type_sdprod(DEBIT,table_sdaster)
+  self.typeSDProd(CHARGE_MECA,char_meca)
+  self.typeSDProd(CHARGE_THER1,char_ther)
+  self.typeSDProd(CHARGE_THER2,char_ther)
+  self.typeSDProd(TABLE,table_sdaster)
+  self.typeSDProd(DEBIT,table_sdaster)
   return None
 
 
@@ -8863,7 +8863,7 @@ def calc_essai_prod(self,RESU_IDENTIFICATION,
 
     if RESU_IDENTIFICATION != None:
         for res in RESU_IDENTIFICATION:
-            self.type_sdprod(res['TABLE'],interspectre)
+            self.typeSDProd(res['TABLE'],interspectre)
 
     MTYPES = {
         'MODELE'    : modele_sdaster,
@@ -8883,7 +8883,7 @@ def calc_essai_prod(self,RESU_IDENTIFICATION,
         for res in RESU_MODIFSTRU:
             for mc, typ in MTYPES.items():
                 if res[mc]:
-                    self.type_sdprod(res[mc], typ)
+                    self.typeSDProd(res[mc], typ)
     return None
 
 
@@ -8996,7 +8996,7 @@ def calc_essai_geomeca_prod(self,
   for DicoEssai in List_essais :
     if DicoEssai.has_key('TABLE_RESU'): 
       for Table in DicoEssai['TABLE_RESU']:
-        self.type_sdprod(Table,table_sdaster)
+        self.typeSDProd(Table,table_sdaster)
   return None 
 
 
@@ -9129,7 +9129,7 @@ CALC_ESSAI_GEOMECA = MACRO(nom="CALC_ESSAI_GEOMECA",
 
 def calc_europlexus_prod(self,COURBE=None,**args):
   if COURBE is not None:
-      self.type_sdprod(args['TABLE_COURBE'],table_sdaster)
+      self.typeSDProd(args['TABLE_COURBE'],table_sdaster)
   return evol_noli
 
 CALC_EUROPLEXUS = MACRO(nom="CALC_EUROPLEXUS",
@@ -10090,9 +10090,9 @@ def calc_gp_prod(self,TRANCHE_2D,GPMAX, **args):
     if TRANCHE_2D['ZONE_MAIL']== "NON":
       for ss_cop in TRANCHE_2D:
         if ss_cop['CHAMP_VISU']!= None:
-          self.type_sdprod(ss_cop['CHAMP_VISU'], cham_elem)
+          self.typeSDProd(ss_cop['CHAMP_VISU'], cham_elem)
   if GPMAX !=None:
-     self.type_sdprod(GPMAX, table_sdaster)
+     self.typeSDProd(GPMAX, table_sdaster)
   return table_sdaster
 
 
@@ -11866,9 +11866,9 @@ def chainage_thm_prod(self,TYPE_CHAINAGE,TYPE_RESU = None,**args) :
     matr_hm1 = args['MATR_HM1']
     matr_hm2 = args['MATR_HM2']
 
-    self.type_sdprod(matr_mh,corresp_2_mailla)
-    self.type_sdprod(matr_hm1,corresp_2_mailla)
-    self.type_sdprod(matr_hm2,corresp_2_mailla)
+    self.typeSDProd(matr_mh,corresp_2_mailla)
+    self.typeSDProd(matr_hm1,corresp_2_mailla)
+    self.typeSDProd(matr_hm2,corresp_2_mailla)
     return None
 
   raise AsException("type de chainage THM non prevu")
@@ -12454,7 +12454,7 @@ CREA_CHAMP=OPER(nom="CREA_CHAMP",op= 195,sd_prod=crea_champ_prod,
 
 def crea_elem_ssd_prod(self,NUME_DDL,**args):
     if NUME_DDL:
-        self.type_sdprod(NUME_DDL,nume_ddl_sdaster)
+        self.typeSDProd(NUME_DDL,nume_ddl_sdaster)
     return macr_elem_dyna
 
 CREA_ELEM_SSD=MACRO(nom="CREA_ELEM_SSD",
@@ -22534,7 +22534,7 @@ ENV_CINE_YACS=PROC(nom             = "ENV_CINE_YACS",
 def exec_logiciel_prod(self, MAILLAGE, **args):
    if MAILLAGE != None:
       mcf = MAILLAGE[0]
-      self.type_sdprod(mcf['MAILLAGE'], maillage_sdaster)
+      self.typeSDProd(mcf['MAILLAGE'], maillage_sdaster)
    return None
 
 EXEC_LOGICIEL = MACRO(nom="EXEC_LOGICIEL",
@@ -25087,25 +25087,25 @@ def macr_adap_mail_prod(self, MAJ_CHAM, ADD_CHAM, ADAPTATION, **args):
   if ( args.has_key('MAILLAGE_NP1') ) :
     if ( args['MAILLAGE_NP1'] is not None ) :
       maillage_np1=args['MAILLAGE_NP1']
-      self.type_sdprod(maillage_np1, maillage_sdaster)
+      self.typeSDProd(maillage_np1, maillage_sdaster)
 #
   if ( args.has_key('MAILLAGE_NP1_ANNEXE') ) :
     if ( args['MAILLAGE_NP1_ANNEXE'] is not None ) :
       maillage_np1_annexe=args['MAILLAGE_NP1_ANNEXE']
-      self.type_sdprod(maillage_np1_annexe, maillage_sdaster)
+      self.typeSDProd(maillage_np1_annexe, maillage_sdaster)
 #
   #print "MAJ_CHAM =", MAJ_CHAM
   if MAJ_CHAM is not None :
 # Remarque : la liste qui suit doit etre conforme à son homologue de LIRE_CHAMP
     for ch in MAJ_CHAM:
       t=ch['TYPE_CHAM']
-      if t[0:5] == "NOEU_":self.type_sdprod(ch['CHAM_MAJ'],cham_no_sdaster)
-      if t[0:2] == "EL":   self.type_sdprod(ch['CHAM_MAJ'],cham_elem)
+      if t[0:5] == "NOEU_":self.typeSDProd(ch['CHAM_MAJ'],cham_no_sdaster)
+      if t[0:2] == "EL":   self.typeSDProd(ch['CHAM_MAJ'],cham_elem)
 #
   #print "ADD_CHAM =", ADD_CHAM
   if ADD_CHAM is not None :
     for ch in ADD_CHAM:
-      self.type_sdprod(ch['CHAM_GD'],carte_sdaster)
+      self.typeSDProd(ch['CHAM_GD'],carte_sdaster)
 #
   return None
 
@@ -25855,11 +25855,11 @@ MACR_ADAP_MAIL=MACRO(nom="MACR_ADAP_MAIL",
 # person_in_charge: samuel.geniaut at edf.fr
 
 def macr_ascouf_calc_prod(self,MODELE,CHAM_MATER,CARA_ELEM,FOND_FISS,RESU_THER,**args):
-  self.type_sdprod(MODELE,modele_sdaster)
-  if CHAM_MATER != None:self.type_sdprod(CHAM_MATER,cham_mater)
-  if CARA_ELEM  != None:self.type_sdprod(CARA_ELEM,cara_elem)
-  if FOND_FISS  != None:self.type_sdprod(FOND_FISS,fond_fiss)
-  if RESU_THER  != None:self.type_sdprod(RESU_THER,evol_ther)
+  self.typeSDProd(MODELE,modele_sdaster)
+  if CHAM_MATER != None:self.typeSDProd(CHAM_MATER,cham_mater)
+  if CARA_ELEM  != None:self.typeSDProd(CARA_ELEM,cara_elem)
+  if FOND_FISS  != None:self.typeSDProd(FOND_FISS,fond_fiss)
+  if RESU_THER  != None:self.typeSDProd(RESU_THER,evol_ther)
   return evol_noli
 
 MACR_ASCOUF_CALC=MACRO(nom="MACR_ASCOUF_CALC",
@@ -26154,12 +26154,12 @@ MACR_ASCOUF_MAIL=MACRO(nom="MACR_ASCOUF_MAIL",
 # person_in_charge: samuel.geniaut at edf.fr
 
 def macr_aspic_calc_prod(self,MODELE,CHAM_MATER,CARA_ELEM,FOND_FISS_1,FOND_FISS_2,RESU_THER,**args):
-  if MODELE      != None:self.type_sdprod(MODELE,modele_sdaster)
-  if CHAM_MATER  != None:self.type_sdprod(CHAM_MATER,cham_mater)
-  if CARA_ELEM   != None:self.type_sdprod(CARA_ELEM,cara_elem)
-  if FOND_FISS_1 != None:self.type_sdprod(FOND_FISS_1,fond_fiss)
-  if FOND_FISS_2 != None:self.type_sdprod(FOND_FISS_2,fond_fiss)
-  if RESU_THER   != None:self.type_sdprod(RESU_THER,evol_ther)
+  if MODELE      != None:self.typeSDProd(MODELE,modele_sdaster)
+  if CHAM_MATER  != None:self.typeSDProd(CHAM_MATER,cham_mater)
+  if CARA_ELEM   != None:self.typeSDProd(CARA_ELEM,cara_elem)
+  if FOND_FISS_1 != None:self.typeSDProd(FOND_FISS_1,fond_fiss)
+  if FOND_FISS_2 != None:self.typeSDProd(FOND_FISS_2,fond_fiss)
+  if RESU_THER   != None:self.typeSDProd(RESU_THER,evol_ther)
   return evol_noli
 
 MACR_ASPIC_CALC=MACRO(nom="MACR_ASPIC_CALC",
@@ -26503,8 +26503,8 @@ MACR_CARA_POUTRE=MACRO(nom="MACR_CARA_POUTRE",
 
 
 def macr_ecla_pg_prod(self,RESULTAT,MAILLAGE,RESU_INIT,**args):
-  self.type_sdprod(RESULTAT,AsType(RESU_INIT))
-  self.type_sdprod(MAILLAGE,maillage_sdaster)
+  self.typeSDProd(RESULTAT,AsType(RESU_INIT))
+  self.typeSDProd(MAILLAGE,maillage_sdaster)
   return None
 
 
@@ -26569,8 +26569,8 @@ MACR_ECLA_PG=MACRO(nom="MACR_ECLA_PG",
 
 def macr_ecre_calc_prod(self,TABLE,DEBIT,**args):
 
-  self.type_sdprod(TABLE,table_sdaster)
-  self.type_sdprod(DEBIT,table_sdaster)
+  self.typeSDProd(TABLE,table_sdaster)
+  self.typeSDProd(DEBIT,table_sdaster)
   return None
 
 MACR_ECRE_CALC=MACRO(nom="MACR_ECRE_CALC",
@@ -26753,9 +26753,9 @@ MACR_ECRE_CALC=MACRO(nom="MACR_ECRE_CALC",
 
 def macr_ecrevisse_prod(self,TABLE,TEMPER,DEBIT,**args):
     # On definit ici les concepts produits
-    self.type_sdprod(TABLE,table_sdaster)
-    self.type_sdprod(TEMPER,evol_ther)
-    self.type_sdprod(DEBIT,table_sdaster)
+    self.typeSDProd(TABLE,table_sdaster)
+    self.typeSDProd(TEMPER,evol_ther)
+    self.typeSDProd(DEBIT,table_sdaster)
     # concept retourne
     return evol_noli
 
@@ -27653,8 +27653,8 @@ MACR_SPECTRE=MACRO(nom="MACR_SPECTRE",
 
 
 def macro_elas_mult_prod(self,NUME_DDL,CAS_CHARGE,**args ):
-  if NUME_DDL is not None and NUME_DDL.is_typco():
-    self.type_sdprod(NUME_DDL,nume_ddl_sdaster)
+  if NUME_DDL is not None and NUME_DDL.isTypCO():
+    self.typeSDProd(NUME_DDL,nume_ddl_sdaster)
   if CAS_CHARGE[0]['NOM_CAS']      != None : return mult_elas
   if CAS_CHARGE[0]['MODE_FOURIER'] != None : return fourier_elas
   raise AsException("type de concept resultat non prevu")
@@ -27725,13 +27725,13 @@ MACRO_ELAS_MULT=MACRO(nom="MACRO_ELAS_MULT",
 
 def macro_expans_prod(self, MODELE_MESURE, RESU_NX, RESU_EX, RESU_ET, RESU_RD, **args):
     RESU_EXP = MODELE_MESURE['MESURE']
-    self.type_sdprod(RESU_NX, mode_meca)
+    self.typeSDProd(RESU_NX, mode_meca)
     for res in (RESU_EX, RESU_ET, RESU_RD):
-        if res is not None and res.is_typco():
+        if res is not None and res.isTypCO():
             if AsType(RESU_EXP) == mode_meca:
-                self.type_sdprod(res, mode_meca)
+                self.typeSDProd(res, mode_meca)
             else:
-                self.type_sdprod(res, dyna_harmo)
+                self.typeSDProd(res, dyna_harmo)
     return None
 
 MACRO_EXPANS=MACRO(nom="MACRO_EXPANS",
@@ -27795,12 +27795,12 @@ MACRO_EXPANS=MACRO(nom="MACRO_EXPANS",
 
 
 def macro_matr_ajou_prod(self,MATR_AMOR_AJOU,MATR_MASS_AJOU,MATR_RIGI_AJOU,FORC_AJOU,**args):
-  self.type_sdprod(MATR_AMOR_AJOU,matr_asse_gene_r)
-  self.type_sdprod(MATR_MASS_AJOU,matr_asse_gene_r)
-  self.type_sdprod(MATR_RIGI_AJOU,matr_asse_gene_r)
+  self.typeSDProd(MATR_AMOR_AJOU,matr_asse_gene_r)
+  self.typeSDProd(MATR_MASS_AJOU,matr_asse_gene_r)
+  self.typeSDProd(MATR_RIGI_AJOU,matr_asse_gene_r)
   if FORC_AJOU != None:
     for m in FORC_AJOU:
-      self.type_sdprod(m['VECTEUR'],vect_asse_gene)
+      self.typeSDProd(m['VECTEUR'],vect_asse_gene)
 
   return None
 
@@ -30317,7 +30317,7 @@ POST_ELEM=OPER(nom="POST_ELEM",op=107,sd_prod=table_sdaster,reentrant='n',
 
 
 def post_endo_fiss_prod(self,TABLE,**args) :
-    self.type_sdprod(TABLE,table_sdaster)
+    self.typeSDProd(TABLE,table_sdaster)
     return maillage_sdaster
 
 POST_ENDO_FISS=MACRO(nom="POST_ENDO_FISS",
@@ -31745,17 +31745,17 @@ PROD_MATR_CHAM=OPER(nom="PROD_MATR_CHAM",op= 156,sd_prod=cham_no_sdaster,
 def proj_base_prod(self,MATR_ASSE_GENE,VECT_ASSE_GENE,
                    RESU_GENE, NUME_DDL_GENE,
                    STOCKAGE,**args ):
-  if NUME_DDL_GENE is not None and NUME_DDL_GENE.is_typco():
-      self.type_sdprod(NUME_DDL_GENE, nume_ddl_gene)
+  if NUME_DDL_GENE is not None and NUME_DDL_GENE.isTypCO():
+      self.typeSDProd(NUME_DDL_GENE, nume_ddl_gene)
   if MATR_ASSE_GENE != None:
     for m in MATR_ASSE_GENE:
-      self.type_sdprod(m['MATRICE'],matr_asse_gene_r)
+      self.typeSDProd(m['MATRICE'],matr_asse_gene_r)
   if VECT_ASSE_GENE != None:
     for v in VECT_ASSE_GENE:
-      self.type_sdprod(v['VECTEUR'],vect_asse_gene)
+      self.typeSDProd(v['VECTEUR'],vect_asse_gene)
   if RESU_GENE != None:
     for v in RESU_GENE:
-      self.type_sdprod(v['RESULTAT'],tran_gene)
+      self.typeSDProd(v['RESULTAT'],tran_gene)
   return None
 
 PROJ_BASE=MACRO(nom="PROJ_BASE",
@@ -32307,17 +32307,17 @@ PROJ_VECT_BASE=OPER(nom="PROJ_VECT_BASE",op=  72,sd_prod=vect_asse_gene,
 def propa_fiss_prod(self,**args):
   if  args.has_key('MAIL_TOTAL')  :
       MAIL_TOTAL = args['MAIL_TOTAL']
-      self.type_sdprod(MAIL_TOTAL,maillage_sdaster)
+      self.typeSDProd(MAIL_TOTAL,maillage_sdaster)
   if  args.has_key('MAIL_FISS')  :
       MAIL_FISS = args['MAIL_FISS']
-      self.type_sdprod(MAIL_FISS,maillage_sdaster)
+      self.typeSDProd(MAIL_FISS,maillage_sdaster)
   if args.has_key('FISSURE') :
       FISSURE = args['FISSURE']
       for numfis in FISSURE :
         if (args['METHODE_PROPA']=='MAILLAGE') :
-          self.type_sdprod(numfis['MAIL_PROPAGE'],maillage_sdaster)
+          self.typeSDProd(numfis['MAIL_PROPAGE'],maillage_sdaster)
         else :
-          self.type_sdprod(numfis['FISS_PROPAGEE'],fiss_xfem)
+          self.typeSDProd(numfis['FISS_PROPAGEE'],fiss_xfem)
   return None
 
 PROPA_FISS=MACRO(nom="PROPA_FISS",

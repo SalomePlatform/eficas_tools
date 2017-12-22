@@ -103,7 +103,7 @@ class JDC_POURSUITE(JDC):
       # si necessaire apres en appelant la methode verifContexte
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
-      # Ajoute a la creation (appel de reg_sd).
+      # Ajoute a la creation (appel de regSD).
       self.sds_dict[sdnom]=sd
       sd.nom=sdnom
 
@@ -113,7 +113,7 @@ class JDC_POURSUITE(JDC):
 
    def getVerifContexte(self):
       #print "getVerifContexte"
-      j_context=self.getContexte_avant(None)
+      j_context=self.getContexteAvant(None)
       self.verifContexte(j_context)
       return j_context
 
@@ -214,7 +214,7 @@ class JDC_POURSUITE(JDC):
    #   self.context_ini={}
    #   self.procedure=None
 
-   def getContexte_avant(self,etape):
+   def getContexteAvant(self,etape):
       """
          Retourne le dictionnaire des concepts connus avant etape
          On tient compte des concepts produits par le jdc pere
@@ -223,18 +223,18 @@ class JDC_POURSUITE(JDC):
          comme DETRUIRE ou les macros
          Si etape == None, on retourne le contexte en fin de JDC
       """
-      #print "jdc_include.getContexte_avant",etape,etape and etape.nom
+      #print "jdc_include.getContexteAvant",etape,etape and etape.nom
       if self.etape_include:
-         new_context=self.etape_include.parent.getContexte_avant(self.etape_include).copy()
+         new_context=self.etape_include.parent.getContexteAvant(self.etape_include).copy()
          self.context_ini=new_context
-      d= JDC.getContexte_avant(self,etape)
+      d= JDC.getContexteAvant(self,etape)
       return d
 
    def resetContext(self):
       #print "jdc_include.resetContext",self,self.nom
       if self.etape_include:
          self.etape_include.parent.resetContext()
-         new_context=self.etape_include.parent.getContexte_avant(self.etape_include).copy()
+         new_context=self.etape_include.parent.getContexteAvant(self.etape_include).copy()
          self.context_ini=new_context
       JDC.resetContext(self)
 

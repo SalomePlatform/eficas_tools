@@ -3,8 +3,8 @@ import Noyau
 
 class CATA:
    def __init__(self):
-      CONTEXT.unset_current_cata()
-      CONTEXT.set_current_cata(self)
+      CONTEXT.unsetCurrentCata()
+      CONTEXT.setCurrentCata(self)
    def enregistre(self,cmd):
       pass
 
@@ -50,7 +50,7 @@ OP4=OPER(nom='OP4',op=4,sd_prod=op4_prod,
 
 def op5_prod(FFT,**args):
    if (FFT != None)        :
-      vale=FFT.get_child('FONCTION').getValeur()
+      vale=FFT.getChild('FONCTION').getValeur()
       if (AsType(vale) == concept )  : return concept
       if (AsType(vale) == concept2) : return concept2
    raise AsException("type de concept resultat non prevu")

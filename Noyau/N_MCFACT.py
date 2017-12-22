@@ -79,7 +79,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
     def getVal(self):
         """
             Une autre méthode qui retourne une "autre" valeur du mot clé facteur.
-            Elle est utilisée par la méthode get_mocle
+            Elle est utilisée par la méthode getMocle
         """
         return [self]
 
@@ -90,7 +90,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         """
         if key == 0:
             return self
-        return self.get_mocle(key)
+        return self.getMocle(key)
 
     def accept(self, visitor):
         """

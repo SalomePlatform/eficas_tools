@@ -23,8 +23,8 @@ class TestFactCase(unittest.TestCase):
       dico=mcfact[0].creeDictValeurs(mcfact[0].mc_liste)
       #dico=mcfact.creeDictValeurs(mcfact.mc_liste)
       self.assertEqual(dico , valeur_attendue)
-      self.assertEqual(mcfact[0].get_mocle('TOTO') , 'AAA')
-      self.assertEqual(mcfact[0].get_mocle('ZORGLUB') , 'OOO')
+      self.assertEqual(mcfact[0].getMocle('TOTO') , 'AAA')
+      self.assertEqual(mcfact[0].getMocle('ZORGLUB') , 'OOO')
       self.assertEqual(mcfact['TOTO'] , 'AAA')
       self.assertRaises(IndexError, mcfact.__getitem__, 'TITI')
 
@@ -39,7 +39,7 @@ class TestFactCase(unittest.TestCase):
       dico=mcfact[0].creeDictValeurs(mcfact[0].mc_liste)
       #dico=mcfact.creeDictValeurs(mcfact.mc_liste)
       self.assertEqual(dico , valeur_attendue)
-      self.assertEqual(mcfact[0].get_mocle('ZORGLUB') , 'OOO')
+      self.assertEqual(mcfact[0].getMocle('ZORGLUB') , 'OOO')
 
    def test003(self):
       cata=FACT(ZORGLUB  =SIMP(statut='f',typ='TXM',defaut='OOO'),
@@ -51,7 +51,7 @@ class TestFactCase(unittest.TestCase):
       valeur_attendue={'ZORGLUB':'ZZZ', 'TOTO':'AAA'}
       dico=mcfact[0].creeDictValeurs(mcfact[0].mc_liste)
       self.assertEqual(dico , valeur_attendue)
-      self.assertEqual(mcfact[0].get_mocle('ZORGLUB') , 'ZZZ')
+      self.assertEqual(mcfact[0].getMocle('ZORGLUB') , 'ZZZ')
       self.assertEqual(mcfact['TOTO'] , 'AAA')
 
    def test004(self):
@@ -64,9 +64,9 @@ class TestFactCase(unittest.TestCase):
       valeur_attendue={'ZORGLUB':'OOO','TOTO':None}
       dico=mcfact[0].creeDictValeurs(mcfact[0].mc_liste)
       self.assertEqual(dico , valeur_attendue)
-      self.assertEqual(mcfact[0].get_mocle('TOTO') , None)
-      self.assertEqual(mcfact[0].get_child('ZORGLUB').getValeur() , 'OOO')
-      self.assertEqual(mcfact[0].get_child('b_unit1').get_child('TOTO').getValeur() , None)
+      self.assertEqual(mcfact[0].getMocle('TOTO') , None)
+      self.assertEqual(mcfact[0].getChild('ZORGLUB').getValeur() , 'OOO')
+      self.assertEqual(mcfact[0].getChild('b_unit1').getChild('TOTO').getValeur() , None)
       self.assertEqual(mcfact['TOTO'] , None)
 
    def test005(self):
@@ -133,10 +133,10 @@ class TestFactCase(unittest.TestCase):
       dico=mcfact[0].creeDictValeurs(mcfact[0].mc_liste)
       self.assertEqual(dico , valeur_attendue)
 
-      self.assertEqual(mcfact[0].get_child('TATA').getValeur() , 'AAA')
-      self.assertEqual(mcfact[0].get_child('TITI').getValeur() , 'AAA')
-      self.assertEqual(mcfact[0].get_child('TUTU').getValeur() , 'AAA')
-      self.assertEqual(mcfact[0].get_child('TOTO').getValeur() , 'BBB')
+      self.assertEqual(mcfact[0].getChild('TATA').getValeur() , 'AAA')
+      self.assertEqual(mcfact[0].getChild('TITI').getValeur() , 'AAA')
+      self.assertEqual(mcfact[0].getChild('TUTU').getValeur() , 'AAA')
+      self.assertEqual(mcfact[0].getChild('TOTO').getValeur() , 'BBB')
       self.assertEqual(mcfact['TITI'] , 'AAA')
       self.assertEqual(mcfact['TUTU'] , 'AAA')
       self.assertEqual(mcfact['TATA'] , 'AAA')
@@ -145,14 +145,14 @@ class TestFactCase(unittest.TestCase):
       self.assertEqual(mcfact['TOTO1'] , 'AAA')
       self.assertEqual(mcfact['TOTO2'] , 'AAA')
       self.assertEqual(mcfact['TOTO4'] , 'AAA')
-      self.assertRaises(IndexError, mcfact[0].get_mocle, 'TOTO3')
+      self.assertRaises(IndexError, mcfact[0].getMocle, 'TOTO3')
 
       self.assertEqual(mcfact['UNITE1'] , 25)
       self.assertEqual(mcfact['UNITE4'] , 25)
       self.assertRaises(IndexError, mcfact.__getitem__, 'UNITE2')
       self.assertRaises(IndexError, mcfact.__getitem__, 'UNITE3')
-      self.assertRaises(IndexError, mcfact[0].get_mocle, 'UNITE2')
-      self.assertRaises(IndexError, mcfact[0].get_mocle, 'UNITE3')
+      self.assertRaises(IndexError, mcfact[0].getMocle, 'UNITE2')
+      self.assertRaises(IndexError, mcfact[0].getMocle, 'UNITE3')
 
-      self.assertEqual(mcfact[0].get_child('b_unit4').get_child('TOTO4').getValeur(),'AAA')
-      self.assertEqual(mcfact[0].get_child('b_unit4').getValeur(),{'TOTO4': 'AAA', 'UNITE4': 25})
+      self.assertEqual(mcfact[0].getChild('b_unit4').getChild('TOTO4').getValeur(),'AAA')
+      self.assertEqual(mcfact[0].getChild('b_unit4').getValeur(),{'TOTO4': 'AAA', 'UNITE4': 25})

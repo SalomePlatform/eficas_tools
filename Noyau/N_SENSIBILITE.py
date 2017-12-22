@@ -77,8 +77,8 @@ class CONCEPT_SENSIBLE(REGLE):
       if not type(valeur) in (list, tuple):
          valeur = [valeur,]
       for v in valeur:
-         if not v.get_name() in etape.sd.sensi:
-            etape.sd.sensi[v.get_name()] = id_etape
+         if not v.getName() in etape.sd.sensi:
+            etape.sd.sensi[v.getName()] = id_etape
       return '', 1
 
 

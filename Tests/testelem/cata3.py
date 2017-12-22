@@ -13,7 +13,7 @@ class concept2(ASSD):pass
 class concept3(ASSD):pass
 
 def op2_prod(self,MATR,**args):
-   self.type_sdprod(MATR,concept2)
+   self.typeSDProd(MATR,concept2)
    return concept
 
 OP2=MACRO(nom='OP2',op=-2,sd_prod=op2_prod,
@@ -23,7 +23,7 @@ OP2=MACRO(nom='OP2',op=-2,sd_prod=op2_prod,
 def op3_prod(self,MATR,**args):
    for m in MATR:
       t=m['CHAM']
-      if t == 'R':self.type_sdprod(m['MM'],concept)
+      if t == 'R':self.typeSDProd(m['MM'],concept)
    return concept
 
 OP3=MACRO(nom='OP3',op=-3,sd_prod=op3_prod,
@@ -56,7 +56,7 @@ def INCLUDE_prod(self,UNITE,**args):
     # le contexte de l etape pere (global au sens Python)
     # et le contexte de l etape (local au sens Python)
     code=compile(text,f,'exec')
-    if self.jdc and self.jdc.par_lot == 'NON':
+    if self.jdc and self.jdc.parLot == 'NON':
       # On est en mode commande par commande
       # On teste la validite de la commande avec interruption eventuelle
       cr=self.report()

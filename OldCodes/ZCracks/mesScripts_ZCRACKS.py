@@ -1,6 +1,6 @@
 
 def view_med(params,appli) :
-    mcSimp=params[0].object.get_child('cracked_name')
+    mcSimp=params[0].object.getChild('cracked_name')
     fileName=mcSimp.valeur
     import os
     if not os.path.isfile(fileName) : 

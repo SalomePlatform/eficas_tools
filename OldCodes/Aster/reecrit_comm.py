@@ -42,4 +42,4 @@ from InterfaceQT4 import eficas_go
 
 if len(sys.argv) > 1 :
     # on veut ouvrir un fichier directement au lancement d'Eficas
-    eficas_go.lance_eficas_ssIhm_reecrit(code='ASTER',fichier = sys.argv[1],version='STA11')
+    eficas_go.lanceEficas_ssIhm_reecrit(code='ASTER',fichier = sys.argv[1],version='STA11')

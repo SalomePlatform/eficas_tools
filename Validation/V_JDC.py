@@ -66,7 +66,7 @@ class JDC(V_MCCOMPO.MCCOMPO):
             return self.valid
         else:
             valid = 1
-            texte, test = self.verif_regles()
+            texte, test = self.verifRegles()
             if test == 0:
                 if cr == 'oui':
                     if texte != "" and (' '.strip(texte) == "") : self.cr.fatal(texte)
@@ -83,7 +83,7 @@ class JDC(V_MCCOMPO.MCCOMPO):
             self.valid = valid
             return self.valid
 
-    def verif_regles(self):
+    def verifRegles(self):
         """
         Effectue la verification de validite des regles du jeu de commandes
         """

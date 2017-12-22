@@ -44,4 +44,4 @@ print ('kjlkjlkjkl')
 print ('kjlkjlkjkl')
 
 from InterfaceQT4 import eficas_go
-if __name__ == '__main__': eficas_go.lance_eficas(code=prefs.code)
+if __name__ == '__main__': eficas_go.lanceEficas(code=prefs.code)

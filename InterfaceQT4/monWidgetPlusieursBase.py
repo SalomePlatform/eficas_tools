@@ -95,6 +95,8 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         self.AAfficher=self.lineEditVal1
         self.inInit=False
+        # PNPN a completer __ si tuple le type des tuples sinon le tuple
+        self.monCommentaireLabel.setText(self.finCommentaireListe())
 
 
   def setValeurs(self):

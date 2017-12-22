@@ -66,7 +66,7 @@ class JDC(I_OBJECT.OBJECT):
       """
           Retourne la liste des concepts avant etape d'un type acceptable
       """
-      d=self.getContexte_avant(etape)
+      d=self.getContexteAvant(etape)
       
       
       l=[]
@@ -87,7 +87,7 @@ class JDC(I_OBJECT.OBJECT):
           if etapeTraitee==etapeStop:
              break
           if etapeTraitee.nom == 'VARIABLE' :
-             variable=etapeTraitee.get_mocle('ModelVariable')
+             variable=etapeTraitee.getMocle('ModelVariable')
              if variable != None :
                 l.append(variable.nom)
       return l
@@ -104,19 +104,19 @@ class JDC(I_OBJECT.OBJECT):
    #def set_Copules_recalcule_etat(self):
    #   for etapeTraitee in self.etapes :
    #       if etapeTraitee.nom == 'CORRELATION' :
-             #Matrix=etapeTraitee.get_child('Matrix')
+             #Matrix=etapeTraitee.getChild('Matrix')
              #if Matrix !=None :
-   #             Correlation=etapeTraitee.get_child('CorrelationMatrix')
+   #             Correlation=etapeTraitee.getChild('CorrelationMatrix')
    #             if Correlation !=None : Correlation.state='arecalculer'
              #   Matrix.state='arecalculer'
      
    #def recalculeEtatCorrelation(self):
    #   for etapeTraitee in self.etapes :
    #       if etapeTraitee.nom == 'CORRELATION' :
-             #Matrix=etapeTraitee.get_child('Matrix')
+             #Matrix=etapeTraitee.getChild('Matrix')
              #if Matrix !=None :
    #             Matrix.state='arecalculer'
-   #             Correlation=Matrix.get_child('CorrelationMatrix')
+   #             Correlation=Matrix.getChild('CorrelationMatrix')
    #             if Correlation !=None : Correlation.state='arecalculer'
    #                Correlation.isValid()
    #             Matrix.isValid()
@@ -126,7 +126,7 @@ class JDC(I_OBJECT.OBJECT):
    def recalculeEtatCorrelation(self):
       for etapeTraitee in self.etapes :
           if etapeTraitee.nom == 'CORRELATION' :
-             Correlation=etapeTraitee.get_child('CorrelationMatrix')
+             Correlation=etapeTraitee.getChild('CorrelationMatrix')
              if Correlation !=None : 
                   Correlation.state='arecalculer'
                   Correlation.isValid()
@@ -151,7 +151,7 @@ class JDC(I_OBJECT.OBJECT):
        if objet != None:  objet.state='arecalculer'
        if hasattr(objet,'listeMcPresents'):
           for childNom in objet.listeMcPresents():
-              child=objet.get_child(childNom)
+              child=objet.getChild(childNom)
               if hasattr(objet,'_updateConditionBloc'):objet._updateConditionBloc()
               self.forceRecalculBloc(child)
        
@@ -162,7 +162,7 @@ class JDC(I_OBJECT.OBJECT):
           Attention different de la routine precedente : 1 seul type passe en parametre
           Teste sur issubclass et par sur le type permis
       """
-      d=self.getContexte_avant(etape)
+      d=self.getContexteAvant(etape)
       l=[]
       try :
          typeverif=self.cata[0].__dict__[type]
@@ -175,7 +175,7 @@ class JDC(I_OBJECT.OBJECT):
       return l
 
    def chercheListAvant(self,etape,valeur):
-       d=self.getContexte_avant(etape)
+       d=self.getContexteAvant(etape)
        for k,v in d.items():
           if issubclass(v.__class__,LASSD):
              if k == valeur :
@@ -292,7 +292,7 @@ class JDC(I_OBJECT.OBJECT):
         # On veut ajouter une nouvelle commande
         try:
           self.setCurrentStep()
-          cmd=self.get_cmd(name)
+          cmd=self.getCmd(name)
           # L'appel a make_objet n'a pas pour effet d'enregistrer l'etape
           # aupres du step courant car editmode vaut 1
           # Par contre elle a le bon parent grace a setCurrentStep
@@ -335,7 +335,7 @@ class JDC(I_OBJECT.OBJECT):
       return []
 
    def getSdAvantEtape(self,nom_sd,etape):
-      return self.getContexte_avant(etape).get(nom_sd,None)
+      return self.getContexteAvant(etape).get(nom_sd,None)
 
    def getSdApresEtapeAvecDetruire(self,nom_sd,sd,etape,avec='non'):
       """ 
@@ -409,9 +409,9 @@ class JDC(I_OBJECT.OBJECT):
          comme DETRUIRE ou les macros
          Si etape == None, on retourne le contexte en fin de JDC
       """
-      if not etape: return self.getContexte_avant(etape)
+      if not etape: return self.getContexteAvant(etape)
 
-      d=self.getContexte_avant(etape)
+      d=self.getContexteAvant(etape)
       if etape.isActif():etape.updateContext(d)
       self.index_etape_courante=self.index_etape_courante+1
       return d
@@ -535,7 +535,7 @@ class JDC(I_OBJECT.OBJECT):
          #derniere etape du jdc : rien a faire
          return
 
-      context=self.getContexte_avant(etape)
+      context=self.getContexteAvant(etape)
 
       for e in self.etapes[index_etape:]:
           e.controlSdprods(context)
@@ -544,7 +544,7 @@ class JDC(I_OBJECT.OBJECT):
    def analyse(self):
       self.compile()
       if not self.cr.estvide():return
-      self.exec_compile()
+      self.execCompile()
       self.activeEtapes()
 
    def registerParametre(self,param):
@@ -578,7 +578,7 @@ class JDC(I_OBJECT.OBJECT):
       l_fonctions = []
       # on recupere le contexte avant etape
       # on ne peut mettre dans les deux listes que des elements de ce contexte
-      d=self.getContexte_avant(etape)
+      d=self.getContexteAvant(etape)
       # construction de l_constantes
       for param in self.params:
         nom = param.nom
@@ -826,7 +826,7 @@ class JDC(I_OBJECT.OBJECT):
       #contexte initial du jdc
       context=self.condition_context.copy()
       #contexte courant des concepts. Il contient les parametres
-      context.update(self.getContexte_avant(etape))
+      context.update(self.getContexteAvant(etape))
       try :
          objet = eval(valeur,context)
          return objet
@@ -859,7 +859,7 @@ class JDC(I_OBJECT.OBJECT):
       """
            Cette methode ajoute  etape dans la liste
            des etapes self.etapes et retourne l identificateur d'etape
-           fourni par l appel a g_register
+           fourni par l appel a gRegister
 
            A quoi sert editmode ?
               - Si editmode vaut 1, on est en mode edition de JDC. On cherche
@@ -877,7 +877,7 @@ class JDC(I_OBJECT.OBJECT):
          self.index_etapes[etape] = len(self.etapes) - 1
       else:
          pass
-      return self.g_register(etape)
+      return self.gRegister(etape)
 
 #ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
    def NommerSdprod(self,sd,sdnom,restrict='non'):
@@ -890,7 +890,7 @@ class JDC(I_OBJECT.OBJECT):
       # XXX En mode editeur dans EFICAS, le nommage doit etre gere differemment
       # Le dictionnaire g_context ne represente pas le contexte
       # effectif avant une etape.
-      # Il faut utiliser getContexte_avant avec indication de l'etape
+      # Il faut utiliser getContexteAvant avec indication de l'etape
       # traitee.
       # Cette etape est indiquee par l'attribut _etape_context qui a ete
       # positionne prealablement par un appel a setEtapeContext
@@ -898,7 +898,7 @@ class JDC(I_OBJECT.OBJECT):
       if CONTEXT.debug : print(("JDC.NommerSdprod ",sd,sdnom))
 
       if self._etape_context:
-         o=self.getContexte_avant(self._etape_context).get(sdnom,None)
+         o=self.getContexteAvant(self._etape_context).get(sdnom,None)
       else:
          o=self.sds_dict.get(sdnom,None)
 
@@ -906,7 +906,7 @@ class JDC(I_OBJECT.OBJECT):
          raise AsException(tr(" Nom de concept deja  defini : "+ sdnom))
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
-      # Ajoute a la creation (appel de reg_sd).
+      # Ajoute a la creation (appel de regSD).
       self.sds_dict[sdnom]=sd
       sd.nom=sdnom
 

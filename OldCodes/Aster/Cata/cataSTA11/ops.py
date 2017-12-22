@@ -32,7 +32,7 @@ import Accas
 from Accas import ASSD
 from Noyau.ascheckers     import CheckLog
 from Noyau.N_info import message, SUPERV
-from Noyau.N_types import force_list
+from Noyau.N_types import forceList
 
 try:
    import aster
@@ -53,7 +53,7 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, 
    """Fonction sdprod partie commune à DEBUT et POURSUITE.
    (on stocke un entier au lieu du logique)
    """
-   jdc.set_par_lot(PAR_LOT, user_value=True)
+   jdc.set_parLot(PAR_LOT, user_value=True)
    jdc.impr_macro = int(IMPR_MACRO == 'OUI')
    jdc.jxveri     = int(CODE != None or (DEBUG != None and DEBUG['JXVERI'] == 'OUI'))
    jdc.sdveri     = int(DEBUG != None and DEBUG['SDVERI'] == 'OUI')
@@ -67,7 +67,7 @@ def commun_DEBUT_POURSUITE(jdc, PAR_LOT, IMPR_MACRO, CODE, DEBUG, IGNORE_ALARM, 
       if LANG:
          from Execution.i18n import localization
          localization.install(LANG)
-      # pb en cas d'erreur dans FIN : appeler reset_print_function dans traiter_fin_exec ?
+      # pb en cas d'erreur dans FIN : appeler reset_print_function dans traiterFinExec ?
       #from functools import partial
       #asprint = partial(aster.affiche, 'MESSAGE')
       #message.register_print_function(asprint)
@@ -111,7 +111,7 @@ def build_debut(self,**args):
    """
    self.jdc.UserError=self.codex.error
 
-   if self.jdc.par_lot == 'NON' :
+   if self.jdc.parLot == 'NON' :
       self.jdc._Build()
    # On execute la fonction debut pour initialiser les bases
    # Cette execution est indispensable avant toute autre action sur ASTER
@@ -298,7 +298,7 @@ def INCLUDE(self, UNITE, DONNEE, **args):
     if not (UNITE or DONNEE) or hasattr(self, '_mark'):
         return
     self._mark = 1
-    if self.jdc and self.jdc.par_lot == 'NON':
+    if self.jdc and self.jdc.parLot == 'NON':
         # On est en mode commande par commande, on appelle la methode speciale
         self.Execute_alone()
     if UNITE:
@@ -344,11 +344,11 @@ def _detr_list_co(self, context):
     list_co = set()
     # par nom de concept (typ=assd)
     for mc in self['CONCEPT'] or []:
-        list_co.update(force_list(mc["NOM"]))
+        list_co.update(forceList(mc["NOM"]))
     # par chaine de caractères (typ='TXM')
     for mc in self['OBJET'] or []:
         # longueur <= 8, on cherche les concepts existants
-        for nom in force_list(mc['CHAINE']):
+        for nom in forceList(mc['CHAINE']):
             assert type(nom) in (str, unicode), 'On attend une chaine de caractères : %s' % nom
             if len(nom.strip()) <= 8:
                 if self.jdc.sds_dict.get(nom) != None:

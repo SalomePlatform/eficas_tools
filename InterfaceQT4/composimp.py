@@ -33,7 +33,7 @@ from . import typeNode
 # Modules Eficas
 from Editeur import Objecttreeitem
 from . import browser
-from Noyau.N_CR   import justify_text
+from Noyau.N_CR   import justifyText
 from Accas        import SalomeEntry
     
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):    
@@ -395,7 +395,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def getListeParamPossible(self):
       liste_param=[]
-      l1,l2=self.jdc.getParametresFonctionsAvantEtape(self.get_etape())
+      l1,l2=self.jdc.getParametresFonctionsAvantEtape(self.getEtape())
       for param in self.object.jdc.params:
           if param.nom not in l1 : continue
           encorevalide=self.valideItem(param.valeur)
@@ -588,6 +588,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       else:
           return 0
 
+  def waitTuple(self) :
+      return  self.object.waitTuple()
+
   def waitDate(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un réel, 0 sinon """
@@ -729,7 +732,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       # ou si son nom de classe est CO.
       # Il faut faire les 2 tests car une macro non valide peut etre
       # dans un etat pas tres catholique avec des CO pas encore types
-      # et donc pas dans sdprods (resultat d'une exception dans type_sdprod)
+      # et donc pas dans sdprods (resultat d'une exception dans typeSDProd)
       if not valeur:valeur=self.object.valeur
       if valeur in self.object.etape.sdprods:return 1
       if type(valeur) is not types.InstanceType:return 0

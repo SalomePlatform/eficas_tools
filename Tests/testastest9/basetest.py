@@ -21,7 +21,7 @@ def make_tests(files):
           pass
 
        def tearDown(self):
-          CONTEXT.unset_current_step()
+          CONTEXT.unsetCurrentStep()
 
        i=0
        for f in glob.glob(os.path.join(ASTERDIR[version],files)):

@@ -52,7 +52,7 @@ class TestOperCase(unittest.TestCase):
 
    def test06(self):
       """ Test fonction sd_prod
-          Test sur un mot-clé simple d'un mot-clé facteur : mcf.get_child(mcs).getValeur()
+          Test sur un mot-clé simple d'un mot-clé facteur : mcf.getChild(mcs).getValeur()
       """
       co2=OP1(a=1)
       co1=OP5(FFT={'FONCTION':co2})
@@ -96,10 +96,10 @@ class TestOperCase(unittest.TestCase):
    def test09(self):
       co2=OP1(a=1)
       co1=OP5(FFT={'FONCTION':co2})
-      l= co1.etape.get_sd_utilisees()
+      l= co1.etape.getSd_utilisees()
       self.assert_(len(l)==1)
       self.assert_(co2 in l )
-      d=co1.etape.get_sd_mcs_utilisees()
+      d=co1.etape.getSd_mcs_utilisees()
       self.assert_(len(d.keys())==1)
       self.assert_(len(d['FONCTION'])==1)
       self.assert_(co2 in d['FONCTION'])

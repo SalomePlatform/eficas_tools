@@ -422,7 +422,7 @@ class PythonGenerator(object):
           Convertit un objet derive d'ASSD en une chaine de caracteres a la
           syntaxe python
       """
-      return obj.get_name()
+      return obj.getName()
 
    def generMCFACT(self,obj):
       """
@@ -503,7 +503,7 @@ class PythonGenerator(object):
       return l
 
 
-   def format_item(self,valeur,etape,obj,vientDeListe=0):
+   def formatItem(self,valeur,etape,obj,vientDeListe=0):
       if (type(valeur) == float or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
          # Pour un flottant on utilise str ou repr si on vient d une liste
          # ou la notation scientifique
@@ -570,11 +570,11 @@ class PythonGenerator(object):
          else :
             obj.valeurFormatee=[]
             for val in obj.valeur :
-               s =s +self.format_item(val,obj.etape,obj,1) + ','
+               s =s +self.formatItem(val,obj.etape,obj,1) + ','
                if obj.waitTxm() :
                   obj.valeurFormatee.append(val)
                else :
-                 obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
+                 obj.valeurFormatee.append(self.formatItem(val,obj.etape,obj))
             if len(obj.valeur) >= 1:
                s = '(' + s + '),'
             if obj.valeur==[] or obj.valeur==() : s="(),"
@@ -582,7 +582,7 @@ class PythonGenerator(object):
             s=self.formatColonnes(obj.nbrColonnes(),obj.valeur,obj)
       else :
          obj.valeurFormatee=obj.valeur
-         s=self.format_item(obj.valeur,obj.etape,obj) + ','
+         s=self.formatItem(obj.valeur,obj.etape,obj) + ','
       return s
 
 
@@ -595,14 +595,14 @@ class PythonGenerator(object):
           try :
           #if 1 :
             for l in range(nbrColonnes) :
-                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                texteVariable=self.formatItem(listeValeurs[indice],obj.etape,obj)
                 textformat=textformat+texteVariable+" ,"
                 indice=indice+1
             textformat=textformat+"\n"
           except :
           #else :
             while ( indice < len(listeValeurs) ) :
-                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                texteVariable=self.formatItem(listeValeurs[indice],obj.etape,obj)
                 textformat=textformat+texteVariable+", "
                 indice=indice+1
             textformat=textformat+"\n"

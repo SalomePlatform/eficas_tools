@@ -64,7 +64,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     # completude
     self.definition=self
     # parent ne peut etre qu'un objet de type JDC
-    self.jdc = self.parent = CONTEXT.get_current_step()
+    self.jdc = self.parent = CONTEXT.getCurrentStep()
     self.niveau=self.parent.niveau
     self.actif=1
     self.state='undetermined'
@@ -258,7 +258,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     return self.actif
 
-  def set_attribut(self,nom_attr,new_valeur):
+  def setAttribut(self,nom_attr,new_valeur):
     """
     Remplace la valeur de self.nom_attr par new_valeur)
     """

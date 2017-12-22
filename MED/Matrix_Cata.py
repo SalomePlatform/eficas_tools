@@ -78,7 +78,7 @@ CORRELATION = PROC ( nom = 'CORRELATION',
 
   CorrelationMatrix = SIMP ( statut = "o", typ = Matrice(nbLigs=None,
                                                          nbCols=None,
-                                                         methodeCalculTaille='NbDeVariables',
+                                                         methodeCalculTaille='nbDeVariables',
                                                          valSup=1,
                                                          valMin=-1,
                                                          structure="symetrique"),

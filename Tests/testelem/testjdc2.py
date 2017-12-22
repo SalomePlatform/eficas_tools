@@ -124,7 +124,7 @@ FIN CR validation :bidon
       j=cata.JdC(procedure=text_jdc,cata=cata,nom="bidon")
       j.actif_status=1
       j.fico=None
-      j.set_par_lot("OUI")
+      j.set_parLot("OUI")
       # On compile le texte Python
       j.compile()
       # On initialise les tops de mesure globale de temps d'execution du jdc
@@ -140,25 +140,25 @@ FIN CR validation :bidon
         j.supprime()
         return
 
-      j.exec_compile()
+      j.execCompile()
       #print j.cr
       if err2 == "":
-        self.assert_(j.cr.estvide(),msg='Erreur non attendue dans exec_compile (err2):\n%s' % str(j.cr))
+        self.assert_(j.cr.estvide(),msg='Erreur non attendue dans execCompile (err2):\n%s' % str(j.cr))
       else:
-        self.assert_(self.check(err2,str(j.cr)),msg='Erreur non attendue dans exec_compile(err2):\n%s\n!=\n%s' % (str(j.cr),err2))
+        self.assert_(self.check(err2,str(j.cr)),msg='Erreur non attendue dans execCompile(err2):\n%s\n!=\n%s' % (str(j.cr),err2))
         j.supprime()
         return
 
       cr=j.report()
       #print cr
       if err3 == "":
-        self.assert_(cr.estvide(),msg='Erreur non attendue dans exec_compile (err3):\n%s' % str(cr))
+        self.assert_(cr.estvide(),msg='Erreur non attendue dans execCompile (err3):\n%s' % str(cr))
       else:
-        self.assert_(self.check(err3,str(cr)),msg='Erreur non attendue dans exec_compile(err3):\n%s\n!=\n%s' % (str(cr),err3))
+        self.assert_(self.check(err3,str(cr)),msg='Erreur non attendue dans execCompile(err3):\n%s\n!=\n%s' % (str(cr),err3))
         j.supprime()
         return
 
-      j.set_par_lot("NON")
+      j.set_parLot("NON")
 
       j.supprime()
 

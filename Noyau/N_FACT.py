@@ -30,7 +30,7 @@ from . import N_ENTITE
 from . import N_MCFACT
 from . import N_MCLIST
 from .N__F import _F
-from .N_types import is_sequence
+from .N_types import isSequence
 
 from . import N_OBJECT
 
@@ -118,7 +118,7 @@ class FACT(N_ENTITE.ENTITE):
                 # On ne devrait jamais passer par la
                 print ("On ne devrait jamais passer par la")
                 return None
-        elif is_sequence(val) and len(val) == 0 and self.statut == 'o':
+        elif isSequence(val) and len(val) == 0 and self.statut == 'o':
                 # On est dans le cas où le mcfact est présent mais est une liste/tuple
                 # vide. Il est obligatoire donc on l'initialise. Les règles, mots-clés
                 # obligatoires diront si un mcfact vide est accepté.
@@ -148,11 +148,11 @@ class FACT(N_ENTITE.ENTITE):
 
         return l
 
-    def verif_cata(self):
-        self.check_min_max()
-        self.check_fr()
-        self.check_regles()
-        self.check_statut()
-        self.check_docu()
-        self.check_validators()
-        self.verif_cata_regles()
+    def verifCata(self):
+        self.checkMinMax()
+        self.checkFr()
+        self.checkRegles()
+        self.checkStatut()
+        self.checkDocu()
+        self.checkValidators()
+        self.verifCataRegles()

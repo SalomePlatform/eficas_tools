@@ -26,9 +26,8 @@ import sys
 import configuration
 
 # Modules Eficas
-from Editeur import utils
 
-class CONFIG(configuration.CONFIG_BASE):
+class CONFIG(configuration.configBase):
 
   #-----------------------------------
   def __init__(self,appli,repIni):
@@ -41,7 +40,7 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_eficas=['exec_acrobat','savedir','path_doc','catalogues','closeAutreCommande','closeFrameRechercheCommande','taille']
 
       #self.cataFile="catalogues_MAP.ini"
-      configuration.CONFIG_BASE.__init__(self,appli,repIni)
+      configuration.configBase.__init__(self,appli,repIni)
   
   def make_ssCode(self,ssCode):
       if ssCode == None : return
