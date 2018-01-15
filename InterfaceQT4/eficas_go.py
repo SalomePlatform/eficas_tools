@@ -38,12 +38,8 @@ if ihmDir not in sys.path : sys.path.append(ihmDir)
 if ihmQTDir not in sys.path : sys.path.append(ihmQTDir)
 if editeurDir not in sys.path :sys.path.append(editeurDir)
 
-#def getEficasSsIhm(code='Adao',versionCode='V0'):
-#    from .qtEficasSsIhm import AppliSsIhm
-#    Eficas=AppliSsIhm(code=code,ssCode=None,salome=0)
-#    return Eficas
 def getEficasSsIhm(code=None,fichier=None,ssCode=None,multi=False,langue='en',versionCode=None):
-    print (versionCode)
+    #print (versionCode)
     from InterfaceQT4.qtEficasSsIhm import AppliSsIhm
     Eficas=AppliSsIhm(code=code,salome=0,ssCode=ssCode,multi=multi,langue=langue,versionCode=versionCode)
     from Editeur  import session

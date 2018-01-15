@@ -302,7 +302,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
 "border-width : 30 px;\n"
 "border-color : beige;\n"
 "text-align : center")
-           print ('self.editor.maConfiguration.dicoImages', self.editor.maConfiguration.dicoImages)
+           #print ('self.editor.maConfiguration.dicoImages', self.editor.maConfiguration.dicoImages)
            if cmd in self.editor.maConfiguration.dicoImages :
               fichier=self.editor.maConfiguration.dicoImages[cmd]
               icon = QIcon()

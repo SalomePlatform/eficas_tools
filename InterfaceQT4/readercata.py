@@ -56,9 +56,6 @@ from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 class READERCATA(object):
 
    def __init__(self,QWParent, appliEficas):
-      print ('----------------------')
-      print ('dans init de readercata')
-      print ('----------------------')
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
       self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS

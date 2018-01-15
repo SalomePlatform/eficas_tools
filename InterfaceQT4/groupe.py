@@ -88,16 +88,22 @@ class Groupe(QWidget,FacultatifOuOptionnel):
 
        
   def calculOptionnel(self):
-        self.liste_mc=[]
-        self.liste_mc_regle=[]
+        self.listeMc=[]
+        self.listeMcRegle=[]
+        self.dictToolTipMc={}
         genea =self.obj.getGenealogie()
         # Attention : les mots clefs listes (+sieurs fact )
         # n ont pas toutes ces methodes
         try :
-           self.liste_mc=self.obj.getListeMcOrdonnee(genea,self.jdc.cata_ordonne_dico)
+        #if 1 :
+           self.listeMc     = self.obj.getListeMcOrdonnee(genea,self.jdc.cata_ordonne_dico)
+           listeNomsPresents=self.obj.dictMcPresents()
            for regle in self.obj.getRegles():
+               (monToolTip,regleOk)=regle.verif(listeNomsPresents)
+               if regleOk : continue
                for mc in regle.mcs :
-                   self.liste_mc_regle.append(mc)
+                   self.listeMcRegle.append(mc)
+                   self.dictToolTipMc[mc]=monToolTip
         except :
            #print ('in except')
            #print (self)
@@ -114,9 +120,9 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       self.dictMCVenantDesBlocs={}
       i=0
       self.calculOptionnel()
-      liste=self.liste_mc
-      liste_rouge=self.liste_mc_regle
-      for MC in self.liste_mc : self.dictMCVenantDesBlocs[MC]=self
+      liste=self.listeMc
+      liste_rouge=self.listeMcRegle
+      for MC in self.listeMc : self.dictMCVenantDesBlocs[MC]=self
       # ce cas est le cas machine tournant sr le plie
       try :
         while i < self.commandesLayout.count():
@@ -150,7 +156,7 @@ class Groupe(QWidget,FacultatifOuOptionnel):
              nodeAEnlever=nodeAEnlever.children[-1]
           listeNode.append(nodeAEnlever)
       self.afficheOptionnel()
-      self.monOptionnel.affiche(self.liste_mc)
+      self.monOptionnel.affiche(self.listeMc)
       if len(listeNode) == 0 : return
       if len(listeNode) == 1 : 
          listeNode[0].delete()

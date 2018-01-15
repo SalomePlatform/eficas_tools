@@ -43,6 +43,11 @@ class monRBButtonCustom(QCheckBox):
          mapalette.setColor( QPalette.WindowText, couleur )
          self.setPalette( mapalette );
          self.setText(tr(texte))
+         try :
+           monToolTip=monOptionnel.parentMC.dictToolTipMc[texte]
+           self.setToolTip(monToolTip)
+         except :
+           pass
 
 
    def mouseDoubleClickEvent(self, event):
@@ -90,7 +95,12 @@ class monPBButtonCustom(QWidget,Ui_customPB):
       if couleur != None :
          mapalette=self.monPb.palette()
          mapalette.setColor( QPalette.ButtonText, Qt.red )
-         self.monPb.setPalette( mapalette );
+         self.monPb.setPalette( mapalette )
+         try :
+           monToolTip=monOptionnel.parentMC.dictToolTipMc[texte]
+           self.monPb.setToolTip(monToolTip)
+         except :
+           pass
       self.monPb.setText(texte)
       self.monPb.clicked.connect(self.ajoutMC)
 
@@ -126,6 +136,8 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      self.cb=None
      self.parentQt=parentQt
      self.parentMC=parentMC
+     
+
      if liste != [] : 
         self.affiche(liste,liste_rouge)
         self.afficheTitre()
@@ -159,7 +171,6 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
          #if mot in liste_rouge : print ('je dois afficher en rouge' , mot)
          couleur=None
          if mot in liste_rouge : couleur=Qt.red 
-         print (mot,couleur)
          if self.parentQt.parentQt.maConfiguration.simpleClic == False :
             cb = monRBButtonCustom(mot,self,couleur=couleur)
             cb.clicked.connect(cb.ajoutAideMC)
