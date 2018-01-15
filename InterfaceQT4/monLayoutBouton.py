@@ -42,8 +42,8 @@ class MonLayoutBouton :
       for nomEtape in self.appliEficas.readercata.cata_ordonne_dico:
         toolButton = QToolButton(self.appliEficas.toolBarCommande)
         icon = QIcon()
-        if nomEtape in self.appliEficas.readercata.dicoIcones:
-             fichier = self.appliEficas.readercata.dicoIcones[nomEtape]
+        if nomEtape in self.appliEficas.maConfiguration.dicoIcones:
+             fichier = self.appliEficas.maConfiguration.dicoIcones[nomEtape]
              icon.addPixmap(QPixmap(fichier), QIcon.Normal, QIcon.Off)
              toolButton.setIcon(icon)
         else :

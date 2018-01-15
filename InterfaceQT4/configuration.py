@@ -82,8 +82,8 @@ class configBase(object):
       #Particularite des schemas MAP
       if hasattr(self,'make_ssCode'): self.make_ssCode(self.ssCode)
 
-      if self.appli: self.parent=appli.top
-      else: 	     self.parent=None
+      #if self.appli: self.parent=appli.top
+      #else: 	     self.parent=None
 
       if not os.path.isdir(self.savedir) :
         if sys.platform[0:5]=="linux" :
@@ -122,7 +122,7 @@ class configBase(object):
       self.boutonDsMenuBar=False
       self.ficIcones=None
       self.repIcones=None
-      self.differencieSiDefaut=True
+      self.differencieSiDefaut=False
 
 
  

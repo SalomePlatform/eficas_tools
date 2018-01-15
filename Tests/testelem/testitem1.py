@@ -65,7 +65,7 @@ class TestCase(unittest.TestCase):
               if mc.nom == "MAILLAGE":
                  valeur,validite=mc.evalValeur("MAIL")
                  test = mc.set_valeur(valeur)
-      text1=app.get_text_JDC(j,'python')
+      text1=app.getTextJDC(j,'python')
       f=open(file)
       text2=f.read()
       f.close()

@@ -21,22 +21,29 @@
 
 from __future__ import absolute_import
 from PyQt5.QtWidgets import QCheckBox, QWidget, QLabel, QPushButton
-from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtCore    import Qt, QRect
+from PyQt5.QtGui     import QPalette
 
-from Extensions.i18n import tr
+from Extensions.i18n    import tr
 from desGroupeOptionnel import Ui_groupeOptionnel
-from desPBOptionnelMT import Ui_customPB
+from desPBOptionnelMT   import Ui_customPB
 
     
 # Import des panels
 
 class monRBButtonCustom(QCheckBox):
 
-   def __init__(self,texte,monOptionnel,parent=None):
+   def __init__(self,texte,monOptionnel,parent=None,couleur=None):
       QCheckBox.__init__(self,tr(texte),parent)
       self.mousePressed=True
       self.monOptionnel=monOptionnel
       self.setToolTip(tr("clicker: affichage aide, double-click: ajout"))
+      if couleur != None :
+         mapalette=self.palette()
+         mapalette.setColor( QPalette.WindowText, couleur )
+         self.setPalette( mapalette );
+         self.setText(tr(texte))
+
 
    def mouseDoubleClickEvent(self, event):
       #print "dans mouseDoubleClickEvent", self
@@ -77,9 +84,13 @@ class monRBButtonCustom(QCheckBox):
   
 class monPBButtonCustom(QWidget,Ui_customPB):
 
-   def __init__(self,texte,monOptionnel,parent=None):
+   def __init__(self,texte,monOptionnel,parent=None,couleur=None):
       QWidget.__init__(self)
       self.setupUi(self)
+      if couleur != None :
+         mapalette=self.monPb.palette()
+         mapalette.setColor( QPalette.ButtonText, Qt.red )
+         self.monPb.setPalette( mapalette );
       self.monPb.setText(texte)
       self.monPb.clicked.connect(self.ajoutMC)
 
@@ -118,7 +129,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      if liste != [] : 
         self.affiche(liste,liste_rouge)
         self.afficheTitre()
-     elif self.parentQt.parentQt.afficheOptionnelVide != False : 
+     elif self.parentQt.parentQt.maConfiguration.afficheOptionnelVide != False : 
         self.afficheTitre()
         self.MCOptionnelLayout.insertWidget(0,QLabel(tr('Pas de MC Optionnel')))
      else :
@@ -145,16 +156,17 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
      self.dicoCb={}
      liste.reverse()
      for mot in liste :
-         if mot in liste_rouge : print ('je dois afficher en rouge' , mot)
-         if self.parentQt.parentQt.simpleClic == False :
-            cb = monRBButtonCustom(mot,self)
+         #if mot in liste_rouge : print ('je dois afficher en rouge' , mot)
+         couleur=None
+         if mot in liste_rouge : couleur=Qt.red 
+         print (mot,couleur)
+         if self.parentQt.parentQt.maConfiguration.simpleClic == False :
+            cb = monRBButtonCustom(mot,self,couleur=couleur)
             cb.clicked.connect(cb.ajoutAideMC)
          else :
-            cb = monPBButtonCustom(mot,self)
+            cb = monPBButtonCustom(mot,self,couleur=couleur)
 
          self.MCOptionnelLayout.insertWidget(0,cb)
          self.dicoCb[cb]=mot
      self.scrollAreaCommandesOptionnelles.horizontalScrollBar().setSliderPosition(0)
-
-      
 

@@ -258,6 +258,10 @@ def createparser():
     parser.add_option(u"-c","--cata", action="store", type="string",dest="cata",
                   help=tr("version de catalogue a utiliser"))
 
+    parser.add_option(u"-v","--version_cata", action="store", type="string",dest="version_cata",
+                  help=tr("version de catalogue a utiliser"))
+
+
     parser.add_option(u"-k","--kode", action="store", type="string",dest="code",
                   help=tr("nom du code a utiliser"))
 

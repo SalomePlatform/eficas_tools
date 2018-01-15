@@ -31,7 +31,7 @@ from  PyQt5.QtWidgets  import QFileDialog, QMessageBox
 from  PyQt5.QtCore     import QFileInfo
 
 DictExtensions= {"MAP" : ".map"}
-class MyTabview(object):
+class MyViewManager(object):
 
    def __init__(self,appliEficas):
        self.appliEficas=appliEficas

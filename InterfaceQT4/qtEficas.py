@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: iso-8859-1 -*-
 # Copyright (C) 2007-2017   EDF R&D
 #
@@ -32,76 +33,47 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QBoxLayout, 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QSize
 
+
+from Editeur import session
+from myMain import Ui_Eficas
+from InterfaceQT4.viewManager import MyViewManager
+from InterfaceQT4.qtEficasSsIhm import AppliSsIhm
+
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 from Extensions import param2
 
 
-from myMain import Ui_Eficas
-from .viewManager import MyTabview
-from .getVersion import getEficasVersion
-from Editeur import session
-
-
-
-class Appli(Ui_Eficas,QMainWindow):
+class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=1,parent=None,ssCode=None,multi=False,langue='fr',ssIhm=False):
+    def __init__(self,code=None,salome=1,parent=None,ssCode=None,multi=False,langue='fr',ssIhm=False,versionCode=None):
         """
         Constructor
         """
+        if ssIhm == True : 
+           print ('mauvaise utilisation de la classe Appli. Utiliser AppliSsIm SVP')
+           exit()
+
+        AppliSsIhm.__init__(self,code,salome,parent,ssCode,multi,langue,ssIhm=True,versionCode=None)
         QMainWindow.__init__(self,parent)
         Ui_Eficas.__init__(self)
 
-        
-
-        version=getEficasVersion()
-        self.VERSION_EFICAS="Eficas QT5 Salome " + version
-        self.salome=salome
-        self.parentMainWindow=parent
-        self.ihm="QT"
-        self.ssIhm=ssIhm
-        self.top = self    #(pour maConfiguration)
-        self.QWParent=None #(Pour lancement sans IHM)
-        self.code=code
-        self.indice=0
-        self.first=1
-        self.dict_reels={}
-        self.recent =  []
-        self.ficRecents={}
-        self.mesScripts={}
-        self.listeAEnlever=[]
-        self.ListePathCode=['Adao','ADAO','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
-        self.listeCode=['Adao','ADAO','Carmel3D','Telemac','CF','MAP','ZCracks', 'SEP','SPECA','PSEN_Eficas','PSEN_N1']
-        self.repIcon=os.path.join( os.path.dirname(os.path.abspath(__file__)),'..','Editeur','icons')
-
-
-        if self.salome:
-          import Accas
-          try :
-            import eficasSalome
-            Accas.SalomeEntry = eficasSalome.SalomeEntry
-          except : 
-            print ('eficas hors salome')
-
+        self.ssIhm=False
         self.multi=multi
-        self.demande=multi # specifique PSEN
-
-        if langue=='fr': self.langue=langue
-        else           : self.langue="ang"
+        self.demande=multi # voir PSEN
 
         if self.multi == False :
              self.definitCode(code,ssCode)
              if code==None: return
         else :
-             OOOOOOOOOOO
+             print ('a programmer')
 
         self.suiteTelemac=False
         if hasattr (self, 'maConfiguration') :
            if self.maConfiguration.force_langue :
-              from .monChoixLangue import MonChoixLangue
+              from InterfaceQt4.monChoixLangue import MonChoixLangue
               widgetLangue = MonChoixLangue(self)
               ret=widgetLangue.exec_()
            self.suiteTelemac=self.maConfiguration.suiteTelemac
@@ -111,8 +83,8 @@ class Appli(Ui_Eficas,QMainWindow):
         from Extensions import localisation
         app=QApplication
         if hasattr (self, 'maConfiguration') : localisation.localise(None,self.langue,translatorFichier=self.maConfiguration.translatorFichier)
-
         self.setupUi(self)
+
         #if parent != None : self.parentCentralWidget = parent.centralWidget()
         #else              : self.parentCentralWidget = None
 
@@ -120,8 +92,9 @@ class Appli(Ui_Eficas,QMainWindow):
            if  hasattr (self, 'maConfiguration') and hasattr(self.maConfiguration,'taille') : self.taille=self.maConfiguration.taille
            else : self.taille=1700
 
-           if self.code in ['MAP',] : self.resize(1440,self.height())
-           else : self.resize(self.taille,self.height())
+           #if self.code in ['MAP',] : self.resize(1440,self.height())
+           #else : self.resize(self.taille,self.height())
+           self.resize(self.taille,self.height())
 
 
         icon = QIcon(self.repIcon+"/parametres.png")
@@ -156,7 +129,7 @@ class Appli(Ui_Eficas,QMainWindow):
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-        self.viewmanager = MyTabview(self)
+        self.viewmanager = MyViewManager(self)
         self.recentMenu=QMenu(tr('&Recents'))
         #self.menuFichier.insertMenu(self.actionOuvrir,self.recentMenu)
 
@@ -189,31 +162,13 @@ class Appli(Ui_Eficas,QMainWindow):
         self.ssCode=ssCode
         if self.code==None :
            self.cleanPath()
-           from .monChoixCode import MonChoixCode
+           from InterfaceQt4.monChoixCode import MonChoixCode
            widgetChoix = MonChoixCode(self)
            #ret=widgetChoix.exec_()
            widgetChoix.show()
-        import sys
         if self.code == None:return # pour le cancel de la fenetre choix code
-        name='prefs_'+self.code
-        prefsCode=__import__(name)
+        AppliSsIhm.definitCode(self,code,ssCode)
 
-        self.repIni=prefsCode.repIni
-        if ssCode != None :
-           self.format_fichier= ssCode  #par defaut
-           prefsCode.NAME_SCHEME=ssCode
-        else :
-           self.format_fichier="python" #par defaut
-
-        nameConf='configuration_'+self.code
-        configuration=__import__(nameConf)
-        self.maConfiguration = configuration.make_config(self,prefsCode.repIni)
-
-        if hasattr (self,'maConfiguration') and self.maConfiguration.translatorFichier : 
-           from Extensions import localisation
-           localisation.localise(None,self.langue,translatorFichier=self.maConfiguration.translatorFichier)
-
-        print ('self.closeAutreCommande',self.maConfiguration.closeAutreCommande)
         #PN --> pb d exception qui font planter salome
         # plus supporte en python 3
         #app=QApplication

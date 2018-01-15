@@ -312,7 +312,7 @@ class TestCase(unittest.TestCase):
 
       assert j.isValid(),j.report()
 
-      text1=app.get_text_JDC(j,'python')
+      text1=app.getTextJDC(j,'python')
       file=os.path.join(prefs.INSTALLDIR,"Tests/testelem/az.comm")
       f=open(file)
       text2=f.read()

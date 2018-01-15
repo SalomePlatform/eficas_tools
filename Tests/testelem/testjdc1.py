@@ -63,7 +63,7 @@ FIN CR validation :toto.comm
       co=j.etapes[1]
       mcs=co.addEntite("INFO")
       
-      cr=app.get_text_JDC(j,'python')
+      cr=app.getTextJDC(j,'python')
       expected="""
 DEBUT();
 
@@ -76,7 +76,7 @@ FIN();
       test,mess=co.nommeSd("MA2")
       assert test == 1
 
-      cr=app.get_text_JDC(j,'python')
+      cr=app.getTextJDC(j,'python')
       expected="""
 DEBUT();
 
@@ -368,7 +368,7 @@ FIN();
 
       assert j.isValid(),j.report()
 
-      text1=app.get_text_JDC(j,'python')
+      text1=app.getTextJDC(j,'python')
       file=os.path.join(prefs.INSTALLDIR,"Tests/testelem/az.comm")
       f=open(file)
       text2=f.read()

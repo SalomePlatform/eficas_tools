@@ -52,7 +52,7 @@ class TestCase(unittest.TestCase):
         if co.nom in ("AFFE_MODELE","AFFE_MATERIAU") :
            add_mcsimp(co,"MAILLAGE",'MAIL')
 
-      text1=app.get_text_JDC(j,'python')
+      text1=app.getTextJDC(j,'python')
       f=open(file)
       text2=f.read()
       f.close()

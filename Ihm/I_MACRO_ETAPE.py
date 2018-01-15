@@ -117,10 +117,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.text_converted=0
        self.text_error=""
        if self.nom != "INCLUDE_MATERIAU":
-          if self.parent.appli.ihm == "QT" :
-              format=self.parent.appli.appliEficas.format_fichier
-          else :
-              format=self.jdc.appli.format_fichier.get()
+          format=self.parent.appli.appliEficas.format_fichier
           #on force a python pour Carmel
           if format=="CARMEL3D" : format="python"
           if format in convert.plugins :

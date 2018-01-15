@@ -52,7 +52,7 @@ class TestCase(unittest.TestCase):
       j=app.openJDC(file=file)
       assert j.isValid(),j.report()
 
-      text1=app.get_text_JDC(j,'python')
+      text1=app.getTextJDC(j,'python')
       f=open(file)
       text2=f.read()
       f.close()

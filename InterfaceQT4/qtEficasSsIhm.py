@@ -27,15 +27,12 @@ except : pass
 import os, sys
 import six
 
-from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 from Extensions import param2
-from InterfaceQT4.viewManagerSsIhm import MyTabviewSsIhm
-
 
 from InterfaceQT4.getVersion import getEficasVersion
-
-from editorSsIhm import JDCEditorSsIhm
+from InterfaceQT4.viewManagerSsIhm import MyViewManagerSsIhm
+#from editorSsIhm import JDCEditorSsIhm
 
 
 class AppliSsIhm:
@@ -48,7 +45,7 @@ class AppliSsIhm:
         """
         version=getEficasVersion()
         self.VERSION_EFICAS="Eficas QT5 Salome " + version
-        self.version_code=versionCode
+        self.versionCode=versionCode
 
         self.salome=salome
         self.ssIhm=True
@@ -75,7 +72,10 @@ class AppliSsIhm:
             print ('eficas hors salome')
 
         self.multi=multi
-        self.demande=multi # specifique PSEN
+        if self.multi : 
+              print ('pas de multi sans ihm')
+              exit()
+
 
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
@@ -85,7 +85,7 @@ class AppliSsIhm:
              if code==None: return
 
         self.suiteTelemac=False
-        self.viewmanager = MyTabviewSsIhm(self)
+        self.viewmanager=MyViewManagerSsIhm(self)
 
 
     def definitCode(self,code,ssCode) :
@@ -105,49 +105,63 @@ class AppliSsIhm:
 
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
-        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
-        self.CONFIGStyle = None
-        if hasattr(configuration,'make_config_style'):
-           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
+        self.maConfiguration = configuration.make_config(self,prefsCode.repIni)
 
+        if hasattr (self,'maConfiguration') and self.maConfiguration.translatorFichier :
+           from Extensions import localisation
+           localisation.localise(None,self.langue,translatorFichier=self.maConfiguration.translatorFichier)
 
-        
-    def fileNew(self):
-        self.viewmanager.newEditor()
-
-    def fileOpen(self,fichier):
-        self.viewmanager.handleOpen(fichier)
-
-    def fileSave(self):
-        return self.viewmanager.saveCurrentEditor()
-
-    def fileSaveAs(self,fichier):
-        return self.viewmanager.saveAsCurrentEditor(fichier)
-
-    def fileClose(self):
-        self.viewmanager.handleClose()
-
-    def jdcRapport(self):
-        return self.viewmanager.jdcRapport()
-
-    def jdcText(self):
-        return self.viewmanager.jdcText()
-
-    def jdcDico(self):
-        return self.viewmanager.jdcDico()
-
-    def jdcDicoPython(self):
-        return self.viewmanager.jdcDicoPython()
 
     def getSource(self,file):
     # appele par Editeur/session.py
-    # a garder pour les poursuites
-    # le format n est pas le meme que celui de la fonction jdcText
         import convert
         p=convert.plugins['python']()
         p.readfile(file)
         texte=p.convert('execnoparseur')
         return texte
+
+
+    def initEditor(self,fichier = None,jdc = None, units = None,include=0):
+        if self.editor != None : 
+           print ('un seul editeur par appli')
+           sys.Exit()
+        self.editor = JDCEditorSsIhm(self,fichier, jdc, self.myQtab,units=units,include=include)
+        
+
+    def fileNew(self):
+        self.editor=initEditor(self)
+
+    def getEditor(self):
+        return self.editor
+
+    def fileOpen(self,fichier):
+        fichierIn = os.path.abspath(six.text_type(fichier))
+        try:
+            monEditor=self.viewmanager.handleOpen(fichierIn)
+        except EficasException as exc:
+            print ('poum')
+            monEditor=None
+        return monEditor
+
+    def fileSave(self):
+        if self.editor == None : return False
+        ok, newName = editor.saveFileAs()
+        print ('ok, newName ',ok, newName)
+
+    def fileSaveAs(self,fileName):
+        if self.editor == None : return False
+        ok = editor.saveFileAs()
+        print ('ok ',ok)
+
+#,self.fileSaveAs
+#,self.fileClose
+#,self.fileExit
+#,self.jdcRapport
+#,self.jdcRegles
+#,self.jdcFichierSource
+#,self.visuJdcPy
+       
+
 
 if __name__=='__main__':
 

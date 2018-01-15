@@ -56,14 +56,16 @@ from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 class READERCATA(object):
 
    def __init__(self,QWParent, appliEficas):
+      print ('----------------------')
+      print ('dans init de readercata')
+      print ('----------------------')
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
       self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
-      self.code=self.QWParent.code
+      self.code=self.appliEficas.code
       self.ssCode=self.appliEficas.ssCode
       self.appliEficas.format_fichier='python'
-      self.version_code=self.QWParent.version_code
-      self.version_cata=None
+      self.versionCode=self.appliEficas.versionCode
       self.fic_cata=None
       self.openCata()
       self.traiteIcones()
@@ -108,10 +110,10 @@ class READERCATA(object):
           return
 
 
-      if self.version_code is not None:
+      if self.versionCode is not None:
           # La version a ete fixee
           for cata in liste_cata_possibles:
-             if self.version_code == cata.identifier:
+             if self.versionCode == cata.identifier:
                 self.fic_cata = cata.cata_file_path
                 self.appliEficas.format_fichier = cata.file_format
                 self.appliEficas.format_fichier_in = cata.file_format_in
@@ -131,7 +133,7 @@ class READERCATA(object):
                  sys.exit(1)
           elif len(cata_choice_list) == 1:
               self.fic_cata = cata_choice_list[0].cata_file_path
-              self.version_code = cata_choice_list[0].identifier
+              self.versionCode = cata_choice_list[0].identifier
               self.appliEficas.format_fichier = cata_choice_list[0].file_format
               self.appliEficas.format_fichier_in = cata_choice_list[0].file_format_in
           else:
@@ -141,7 +143,7 @@ class READERCATA(object):
 
       if self.fic_cata == None :
           if self.appliEficas.salome == 0 :
-             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.version_code)))
+             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.versionCode)))
              sys.exit(1)
           else :
              self.appliEficas.close()
@@ -182,7 +184,7 @@ class READERCATA(object):
       self.cata=(self.cata,)
 
       self.titre=self.VERSION_EFICAS+" "+tr( " avec le catalogue ") + os.path.basename(self.fic_cata)
-      if self.appliEficas.top:
+      if self.appliEficas.ssIhm == False :
         self.appliEficas.setWindowTitle(self.titre)
       self.appliEficas.titre=self.titre
       self.QWParent.titre=self.titre
@@ -259,12 +261,11 @@ class READERCATA(object):
       if ret == QDialog.Accepted:
           print (widgetChoix.CBChoixCata.currentIndex())
           cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
-          self.version_cata = cata.identifier
           self.fic_cata = cata.cata_file_path
-          self.version_code = self.version_cata
+          self.versionCode = cata.identifier
           self.appliEficas.format_fichier = cata.file_format
           self.appliEficas.format_fichier_in = cata.file_format_in
-          lab+=self.version_cata
+          lab+=self.versionCata
           self.appliEficas.setWindowTitle(lab)
           #qApp.mainWidget().setCaption(lab)
           widgetChoix.close()
@@ -277,10 +278,11 @@ class READERCATA(object):
       try:
         ficIcones=self.appliEficas.maConfiguration.ficIcones 
         fichierIcones = __import__(ficIcones, globals(), locals(), [], -1)
-        self.dicoIcones=fichierIcones.dicoDesIcones.dicoIcones
+        self.appliEficas.maConfiguration.dicoIcones=fichierIcones.dicoDesIcones.dicoIcones
+        self.appliEficas.maConfiguration.dicoImages=fichierIcones.dicoDesIcones.dicoIcones
       except:
         print ("Pas de fichier associe contenant des liens sur les icones ")
-        self.dicoIcones={}
+        self.appliEficas.maConfiguration.dicoIcones={}
       
 
 

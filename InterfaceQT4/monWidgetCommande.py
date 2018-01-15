@@ -80,7 +80,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.labelNomCommande.setText(tr(self.obj.nom))
 
 
-      if self.editor.closeAutreCommande == True  : self.closeAutreCommande()
+      if self.editor.maConfiguration.closeAutreCommande == True  : self.closeAutreCommande()
       else :
         try :
            self.bCatalogue.clicked.connect(self.afficheCatalogue)
@@ -91,7 +91,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
        
       if hasattr(self,'LENom'): self.LENom.returnPressed.connect(self.nomChange)
    
-      if self.editor.code in ['Adao','ADAO'] and self.editor.closeFrameRechercheCommande==True  : 
+      if self.editor.code in ['Adao','ADAO'] and self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
                       self.frameAffichage.close()
 
       if self.editor.code in ['CARMELCND',] : self.closeAutreCommande()

@@ -82,7 +82,7 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
 #      self.labelNomCommande.setText(tr(self.obj.nom))
 #
 #
-#      if self.editor.closeAutreCommande == True  : self.closeAutreCommande()
+#      if self.editor.maConfiguration.closeAutreCommande == True  : self.closeAutreCommande()
 #      else :
 #        try :
 #           self.bCatalogue.clicked.connect(self.afficheCatalogue)

@@ -51,6 +51,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.item = jdc_item
       self.node = node
       self.editor = editor
+      self.simpleClic=self.editor.maConfiguration.simpleClic
       self.jdc  = self.item.object.getJdcRoot()
       debutTitre=self.editor.titre
       self.listeWidget=[]
@@ -76,7 +77,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       else : 
         self.RBRegle.clicked.connect(self.afficheRegle)
 
-      if self.editor.Ordre_Des_Commandes == None : self.RBOrdre.close()
+      if self.editor.readercata.Ordre_Des_Commandes == None : self.RBOrdre.close()
 
        
       #self.editor.labelCommentaire.setText("")
@@ -88,19 +89,19 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       self.boolAlpha=0
       self.boolGroupe=0
       self.boolOrdre=0
-      if self.editor.affiche=="alpha"  : 
+      if self.editor.maConfiguration.affiche=="alpha"  : 
          self.boolAlpha==1;  
          self.RBalpha.setChecked(True);
          self.afficheAlpha()
-      elif self.editor.affiche=="groupe" : 
+      elif self.editor.maConfiguration.affiche=="groupe" : 
          self.boolGroupe==1; 
          self.RBGroupe.setChecked(True); 
          self.afficheGroupe()
-      elif self.editor.affiche=="ordre"  : 
+      elif self.editor.maConfiguration.affiche=="ordre"  : 
          self.boolOrdre==1;  
          self.RBOrdre.setChecked(True);  
          self.afficheOrdre()
-      if self.editor.closeFrameRechercheCommande == True : self.frameAffichage.close()
+      if self.editor.maConfiguration.closeFrameRechercheCommande == True : self.frameAffichage.close()
 
       if self.editor.widgetTree != None : self.editor.restoreSplitterSizes(2) 
       else: self.editor.restoreSplitterSizes(3)
@@ -171,7 +172,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       return listeACreer
 
   def ajouteRadioButtons(self):
-      if self.editor.nombreDeBoutonParLigne != 0 :
+      if self.editor.maConfiguration.nombreDeBoutonParLigne != 0 :
          self.ajoutePushButtons()
          return
       #print 'ds ajouteRadioButtons'
@@ -195,11 +196,11 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
-           #if self.editor.simpleClic :  rbcmd.mouseReleaseEvent=self.insereNoeudApresClick
+           #if self.simpleClic :  rbcmd.mouseReleaseEvent=self.insereNoeudApresClick
            #else : rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
            #self.buttonGroup.buttonClicked.connect(self.rbClique) 
-           if not(self.editor.simpleClic ):  rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
-         if self.editor.simpleClic :  
+           if not(self.simpleClic ):  rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
+         if self.simpleClic :  
             self.buttonGroup.buttonClicked.connect(self.rbCliqueEtInsere) 
          else :
             self.buttonGroup.buttonClicked.connect(self.rbClique) 
@@ -223,8 +224,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
               rbcmd=(QRadioButton(tr(cmd)))
               self.buttonGroup.addButton(rbcmd)
               self.commandesLayout.addWidget(rbcmd)
-              if not(self.editor.simpleClic ):  rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
-           if self.editor.simpleClic :  
+              if not(self.simpleClic ):  rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
+           if self.simpleClic :  
              self.buttonGroup.buttonClicked.connect(self.rbCliqueEtInsere) 
            else :
              self.buttonGroup.buttonClicked.connect(self.rbClique) 
@@ -235,8 +236,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       elif  self.boolOrdre==1 :
          listeFiltre=self.creeListeCommande(filtre)
          liste=[]
-         if self.editor.Ordre_Des_Commandes == None : Ordre_Des_Commandes=listeFiltre
-         else : Ordre_Des_Commandes=self.editor.Ordre_Des_Commandes
+         if self.editor.readercata.Ordre_Des_Commandes == None : Ordre_Des_Commandes=listeFiltre
+         else : Ordre_Des_Commandes=self.editor.readercata.Ordre_Des_Commandes
          for cmd in Ordre_Des_Commandes :
             if cmd in listeFiltre :
                  liste.append(cmd)
@@ -245,8 +246,8 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
            rbcmd=(QRadioButton(tr(cmd)))
            self.buttonGroup.addButton(rbcmd)
            self.commandesLayout.addWidget(rbcmd)
-           if not(self.editor.simpleClic ):  rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
-         if self.editor.simpleClic :  
+           if not(self.simpleClic ):  rbcmd.mouseDoubleClickEvent=self.insereNoeudApresClick
+         if self.simpleClic :  
             self.buttonGroup.buttonClicked.connect(self.rbCliqueEtInsere) 
          else :
             self.buttonGroup.buttonClicked.connect(self.rbClique) 
@@ -281,14 +282,14 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          liste=self.creeListeCommande(None)
          listeFiltre=self.creeListeCommande(None)
          liste=[]
-         if self.editor.Ordre_Des_Commandes == None : Ordre_Des_Commandes=listeFiltre
-         else : Ordre_Des_Commandes=self.editor.Ordre_Des_Commandes
+         if self.editor.readercata.Ordre_Des_Commandes == None : Ordre_Des_Commandes=listeFiltre
+         else : Ordre_Des_Commandes=self.editor.readercata.Ordre_Des_Commandes
          for cmd in Ordre_Des_Commandes :
             if cmd in listeFiltre :
                  liste.append(cmd)
       for cmd in liste :
            col=col+1
-           if col == self.editor.nombreDeBoutonParLigne :
+           if col == self.editor.maConfiguration.nombreDeBoutonParLigne :
               col=0
               ligne=ligne+1
            self.dicoCmd[tr(cmd)]=cmd
@@ -301,8 +302,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
 "border-width : 30 px;\n"
 "border-color : beige;\n"
 "text-align : center")
-           if cmd in self.editor.dicoImages :
-              fichier=self.editor.dicoImages[cmd]
+           print ('self.editor.maConfiguration.dicoImages', self.editor.maConfiguration.dicoImages)
+           if cmd in self.editor.maConfiguration.dicoImages :
+              fichier=self.editor.maConfiguration.dicoImages[cmd]
               icon = QIcon()
               icon.addPixmap(QPixmap(fichier), QIcon.Normal, QIcon.Off)
               rbcmd.setIcon(icon)

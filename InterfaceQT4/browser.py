@@ -500,8 +500,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
           return self.treeParent.appendChild(name,pos=index,plier=plier)
 
     def verifiePosition(self,name,pos,aLaRacine=False):
-        if name not in self.editor.Classement_Commandes_Ds_Arbre : return True
-        indexName=self.editor.Classement_Commandes_Ds_Arbre.index(name)
+        if name not in self.editor.readercata.Classement_Commandes_Ds_Arbre : return True
+        indexName=self.editor.readercata.Classement_Commandes_Ds_Arbre.index(name)
 
         etapes=self.item.getJdc().etapes
         if etapes == [] : return True
@@ -512,16 +512,16 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if pos=="after" : indexOu = indexOu+1
         for e in etapes[:indexOu] :
             nom=e.nom
-            if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
-            indexEtape=self.editor.Classement_Commandes_Ds_Arbre.index(nom)
+            if nom not in self.editor.readercata.Classement_Commandes_Ds_Arbre : continue
+            indexEtape=self.editor.readercata.Classement_Commandes_Ds_Arbre.index(nom)
             if indexEtape > indexName :
                comment=tr('le mot clef ')+name+tr(' doit etre insere avant ')+nom
                QMessageBox.information( None,tr('insertion impossible'),comment, )
                return False
         for e in etapes[indexOu:] :
             nom=e.nom
-            if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
-            indexEtape=self.editor.Classement_Commandes_Ds_Arbre.index(nom)
+            if nom not in self.editor.readercata.Classement_Commandes_Ds_Arbre : continue
+            indexEtape=self.editor.readercata.Classement_Commandes_Ds_Arbre.index(nom)
             if indexEtape < indexName :
                comment=tr('le mot clef ')+name+tr(' doit etre insere apres ')+nom
                QMessageBox.information( None,tr('insertion impossible'),comment, )
