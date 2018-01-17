@@ -181,7 +181,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     def informe(self,titre,txt,critique=True):
     #--------------------------------#
        if  critique :
-           self.affiche_infos(tr(txt),Qt.red)
+           self.afficheInfos(tr(txt),Qt.red)
            QMessageBox.critical( self, tr(titre), tr(txt))
        else :
            QMessageBox.warning( self, tr(titre),tr(txt))
@@ -952,6 +952,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     # ajoute une etape  de JdC a partir d un texte
         monItem=itemApres
         etape=monItem.item.object
+         
         CONTEXT.setCurrentStep(etape)
         try :
           ok=etape.buildIncludeEtape(texte)
@@ -964,6 +965,21 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         self.tree.racine.buildChildren()
         return ok
 
+    #-------------------------------------------#
+    def updateJdcAfterEtape(self, etape,texte):
+    #--------------------------------------------#
+    # ajoute une etape  de JdC a partir d un texte
+        CONTEXT.setCurrentStep(etape)
+        try :
+          ok=etape.buildIncludeEtape(texte,doitEtreValide=0)
+        except :
+          ok=0
+        if not ok :
+           QMessageBox.information( self,
+                      tr("Import texte"),
+                      tr("Impossible d importer le texte"))
+        self.tree.racine.buildChildren()
+        return ok
 
 
     #-------------------------------------#
@@ -1359,6 +1375,13 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
        self.widgetTree.show()
        #self.restoreSplitterSizes(3)
 
+    #-----------------------
+    def getEtapeCourante(self) :
+    #-----------------------
+      print (self.tree.selectedItems())
+      if len(self.tree.selectedItems()) != 1 : return None
+      etape=self.tree.selectedItems()[0].item.object.getEtape()
+      return etape
     #-----------------------------
     def getTreeIndex(self,noeud):
     #----------------------------

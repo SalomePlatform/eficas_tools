@@ -194,6 +194,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         if self.code.upper() in Appli.__dict__:
           Appli.__dict__[self.code.upper()](self,)
         if self.suiteTelemac : self.lookSuiteTelemac()
+        self.metMenuAJourUtilisateurs()
 
     def initAides(self):
         #print "je passe la"
@@ -319,6 +320,11 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.actionSortieLegere.setText(tr("Sortie Legere"))
         self.menuFichier.insertAction(self.actionEnregistrer_sous,self.actionSortieLegere)
         self.actionSortieLegere.triggered.connect(self.handleSortieLegere)
+
+
+    def MT(self):
+        self.enlevernewInclude()
+        self.toolBar.addSeparator()
 
 
     def ZCRACKS(self):
@@ -951,6 +957,25 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
     def handleAjoutEtape(self,nomEtape):
         self.viewmanager.handleAjoutEtape(nomEtape)
      
+    def metMenuAJourUtilisateurs(self):
+        self.lesFonctionsUtilisateurs={}
+        if self.code not in self.mesScripts : return
+        if not hasattr(self.mesScripts[self.code],'dict_menu') : return
+        titre,lesFonctions=self.mesScripts[self.code].dict_menu.items()[0]
+        self.menuOptions = self.menubar.addMenu("menuOptions")
+        self.menuOptions.setTitle(tr(titre))
+        for elt in lesFonctions :
+            laFonctionUtilisateur, label, lesArguments = elt
+            action = QAction(self)
+            action.setText(label)
+            #action.triggered.connect(self.appelleFonctionUtilisateur)
+            self.menuOptions.addAction(action)
+            self.lesFonctionsUtilisateurs[action]=(laFonctionUtilisateur, lesArguments)
+        self.menuOptions.triggered.connect(self.handleFonctionUtilisateur)
+
+    def handleFonctionUtilisateur(self,action) :
+        (laFonctionUtilisateur, lesArguments)=self.lesFonctionsUtilisateurs[action]
+        self.viewmanager.handleFonctionUtilisateur(laFonctionUtilisateur, lesArguments)
 
 if __name__=='__main__':
 

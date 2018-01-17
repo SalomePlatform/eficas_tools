@@ -71,7 +71,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       return d.get(nom_sd,None)
     return None
 
-  def getContexteJdc(self,fichier,text):
+  def getContexteJdc(self,fichier,text,doitEtreValide=1):
     """ 
          Interprete text comme un texte de jdc et retourne le contexte final.
 
@@ -83,14 +83,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     #print ("getContexteJdc",self,self.nom)
     # On recupere l'etape courante
     step=CONTEXT.getCurrentStep()
-    try:
-    #if 1 :
+    #try:
+    if 1 :
        # on essaie de creer un objet JDC auxiliaire avec un contexte initial
        # Attention getContexteAvant retourne un dictionnaire qui contient
        # le contexte courant. Ce dictionnaire est reactualise regulierement.
        # Si on veut garder l'etat du contexte fige, il faut en faire une copie.
        context_ini = self.parent.getContexteAvant(self).copy()
-       #print "getContexteJdc",context_ini.keys()
+       print ("getContexteJdc",context_ini.keys())
 
        # Indispensable avant de creer un nouveau JDC
        CONTEXT.unsetCurrentStep()
@@ -150,29 +150,31 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.jdc_aux=j
        self.jdc.jdcDict=self.jdc_aux
 
-    except:
-    #else :
+    #except:
+    else :
        traceback.print_exc()
        # On retablit l'etape courante step
        CONTEXT.unsetCurrentStep()
        CONTEXT.setCurrentStep(step)
        return None
 
-    if not j.cr.estvide():
+     
+    if not j.cr.estvide() and doitEtreValide:
        # Erreurs dans l'INCLUDE. On garde la memoire du fichier 
        # mais on n'insere pas les concepts
        # On retablit l'etape courante step
-       #print j.cr
-       #print j.isValid()
+       print (j.cr)
+       print ("valid ",j.isValid())
        CONTEXT.unsetCurrentStep()
        CONTEXT.setCurrentStep(step)
        raise EficasException(tr("Impossible de relire le fichier %s \n ")+ six.text_type(j.cr))
 
 
-    if not j.isValid():
+    if not j.isValid() and doitEtreValide:
        # L'INCLUDE n'est pas valide.
        # on produit un rapport d'erreurs
        cr=j.report()
+       print ('cr', cr)
        # On retablit l'etape courante step
        CONTEXT.unsetCurrentStep()
        CONTEXT.setCurrentStep(step)
@@ -181,6 +183,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
 
     # Si aucune erreur rencontree
+    # ou qu on accepte un jdc incomplet
     # On recupere le contexte de l'include verifie
     try:
        j_context=j.getVerifContexte()
@@ -528,7 +531,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
 
 
-  def buildIncludeEtape(self,text):
+  def buildIncludeEtape(self,text,doitEtreValide):
     import Extensions.jdc_include
     self.JdC_aux=Extensions.jdc_include.JdC_include
     # un include partage la table des unites avec son parent (jdc)
@@ -536,7 +539,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # Attention fonctionne pour import_Zone de MT
     # a adapter eventuellement
     try :
-       contexte = self.getContexteJdc(None,text)
+       contexte = self.getContexteJdc(None,text,doitEtreValide)
     except EficasException: 
        return 0
      

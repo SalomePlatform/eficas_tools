@@ -230,7 +230,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
 
         if len(listeComplete) > max : 
            texte=tr("Nombre maximum de valeurs ")+str(max)+tr(" atteint")
-           self.editor.affiche_infos(texte,Qt.red)
+           self.editor.afficheInfos(texte,Qt.red)
            return
 
         validite,comm,comm2,listeRetour= self.politique.ajoutNTuple(listeComplete)

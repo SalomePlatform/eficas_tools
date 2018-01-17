@@ -365,7 +365,7 @@ class ObjectTreeItem(TreeItem,Delegate):
     
     def getMcPresents(self):
         """ Retourne le dictionnaire des mots-cles presents de l'objet pointe par self """
-        return self.object.dict_mc_presents()
+        return self.object.dictMcPresents()
 
     def verifConditionRegles(self,l_mc_presents):
         return self.object.verifConditionRegles(l_mc_presents)

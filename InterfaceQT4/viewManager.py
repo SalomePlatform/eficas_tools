@@ -410,3 +410,22 @@ class MyViewManager(object):
        if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleAjoutGroup(listeGroup)
+  
+   def handleFonctionUtilisateur(self,laFonctionUtilisateur, lesArguments):
+       # Peut-etre a blinder un peu plus sur le nb d argument
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       if editor.getEtapeCourante == None :
+          QMessageBox.information( self,
+                      tr("Selectionner une etape"),
+                      tr("Le texte sera inséré après l étape selectionnée"))
+
+       listeParam = [] 
+       for p in lesArguments:
+          print (p)
+          if hasattr(editor,p): listeParam.append(getattr(editor,p))
+          if p=="editor"      : listeParam.append(editor)
+          if p=="etapeCourante" : listeParam.append(editor.getEtapeCourante())
+       apply(laFonctionUtilisateur,listeParam)
+

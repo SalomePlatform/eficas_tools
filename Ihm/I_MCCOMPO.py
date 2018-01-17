@@ -163,15 +163,15 @@ class MCCOMPO(I_OBJECT.OBJECT):
           index=index+1
       return index
           
-  def ordonneListeMc(self,liste_mc_a_ordonner,liste_noms_mc_ordonnee):
+  def ordonneListeMc(self,listeMc_a_ordonner,liste_noms_mc_ordonnee):
     """
-        Retourne liste_mc_a_ordonner ordonnee suivant l'ordre 
+        Retourne listeMc_a_ordonner ordonnee suivant l'ordre 
         donne par liste_noms_mc_ordonnee
     """
     liste = []
     # on transforme liste_a_ordonner en un dictionnaire (plus facile a consulter)
     d_mc = {}
-    for mc in liste_mc_a_ordonner:
+    for mc in listeMc_a_ordonner:
       d_mc[mc.nom]=mc
     # on construit la liste des objets ordonnes
     for nom_mc in liste_noms_mc_ordonnee:

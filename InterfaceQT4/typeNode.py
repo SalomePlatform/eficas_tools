@@ -81,6 +81,7 @@ class PopUpMenuNodeMinimal(object) :
     def ajoutScript(self):
 
     # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
+    # a revoir avec un menu et un connect sur le triggered sur le menu ?
         if hasattr(self.appliEficas, 'mesScripts'):
             if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
