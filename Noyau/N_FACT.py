@@ -54,7 +54,7 @@ class FACT(N_ENTITE.ENTITE):
     list_instance = N_MCLIST.MCList
     label = 'FACT'
 
-    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,ang="",
+    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,ang="",fenetreIhm=None,
                  min=0, max=1, validators=None, **args):
         """
             Un mot-clé facteur est caractérisé par les attributs suivants :
@@ -67,6 +67,7 @@ class FACT(N_ENTITE.ENTITE):
               - max
               - position
               - docu
+              - fenetreIhm
         """
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs
@@ -86,6 +87,7 @@ class FACT(N_ENTITE.ENTITE):
         self.entites = args
         self.position = None
         self.affecter_parente()
+        self.fenetreIhm = fenetreIhm
 
     def __call__(self, val, nom, parent):
         """

@@ -44,7 +44,6 @@ from Editeur        import session
 from Editeur        import comploader
 from Editeur        import Objecttreeitem
 from InterfaceQT4   import browser
-from InterfaceQT4   import readercata
 
 from desBaseWidget    import Ui_baseWidget
 from InterfaceQT4.monViewTexte   import ViewText

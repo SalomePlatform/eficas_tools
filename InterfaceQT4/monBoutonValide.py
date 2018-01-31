@@ -46,7 +46,7 @@ class MonBoutonValide(QToolButton) :
        #print "dans mousePressEvent"
        if self.parent.node.item.object.isValid() :
           myToolTip=tr("objet valide")
-          if self.parent.editor.configuration.differencieSiDefaut :
+          if self.parent.editor.maConfiguration.differencieSiDefaut :
             if self.parent.node.item.object.valeur != self.parent.node.item.object.definition.defaut :
                 myToolTip+='\ndefaut : \n'+str(self.parent.node.item.object.definition.defaut)
 

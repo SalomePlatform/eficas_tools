@@ -22,9 +22,6 @@
 
 
 
-
-
-
 from Accas import *
 #
 
@@ -161,7 +158,11 @@ ZONE = MACRO(nom = 'ZONE',
              reentrant = 'n',
              UIinfo = {"groupes":("Machine tournante",)},
              fr = "Description d'une zone (comportant noeuds et elements, et en option masses ponctuelles et fissures)",
-             regles = (AU_MOINS_UN("ELEMENTS")),
+             fenetreIhm='deplie1Niveau',
+             #regles = (AU_MOINS_UN("ELEMENTS")),
+             regles=(AU_MOINS_UN('A1','B'),),
+             A1=SIMP(statut='f',typ='TXM',),
+             B=SIMP(statut='f',typ='TXM',),
              MASSE = FACT(statut='f',
                           min=0,
                           max='**',

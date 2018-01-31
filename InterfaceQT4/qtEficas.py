@@ -947,12 +947,8 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         if self.maConfiguration.boutonDsMenuBar == False : return
         if not hasattr(self, 'readercata') : return
         from monLayoutBouton import MonLayoutBouton
-        if hasattr(self,'monLayoutBoutonRempli') : 
-           print ('double passage dans le readerCata')
-           self.monLayoutBoutonRempli.close()
+        if hasattr(self,'monLayoutBoutonRempli') : return
         self.monLayoutBoutonRempli=MonLayoutBouton(self)
-        #for 
-        #self.toolBarCommande.close()
         
     def handleAjoutEtape(self,nomEtape):
         self.viewmanager.handleAjoutEtape(nomEtape)

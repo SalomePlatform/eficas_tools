@@ -98,7 +98,7 @@ class MCCOMPO(object):
              - testglob = booleen 1 si toutes les regles OK, 0 sinon
         """
         # On verifie les regles avec les defauts affectes
-        dictionnaire = self.dict_mc_presents(restreint='non')
+        dictionnaire = self.dictMcPresents(restreint='non')
         texte = ['']
         testglob = 1
         for r in self.definition.regles:
@@ -109,7 +109,7 @@ class MCCOMPO(object):
         texte = os.linesep.join(texte)
         return texte, testglob
 
-    def dict_mc_presents(self, restreint='non'):
+    def dictMcPresents(self, restreint='non'):
         """
             Retourne le dictionnaire {mocle : objet} construit a partir de self.mc_liste
             Si restreint == 'non' : on ajoute tous les mots-cles simples du catalogue qui ont

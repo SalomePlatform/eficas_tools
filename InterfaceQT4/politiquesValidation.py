@@ -56,7 +56,7 @@ class Validation(object)  :
 
          if not validite and commentaire is None:
                   commentaire = "impossible d'evaluer : %s " %repr(valeurentree)
-         print ('ds testeUneValeur', valeur, validite, commentaire)
+         #print ('ds testeUneValeur', valeur, validite, commentaire)
          return valeur, validite, commentaire
 
 # ----------------------------------------------------------------------------------------

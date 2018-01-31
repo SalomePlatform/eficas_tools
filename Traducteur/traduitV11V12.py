@@ -323,9 +323,9 @@ def traduc(infile,outfile,flog=None):
     
     removeMotCleInFact(jdc,"DEFI_MATERIAU","UMAT","NB_VALE",pasDeRegle(),0)
     removeMotCleInFact(jdc,"DEFI_MATERIAU","UMAT_FO","NB_VALE",pasDeRegle(),0)
-    liste_mc=["C"+str(i) for i in range(1,198)]
-    fusionMotCleInFact(jdc,"DEFI_MATERIAU","UMAT",liste_mc,"LISTE_COEF")
-    fusionMotCleInFact(jdc,"DEFI_MATERIAU","UMAT_FO",liste_mc,"LISTE_COEF")
+    listeMc=["C"+str(i) for i in range(1,198)]
+    fusionMotCleInFact(jdc,"DEFI_MATERIAU","UMAT",listeMc,"LISTE_COEF")
+    fusionMotCleInFact(jdc,"DEFI_MATERIAU","UMAT_FO",listeMc,"LISTE_COEF")
     
     removeMotCle(jdc,"DEFI_MATERIAU","LABORD_1D",pasDeRegle(),0) 
     

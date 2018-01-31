@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -16,25 +18,19 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+"""
+"""
 # Modules Python
+
 # Modules Eficas
+import prefs
+name='prefs_'+prefs.code
+__import__(name)
 
-from __future__ import absolute_import
-from desWidgetFactPlie import Ui_WidgetFactPlie
-from .groupe import Groupe
-from Extensions.i18n import tr
-# Import des panels
+#import sys
+#reload(sys)
+#sys.setdefaultencoding('latin1')
 
-class MonWidgetFactPlie(Ui_WidgetFactPlie,Groupe):
-  """
-  """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
-      #print "fact plie : ",node.item.nom
-      node.fenetreAAfficher=self
-      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
-      self.groupBox.setText(self.node.item.getLabelText()[0])
-      self.parentQt.commandesLayout.insertWidget(insertIn,self)
-
-  def traiteClicSurLabel(self,texte):
-      return
-
+from InterfaceQT4 import eficas_go
+print eficas_go
+eficas_go.lanceEficas(code=prefs.code)

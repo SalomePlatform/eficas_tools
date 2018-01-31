@@ -214,15 +214,11 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         pass
 
   def nomChange(self):
-      print (1)
       nom = str(self.LENom.text())
       nom = nom.strip()
       if nom == '' : return                  # si pas de nom, on ressort sans rien faire
-      print (2)
       test,mess = self.node.item.nommeSd(nom)
-      print (test,mess)
       self.editor.afficheCommentaire(mess)
-      print (3)
 
       #Notation scientifique
       if test :

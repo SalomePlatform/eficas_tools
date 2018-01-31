@@ -41,18 +41,18 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         monObjet=self.item.object
         monNom=self.item.nom
         maCommande=commande
-        #print "ds getPanelGroupe" , self.item.nom
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
+        # attention si l objet est une mclist on utilise bloc
         if not (monObjet.isMCList()) :
            if  hasattr(self,'plie') and self.plie==True : 
-               from .monWidgetFactPlie import MonWidgetFactPlie
+               from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
                widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
            else:
-               from .monWidgetFact import MonWidgetFact
+               from InterfaceQT4.monWidgetFact import MonWidgetFact
                widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
         else :
-           from .monWidgetBloc import MonWidgetBloc
+           from InterfaceQT4.monWidgetBloc import MonWidgetBloc
            widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         return widget
 
@@ -100,7 +100,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
             FACTPanel.
             Si la liste est plus longue on utilise le panneau MCLISTPanel.
         """
-        print ('he suis dans panel de MCListTreeItem')
+        print ('je suis dans panel de MCListTreeItem')
         if len(self._object) > 1:
            return MCLISTPanel(jdcdisplay,pane,node)
         elif isinstance(self._object.data[0],ErrorObj):

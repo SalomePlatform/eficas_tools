@@ -183,15 +183,15 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   #        if v.nom == name : return v
   #    return None
       
-  def getType_sd_prod(self):
-      """
-         Retourne le nom du type du concept résultat de l'étape
-      """
-      sd_prod=self.object.getType_produit()
-      if sd_prod:
-         return sd_prod.__name__
-      else:
-         return ""
+ # def getType_sd_prod(self):
+ #     """
+ #        Retourne le nom du type du concept résultat de l'étape
+ #     """
+ #     sd_prod=self.object.getType_produit()
+ #     if sd_prod:
+ #        return sd_prod.__name__
+ #     else:
+ #        return ""
 
   def addItem(self,name,pos):      
       mcent = self._object.addEntite(name,pos)

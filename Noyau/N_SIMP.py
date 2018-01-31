@@ -49,7 +49,7 @@ class SIMP(N_ENTITE.ENTITE):
     def __init__(self, typ,ang="", fr="", statut='f', into=None, intoSug = None,siValide = None, defaut=None,
                  min=1, max=1, homo=1, position='local',
                  val_min=float('-inf'), val_max=float('inf'), docu="", validators=None,
-                 sug=None):
+                 sug=None,fenetreIhm=None):
         """
             Un mot-clé simple est caractérisé par les attributs suivants :
             - type : cet attribut est obligatoire et indique le type de valeur attendue
@@ -60,13 +60,14 @@ class SIMP(N_ENTITE.ENTITE):
             - defaut : valeur par défaut
             - min : nombre minimal de valeurs
             - max : nombre maximal de valeurs
-            - homo : ?
+            - homo : un certatin nb de choses qui il faut redispacher ailleurs (information, constant)
             - ang : doc
             - position : si global, le mot-clé peut-être lu n'importe où dans la commande
             - val_min : valeur minimale autorisée
             - val_max : valeur maximale autorisée
-            - docu : ?
-            - sug : ?
+            - docu : clef sur de la documentation utilisateur
+            - sug : valeur suggere
+            - fenetreIhm=None 
         """
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs
@@ -93,6 +94,7 @@ class SIMP(N_ENTITE.ENTITE):
         if self.val_max == '**' : self.val_max = float('inf')
         if self.min     == '**' : self.min     = float('-inf')
         if self.val_min == '**' : self.val_min = float('-inf')
+        self.fenetreIhm=fenetreIhm
 
     def verifCata(self):
         """

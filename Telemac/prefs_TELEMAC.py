@@ -52,3 +52,4 @@ mode_nouv_commande="figee"
 affiche         = "ordre"
 translatorFichier = os.path.join(repIni,'labelCataToIhm')
 closeFrameRecherche=True
+differencieSiDefaut = True

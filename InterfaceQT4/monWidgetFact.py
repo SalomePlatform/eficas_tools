@@ -58,6 +58,7 @@ class MonWidgetFactCommun(Groupe):
       #print "delayAffiche, self.doitAfficherOptionnel = ", self.doitAfficherOptionnel
       if self.doitAfficherOptionnel and self.editor.code != "CARMELCND" :self.afficheOptionnel()
 
+
 class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=True):
       MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)

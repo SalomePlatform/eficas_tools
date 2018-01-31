@@ -119,14 +119,14 @@ number_kw_pattern=re.compile(r"""
 )
 """,re.VERBOSE|re.MULTILINE)
 
-def construitGenea(texte,liste_mc):
+def construitGenea(texte,listeMc):
     """
        Retourne un dictionnaire dont les cles sont des reels et les valeurs sont leurs representations textuelles.
 
        Realise un filtrage sur les reels :
 
          - Ne garde que les reels pour lesquels str ne donne pas une bonne representation.
-         - Ne garde que les reels derriere un argument keyword dont le nom est dans liste_mc
+         - Ne garde que les reels derriere un argument keyword dont le nom est dans listeMc
 
        >>> s = '''a=+21.3e-5*85,b=-.1234,c=81.6   , d= -8 , e=_F(x=342.67,y=-1), f=+1.1, g=(1.3,-5,1.54E-3),
        ... #POMPE_PRIMA._BOUCLE_N._2_ELEMENT_NUMERO:0239
@@ -142,7 +142,7 @@ def construitGenea(texte,liste_mc):
             #argument keyword
             mot=m[:-1]
         else:
-            if mot not in liste_mc:continue
+            if mot not in listeMc:continue
             #valeur
             key=eval(m)
             if str(key) != m: d[key]=m

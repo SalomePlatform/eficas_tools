@@ -61,6 +61,11 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
              del self.dicoMCWidgetOptionnel[k]
       #print( "fin vireLesAutres")
       
+  def vireTous(self):
+      for k in list(self.dicoMCWidgetOptionnel.keys()):
+          self.dicoMCWidgetOptionnel[k].close()
+          del self.dicoMCWidgetOptionnel[k]
+
   def afficheOptionnelVide(self):
       self.GeneaLabel.setText("")
       for k in list(self.dicoMCWidgetOptionnel.keys()):

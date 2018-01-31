@@ -27,9 +27,9 @@ import traceback
 # Modules Eficas
 from Editeur import Objecttreeitem
 from Extensions.i18n import tr
-from . import compooper
-from . import browser
-from . import typeNode
+from InterfaceQT4 import compooper
+from InterfaceQT4 import browser
+from InterfaceQT4 import typeNode
 from PyQt5.QtWidgets import QAction
 from PyQt5.QtCore import Qt
 

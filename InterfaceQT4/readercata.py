@@ -181,8 +181,7 @@ class READERCATA(object):
       self.cata=(self.cata,)
 
       self.titre=self.VERSION_EFICAS+" "+tr( " avec le catalogue ") + os.path.basename(self.fic_cata)
-      if self.appliEficas.ssIhm == False :
-        self.appliEficas.setWindowTitle(self.titre)
+      if self.appliEficas.ssIhm == False : self.appliEficas.setWindowTitle(self.titre)
       self.appliEficas.titre=self.titre
       self.QWParent.titre=self.titre
 
@@ -225,7 +224,7 @@ class READERCATA(object):
           Pour chaque entite du catlogue on cree une liste de nom ordre_mc qui
           contient le nom des mots cles dans le bon ordre
       """ 
-      self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
+      self.cata_ordonne_dico, self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
 
    def retrouveOrdreCataStandard(self):
       """ 

@@ -123,6 +123,7 @@ class configBase(object):
       self.ficIcones=None
       self.repIcones=None
       self.differencieSiDefaut=False
+      self.typeDeCata='Python'
 
 
  

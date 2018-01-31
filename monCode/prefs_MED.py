@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#            maConfiguration MANAGEMENT OF EDF VERSION
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
 # ======================================================================
 # COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
@@ -28,17 +28,15 @@ sys.path[:0]=[INSTALLDIR]
 
 
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='fr'
+lang='en'
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
+docPath=repIni
 
 #
+typeDeCata='XML'
 catalogues=(
-   ('MT','V2017',os.path.join(repIni,'MT_Cata_V2017.py'),'python','python'),
+   ('med','med',os.path.join(repIni,'cata_med.py'),'dico','xml'), 
 )
-nombreDeBoutonParLigne=4
-simpleClic=True
-closeFrameRechercheCommande=True
-boutonDsMenuBar=True
-ficIcones='images.dicoDesIcones'
+

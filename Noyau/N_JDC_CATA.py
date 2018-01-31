@@ -69,6 +69,7 @@ class JDC_CATA(N_ENTITE.ENTITE):
         # courant à None
         CONTEXT.unsetCurrentCata()
         CONTEXT.setCurrentCata(self)
+        self.fenetreIhm=None
 
     def __call__(self, procedure=None, cata=None, cata_ord_dico=None,
                  nom='SansNom', parent=None, **args):

@@ -39,7 +39,6 @@ import convert, generator
 from Editeur        import session
 from Editeur        import comploader
 from Editeur        import Objecttreeitem
-from InterfaceQT4   import readercata
 
 DictExtensions= {"MAP" : ".map", "TELEMAC" : '.cas'}
 debug = False
@@ -84,6 +83,12 @@ class JDCEditorSsIhm :
 
 
         if not hasattr ( self.appliEficas, 'readercata') or  self.appliEficas.multi==True:
+           if self.maConfiguration.typeDeCata == 'XML' :
+              from InterfaceQT4   import readercataXML as readercata
+           else :
+              from InterfaceQT4   import readercata
+           print (self.maConfiguration.typeDeCata)
+           print (readercata)
            self.readercata  = readercata.READERCATA( self, self.appliEficas )
            self.appliEficas.readercata=self.readercata
            self.appliEficas.code=self.code
@@ -197,7 +202,7 @@ class JDCEditorSsIhm :
 
              pareil,texteNew=self.verifieChecksum(p.text)
              if  not pareil :
-                self.informe(tr("fichier modifie"),tr("Attention! fichier change hors EFICAS"),False)
+                self.informe(("fichier modifie"),("Attention! fichier change hors EFICAS"),False)
 
              p.text=texteNew
              memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)

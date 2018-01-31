@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2012   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,25 +16,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Modules Python
-# Modules Eficas
-
-from __future__ import absolute_import
-from desWidgetFactPlie import Ui_WidgetFactPlie
-from .groupe import Groupe
-from Extensions.i18n import tr
-# Import des panels
-
-class MonWidgetFactPlie(Ui_WidgetFactPlie,Groupe):
-  """
-  """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
-      #print "fact plie : ",node.item.nom
-      node.fenetreAAfficher=self
-      Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
-      self.groupBox.setText(self.node.item.getLabelText()[0])
-      self.parentQt.commandesLayout.insertWidget(insertIn,self)
-
-  def traiteClicSurLabel(self,texte):
-      return
-
+code="MED" 
+import sys, os
+if os.path.dirname(os.path.abspath(__file__)) not in sys.path :
+   sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))

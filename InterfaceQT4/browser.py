@@ -67,7 +67,7 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.childrenComplete=[]
         self.racine=self.item.itemNode(self,self.item)
  
-        self.itemCourrant=None
+        self.itemCourant=None
 
         self.itemClicked.connect(self.handleOnItem)
         self.itemCollapsed.connect(self.handleCollapsedItem)
@@ -107,6 +107,7 @@ class JDCTree( QTreeWidget,GereRegles ):
         """
         #print "handleContextMenu"
         if item == None : return
+        self.itemCourant=item
         if item.existeMenu == 0 : return
         if item.menu == None:
            item.createPopUpMenu()
@@ -119,6 +120,7 @@ class JDCTree( QTreeWidget,GereRegles ):
     def handleCollapsedItem(self,item):
         #print "dans CollapsedItem", self.inhibeExpand  
         if self.inhibeExpand == True : return
+        self.itemCourant=item
         # On traite le cas de l item non selectionne
         itemParent=item
         while not (hasattr (itemParent,'getPanel')) : 
@@ -137,6 +139,7 @@ class JDCTree( QTreeWidget,GereRegles ):
         #import traceback
         #traceback.print_stack()
         if self.inhibeExpand == True : return
+        self.itemCourant=item
         self.inhibeExpand = True 
         itemParent=item
         while not (hasattr (itemParent,'getPanel')) : 
@@ -151,11 +154,11 @@ class JDCTree( QTreeWidget,GereRegles ):
 
 
     def handleOnItem(self,item,int):
-        #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
+        #print ("je passe dans handleOnItem pour ",self, item.item.nom, item, item.item, item.item.getLabelText())
         
         from InterfaceQT4 import composimp
         self.inhibeExpand = True 
-        self.itemCourrant=item
+        self.itemCourant=item
         itemParent=item
 
         while not (hasattr (itemParent,'getPanel')) : 
@@ -163,11 +166,8 @@ class JDCTree( QTreeWidget,GereRegles ):
            itemParent=itemParent.treeParent 
 
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
-              
             estUneFeuille=(isinstance(item,composimp.Node))
              # il faut afficher le parent
-            #print "estUneFeuille", estUneFeuille
-            #print "afficheCommandesPliees", self.editor.afficheCommandesPliees
             if estUneFeuille                        : itemParent.affichePanneau()
             elif self.editor.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
             else                                    : itemParent.affichePanneau()
@@ -226,8 +226,12 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         else:   name  = tr(item.getLabelText()[0])
         if item.nom != tr(item.nom) : name = str(tr(item.nom)+" :")
         value = tr(str( item.getText() ) )
+       
+        # si specialisation de la fenetre
+        if self.item.object.definition == None : self.fenetreIhm = None
+           # Cas des listes de mots_clefs 
+        else : self.fenetreIhm = self.item.object.definition.fenetreIhm
  
-
         if self.editor.enteteQTree=='complet':mesColonnes=(name,value)
         else : mesColonnes=(name,)
 
@@ -333,13 +337,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         return None
 
 
-    def deplieCeNiveau(self):
-        
-        if self.fenetre == None : 
-           print ('PNPNPN a programmer')
-        #self.fenetre=self.getPanelGroupe(self.editor)
-        #print ((self.item.panel))
-        print (self.fenetre)
+    def afficheCeNiveau(self):
+        #print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
             self.editor.widgetCentraleLayout.removeItem(widget)
@@ -353,12 +352,20 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         self.maFenetreCadre=MonWidgetNiveauFact(self,self.editor,maDefinition,monObjet)
-        #self.maFenetreCadre.commandesLayout.insertWidget(-1,self.fenetre)
+        self.fenetre=self.maFenetreCadre
         self.editor.widgetCentraleLayout.addWidget(self.maFenetreCadre)
-        #print ("j ajoute ", self.fenetre, self.fenetre.node.item.nom)
         self.editor.fenetreCentraleAffichee=self.maFenetreCadre
-        self.tree.node_selected= self
-
+        self.select()
+        #print ('fin afficheCeNiveau pour ', self.item.nom)
+        
+   
+    def getPanelModifie(self):
+       
+        if self.fenetreIhm == None : return None
+        if self.fenetreIhm=='deplie1Niveau':
+           from InterfaceQT4.monWidgetCommandeDeplie1Niveau import MonWidgetCommandeDeplie1Niveau
+           return MonWidgetCommandeDeplie1Niveau (self,self.editor ,self.item.object)
+        return None
         
 
     def affichePanneau(self) :
@@ -366,6 +373,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         # posera des pb si un code decide d appeler FIN un mot clef
         # on resoudera a ce moment la
         # pour l instant pas de poussiere sous le tapis
+        #print ('_________________ds affichePanneau pour', self.item.nom)
         if  not(self.item.isActif()) : 
             from .monWidgetInactif import MonWidgetInactif
             self.fenetre = MonWidgetInactif(self,self.editor)
@@ -373,10 +381,13 @@ class JDCNode(QTreeWidgetItem,GereRegles):
            itemParent=self
            while not (hasattr (itemParent,'getPanel')) : itemParent=itemParent.treeParent 
            if itemParent!=self : 
+              #print ('j appelle affichePanneau pour ', itemParent.item.nom , 'par', self.item.nom)
               itemParent.affichePanneau()
+              #print ('fin _________________ds affichePanneau pour', self.item.nom)
               return
-           self.fenetre=self.getPanel()
-           #self.editor.restoreSplitterSizes()
+           self.fenetre=self.getPanelModifie()
+           if self.fenetre == None : self.fenetre=self.getPanel()
+           self.editor.restoreSplitterSizes()
          
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
@@ -399,7 +410,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.tree.inhibeExpand=True
         self.tree.expandItem(self)
         self.tree.inhibeExpand=False
-        #print( 'fin affichePanneau pour', self.item.nom)
+        #print( '_________________fin affichePanneau pour', self.item.nom)
           
 
     def createPopUpMenu(self):
@@ -824,7 +835,6 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         return child
 
     def plieToutEtReafficheSaufItem(self, itemADeplier):
-        #print "je suis dans plieToutEtReaffiche", self.item.getNom()
         self.inhibeExpand=True
         from InterfaceQT4 import compojdc
         if (isinstance(self, compojdc.Node)) :
@@ -843,6 +853,10 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.inhibeExpand=False
 
     def plieToutEtReaffiche(self):
+        if self.item.getNom() == 'RAFFINEMENT' : 
+           import traceback
+           traceback.print_stack()
+           print (a)
         from InterfaceQT4 import compojdc
         if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
         self.inhibeExpand=True
@@ -853,6 +867,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if (isinstance(item,compobloc.Node)) : continue
             item.setPlie()
         self.affichePanneau()
+        #print ("fin plieToutEtReaffiche", self.item.getNom())
 
     def deplieToutEtReaffiche(self):
         self.editor.deplier = True
@@ -879,15 +894,17 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         #       item.appartientAUnNoeudPlie=False
 
     def setPlieChildren(self):
-        #print ("dans setPlieChildren pour", self.item.nom)
         self.plie=True
+        from InterfaceQT4 import composimp
+        if isinstance(self,composimp.Node) : return
         for c in self.children :
             c.setPlieChildren()
             #print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.getLabelText()[0]
             c.appartientAUnNoeudPlie=True
             c.plie=True
             #print "dans setPlieChildren plie", c.item.nom
-            c.setExpanded(False)
+            #  01/2018 PNPN : boucle sur MT __ La ligne suivante ne me semble pas necessaire
+            #if not (isinstance(c,composimp.Node)) :c.setExpanded(False)
 
         # Pour les blocs et les motcles list
         # on affiche un niveau de plus
@@ -899,17 +916,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
                niveauPere=niveauPere.treeParent
             for c in self.children :
                 c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
-                #print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.getLabelText()[0], "mis a la valeur ", niveauPere.appartientAUnNoeudPlie
+                #print ("dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.getLabelText()[0], "mis a la valeur ", niveauPere.appartientAUnNoeudPlie)
                 c.setExpanded(False)
 
-        # on affiche un niveau de plus
-        #if isinstance(self,compomclist.Node)  : 
-        #if isinstance(self,compobloc.Node)  : 
-        #    niveauPere=self.treeParent
-        #    while (isinstance(niveauPere,compobloc.Node)):
-        #       niveauPere=niveauPere.treeParent
-        #    for c in self.children :
-        #        c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
 
     def setDeplie(self):
         #print "dans setPlieChildren pour", self.item.nom

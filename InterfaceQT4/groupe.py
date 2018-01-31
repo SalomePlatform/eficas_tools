@@ -37,10 +37,11 @@ class Groupe(QWidget,FacultatifOuOptionnel):
   """
   """
   def __init__(self,node,editor,parentQt,definition,obj,niveau,commande=None):
+      #print ("groupe : ",self.node.item.nom," ",self.node.fenetre)
       QWidget.__init__(self,None)
       self.node=node
       self.node.fenetre=self
-      #print "groupe : ",self.node.item.nom," ",self.node.fenetre
+      if self.node.item.nom == 'MASSES' : traceback.print_stack()
       self.setupUi(self)
       self.editor=editor
       self.obj=obj
@@ -74,10 +75,8 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       
 
   def afficheMots(self):
-      #print "ds afficheMots ",self.node.item.nom
+      #print ("ds afficheMots ",self.node.item.nom,self.node.plie)
       for node in self.node.children:
-           #if node.item.nom == "Background" :print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie,node.getPanelGroupe
-           #if node.item.nom == "BackgroundError" :print "afficheMots ",node," " ,node.item.nom, " ",node.plie ," ", node.appartientAUnNoeudPlie,node.getPanelGroupe
            # non return mais  continue car il faut tenir compte des blocs
            if node.appartientAUnNoeudPlie==True : continue
            #print "je suis apres le if pour ",node.item.nom
@@ -189,28 +188,11 @@ class Groupe(QWidget,FacultatifOuOptionnel):
 
   def setPlie(self):
       self.node.setPlie()
-      if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
-         #if  (len(self.node.item.getGenealogie())==2):
-             index=self.maCommande.commandesLayout.indexOf(self)
-             self.maCommande.reafficheSeulement(self,index)
-             return
-         #else :
-         #  self.reaffiche(self.node)
-         #return
-      #print ('je reaffiche dans Plie')
       self.reaffiche(self.node) 
 
   def setDeplie(self):
+      #print ('je passe ds setDeplie de groupe')
       self.node.setDeplie()
-      if self.editor.code== 'MT' and (self.maCommande.obj.nom == "ZONE") :
-         #if  (len(self.node.item.getGenealogie())==2):
-             index=self.parentQt.commandesLayout.indexOf(self)
-             self.maCommande.reafficheSeulement(self,index)
-             return
-         #else :
-         #  self.reaffiche(self.node)
-         #return
-      #print ('je reaffiche dans Plie')
       self.reaffiche(self.node) 
     
 

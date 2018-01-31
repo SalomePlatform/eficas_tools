@@ -71,6 +71,8 @@ class PROC(N_ENTITE.ENTITE):
                       rangés par niveau. Ils apparaissent alors exclusivement dans leur niveau de rangement.
                       Si niveau vaut None, l'opérateur est rangé au niveau global.
 
+     - fenetreIhm : specification de la fenetre
+
      - entites : dictionnaire dans lequel sont stockés les sous entités de l'opérateur. Il s'agit
                        des entités de définition pour les mots-clés : FACT, BLOC, SIMP. Cet attribut
                        est initialisé avec args, c'est à dire les arguments d'appel restants.
@@ -80,29 +82,30 @@ class PROC(N_ENTITE.ENTITE):
     class_instance = N_PROC_ETAPE.PROC_ETAPE
     label = 'PROC'
 
-    def __init__(self, nom, op=None, reentrant='n', repetable='o', fr="",ang="",
+    def __init__(self, nom, op=None, reentrant='n', repetable='o', fr="",ang="", fenetreIhm=None,
                  docu="", regles=(), op_init=None, niveau = None, UIinfo=None, **args):
         """
            Méthode d'initialisation de l'objet PROC. Les arguments sont utilisés pour initialiser
            les attributs de meme nom
         """
-        self.nom = nom
-        self.op = op
-        self.reentrant = reentrant
-        self.repetable = repetable
-        self.fr = fr
+        self.nom        = nom
+        self.op         = op
+        self.reentrant  = reentrant
+        self.repetable  = repetable
+        self.fenetreIhm = fenetreIhm
+        self.fr         = fr
         #self.ang=""
-        self.ang=ang
-        self.docu = docu
+        self.ang        = ang
+        self.docu       = docu
         if type(regles) == tuple:
             self.regles = regles
         else:
             self.regles = (regles,)
         # Attribut op_init : Fonction a appeler a la construction de l
         # operateur sauf si == None
-        self.op_init = op_init
-        self.entites = args
-        current_cata = CONTEXT.getCurrentCata()
+        self.op_init    = op_init
+        self.entites    = args
+        current_cata    = CONTEXT.getCurrentCata()
         if niveau == None:
             self.niveau = None
             current_cata.enregistre(self)

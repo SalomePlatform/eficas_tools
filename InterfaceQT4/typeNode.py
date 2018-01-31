@@ -64,22 +64,8 @@ class PopUpMenuNodeMinimal(object) :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
                if self.tree.currentItem().item.getNom() in self.dict_commandes_mesScripts : 
                    self.ajoutScript()
-        if self.appliEficas.code == 'MT' :
-           item=self
-           depth=0
-           while(item!=None) :
-            depth = depth+1
-            item = item.parent()
-           if depth != 3 : return
-           from InterfaceQT4 import composimp
-           if (isinstance(self,composimp.Node)) : return
-           label=('Deplie ce niveau')
-           self.actionDeplie=QAction(label,self.tree)
-           self.actionDeplie.triggered.connect(self.deplieCeNiveau)
-           self.menu.addAction(self.actionDeplie)
     
     def ajoutScript(self):
-
     # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
     # a revoir avec un menu et un connect sur le triggered sur le menu ?
         if hasattr(self.appliEficas, 'mesScripts'):

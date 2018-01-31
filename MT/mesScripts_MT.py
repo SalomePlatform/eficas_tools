@@ -52,6 +52,12 @@ def import_zone(listeparam):
       oldItem.select()
       oldItem.supprimeNoeud()
 
+def import_zone_from_menu(editor,etape):
+    texte="ZONE(NOEUDS=(_F(NOM='N1',POSITION_AXIALE=0.0,), _F(NOM='N2',POSITION_AXIALE=0.1,), _F(NOM='N3',POSITION_AXIALE=0.2,), _F(NOM='N4',POSITION_AXIALE=0.3,),),),"
+    retour = editor.updateJdcAfterEtape(etape,texte)
+
+def import_ligne(listeparam):
+    print ('in import_ligne')
 
 # le dictionnaire des commandes a la structure suivante :
 # la clef est la commande qui va proposer l action
@@ -68,3 +74,21 @@ dict_commandes={
                (view_zone,"View",('item',),False,True,"affiche dans Geom la representation de la zone "),
                (import_zone,"import_zone",('editor','self'),False,False,"import de fichier zone"),)
                }
+
+# le dictionnaire des menus a la structure suivante 
+# la clef qui est le titre du menu
+# (pour l instant 1 seul menu) --> devlop si besoin de plusieurs menus
+# une liste de tuple
+# 
+
+# Chaque  tuple  contient
+#	- la fonction a appeler
+#       - le label dans le menu
+#	- un tuple contenant les parametres attendus par la fonction
+dict_menu = {
+      'Ajout Elts' : (
+       #(import_zone,"import_zone",('editor','self'),False,False,"import de fichier zone"),
+       (import_zone_from_menu,"import_zone",('editor','etapeCourante'),),
+       (import_ligne,"import_ligne",('editor','etapeCourante'),),
+       )
+       }

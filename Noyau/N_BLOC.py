@@ -70,6 +70,7 @@ class BLOC(N_ENTITE.ENTITE):
         self.fr = fr
         self.ang = ang
         self.docu = docu
+        self.fenetreIhm=None
         if type(regles) == tuple:
             self.regles = regles
         else:

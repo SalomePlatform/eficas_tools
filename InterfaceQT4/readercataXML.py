@@ -1,0 +1,77 @@
+# -*- coding: utf-8 -*-
+# Copyright (C) 2007-2013   EDF R&D
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
+"""
+    Ce module sert a lire un catalogue et a construire
+    un objet CataItem pour Eficas.
+    Il s'appuie sur la classe READERCATA
+"""
+# Modules Python
+import sys, os
+sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..','EssaiInit',)))
+import autre_analyse_cata
+
+
+# Modules Eficas
+
+from monChoixCata import MonChoixCata
+from Extensions.i18n import tr
+from Extensions.eficas_exception import EficasException
+import uiinfo
+
+
+class READERCATA:
+
+   def __init__(self,QWParent, appliEficas):
+      self.QWParent=QWParent
+      self.appliEficas=appliEficas
+      self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
+      self.code=self.appliEficas.code
+      self.ssCode=self.appliEficas.ssCode
+      self.appliEficas.format_fichier='python'
+      self.appliEficas.format_fichier_in ='xml'
+      self.modeNouvCommande=self.appliEficas.maConfiguration.modeNouvCommande
+      self.versionCode=self.appliEficas.versionCode
+      self.version_cata=None
+      self.fic_cata=None
+      self.OpenCata()
+      self.cataitem=None
+      self.titre='Eficas XML'
+      self.Ordre_Des_Commandes=None
+      self.Classement_Commandes_Ds_Arbre=()
+
+      #self.traiteIcones()
+      #self.creeDicoInverse()
+
+
+   def OpenCata(self):
+
+      self.fic_cata = 'Cata_MED_FAM.xml'
+      
+      import readerEfficas
+      xml = open('/home/A96028/QT5GitEficasTravail/XMLEficas/EssaiInit/Cata_MED_FAM.xml').read()
+      SchemaMed = readerEfficas.efficas.CreateFromDocument(xml)
+      SchemaMed.exploreCata() 
+      self.cata=(SchemaMed,)
+      uiinfo.traite_UIinfo(self.cata[0])
+      self.Commandes_Ordre_Catalogue=[]
+      self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata[0])
+      self.liste_groupes=None
+
+

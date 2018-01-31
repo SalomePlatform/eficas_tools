@@ -29,7 +29,7 @@ class MonWidgetBloc(Ui_WidgetBloc,Groupe):
   """
   """
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-      #print "bloc : ",node.item.nom
+      #print ("bloc : ",node.item.nom)
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       self.parentQt.commandesLayout.insertWidget(-1,self,1)
 
