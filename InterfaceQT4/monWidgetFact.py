@@ -26,7 +26,7 @@ from PyQt5.QtWidgets import QWidget
 
 from .groupe import Groupe
 from desWidgetFact import Ui_WidgetFact
-#from desWidgetFactHorizon import Ui_WidgetFactHorizon
+from desWidgetFactTableau import Ui_WidgetFactTableau
 from Extensions.i18n import tr
 # Import des panels
 
@@ -60,9 +60,12 @@ class MonWidgetFactCommun(Groupe):
 
 
 class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=True):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
       MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
 
-#class MonWidgetFactHorizontal(Ui_WidgetFactHorizon,MonWidgetFactCommun):
-#  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-#      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
+#class MonWidgetFactTableau(Ui_WidgetFactTableau,MonWidgetFactCommun):
+class MonWidgetFactTableau(Ui_WidgetFact,MonWidgetFactCommun):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
+      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
+      print ('je passe dans FactTableau')
+      MonWidgetFactTableau.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)

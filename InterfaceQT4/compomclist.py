@@ -83,7 +83,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
     def init(self):
         # Si l'objet Accas (MCList) a moins d'un mot cle facteur
         # on utilise directement ce mot cle facteur comme delegue
-        #print ('he suis dans init de MCListTreeItem')
+        print ('je suis dans init de MCListTreeItem')
         #import traceback
         #traceback.print_stack()
         self.updateDelegate()

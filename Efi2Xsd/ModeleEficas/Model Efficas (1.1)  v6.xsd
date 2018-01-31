@@ -1,43 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2014 rel. 2 (x64) (http://www.altova.com) by BC (ED) -->
+<!-- édité avec XMLSpy v2018 sp1 (http://www.altova.com) par Fayolle (EDF R&D) -->
+<!-- edited with XMLSpy v2015 rel. 4 (http://www.altova.com) by USER1 (EDF-DSP) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns="http://chercheurs.edf.com/logiciels/efficas" xmlns:efficas="http://chercheurs.edf.com/logiciels/efficas" xmlns:altova="http://www.altova.com/xml-schema-extensions" targetNamespace="http://chercheurs.edf.com/logiciels/efficas" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0" vc:minVersion="1.1">
 	<xs:element name="doc" type="T_doc"/>
 	<xs:element name="cata" type="T_cata"/>
 	<xs:element name="regles" type="T_regles"/>
 	<xs:element name="typeCree" type="T_classe_utilisateur"/>
-	<xs:element name="ValeurDef" type="T_typeAttendu"/>
-	<xs:element name="ValeurSugg" type="T_typeAttendu"/>
+	<xs:element name="valeurDef" type="T_typeAttendu"/>
+	<xs:element name="valeurSugg" type="T_typeAttendu"/>
 	<xs:element name="fonction_utilisateur" type="T_fonction_python"/>
 	<xs:element name="commandes" type="T_commandes">
+		<!-- La contrainte suivante fonctionne -->
 		<xs:unique name="Uniq_Command">
 			<xs:selector xpath="*"/>
 			<xs:field xpath="@efficas:nom"/>
 		</xs:unique>
-		<xs:key name="Uniq_Name_In_Oper">
-			<xs:annotation>
-				<xs:documentation>SIMP devrait être selectionné que si .//SIMP[portee='Global']</xs:documentation>
-			</xs:annotation>
-			<xs:selector xpath="./OPER/BLOC |./OPER/FACT|./OPER/SIMP"/>
-			<xs:field xpath="@efficas:nom"/>
-		</xs:key>
-		<xs:keyref name="Ref_A_Name_In_Oper" refer="Uniq_Name_In_Oper">
-			<xs:selector xpath="./OPER/regles"/>
-			<xs:field xpath="EXCLUS"/>
-		</xs:keyref>
-		<xs:key name="Uniq_Name_In_Proc">
-			<xs:annotation>
-				<xs:documentation>SIMP devrait être selectionné que si .//SIMP[portee='Global']</xs:documentation>
-			</xs:annotation>
-			<xs:selector xpath="./PROC/BLOC | ./PROC/FACT| ./PROC/SIMP"/>
-			<xs:field xpath="@efficas:nom"/>
-		</xs:key>
-		<xs:keyref name="Ref_A_Name_In_Proc" refer="Uniq_Name_In_Proc">
-			<xs:selector xpath="./PROC/regles"/>
-			<xs:field xpath="EXCLUS"/>
-		</xs:keyref>
 	</xs:element>
 	<xs:element name="validators" type="T_validators"/>
-	<xs:element name="PlageValeur" type="T_PlageValeur"/>
+	<xs:element name="plageValeur" type="T_plageValeur"/>
 	<xs:element name="typeAttendu" type="T_name"/>
 	<xs:element name="classeUtilisateurName" type="T_classe_utilisateur_username" abstract="true" substitutionGroup="typeAttendu"/>
 	<xs:element name="SIMP" type="T_SIMP"/>
@@ -75,7 +55,7 @@
 		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="T_Cardinalite"/>
-	<xs:complexType name="T_PlageValeur">
+	<xs:complexType name="T_plageValeur">
 		<xs:choice>
 			<xs:sequence>
 				<xs:element ref="borne_sup" minOccurs="0"/>
@@ -84,7 +64,7 @@
 			<xs:element ref="into"/>
 		</xs:choice>
 	</xs:complexType>
-	<xs:complexType name="T_Accas.Common">
+	<xs:complexType name="T_Accas_Common">
 		<xs:sequence>
 			<xs:element ref="regles" minOccurs="0"/>
 			<xs:element ref="doc" minOccurs="0"/>
@@ -96,10 +76,85 @@
 		</xs:sequence>
 		<xs:attribute ref="nom" use="required"/>
 	</xs:complexType>
-	<xs:element name="OPER" type="T_OPER"/>
+	<xs:element name="OPER" type="T_OPER">
+		<!-- La contrainte fonctionne uniquement si l'on n'oublie pas le prefix dans l'expression du selector !  -->
+		<!-- aucun nom identique ne doit apparaître dans les sous élements d'un même niveau dans OPER ou PROC    -->
+		<xs:key name="Key_Name_In_Oper">
+			<xs:annotation>
+				<xs:documentation>SIMP devrait être selectionné que si .//SIMP[portee='Global']</xs:documentation>
+			</xs:annotation>
+			<xs:selector xpath="./efficas:BLOC |./efficas:FACT|./efficas:SIMP"/>
+			<xs:field xpath="@efficas:nom"/>
+		</xs:key>
+		<xs:keyref name="Oper_Ref_A_Name_In_Exclus" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:EXCLUS"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_Exclus">
+			<xs:selector xpath="./efficas:regles/efficas:EXCLUS"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Oper_Ref_A_Name_In_A_Classer" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:A_CLASSER/efficas:p1 | ./efficas:regles/efficas:A_CLASSER/efficas:p2"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_A_Classer">
+			<xs:selector xpath="./efficas:regles/efficas:A_CLASSER/efficas:p1 | ./efficas:regles/efficas:A_CLASSER/efficas:p2"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Oper_Ref_A_Name_In_Au_Moins_Un" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:AU_MOINS_UN"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_Au_Moins_Un">
+			<xs:selector xpath="./efficas:regles/efficas:AU_MOINS_UN"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Oper_Ref_A_Name_In_Au_Plus_Un" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:AU_PLUS_UN"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_Au_Plus_Un">
+			<xs:selector xpath="./efficas:regles/efficas:AU_PLUS_UN"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Oper_Ref_A_Name_In_Ensemble" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:ENSEMBLE"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_Ensemble">
+			<xs:selector xpath="./efficas:regles/efficas:ENSEMBLE"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Oper_Ref_A_Name_In_Present_Absent" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_ABSENT"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_Present_Absent">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_ABSENT"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Oper_Ref_A_Name_In_Present_Present" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_PRESENT"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_Present_Present">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_PRESENT"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Oper_Ref_A_Name_In_Un_Parmi" refer="Key_Name_In_Oper">
+			<xs:selector xpath="./efficas:regles/efficas:UN_PARMI"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Oper_Uniq_Name_In_Un_Parmi">
+			<xs:selector xpath="./efficas:regles/efficas:UN_PARMI"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+	</xs:element>
+	
 	<xs:complexType name="T_OPER">
 		<xs:complexContent>
-			<xs:extension base="T_Accas.Common">
+			<xs:extension base="T_Accas_Common">
 				<xs:sequence>
 					<xs:element ref="typeCree"/>
 				</xs:sequence>
@@ -108,22 +163,105 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:element name="PROC" type="T_PROC">
-		<xs:unique name="Uniqb_NAme_In_PRoc">
-			<xs:selector xpath="BLOC|FACT|SIMP"/>
+		<!-- La contrainte fonctionne pour toutes les PROC adjacentes et devrait être par PROC -->
+		<xs:key name="Key_Name_In_Proc">
+			<xs:annotation>
+				<xs:documentation>SIMP devrait être selectionné que si .//SIMP[portee='Global']</xs:documentation>
+			</xs:annotation>
+			<xs:selector xpath="./efficas:BLOC | ./efficas:FACT| ./efficas:SIMP"/>
 			<xs:field xpath="@efficas:nom"/>
+		</xs:key>
+		<xs:keyref name="Proc_Ref_A_Name_In_Exclus" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:EXCLUS"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_Exclus">
+			<xs:selector xpath="./efficas:regles/efficas:EXCLUS"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Proc_Ref_A_Name_In_A_Classer" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:A_CLASSER/efficas:p1 | ./efficas:regles/efficas:A_CLASSER/efficas:p2"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_A_Classer">
+			<xs:selector xpath="./efficas:regles/efficas:A_CLASSER/efficas:p1 | ./efficas:regles/efficas:A_CLASSER/efficas:p2"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Proc_Ref_A_Name_In_Au_Moins_Un" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:AU_MOINS_UN"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_Au_Moins_Un">
+			<xs:selector xpath="./efficas:regles/efficas:AU_MOINS_UN"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Proc_Ref_A_Name_In_Au_Plus_Un" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:AU_PLUS_UN"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_Au_Plus_Un">
+			<xs:selector xpath="./efficas:regles/efficas:AU_PLUS_UN"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Proc_Ref_A_Name_In_Ensemble" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:ENSEMBLE"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_Ensemble">
+			<xs:selector xpath="./efficas:regles/efficas:ENSEMBLE"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Proc_Ref_A_Name_In_Present_Absent" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_ABSENT"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_Present_Absent">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_ABSENT"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Proc_Ref_A_Name_In_Present_Present" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_PRESENT"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_Present_Present">
+			<xs:selector xpath="./efficas:regles/efficas:PRESENT_PRESENT"/>
+			<xs:field xpath="."/>
+		</xs:unique>
+		<xs:keyref name="Ref_A_Name_In_Un_Parmi" refer="Key_Name_In_Proc">
+			<xs:selector xpath="./efficas:regles/efficas:UN_PARMI"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:unique name="Proc_Uniq_Name_In_Un_Parmi">
+			<xs:selector xpath="./efficas:regles/efficas:UN_PARMI"/>
+			<xs:field xpath="."/>
 		</xs:unique>
 	</xs:element>
 	<xs:complexType name="T_PROC">
 		<xs:complexContent>
-			<xs:extension base="T_Accas.Common">
+			<xs:extension base="T_Accas_Common">
 				<xs:attribute ref="subroutine"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FACT" type="T_FACT"/>
+	<xs:element name="FACT" type="T_FACT">
+		<!-- La contrainte fonctionne uniquement si l'on n'oublie pas le prefix dans l'expression du selector !  -->
+		<!-- aucun nom identique ne doit apparaître dans les sous élements d'un même niveau de FACT              -->
+		<xs:key name="Key_Name_In_Fact">
+			<xs:annotation>
+				<xs:documentation>SIMP devrait être selectionné que si .//SIMP[portee='Global']</xs:documentation>
+			</xs:annotation>
+			<xs:selector xpath="./efficas:BLOC |./efficas:FACT|./efficas:SIMP"/>
+			<xs:field xpath="@efficas:nom"/>
+		</xs:key>
+		<xs:keyref name="Ref_A_Name_In_Fact" refer="Key_Name_In_Fact">
+			<xs:selector xpath="./efficas:regles/efficas:EXCLUS"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+	</xs:element>
+	<!-- Définition par restriction -->
 	<!--	<xs:complexType name="T_FACT">
 		<xs:complexContent>
-			<xs:restriction base="T_Accas.Common">
+			<xs:restriction base="T_Accas_Common">
 				<xs:sequence>
 					<xs:element ref="regles" minOccurs="0"/>
 					<xs:element ref="doc" minOccurs="0"/>
@@ -138,26 +276,39 @@
 	</xs:complexType>-->
 	<xs:complexType name="T_FACT">
 		<xs:complexContent>
-			<xs:extension base="T_Accas.Common">
+			<xs:extension base="T_Accas_Common">
 				<xs:attribute ref="statut"/>
 				<xs:attribute ref="min_occurs" default="1"/>
 				<xs:attribute ref="max_occurs" default="1">
 					<xs:annotation>
-						<xs:documentation>La valuer -1 equivaut à oo</xs:documentation>
+						<xs:documentation>La valeur -1 equivaut à oo</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
-				<xs:assert test=".[exists(@efficas:max_occurs) and exists(@efficas:min_occurs) and @efficas:max_occurs  gt @efficas:min_occurs]"/>
-				<!--<xs:assert test="if (.[exists(@efficas:max_occurs)] and .[exists(@efficas:min_occurs)] ) then (@efficas:max_occurs  gt @efficas:min_occurs) or @efficas:max_occurs = -1 else true" altova:message="Erreur max_occurs  > min_occurs "/>-->
 			</xs:extension>
+			<!--				<xs:assert test=".[exists(@efficas:max_occurs) and exists(@efficas:min_occurs) and @efficas:max_occurs  gt @efficas:min_occurs]"/>
+-->
+			<!--<xs:assert test="if (.[exists(@efficas:max_occurs)] and .[exists(@efficas:min_occurs)] ) then (@efficas:max_occurs  gt @efficas:min_occurs) or @efficas:max_occurs = -1 else true" altova:message="Erreur max_occurs  > min_occurs "/>-->
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:simpleType name="T_fonction_python">
 		<xs:restriction base="xs:string"/>
 	</xs:simpleType>
-	<xs:element name="BLOC" type="T_BLOC"/>
+	<xs:element name="BLOC" type="T_BLOC">
+		<xs:key name="Key_Name_In_Bloc">
+			<xs:annotation>
+				<xs:documentation>SIMP devrait être selectionné que si .//SIMP[portee='Global']</xs:documentation>
+			</xs:annotation>
+			<xs:selector xpath="./efficas:BLOC |./efficas:FACT|./efficas:SIMP"/>
+			<xs:field xpath="@efficas:nom"/>
+		</xs:key>
+		<xs:keyref name="Ref_A_Name_In_Bloc" refer="Key_Name_In_Bloc">
+			<xs:selector xpath="./efficas:regles/efficas:EXCLUS"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+	</xs:element>
 	<xs:complexType name="T_BLOC">
 		<xs:complexContent>
-			<xs:extension base="T_Accas.Common">
+			<xs:extension base="T_Accas_Common">
 				<xs:sequence>
 					<xs:element ref="condition"/>
 				</xs:sequence>
@@ -172,18 +323,18 @@
 					<xs:documentation>La portée pouurait devenir un attribut de SIMP. Une autre solution consisterait a créer un SIMPG pour distinguer les @nom uniques des SIMP a portée globale des autres.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element ref="ValeurDef" minOccurs="0"/>
-			<xs:element ref="ValeurSugg" minOccurs="0"/>
-			<xs:element ref="PlageValeur" minOccurs="0"/>
+			<xs:element ref="valeurDef" minOccurs="0"/>
+			<xs:element ref="valeurSugg" minOccurs="0"/>
+			<xs:element ref="plageValeur" minOccurs="0"/>
 			<xs:element ref="typeAttendu"/>
 			<xs:element ref="validators" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute ref="nom" use="required"/>
-		<xs:attribute ref="statut"/>
+		<xs:attribute ref="statut" default="o"/>
 		<xs:attribute ref="min_occurs" default="1"/>
 		<xs:attribute ref="max_occurs" default="1">
 			<xs:annotation>
-				<xs:documentation>La valuer -1 equivaut à oo</xs:documentation>
+				<xs:documentation>La valeur -1 equivaut à oo</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
@@ -258,14 +409,7 @@
 	<xs:element name="AU_MOINS_UN" type="T_predicat1"/>
 	<xs:element name="AU_PLUS_UN" type="T_predicat1"/>
 	<xs:element name="ENSEMBLE" type="T_predicat1"/>
-	<xs:element name="EXCLUS" type="T_predicat1">
-		<!-- A priori, ce n'est pas l'endroit pour le placer : ? scope de Uniq_Command-->
-		<!--		<xs:keyref name="referToAnAlreadyDefinedName" refer="Uniq_Command">
-			<xs:selector xpath="."/>
-			<xs:field xpath="."/>
-		</xs:keyref>
--->
-	</xs:element>
+	<xs:element name="EXCLUS" type="T_predicat1"/>
 	<xs:element name="PRESENT_ABSENT" type="T_predicat1"/>
 	<xs:element name="PRESENT_PRESENT" type="T_predicat1"/>
 	<xs:element name="UN_PARMI" type="T_predicat1"/>
@@ -275,14 +419,7 @@
 			<xs:element ref="AU_MOINS_UN"/>
 			<xs:element ref="AU_PLUS_UN"/>
 			<xs:element ref="ENSEMBLE"/>
-			<xs:element ref="EXCLUS">
-				<!-- A priori, ce n'est pas l'endroit pour le placer -->
-				<!--				<xs:keyref name="referToAnAlreadyDefinedName" refer="/Uniq_Command">
-					<xs:selector xpath="."/>
-					<xs:field xpath="."/>
-				</xs:keyref>
--->
-			</xs:element>
+			<xs:element ref="EXCLUS"/>
 			<xs:element ref="PRESENT_ABSENT"/>
 			<xs:element ref="PRESENT_PRESENT"/>
 			<xs:element ref="UN_PARMI"/>
@@ -365,8 +502,8 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<!-- On ne peut pas rendre abstrait un simpleType && 
-          Il n'est pas possible de dérivé par restriction un simplecontent d'un type complex qui
-          lui peut être abstrait
+          Il n'est pas possible de dériver par restriction un simplecontent d'un type complex qui
+          lui peut être abstrait.
     -->
 	<xs:simpleType name="T_classe_utilisateur_name">
 		<xs:restriction base="T_name">
@@ -445,7 +582,7 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<!-- Une liste est aussi un type simple !!!! -->
+	<!-- Une liste est aussi un type simple ! -->
 	<!--    <xs:simpleType name="T_list_anySimpleType">
 		<xs:list itemType="xs:anySimpleType"/>
 	</xs:simpleType>

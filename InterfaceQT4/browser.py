@@ -348,10 +348,11 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             self.editor.fenetreCentraleAffichee.close()
             self.editor.fenetreCentraleAffichee.deleteLater()
 
-        from monWidgetNiveauFact import MonWidgetNiveauFact
+        from monWidgetNiveauFact import MonWidgetNiveauFact, MonWidgetNiveauFactTableau
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
-        self.maFenetreCadre=MonWidgetNiveauFact(self,self.editor,maDefinition,monObjet)
+        if maDefinition.fenetreIhm=='Tableau' : self.maFenetreCadre=MonWidgetNiveauFactTableau(self,self.editor,maDefinition,monObjet)
+        else : self.maFenetreCadre=MonWidgetNiveauFact(self,self.editor,maDefinition,monObjet)
         self.fenetre=self.maFenetreCadre
         self.editor.widgetCentraleLayout.addWidget(self.maFenetreCadre)
         self.editor.fenetreCentraleAffichee=self.maFenetreCadre

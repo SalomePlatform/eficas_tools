@@ -24,7 +24,6 @@
 """
 # Modules Python
 import sys, os
-sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..','EssaiInit',)))
 import autre_analyse_cata
 
 
@@ -34,7 +33,7 @@ from monChoixCata import MonChoixCata
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 import uiinfo
-
+from Efi2Xsd import readerEfficas
 
 class READERCATA:
 
@@ -64,8 +63,7 @@ class READERCATA:
 
       self.fic_cata = 'Cata_MED_FAM.xml'
       
-      import readerEfficas
-      xml = open('/home/A96028/QT5GitEficasTravail/XMLEficas/EssaiInit/Cata_MED_FAM.xml').read()
+      xml = open('/home/A96028/QT5GitEficasTravail/Med/Cata_MED_FAM.xml').read()
       SchemaMed = readerEfficas.efficas.CreateFromDocument(xml)
       SchemaMed.exploreCata() 
       self.cata=(SchemaMed,)

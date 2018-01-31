@@ -28,14 +28,9 @@ import types
 
 from desWidgetNiveauFact import Ui_WidgetNiveauFact
 from InterfaceQT4.groupe import Groupe
-#from .gereIcones import FacultatifOuOptionnel
+from InterfaceQT4.monWidgetTableau import MonFactTableauCommun
 
 from PyQt5.QtWidgets  import  QWidget
-#from PyQt5.QtWidgets  import QApplication, QWidget, QSpacerItem, QSizePolicy
-#from PyQt5.QtGui import QFont, QIcon
-#from PyQt5.QtCore import QTimer
-#from PyQt5.QtCore import Qt
-
 
 
 from Extensions.i18n import tr
@@ -52,6 +47,7 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
       self.listeAffichageWidget=[]
       Groupe.__init__(self,node,editor,None,definition,obj,1,self)
       self.afficheOptionnel()
+      self.inhibe=False
 
   def reaffiche(self,nodeAVoir=None):
       self.node.setDeplieChildren()
@@ -163,3 +159,7 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
       self.monGroupe=self.monOptionnel.afficheOptionnel(liste,liste_rouge,self)
       
 
+class MonWidgetNiveauFactTableau(MonWidgetNiveauFact, MonFactTableauCommun):
+  def __init__(self,node,editor,definition,obj):
+      MonWidgetNiveauFact.__init__(self,node,editor,definition,obj)
+      MonFactTableauCommun.__init__(self)

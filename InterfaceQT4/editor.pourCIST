@@ -339,7 +339,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if generator.plugins.has_key('dicoImbrique'):
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
-         dico=self.get_Dico() #generator.Dico
+         dico=self.getDico() #generator.Dico
          
     
          for k in dico['CONTINGENCY_PROCESSING'].keys():
@@ -358,7 +358,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          ###
          return dico    
     
-        #return self.get_Dico()
+        #return self.getDico()
 
     #-------------------#  Pour execution avec output et error dans le bash
     def process_VP(self):
@@ -366,7 +366,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
-         dico=self.get_Dico() #generator.Dico
+         dico=self.getDico() #generator.Dico
          return dico
 
    
@@ -378,7 +378,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
           return 
         noeudAvantCommentaire=self.tree.selectedItems()[0]
         if noeudAvantCommentaire ==self.tree.racine : 
-            self.tree.racine.append_child("COMMENTAIRE",pos=0)
+            self.tree.racine.appendChild("COMMENTAIRE",pos=0)
             return
         noeudAvantCommentaire.addComment(True)
         
@@ -615,7 +615,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
     #-----------------------#
     def viewJdcPy(self):
     #-----------------------#
-        strSource = str( self.get_text_JDC(self.format) )
+        strSource = str( self.getTextJDC(self.format) )
         self._viewText(strSource, "JDC_RESULTAT")
 
     #-----------------------#
@@ -670,7 +670,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         self.labelCommentaire.setText("")
 
     #-------------------#
-    def init_modif(self):
+    def initModif(self):
     #-------------------#
       """
           Met l'attribut modified a 'o' : utilise par Eficas pour savoir
@@ -753,8 +753,8 @@ class JDCEditor(Ui_baseWidget,QWidget):
       """
       self.chercheNoeudSelectionne()
       if len(self.node_selected) == 0 : return
-      if len(self.node_selected) == 1 : self.node_selected[0].update_node_label_in_blue()
-      else :  self.node_selected[0].update_plusieurs_node_label_in_blue(self.node_selected)
+      if len(self.node_selected) == 1 : self.node_selected[0].updateNodeLabelInBlue()
+      else :  self.node_selected[0].updatePlusieursNodeLabelInBlue(self.node_selected)
       self.QWParent.edit="copier"
       self.QWParent.noeud_a_editer = self.node_selected
 
@@ -804,7 +804,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                except :
                  pass
            return
-           self.init_modif()
+           self.initModif()
            child.select()
         except  :
            traceback.print_exc()
@@ -827,7 +827,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            # indexNoeudACopier=noeudACopier.treeParent.children.index(noeudACopier)
             indexNoeudACopier=self.getTreeIndex(noeudACopier)
             noeudACopier.treeParent.item.deplaceEntite(indexNoeudACopier,indexNoeudOuColler,pos)
-            noeudACopier.treeParent.build_children()
+            noeudACopier.treeParent.buildChildren()
 
          #else:
          except:
@@ -915,7 +915,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       return self.fichier
 
     #---------------------------#
-    def get_file_variable(self) :
+    def getFileVariable(self) :
     #---------------------------#
      titre = tr("Choix d'un fichier XML")
      texte = tr("Le fichier contient une commande MODEL\n")
@@ -941,7 +941,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         fn = six.text_type(fn)
        
         if txt == None :
-            txt = self.get_text_JDC(self.format,formatLigne=formatLigne)
+            txt = self.getTextJDC(self.format,formatLigne=formatLigne)
             eol = '\n'
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
@@ -949,7 +949,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             else:
                 txt += eol
             txt=self.ajoutVersionCataDsJDC(txt)
-            checksum=self.get_checksum(txt)
+            checksum=self.getChecksum(txt)
             txt=txt+checksum
         if self.code=="TELEMAC" : return 1
         try:
@@ -966,7 +966,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
             return 0
 
     #-----------------------------------------------------------#
-    def get_text_JDC(self,format,pourRun=0,formatLigne="beautifie"):
+    def getTextJDC(self,format,pourRun=0,formatLigne="beautifie"):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
       if format in generator.plugins:
@@ -994,7 +994,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          return ""
 
     #----------------------#
-    def get_Dico(self):
+    def getDico(self):
     #---------------------#
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
@@ -1032,7 +1032,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
          return
       if self.modified or self.fichier==None  :
          self.fichierMapInput = self.__generateTempFilename(prefix = "map_run", suffix = ".map")
-         texte=self.get_text_JDC("MAP")
+         texte=self.getTextJDC("MAP")
          self.writeFile( self.fichierMapInput, txt = texte)
       else :
          self.fichierMapInput=self.fichier
@@ -1069,7 +1069,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if self.modified or self.fichier==None  :
       #if 1:
          self.fichierZcracksInput = self.__generateTempFilename(prefix = "zcracks_run", suffix = ".z7p")
-         texte=self.get_text_JDC("ZCRACKS",pourRun=1)
+         texte=self.getTextJDC("ZCRACKS",pourRun=1)
          self.writeFile( self.fichierZcracksInput, txt = texte)
       else :
          self.fichierZcracksInput=self.fichier
@@ -1090,7 +1090,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
       if self.modified or self.fichier==None  :
          QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
          return
-      if not hasattr(self,'generator'): texte=self.get_text_JDC(self.format)
+      if not hasattr(self,'generator'): texte=self.getTextJDC(self.format)
       from PrepareRunCarmel import prepareRunCarmel
       fichierGenerique=os.path.basename(self.fichier).split(".")[0]
       repMed=os.path.dirname(self.fichier)
@@ -1196,7 +1196,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
         if not hasattr(self, 'fichierMapInput') or not self.fichierMapInput or not os.path.exists(self.fichierMapInput):
             self.fichierMapInput = self.__generateTempFilename(prefix = "map_run", suffix = ".map")
-            texte=self.get_text_JDC("MAP")
+            texte=self.getTextJDC("MAP")
             self.writeFile( self.fichierMapInput, txt = texte)
 
         cmd = ("map gen -t dat -n " + composant + " -i " + self.fichierMapInput + " -o " + fn)
@@ -1213,13 +1213,13 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
     #-----------------------------------------#
-    def cherche_Groupes(self):
+    def chercheGroupes(self):
     #-----------------------------------------#
-        listeMA,listeNO=self.get_text_JDC("GroupMA")
+        listeMA,listeNO=self.getTextJDC("GroupMA")
         return listeMA,listeNO
 
     #-----------------------------------------#
-    def cherche_Dico(self):
+    def chercheDico(self):
     #-----------------------------------------#
         dicoCourant={}
         format =  self.appliEficas.format_fichier
@@ -1328,7 +1328,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         if newName is not None:
            self.appliEficas.addToRecentList(newName)
            self.tree.racine.item.getObject().nom=os.path.basename(newName)
-           self.tree.racine.update_node_label()
+           self.tree.racine.updateNodeLabel()
 
         if self.jdc.isvalid() != 0 and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fn)
@@ -1369,7 +1369,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
 
 
     #---------------------------------------------#
-    def get_file(self,unite=None,fic_origine = ''):
+    def getFile(self,unite=None,fic_origine = ''):
     #---------------------------------------------#
     # appele par I_JDC
         ulfile  = None
@@ -1392,7 +1392,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
                    titre,
                    self.appliEficas.CONFIGURATION.savedir)
 
-        # ce retour est impose par le get_file d'I_JDC
+        # ce retour est impose par le getFile d'I_JDC
         if fn== '' : return None," "
         if not fn : return (0, " ")
         fn=fn[0]
@@ -1418,7 +1418,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
         etape=monItem.item.object
         CONTEXT.set_current_step(etape)
         etape.build_includeInclude(texte)
-        self.tree.racine.build_children()
+        self.tree.racine.buildChildren()
 
     #-----------------------------------#
     def updateJdcEtape(self, itemApres,texte):
@@ -1435,7 +1435,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
            QMessageBox.information( self,
                       tr("Import texte"),
                       tr("Impossible d importer le texte"))
-        self.tree.racine.build_children()
+        self.tree.racine.buildChildren()
         return ok
 
 
@@ -1489,7 +1489,7 @@ class JDCEditor(Ui_baseWidget,QWidget):
               #print (mot, ouChercher)
               if ouChercher==None : return None
         monMC=ouChercher.get_child(MCFils,restreint="oui")
-        monMC.set_valeur(valeur)
+        monMC.setValeur(valeur)
         monMC.isvalid()
 
  
@@ -1730,12 +1730,12 @@ class JDCEditor(Ui_baseWidget,QWidget):
         indexFin=text.find(":FIN CHECKSUM")
         checkAvant=text[indexDeb:indexFin+13]
         textJDC=text[0:indexDeb]+text[indexFin+13:-1]
-        checksum=self.get_checksum(textJDC)
+        checksum=self.getChecksum(textJDC)
         pareil=(checkAvant==checksum)
         return pareil, textJDC
 
     #---------------------------#
-    def get_checksum(self,texte):
+    def getChecksum(self,texte):
     #---------------------------#
         newtexte=texte.replace('"','\\"')
         commande='echo "'+newtexte+'"|md5sum'

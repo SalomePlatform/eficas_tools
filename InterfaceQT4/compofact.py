@@ -19,19 +19,19 @@
 #
 
 from __future__ import absolute_import
-from . import browser
-from . import typeNode
+from InterfaceQT4 import browser
+from InterfaceQT4 import typeNode
 from Extensions.i18n import tr
 
 
 from Editeur import Objecttreeitem
 import six
+import traceback
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 
     def getPanelGroupe(self,parentQt,commande,insertIn=-1):
-        import traceback
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
@@ -39,15 +39,15 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
         #if  hasattr(self,'plie') :print self.item.nom, self.plie
-        #if maDefinition.sensLayout == 'horizontal':
-        #   from .monWidgetFact import MonWidgetFactHorizontal
-        #   widget=MonWidgetFactHorizontal(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+        #if maDefinition.fenetreIhm == 'Tableau':
+        #   from InterfaceQt4.monWidgetFact import MonWidgetFactTableau
+        #   widget=MonWidgetFactTableau(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         #elif  hasattr(self,'plie') and self.plie==True : 
         if  hasattr(self,'plie') and self.plie==True : 
-           from .monWidgetFactPlie import MonWidgetFactPlie
+           from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
            widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
         else:
-           from .monWidgetFact import MonWidgetFact
+           from InterfaceQT4.monWidgetFact import MonWidgetFact
            widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
         return widget
 
