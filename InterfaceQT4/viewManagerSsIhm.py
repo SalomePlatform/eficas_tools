@@ -51,8 +51,13 @@ class JdcSsIhmHandler(object):
 #  ---------------------
        self.viewManagerSsIhm.getFileName(self)
 
+   def jdcRapport(self) :
+#  ---------------------
+       self.viewManagerSsIhm.handleViewJdcRapport(self)
 
-
+   def getDicoPython(self) :
+#  -------------------------
+       return self.viewManagerSsIhm.generDico(self)
 
 
 #--------------------------------
@@ -141,6 +146,36 @@ class MyViewManagerSsIhm(object):
         self.dictEditors[handler].viewJdcSource()
 
 
+#  ---------------------------------------------
+   def handleViewJdcRapport(self,handler):
+#  ---------------------------------------------
+        print (handler)
+        if not (handler in self.dictEditors) :
+           print ('editor non trouve')
+           return
+        self.dictEditors[handler].viewJdcRapport()
+
+#  ---------------------------------------------
+   def handleViewJdcRapport(self,handler):
+#  ---------------------------------------------
+        print (handler)
+        if not (handler in self.dictEditors) :
+           print ('editor non trouve')
+           return
+        self.dictEditors[handler].viewJdcRapport()
+
+
+#  ---------------------------------------------
+   def generDico(self,handler):
+#  ---------------------------------------------
+        print (handler)
+        if not (handler in self.dictEditors) :
+           print ('editor non trouve')
+           return
+        return self.dictEditors[handler].generDico()
+
+
+
 #   def handleClose(self,doitSauverRecent = 1,texte=tr('&Quitter')):
 #       if doitSauverRecent : self.appliEficas.sauveRecents()
 #       index=self.myQtab.currentIndex()
@@ -193,10 +228,6 @@ class MyViewManagerSsIhm(object):
 #          return
 #       self.dict_editors[index].gestionParam()
 #
-#   def handleViewJdcRapport(self):
-#       index=self.myQtab.currentIndex()
-#       if index < 0 : return
-#       self.dict_editors[index].viewJdcRapport()
 #
 #
 #   def saveCurrentEditor(self):

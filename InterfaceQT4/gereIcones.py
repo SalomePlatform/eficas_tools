@@ -73,8 +73,8 @@ class FacultatifOuOptionnel(object):
         clef=self.editor.maConfiguration.adresse+"/"
       except :
         return None
-      for k in self.editor.readercata.cata[0].JdC.dict_groupes:
-          if self.obj.nom in self.editor.readercata.cata[0].JdC.dict_groupes[k]:
+      for k in self.editor.readercata.cata.JdC.dict_groupes:
+          if self.obj.nom in self.editor.readercata.cata.JdC.dict_groupes[k]:
              clef+=k
              break
       clef+="/"+ self.obj.nom[0:-5].lower()+"/spec_"+self.obj.nom[0:-5].lower()+".html"

@@ -331,7 +331,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
         except :
           print ('pb d accent : contacter la maintenance')
 
-      definitionEtape=getattr(self.jdc.cata[0],self.name)
+      definitionEtape=getattr(self.jdc.cata,self.name)
       #commentaire=getattr(definitionEtape,self.jdc.lang)
       try :
         commentaire=getattr(definitionEtape,self.jdc.lang)

@@ -91,6 +91,7 @@ class JDCEditorSsIhm :
            print (readercata)
            self.readercata  = readercata.READERCATA( self, self.appliEficas )
            self.appliEficas.readercata=self.readercata
+           self.readercata.dumpToXml()
            self.appliEficas.code=self.code
         else :
            self.readercata=self.appliEficas.readercata
@@ -219,7 +220,9 @@ class JDCEditorSsIhm :
             return None
 
         CONTEXT.unsetCurrentStep()
-        jdc=self.readercata.cata[0].JdC(procedure=text,
+ 
+        #jdc=self.readercata.cata[0].JdC(procedure=text,
+        jdc=self.readercata.cata.JdC(procedure=text,
                                     appli=self,
                                     cata=self.readercata.cata,
                                     cata_ord_dico=self.readercata.cata_ordonne_dico,
@@ -246,15 +249,19 @@ class JDCEditorSsIhm :
         if self.code == "PSEN"    : texte = self._newPSEN()
         if self.code == "PSEN_N1" : texte = self._newPSEN_N1()
 
-        if hasattr(self.readercata.cata[0],'TEXTE_NEW_JDC') : texte=self.readercata.cata[0].TEXTE_NEW_JDC
+        #if hasattr(self.readercata.cata[0],'TEXTE_NEW_JDC') : texte=self.readercata.cata[0].TEXTE_NEW_JDC
+        if hasattr(self.readercata.cata,'TEXTE_NEW_JDC') : texte=self.readercata.cata.TEXTE_NEW_JDC
 
        
-        jdc=self.readercata.cata[0].JdC( procedure =texte,
+        #jdc=self.readercata.cata[0].JdC( procedure =texte,
+        print (self.readercata.cata)
+        jdc=self.readercata.cata.JdC( procedure =texte,
                                          appli=self,
                                          cata=self.readercata.cata,
                                          cata_ord_dico=self.readercata.cata_ordonne_dico,
                                          rep_mat=self.maConfiguration.rep_mat
                                         )
+        
         jdc.lang    = self.appli.langue
         if units is not None:
            jdc.recorded_units=units
@@ -273,7 +280,8 @@ class JDCEditorSsIhm :
         JdC_aux=Extensions.jdc_include.JdC_include
         CONTEXT.unsetCurrentStep()
 
-        jaux=self.readercata.cata[0].JdC( procedure="",
+        #jaux=self.readercata.cata[0].JdC( procedure="",
+        jaux=self.readercata.cata.JdC( procedure="",
                                appli=self,
                                cata=self.readercata.cata,
                                cata_ord_dico=self.readercata.cata_ordonne_dico,
@@ -743,7 +751,8 @@ class JDCEditorSsIhm :
         #  for e in self.jdc.etapes:
         #    if e.nom == etape : etape=e; break
         #if etape == None : return
-        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        definitionEtape=getattr(self.jdc.cata,nomEtape)
+        #definitionEtape=getattr(self.jdc.cata[0],nomEtape)
         ouChercher=definitionEtape
         if len(listeMC) > 1 :
 
@@ -759,7 +768,8 @@ class JDCEditorSsIhm :
     def changeIntoDefMC(self,nomEtape,listeMC,valeurs):
     #------------------------------------------------#
     # dans le MDD
-        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        #definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        definitionEtape=getattr(self.jdc.cata,nomEtape)
         ouChercher=definitionEtape
 
         if len(listeMC) > 1 :
@@ -786,7 +796,8 @@ class JDCEditorSsIhm :
           for e in self.jdc.etapes:
             if e.nom == etape : etape=e; break
         if etape == None : return
-        definitionEtape=getattr(self.jdc.cata[0],etape)
+        #definitionEtape=getattr(self.jdc.cata[0],etape)
+        definitionEtape=getattr(self.jdc.cata,etape)
         ouChercher=definitionEtape
         for k in listeAvant : 
             ouChercher=ouChercher.entites[k]
@@ -801,7 +812,8 @@ class JDCEditorSsIhm :
     def ajoutDefinitionMC(self,nomEtape,listeAvant,nomDuMC,typ,**args):
     #-------------------------------------------------------------#
     # dans le MDD
-        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        #definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        definitionEtape=getattr(self.jdc.cata,nomEtape)
         ouChercher=definitionEtape
         for k in listeAvant : 
             ouChercher=ouChercher.entites[k]
@@ -824,7 +836,8 @@ class JDCEditorSsIhm :
     #---------------------------------------------------------------------#
     # dans le MDD
         print ('ajoutDefinitionMCFact', nomDuMC)
-        definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        #definitionEtape=getattr(self.jdc.cata[0],nomEtape)
+        definitionEtape=getattr(self.jdc.cata,nomEtape)
         ouChercher=definitionEtape
         for k in listeAvant : 
             ouChercher=ouChercher.entites[k]
@@ -878,8 +891,9 @@ class JDCEditorSsIhm :
     #-------------------------------------#
     def ajoutVersionCataDsJDC(self,txt):
     #-------------------------------------#
-        if not hasattr(self.readercata.cata[0],'VERSION_CATALOGUE'): return txt
-        ligneVersion="#VERSION_CATALOGUE:"+self.readercata.cata[0].VERSION_CATALOGUE+":FIN VERSION_CATALOGUE\n"
+        #if not hasattr(self.readercata.cata[0],'VERSION_CATALOGUE'): return txt
+        if not hasattr(self.readercata.cata,'VERSION_CATALOGUE'): return txt
+        ligneVersion="#VERSION_CATALOGUE:"+self.readercata.cata.VERSION_CATALOGUE+":FIN VERSION_CATALOGUE\n"
         texte=txt+ligneVersion
         return texte
 
@@ -897,7 +911,7 @@ class JDCEditorSsIhm :
            textJDC=text[0:indexDeb]+text[indexFin+23:-1]
 
         self.versionCata="sans"
-        if hasattr(self.readercata.cata[0],'VERSION_CATALOGUE'): self.versionCata=self.readercata.cata[0].VERSION_CATALOGUE
+        if hasattr(self.readercata.cata,'VERSION_CATALOGUE'): self.versionCata=self.readercata.cata.VERSION_CATALOGUE
 
         if self.versionCata==self.versionCataDuJDC : memeVersion=True
         return memeVersion,textJDC

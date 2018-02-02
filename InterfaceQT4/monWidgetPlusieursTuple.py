@@ -360,12 +360,12 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
       if self.editor.code == 'VP' : return
       if self.objSimp.valeur != None and self.objSimp.valeur != [] : return
-      if not hasattr(self.editor.readercata.cata[0],'sd_ligne') : self.editor.readercata.cata[0].sd_ligne=None
-      if not hasattr(self.editor.readercata.cata[0],'sd_generateur') : self.editor.readercata.cata[0].sd_generateur=None
-      if not hasattr(self.editor.readercata.cata[0],'sd_transfo') : self.editor.readercata.cata[0].sd_transfo=None
-      if not hasattr(self.editor.readercata.cata[0],'sd_charge') : self.editor.readercata.cata[0].sd_charge=None
-      if not hasattr(self.editor.readercata.cata[0],'sd_moteur') : self.editor.readercata.cata[0].sd_moteur=None
-      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_ligne :
+      if not hasattr(self.editor.readercata.cata,'sd_ligne') : self.editor.readercata.cata.sd_ligne=None
+      if not hasattr(self.editor.readercata.cata,'sd_generateur') : self.editor.readercata.cata.sd_generateur=None
+      if not hasattr(self.editor.readercata.cata,'sd_transfo') : self.editor.readercata.cata.sd_transfo=None
+      if not hasattr(self.editor.readercata.cata,'sd_charge') : self.editor.readercata.cata.sd_charge=None
+      if not hasattr(self.editor.readercata.cata,'sd_moteur') : self.editor.readercata.cata.sd_moteur=None
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata.sd_ligne :
          val=[]
          if  hasattr(self.objSimp.jdc,'LineDico'):
           for k in self.objSimp.jdc.LineDico :
@@ -375,7 +375,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
               except :
                pass
          self.node.item.setValeur(val)
-      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_generateur :
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata.sd_generateur :
          val=[]
          if  hasattr(self.objSimp.jdc,'MachineDico'):
           for k in self.objSimp.jdc.MachineDico :
@@ -385,7 +385,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
               except :
                pass
          self.node.item.setValeur(val)
-      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_transfo :
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata.sd_transfo :
          val=[]
          if  hasattr(self.objSimp.jdc,'TransfoDico'):
           for k in self.objSimp.jdc.TransfoDico :
@@ -395,7 +395,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
               except :
                pass
          self.node.item.setValeur(val)
-      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_charge :
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata.sd_charge :
          val=[]
          if  hasattr(self.objSimp.jdc,'LoadDico'):
           for k in self.objSimp.jdc.LoadDico :
@@ -405,7 +405,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
               except :
                pass
          self.node.item.setValeur(val)
-      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata[0].sd_moteur :
+      if self.objSimp.definition.validators.typeDesTuples[0]==self.editor.readercata.cata.sd_moteur :
          val=[]
          if  hasattr(self.objSimp.jdc,'MotorDico'):
           for k in self.objSimp.jdc.MotorDico :
