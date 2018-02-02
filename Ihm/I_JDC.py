@@ -135,7 +135,7 @@ class JDC(I_OBJECT.OBJECT):
    def recalculeValiditeApresChangementGlobalJdc(self):
         #print "je passe dans recalculeValiditeApresChangementGlobalJdc"
         try :
-          liste=self.getJdcRoot().cata[0].liste_condition
+          liste=self.getJdcRoot().cata.liste_condition
         except :
           liste=()
         for etapeTraitee in self.etapes :
@@ -165,7 +165,7 @@ class JDC(I_OBJECT.OBJECT):
       d=self.getContexteAvant(etape)
       l=[]
       try :
-         typeverif=self.cata[0].__dict__[type]
+         typeverif=self.cata.__dict__[type]
       except :
          return l
       for k,v in d.items():

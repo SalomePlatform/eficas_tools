@@ -178,7 +178,6 @@ class READERCATA(object):
       #
       # traitement des clefs documentaires
       #
-      self.cata=(self.cata,)
 
       self.titre=self.VERSION_EFICAS+" "+tr( " avec le catalogue ") + os.path.basename(self.fic_cata)
       if self.appliEficas.ssIhm == False : self.appliEficas.setWindowTitle(self.titre)
@@ -285,8 +284,8 @@ class READERCATA(object):
    def creeDicoInverse(self):
         self.dicoInverse={}
         self.dicoMC={} 
-        listeEtapes=self.cata[0].JdC.commandes
-        for e in self.cata[0].JdC.commandes:
+        listeEtapes=self.cata.JdC.commandes
+        for e in self.cata.JdC.commandes:
             self.traiteEntite(e)
 
    
@@ -326,4 +325,12 @@ class READERCATA(object):
            #else : print (niveau+1)*"   ", nom
 
         
+   def dumpToXml(self):
+       from Efi2Xsd import readerEfficas
+       print ('in dumpToXml')
+       #newSchema=   xml = open('Cata_MED_FAM.xml').read()
+       #SchemaMed = efficas.CreateFromDocument(xml)
+       #SchemaMed.alimenteCata(self.cata)
+
           
+   

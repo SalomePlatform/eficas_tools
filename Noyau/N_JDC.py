@@ -92,8 +92,9 @@ NONE = None
         self.procedure = procedure
         self.definition = definition
         self.cata = cata
-        if type(self.cata) != tuple and cata != None:
-            self.cata = (self.cata,)
+        # PN pourquoi ?
+        #if type(self.cata) != tuple and cata != None:
+        #    self.cata = (self.cata,)
         self._build_reserved_kw_list()
         self.cata_ordonne_dico = cata_ord_dico
         self.nom = nom
@@ -191,7 +192,7 @@ Causes possibles :
         linecache.cache[self.nom] = 0, 0, self.procedure.split('\n'), self.nom
         try:
             exec(self.exec_init, self.g_context)
-            for obj_cata in self.cata:
+            for obj_cata in (self.cata,):
                 if type(obj_cata) == types.ModuleType:
                     init2 = "from " + obj_cata.__name__ + " import *"
                     exec(init2, self.g_context)
@@ -608,7 +609,7 @@ Causes possibles :
             donnee par son nom dans les catalogues declares
             au niveau du jdc
         """
-        for cata in self.cata:
+        for cata in (self.cata,):
             if hasattr(cata, nomcmd):
                 return getattr(cata, nomcmd)
 
@@ -633,8 +634,9 @@ Causes possibles :
         """Construit la liste des mots-cles reserves (interdits pour le
         nommage des concepts)."""
         self._reserved_kw = set()
-        for cat in self.cata:
-            self._reserved_kw.update(
+        #for cat in self.cata:
+        cat=self.cata
+        self._reserved_kw.update(
                 [kw for kw in dir(cat) if len(kw) <= 8 and kw == kw.upper()])
         self._reserved_kw.difference_update(
             ['OPER', 'MACRO', 'BLOC', 'SIMP', 'FACT', 'FORM',

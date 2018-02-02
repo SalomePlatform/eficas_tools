@@ -111,7 +111,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
       # pour eviter que le nom du concept soit le nom de la classe --> souci pour utiliser le concept
       if (nom == self.definition.nom) : return  (0, tr("un concept de type ")+ nom + tr(" ne peut pas se nommer ") +  nom)
-      if ( nom in dir(self.jdc.cata[0])) : return (0, nom + tr("est un not reserve"))
+      if ( nom in dir(self.jdc.cata)) : return (0, nom + tr("est un not reserve"))
       #if (not isinstance(nom,str)) : return (0, tr("Le nom ") + nom + tr(" est un mot reserve"))
       #if len(nom) > 8 and self.jdc.definition.code == 'ASTER':
       #  return 0, tr("Nom de concept trop long (maxi 8 caracteres)")
