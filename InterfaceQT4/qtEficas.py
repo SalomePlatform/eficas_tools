@@ -73,7 +73,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.suiteTelemac=False
         if hasattr (self, 'maConfiguration') :
            if self.maConfiguration.force_langue :
-              from InterfaceQt4.monChoixLangue import MonChoixLangue
+              from InterfaceQT4.monChoixLangue import MonChoixLangue
               widgetLangue = MonChoixLangue(self)
               ret=widgetLangue.exec_()
            self.suiteTelemac=self.maConfiguration.suiteTelemac
@@ -162,7 +162,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.ssCode=ssCode
         if self.code==None :
            self.cleanPath()
-           from InterfaceQt4.monChoixCode import MonChoixCode
+           from InterfaceQT4.monChoixCode import MonChoixCode
            widgetChoix = MonChoixCode(self)
            #ret=widgetChoix.exec_()
            widgetChoix.show()

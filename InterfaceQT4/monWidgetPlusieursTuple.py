@@ -29,19 +29,19 @@ import types,os,sys
 
 from six.moves import range
 from PyQt5.QtWidgets  import QFrame,QApplication, QFrame, QWidget
-from PyQt5.QtGui  import QIcon
-from PyQt5.QtCore  import QSize, Qt, QTimer
+from PyQt5.QtGui      import QIcon
+from PyQt5.QtCore     import QSize, Qt, QTimer
 
 from Extensions.i18n import tr
 
 
-from .feuille               import Feuille
-from .politiquesValidation  import PolitiquePlusieurs
-from .qtSaisie              import SaisieValeur
-from .gereListe             import GereListe
-from .gereListe             import LECustom
-from Tuple2                import Ui_Tuple2
-from Tuple3                import Ui_Tuple3
+from InterfaceQT4.feuille               import Feuille
+from InterfaceQT4.politiquesValidation  import PolitiquePlusieurs
+from InterfaceQT4.qtSaisie              import SaisieValeur
+from InterfaceQT4.gereListe             import GereListe
+from InterfaceQT4.gereListe             import LECustom
+from Tuple2                             import Ui_Tuple2
+from Tuple3                             import Ui_Tuple3
 
 
 #--------------------------
@@ -173,10 +173,11 @@ class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
 class MonWidgetPlusieursTuple(Feuille,GereListe):
 # -------------------------------------------- #
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+  def __init__(self, node, monSimpDef, nom, objSimp, parentQt, commande):
   #-----------------------------------------------------
 
         self.indexDernierLabel=0
+        self.numLineEditEnCours=0
         self.nomLine="TupleVal"
         self.listeAffichageWidget=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
@@ -199,8 +200,8 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           self.BSelectFichier.setIcon(icon3)
           self.BSelectFichier.setIconSize(QSize(32, 32))
         self.BSelectFichier.clicked.connect(self.selectInFile)
-          
-        
+ 
+
 
 
   def ajoutLineEdit(self,valeur=None,inInit=False):
@@ -239,7 +240,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
   def setValeurs(self):
   # ---------------------
-       self.RBListePush()
+       if self.editor.code == 'PSEN' : self.RBListePush()
        valeurs=self.node.item.getValeur()
        min,max=self.node.item.getMinMax()
        if max == "**" or max > 5 : aCreer=5

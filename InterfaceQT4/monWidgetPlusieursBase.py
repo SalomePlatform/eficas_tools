@@ -54,7 +54,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         self.nomLine="lineEditVal"
         self.inInit=True
         self.indexDernierLabel=0
-        self.NumLineEditEnCours=0
+        self.numLineEditEnCours=0
         self.listeAffichageWidget=[]
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         GereListe.__init__(self)
@@ -193,27 +193,6 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       # A priori, on ne fait rien
       pass
 
-  #def ajoutNValeur(self,liste) :
-  #    for val in liste :
-  #       i=1
-  #       ajoute=False
-  #       while i <  self.indexDernierLabel+1:
-  #          nomLineEdit="lineEditVal"+str(i)
-  #          courant=getattr(self,nomLineEdit)
-  #          valeur=courant.text()
-  #          if valeur == None or valeur == "" :
-  #            ajoute=True
-  #            courant.setText(str(val))
-  #            commentaire=self.ajout1Valeur(val)
-  #            if (commentaire != None ):
-  #               self.editor.afficheInfos(commentaire,Qt.red)
-  #               courant.setText("")
-  #            break
-  #          else : 
-  #            i=i+1
-  #       if ajoute : continue
-  #       self.ajoutLineEdit(valeur=str(val))
-  #       self.changeValeur()
                 
   def ajoutNValeur(self,liste):
   #----------------------------

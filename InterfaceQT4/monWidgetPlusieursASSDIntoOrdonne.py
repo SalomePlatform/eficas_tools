@@ -39,7 +39,7 @@ from PyQt5.QtWidgets  import  QScrollBar
 class MonWidgetPlusieursASSDIntoOrdonne (MonWidgetPlusieursIntoOrdonne):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        self.NumLineEditEnCours=0
+        self.numLineEditEnCours=0
         MonWidgetPlusieursIntoOrdonne.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
        
 

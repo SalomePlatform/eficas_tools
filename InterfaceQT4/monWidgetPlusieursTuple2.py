@@ -23,9 +23,10 @@ import types,os
 
 # Modules Eficas
 
-from .feuille                  import Feuille
-from .monWidgetPlusieursTuple  import MonWidgetPlusieursTuple 
-from desWidgetPlusieursTuple  import Ui_WidgetPlusieursTuple
+from InterfaceQT4.feuille                  import Feuille
+from InterfaceQT4.monWidgetPlusieursTuple  import MonWidgetPlusieursTuple 
+from desWidgetPlusieursTuple               import Ui_WidgetPlusieursTuple
+from desWidgetTableau                      import Ui_WidgetTableau
 
 
 class MonWidgetPlusieursTuple2 (Ui_WidgetPlusieursTuple,MonWidgetPlusieursTuple):
@@ -34,3 +35,13 @@ class MonWidgetPlusieursTuple2 (Ui_WidgetPlusieursTuple,MonWidgetPlusieursTuple)
         self.nbValeurs=2
         MonWidgetPlusieursTuple.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
       
+class MonWidgetTableau (Ui_WidgetTableau,MonWidgetPlusieursTuple):
+  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        self.nbValeurs=len(monSimpDef.homo)
+        MonWidgetPlusieursTuple.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        self.resize(self.width(),1800)
+
+  def ajoutLineEdit(self,valeur=None,inInit=False):
+      hauteurAvant=(self.frame.height())
+      MonWidgetPlusieursTuple.ajoutLineEdit(self,valeur,inInit)
+

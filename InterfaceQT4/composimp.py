@@ -28,11 +28,11 @@ import types,os
 
 from copy import copy,deepcopy
 import traceback
-from . import typeNode
+from InterfaceQT4 import typeNode
 
 # Modules Eficas
-from Editeur import Objecttreeitem
-from . import browser
+from Editeur      import Objecttreeitem
+from InterfaceQT4 import browser
 from Noyau.N_CR   import justifyText
 from Accas        import SalomeEntry
     
@@ -49,7 +49,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
         # label informatif 
         if monObjet.isInformation():
-          from .monWidgetInfo import MonWidgetInfo
+          from InterfaceQT4.monWidgetInfo import MonWidgetInfo
           widget=MonWidgetInfo(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           self.widget=widget
           return widget
@@ -60,7 +60,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
       # a gerer comme dans composimp
       # Gestion des matrices
         if self.item.waitMatrice ():
-          from .monWidgetMatrice import MonWidgetMatrice
+          from InterfaceQT4.monWidgetMatrice import MonWidgetMatrice
           widget=MonWidgetMatrice(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           self.widget=widget
           return widget
@@ -77,117 +77,120 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
         # A verifier
           if maDefinition.intoSug != [] and maDefinition.intoSug != None:
-            from .monWidgetCBIntoSug import MonWidgetCBIntoSug
+            from InterfaceQT4.monWidgetCBIntoSug import MonWidgetCBIntoSug
             widget=MonWidgetCBIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif  maDefinition.into != [] and maDefinition.into != None:
             if len(monInto) < 4 :
-              from .monWidgetRadioButton import MonWidgetRadioButton
+              from InterfaceQT4.monWidgetRadioButton import MonWidgetRadioButton
               widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(monInto) < 7 :
-              from .monWidget4a6RadioButton import MonWidget4a6RadioButton
+              from InterfaceQT4.monWidget4a6RadioButton import MonWidget4a6RadioButton
               widget=MonWidget4a6RadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-              from .monWidgetCB import MonWidgetCB
+              from InterfaceQT4.monWidgetCB import MonWidgetCB
               widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.waitBool() :
-            from .monWidgetSimpBool import MonWidgetSimpBool
+            from InterfaceQT4.monWidgetSimpBool import MonWidgetSimpBool
             widget=MonWidgetSimpBool(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.waitFichier():
-            from .monWidgetSimpFichier import MonWidgetSimpFichier
+            from InterfaceQT4.monWidgetSimpFichier import MonWidgetSimpFichier
             widget=MonWidgetSimpFichier(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           # PNPNPN - a faire
           elif self.item.waitDate():
-            from .monWidgetDate import MonWidgetDate
+            from InterfaceQT4.monWidgetDate import MonWidgetDate
             widget=MonWidgetDate(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.waitHeure():
-            from .monWidgetHeure import MonWidgetHeure
+            from InterfaceQT4.monWidgetHeure import MonWidgetHeure
             widget=MonWidgetHeure(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.waitTuple() :
             if self.item.object.definition.type[0].ntuple == 2:
-               from .monWidgetSimpTuple2 import MonWidgetSimpTuple2
+               from InterfaceQT4.monWidgetSimpTuple2 import MonWidgetSimpTuple2
                widget=MonWidgetSimpTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif self.item.object.definition.type[0].ntuple == 3 :
-               from .monWidgetSimpTuple3 import MonWidgetSimpTuple3
+               from InterfaceQT4.monWidgetSimpTuple3 import MonWidgetSimpTuple3
                widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                print ("Pas de Tuple de longueur > 3")
                print ("Prevenir la maintenance ")
 
           elif self.item.waitComplex():
-            from .monWidgetSimpComplexe import MonWidgetSimpComplexe
+            from InterfaceQT4.monWidgetSimpComplexe import MonWidgetSimpComplexe
             widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.waitCo():
             if len(self.item.getSdAvantDuBonType()) == 0 :
-               from .monWidgetUniqueSDCO import MonWidgetUniqueSDCO
+               from InterfaceQT4.monWidgetUniqueSDCO import MonWidgetUniqueSDCO
                widget=MonWidgetUniqueSDCO(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :      
-               from .monWidgetSDCOInto import MonWidgetSDCOInto
+               from InterfaceQT4.monWidgetSDCOInto import MonWidgetSDCOInto
                widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.waitAssd():
             if len(self.item.getSdAvantDuBonType()) == 0 :
-               from .monWidgetVide import MonWidgetVide
+               from InterfaceQT4.monWidgetVide import MonWidgetVide
                widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(self.item.getSdAvantDuBonType()) < 4 :
-              from .monWidgetRadioButton import MonWidgetRadioButtonSD
+              from InterfaceQT4.monWidgetRadioButton import MonWidgetRadioButtonSD
               widget=MonWidgetRadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(self.item.getSdAvantDuBonType()) < 7 :
-              from .monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
+              from InterfaceQT4.monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
               widget=MonWidget4a6RadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-              from .monWidgetCB import MonWidgetCBSD
+              from InterfaceQT4.monWidgetCB import MonWidgetCBSD
               widget=MonWidgetCBSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           
           elif  self.item.waitSalome() and self.editor.salome:
-            from .monWidgetSimpSalome import MonWidgetSimpSalome
+            from InterfaceQT4.monWidgetSimpSalome import MonWidgetSimpSalome
             widget=MonWidgetSimpSalome(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.waitTxm():
-            from .monWidgetSimpTxt import MonWidgetSimpTxt
+            from InterfaceQT4.monWidgetSimpTxt import MonWidgetSimpTxt
             widget=MonWidgetSimpTxt(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            from .monWidgetSimpBase import MonWidgetSimpBase
+            from InterfaceQT4.monWidgetSimpBase import MonWidgetSimpBase
             widget=MonWidgetSimpBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
         # Gestion des listes
         else :
           if maDefinition.intoSug != [] and maDefinition.intoSug != None:
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                 from .monWidgetIntoSug import MonWidgetIntoSug
+                 from InterfaceQT4.monWidgetIntoSug import MonWidgetIntoSug
                  widget=MonWidgetIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           #if maDefinition.into != [] and maDefinition.into != None:
           # Attention pas fini --> on attend une liste de ASSD avec ordre
           elif self.item.waitAssd() and self.item.isListSansOrdreNiDoublon():
                listeAAfficher = self.item.getSdAvantDuBonType()
                if len(listeAAfficher) == 0:
-                 from .monWidgetVide import MonWidgetVide
+                 from InterfaceQT4.monWidgetVide import MonWidgetVide
                  widget = MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                 from .monWidgetPlusieursInto import MonWidgetPlusieursInto
+                 from InterfaceQT4.monWidgetPlusieursInto import MonWidgetPlusieursInto
                  widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.waitAssd() :
                listeAAfficher = self.item.getSdAvantDuBonType()
                if len(listeAAfficher) == 0:
-                 from .monWidgetVide import MonWidgetVide
+                 from InterfaceQT4.monWidgetVide import MonWidgetVide
                  widget = MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                elif self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                 from .monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
+                 from InterfaceQT4.monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
                  widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlieASSD
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlieASSD
                   widget=MonWidgetPlusieursPlieASSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.waitTuple() :
-            if self.item.object.definition.type[0].ntuple == 2:
-               from .monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
+            if self.item.object.definition.fenetreIhm == 'Tableau' :
+               from InterfaceQT4.monWidgetPlusieursTuple2 import MonWidgetTableau
+               widget=MonWidgetTableau(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            elif self.item.object.definition.type[0].ntuple == 2:
+               from InterfaceQT4.monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
                widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif self.item.object.definition.type[0].ntuple == 3 :
-               from .monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
+               from InterfaceQT4.monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
                widget=MonWidgetPlusieursTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                print ("Pas de Tuple de longueur > 3")
@@ -196,25 +199,25 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             if self.item.isListSansOrdreNiDoublon():
                
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                  from .monWidgetPlusieursInto import MonWidgetPlusieursInto
+                  from InterfaceQT4.monWidgetPlusieursInto import MonWidgetPlusieursInto
                   widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                  from .monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
+                  from InterfaceQT4.monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
                   widget=MonWidgetPlusieursIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
             #print 8
             if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
-               from .monWidgetPlusieursBase import MonWidgetPlusieursBase
+               from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
                widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+               from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
         self.widget=widget

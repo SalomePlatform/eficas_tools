@@ -27,10 +27,12 @@
 		 <valeurDef><typesimple>42</typesimple></valeurDef>
 		<typeAttendu>I</typeAttendu>
 	</SIMP>
+    <!--
 	<SIMP efficas:nom="SIMP5" efficas:min_occurs="2" efficas:max_occurs="-1">
 		 <valeurDef><typesimple xsi:type="T_list_I">52 53</typesimple></valeurDef>
 		<typeAttendu>I</typeAttendu>
 	</SIMP>
+    -->
 </FACT>
 </PROC>
 </commandes>

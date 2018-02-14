@@ -28,7 +28,6 @@ import types
 
 from desWidgetNiveauFact import Ui_WidgetNiveauFact
 from InterfaceQT4.groupe import Groupe
-from InterfaceQT4.monWidgetTableau import MonFactTableauCommun
 
 from PyQt5.QtWidgets  import  QWidget
 
@@ -159,7 +158,6 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
       self.monGroupe=self.monOptionnel.afficheOptionnel(liste,liste_rouge,self)
       
 
-class MonWidgetNiveauFactTableau(MonWidgetNiveauFact, MonFactTableauCommun):
+class MonWidgetNiveauFactTableau(MonWidgetNiveauFact):
   def __init__(self,node,editor,definition,obj):
       MonWidgetNiveauFact.__init__(self,node,editor,definition,obj)
-      MonFactTableauCommun.__init__(self)
