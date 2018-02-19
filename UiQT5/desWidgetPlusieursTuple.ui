@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>662</width>
-    <height>163</height>
+    <width>740</width>
+    <height>386</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -174,7 +174,7 @@
         </size>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;TextLabel     dqDFDQ&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -222,8 +222,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>211</width>
-             <height>84</height>
+             <width>289</width>
+             <height>307</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -236,16 +236,7 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
+            <property name="margin">
              <number>0</number>
             </property>
             <item>
@@ -274,16 +265,7 @@
         <enum>QFrame::Box</enum>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>0</number>
         </property>
         <item>
@@ -322,7 +304,8 @@
             </property>
             <property name="icon">
              <iconset theme="go-up">
-              <normaloff>.</normaloff>.</iconset>
+              <normaloff/>
+             </iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -360,7 +343,8 @@
             </property>
             <property name="icon">
              <iconset theme="go-down">
-              <normaloff>.</normaloff>.</iconset>
+              <normaloff/>
+             </iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -539,7 +523,8 @@
          </property>
          <property name="icon">
           <iconset theme="text-x-generic">
-           <normaloff>.</normaloff>.</iconset>
+           <normaloff/>
+          </iconset>
          </property>
          <property name="iconSize">
           <size>

@@ -80,7 +80,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             from InterfaceQT4.monWidgetCBIntoSug import MonWidgetCBIntoSug
             widget=MonWidgetCBIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif  maDefinition.into != [] and maDefinition.into != None:
-            if len(monInto) < 4 :
+            if maDefinition.fenetreIhm=='menuDeroulant' :
+              from InterfaceQT4.monWidgetCB import MonWidgetCB
+              widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            elif len(monInto) < 4 :
               from InterfaceQT4.monWidgetRadioButton import MonWidgetRadioButton
               widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(monInto) < 7 :
@@ -184,7 +187,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                   widget=MonWidgetPlusieursPlieASSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.waitTuple() :
             if self.item.object.definition.fenetreIhm == 'Tableau' :
-               from InterfaceQT4.monWidgetPlusieursTuple2 import MonWidgetTableau
+               from InterfaceQT4.monWidgetTableau import MonWidgetTableau
                widget=MonWidgetTableau(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif self.item.object.definition.type[0].ntuple == 2:
                from InterfaceQT4.monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2

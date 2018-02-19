@@ -54,6 +54,7 @@ class READERCATA:
       self.titre='Eficas XML'
       self.Ordre_Des_Commandes=None
       self.Classement_Commandes_Ds_Arbre=()
+      self.demandeCatalogue=False
 
       #self.traiteIcones()
       #self.creeDicoInverse()
@@ -61,9 +62,10 @@ class READERCATA:
 
    def OpenCata(self):
 
-      self.fic_cata = 'Cata_MED_FAM.xml'
-      
-      xml = open('/home/A96028/QT5GitEficasTravail/eficas/Med/Cata_MED_FAM.xml').read()
+      #self.fic_cata = 'Cata_MED_FAM.xml'
+      #xml = open('/home/A96028/QT5GitEficasTravail/eficas/Med/Cata_MED_FAM.xml').read()
+      self.fic_cata = 'cata_test1.xml'
+      xml = open('/home/A96028/QT5GitEficasTravail/eficas/CataTestXSD/cata_test1.xml').read()
       SchemaMed = readerEfficas.efficas.CreateFromDocument(xml)
       SchemaMed.exploreCata() 
       #self.cata=(SchemaMed,)

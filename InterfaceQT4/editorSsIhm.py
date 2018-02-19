@@ -82,13 +82,11 @@ class JDCEditorSsIhm :
         self.version_code = session.d_env.cata
 
 
-        if not hasattr ( self.appliEficas, 'readercata') or  self.appliEficas.multi==True:
+        if not hasattr ( self.appliEficas, 'readercata') or self.appliEficas.readercata.demandeCatalogue==True or self.appliEficas.multi==True:
            if self.maConfiguration.typeDeCata == 'XML' :
               from InterfaceQT4   import readercataXML as readercata
            else :
               from InterfaceQT4   import readercata
-           print (self.maConfiguration.typeDeCata)
-           print (readercata)
            self.readercata  = readercata.READERCATA( self, self.appliEficas )
            self.appliEficas.readercata=self.readercata
            self.readercata.dumpToXml()

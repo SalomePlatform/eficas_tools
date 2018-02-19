@@ -37,7 +37,6 @@ from PyQt5.QtCore    import QProcess, QFileInfo, QTimer, Qt, QDir, QSize
 import traceback
 
 # Modules Eficas
-import convert, generator
 from Extensions.i18n import tr
 
 from Editeur        import session
@@ -118,6 +117,14 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         else                                      : self.affichePlie=False
 
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
+
+        if self.appliEficas.readercata.demandeCatalogue==True  :
+           nomFichierTranslation='translatorFichier'+'_'+str(self.appliEficas.readercata.versionCode)
+           if hasattr(self.appliEficas.maConfiguration,nomFichierTranslation) :
+              translatorFichier=getattr(self.appliEficas.maConfiguration,nomFichierTranslation)
+              from Extensions import localisation
+              localisation.localise(None,self.appliEficas.langue,translatorFichier=translatorFichier)
+
 
         if self.jdc_item and self.appliEficas.ssIhm==False :
             self.tree = browser.JDCTree( self.jdc_item,  self )
@@ -847,8 +854,8 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
             self.generator.writeDefault(fn)
         elif self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
             msgBox = QMessageBox(None)
-            msgBox.setWindowTitle(tr("Fichier Cas invalide"))
-            msgBox.setText(tr("Le fichier cas est invalide"))
+            msgBox.setWindowTitle(tr("Fichier .cas invalide / incomplet"))
+            msgBox.setText(tr("Le fichier .cas est invalide / incomplet"))
             msgBox.addButton(tr("&Sauvegarder"),1)
             msgBox.addButton(tr("&Quitter sans sauvegarder"),0)
             msgBox.addButton(tr("&Annuler"),2)

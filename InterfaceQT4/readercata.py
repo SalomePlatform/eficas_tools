@@ -45,7 +45,7 @@ import analyse_catalogue
 import analyse_catalogue_initial
 import autre_analyse_cata
 import uiinfo
-from .monChoixCata import MonChoixCata
+from InterfaceQT4.monChoixCata import MonChoixCata
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
@@ -59,6 +59,7 @@ class READERCATA(object):
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
       self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
+      self.demandeCatalogue=False
       self.code=self.appliEficas.code
       self.ssCode=self.appliEficas.ssCode
       self.appliEficas.format_fichier='python'
@@ -137,6 +138,7 @@ class READERCATA(object):
               # plusieurs catalogues sont disponibles : il faut demander a l'utilisateur
               # lequel il veut utiliser ...
               self.askChoixCatalogue(cata_choice_list)
+              self.demandeCatalogue=True
 
       if self.fic_cata == None :
           if self.appliEficas.salome == 0 :
@@ -168,6 +170,11 @@ class READERCATA(object):
       if hasattr(self.cata, 'Classement_Commandes_Ds_Arbre') : 
              self.Classement_Commandes_Ds_Arbre=self.cata.Classement_Commandes_Ds_Arbre
       else : self.Classement_Commandes_Ds_Arbre=()
+      if hasattr(self.cata,'enum'):
+         _temp= __import__(self.cata.enum,globals(), locals(), ['DicoEnumCasFrToEnumCasEn', 'TelemacdicoEn'], 0)
+         self.DicoEnumCasFrToEnumCasEn = _temp.DicoEnumCasFrToEnumCasEn
+         self.TelemacdicoEn = _temp.TelemacdicoEn
+        
       #print self.cata.Ordre_Des_Commandes
 
       #
@@ -249,18 +256,18 @@ class READERCATA(object):
       widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
       ret=widgetChoix.exec_()
       
+      
       lab=str(self.VERSION_EFICAS)+" "
       lab+=tr(" pour ")
       lab+=str(self.code) 
       lab+=tr(" avec le catalogue ")
       if ret == QDialog.Accepted:
-          print (widgetChoix.CBChoixCata.currentIndex())
           cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
           self.fic_cata = cata.cata_file_path
           self.versionCode = cata.identifier
           self.appliEficas.format_fichier = cata.file_format
           self.appliEficas.format_fichier_in = cata.file_format_in
-          lab+=self.versionCata
+          lab+=self.versionCode
           self.appliEficas.setWindowTitle(lab)
           #qApp.mainWidget().setCaption(lab)
           widgetChoix.close()

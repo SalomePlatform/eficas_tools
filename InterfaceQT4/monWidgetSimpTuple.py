@@ -32,9 +32,9 @@ from PyQt5.QtCore import Qt
 # Modules Eficas
 from Extensions.i18n import tr
 
-from .feuille               import Feuille
-from .politiquesValidation  import PolitiqueUnique
-from .qtSaisie              import SaisieValeur
+from InterfaceQT4.feuille               import Feuille
+from InterfaceQT4.politiquesValidation  import PolitiqueUnique
+from InterfaceQT4.qtSaisie              import SaisieValeur
 
 
 class MonWidgetSimpTuple(Feuille):

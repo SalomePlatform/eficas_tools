@@ -26,8 +26,8 @@ import types,os
 #from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
-from .feuille               import Feuille
-from .monWidgetSimpTuple    import MonWidgetSimpTuple 
+from InterfaceQT4.feuille               import Feuille
+from InterfaceQT4.monWidgetSimpTuple    import MonWidgetSimpTuple 
 from desWidgetTuple2       import Ui_WidgetTuple2 
 
 

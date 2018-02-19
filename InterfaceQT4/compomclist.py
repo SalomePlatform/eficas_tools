@@ -83,9 +83,6 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
     def init(self):
         # Si l'objet Accas (MCList) a moins d'un mot cle facteur
         # on utilise directement ce mot cle facteur comme delegue
-        print ('je suis dans init de MCListTreeItem')
-        #import traceback
-        #traceback.print_stack()
         self.updateDelegate()
 
     def updateDelegate(self):
@@ -100,7 +97,6 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
             FACTPanel.
             Si la liste est plus longue on utilise le panneau MCLISTPanel.
         """
-        print ('je suis dans panel de MCListTreeItem')
         if len(self._object) > 1:
            return MCLISTPanel(jdcdisplay,pane,node)
         elif isinstance(self._object.data[0],ErrorObj):

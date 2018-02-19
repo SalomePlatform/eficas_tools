@@ -29,13 +29,12 @@ import traceback,types
 # Modules Eficas
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
-from . import I_ETAPE
-from . import I_ENTITE
-from . import I_OBJECT
+from Ihm  import I_ETAPE
+from Ihm import I_ENTITE
+from Ihm import I_OBJECT
 import Noyau
 from Noyau.N_ASSD import ASSD
 from Noyau import N__F
-import convert
 from Extensions import param2
 
 # import rajoutes suite a l'ajout de buildSd --> a resorber

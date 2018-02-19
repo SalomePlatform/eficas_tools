@@ -50,6 +50,7 @@ class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     self.actif=1
     self.state="unchanged"
     self.register()
+    self.fenetreIhm=None
 
   def register(self):
     """ 
