@@ -31,7 +31,7 @@ from desPBOptionnelMT   import Ui_customPB
     
 # Import des panels
 
-class monRBButtonCustom(QCheckBox):
+class MonRBButtonCustom(QCheckBox):
 
    def __init__(self,texte,monOptionnel,parent=None,couleur=None):
       QCheckBox.__init__(self,tr(texte),parent)
@@ -87,7 +87,7 @@ class monRBButtonCustom(QCheckBox):
           monAide = ""
       self.monOptionnel.parentMC.editor.afficheCommentaire(monAide)
   
-class monPBButtonCustom(QWidget,Ui_customPB):
+class MonPBButtonCustom(QWidget,Ui_customPB):
 
    def __init__(self,texte,monOptionnel,parent=None,couleur=None):
       QWidget.__init__(self)
@@ -172,10 +172,10 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
          couleur=None
          if mot in liste_rouge : couleur=Qt.red 
          if self.parentQt.parentQt.maConfiguration.simpleClic == False :
-            cb = monRBButtonCustom(mot,self,couleur=couleur)
+            cb = MonRBButtonCustom(mot,self,couleur=couleur)
             cb.clicked.connect(cb.ajoutAideMC)
          else :
-            cb = monPBButtonCustom(mot,self,couleur=couleur)
+            cb = MonPBButtonCustom(mot,self,couleur=couleur)
 
          self.MCOptionnelLayout.insertWidget(0,cb)
          self.dicoCb[cb]=mot

@@ -4278,3 +4278,5 @@ Classement_Commandes_Ds_Arbre = (
 'TIDES',
 'COUPLING',
 'INTERNAL')
+
+enum = 'Telemac.enum_Telemac2d_auto'

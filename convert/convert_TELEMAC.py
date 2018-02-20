@@ -22,9 +22,10 @@ from __future__ import absolute_import
 import re
 from Extensions.i18n import tr
 
+#import traceback
+#traceback.print_stack()
 
-from .convert_python import Pythonparser
-import six
+from convert.convert_python import Pythonparser
 from six.moves import range
 try:
   basestring
@@ -65,10 +66,10 @@ pattern_ContientDouble=re.compile (r"^.*''.*$")
 
 
 #Si le code n est pas Telemac
-try :
-   from enum_Telemac2d_auto       import TelemacdicoEn
-except :
-   pass
+#try :
+#   from enum_Telemac2d_auto       import self.TelemacdicoEn
+#except :
+#   pass
 
 from Extensions import localisation
 
@@ -90,19 +91,24 @@ class TELEMACparser(Pythonparser):
    a file with a different or inexistent definition of variables.
    """
 
+   
+
    def convert(self, outformat, appli=None):
 
 
       from Accas import A_BLOC, A_FACT, A_SIMP
-      self.dicoCasToCata=appli.readercata.dicoCasToCata
-      self.dicoInverse=appli.readercata.dicoInverse
-      self.dicoMC=appli.readercata.dicoMC
-      self.Ordre_Des_Commandes=appli.readercata.Ordre_Des_Commandes
+      self.dicoCasToCata            = appli.readercata.dicoCasToCata
+      self.dicoInverse              = appli.readercata.dicoInverse
+      self.dicoMC                   = appli.readercata.dicoMC
+      self.Ordre_Des_Commandes      = appli.readercata.Ordre_Des_Commandes
+      self.TelemacdicoEn            = appli.readercata.TelemacdicoEn
+      self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+      
 
       if appli.langue=='fr' :
-          from enum_Telemac2d_auto       import DicoEnumCasFrToEnumCasEn
-          for k in DicoEnumCasFrToEnumCasEn :
-              TelemacdicoEn[k]=DicoEnumCasFrToEnumCasEn[k]
+          #from enum_Telemac2d_auto       import DicoEnumCasFrToEnumCasEn
+          for k in self.DicoEnumCasFrToEnumCasEn :
+              self.TelemacdicoEn[k]=self.DicoEnumCasFrToEnumCasEn[k]
 
       text=""
       self.dictSimp={}
@@ -359,9 +365,9 @@ class TELEMACparser(Pythonparser):
           try    : valeur=eval(valeur,{})
           except : pass
 
-          if nom in TelemacdicoEn:
+          if nom in self.TelemacdicoEn:
              try    :
-               valeur=TelemacdicoEn[nom][valeur]
+               valeur=self.TelemacdicoEn[nom][valeur]
                self.textePy += nom + "= '" + str(valeur) +"',"
                return
              except : pass
@@ -418,8 +424,8 @@ class TELEMACparser(Pythonparser):
           # Attention : on attend une liste mais on a une seule valeur!
              try :    oldValeur=eval(oldValeur,{})
              except : pass
-             if nom in TelemacdicoEn :
-                v=TelemacdicoEn[nom][oldValeur]
+             if nom in self.TelemacdicoEn :
+                v=self.TelemacdicoEn[nom][oldValeur]
                 self.textePy += nom + "= ('" + str(v) +"',),"
              else :
                 self.textePy += nom + "= (" + str(oldValeur) +",),"
@@ -431,8 +437,8 @@ class TELEMACparser(Pythonparser):
           for v in valeur :
             try :    v=eval(v,{})
             except : pass
-            if nom in TelemacdicoEn:
-               try    : v=TelemacdicoEn[nom][v]
+            if nom in self.TelemacdicoEn:
+               try    : v=self.TelemacdicoEn[nom][v]
                except : pass
             newVal.append(v)
           self.textePy += nom + "=" + str(newVal) +","

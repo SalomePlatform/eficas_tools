@@ -87,7 +87,7 @@ class JDCEditorSsIhm :
               from InterfaceQT4   import readercataXML as readercata
            else :
               from InterfaceQT4   import readercata
-           self.readercata  = readercata.READERCATA( self, self.appliEficas )
+           self.readercata  = readercata.ReaderCata( self, self.appliEficas )
            self.appliEficas.readercata=self.readercata
            self.readercata.dumpToXml()
            self.appliEficas.code=self.code

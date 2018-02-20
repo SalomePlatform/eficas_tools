@@ -86,8 +86,8 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
                         self.cr.fatal("Macro-commande mal definie : le concept n'a pas ete type par un appel a typeSDProd pour %s"  % c.nom)
                     valid = 0
 
-            valid = valid * self.valid_child()
-            valid = valid * self.valid_regles(cr)
+            valid = valid * self.validChild()
+            valid = valid * self.validRegles(cr)
 
             if self.reste_val != {}:
                 if cr == 'oui':
@@ -101,7 +101,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
                 return valid
 
             if self.sd != None:
-                valid = valid * self.valid_sdnom(cr)
+                valid = valid * self.validSdnom(cr)
 
             if self.definition.reentrant == 'n' and self.reuse:
                 # Il ne peut y avoir de concept reutilise avec une MACRO  non

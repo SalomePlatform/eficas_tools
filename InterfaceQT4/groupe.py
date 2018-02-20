@@ -181,9 +181,11 @@ class Groupe(QWidget,FacultatifOuOptionnel):
         if firstNode==None : firstNode=nouveau 
         if nouveau == None or nouveau == 0  : 
            self.editor.afficheInfos(tr('insertion impossible a cet endroit pour '+nom),Qt.red)
-      self.reaffiche(firstNode)
-      if firstNode!=None and firstNode !=0 and firstNode.item!=None :
-        firstNode.select()
+      try :
+       self.reaffiche(firstNode)
+       if firstNode!=None and firstNode !=0 and firstNode.item!=None : firstNode.select()
+      except :
+       pass
 
 
   def setPlie(self):

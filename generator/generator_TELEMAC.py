@@ -60,23 +60,25 @@ class TELEMACGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None,appli=None,statut="Entier"):
 
-      self.statut=statut
-      self.langue=appli.langue
-      self.DicoEnumCasEnInverse={}
-      from enum_Telemac2d_auto       import TelemacdicoEn
-      for motClef in TelemacdicoEn:
+      self.statut        = statut
+      self.langue        = appli.langue
+      self.TelemacdicoEn = appli.readercata.TelemacdicoEn
+      self.DicoEnumCasEnInverse = {}
+      #from enum_Telemac2d_auto       import self.TelemacdicoEn
+      for motClef in self.TelemacdicoEn:
           d={}
-          for valTelemac in TelemacdicoEn[motClef]:
-             valEficas= TelemacdicoEn[motClef][valTelemac]
-             d[valEficas]=valTelemac
+          for valTelemac in self.TelemacdicoEn[motClef]:
+             valEficas   = self.TelemacdicoEn[motClef][valTelemac]
+             d[valEficas] =valTelemac
           self.DicoEnumCasEnInverse[motClef]=d
       if self.langue == 'fr' : 
-         from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
-         for motClef in DicoEnumCasFrToEnumCasEn:
+         #from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
+         self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+         for motClef in self.DicoEnumCasFrToEnumCasEn:
               d={}
-              for valTelemac in DicoEnumCasFrToEnumCasEn[motClef]:
-                 valEficas= DicoEnumCasFrToEnumCasEn[motClef][valTelemac]
-                 d[valEficas]=valTelemac
+              for valTelemac in self.DicoEnumCasFrToEnumCasEn[motClef]:
+                 valEficas    = self.DicoEnumCasFrToEnumCasEn[motClef][valTelemac]
+                 d[valEficas] = valTelemac
               self.DicoEnumCasEnInverse[motClef]=d
       self.initDico()
       # Pour Simplifier les verifs d ecriture

@@ -51,11 +51,119 @@ from Extensions.eficas_exception import EficasException
 
 from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 
+#-------------------------------
+class ReaderCataCommun(object):
+#-------------------------------
+
+   def askChoixCatalogue(self, cata_choice_list):
+   # ____________________________________________
+      """
+      Ouvre une fenetre de selection du catalogue dans le cas où plusieurs
+      ont ete definis dans Accas/editeur.ini
+      """      
+      code = getattr(self.appliEficas.maConfiguration, "code", None)
+      if code != None : 
+          title=tr("Choix d une version du code ")+str(code)
+      else :
+          title=tr("Choix d une version ")
+    
+      widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
+      ret=widgetChoix.exec_()
+      
+      
+      lab=str(self.VERSION_EFICAS)+" "
+      lab+=tr(" pour ")
+      lab+=str(self.code) 
+      lab+=tr(" avec le catalogue ")
+      if ret == QDialog.Accepted:
+          cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
+          self.fic_cata = cata.cata_file_path
+          self.versionCode = cata.identifier
+          self.appliEficas.format_fichier = cata.file_format
+          self.appliEficas.format_fichier_in = cata.file_format_in
+          lab+=self.versionCode
+          self.appliEficas.setWindowTitle(lab)
+          #qApp.mainWidget().setCaption(lab)
+          widgetChoix.close()
+      else:
+          widgetChoix.close()
+          raise EficasException()
+
+   def choisitCata(self):
+   # ____________________
+
+      liste_cata_possibles=[]
+      self.Commandes_Ordre_Catalogue=[]
+
+      all_cata_list = []
+      for catalogue in self.appliEficas.maConfiguration.catalogues:
+          if isinstance(catalogue, CatalogDescription): all_cata_list.append(catalogue)
+          elif isinstance(catalogue, tuple)           : all_cata_list.append(CatalogDescription.create_from_tuple(catalogue))
+          else: print(("Catalog description cannot be interpreted: ", catalogue))
+
+      # This filter is only useful for codes that have subcodes (like MAP).
+      # Otherwise, the "code" attribute of the catalog description can (should) be None.
+      if self.ssCode is None: liste_cata_possibles = all_cata_list
+      else:
+          for catalogue in all_cata_list:
+              if catalogue.code == self.code and catalogue.file_format == self.ssCode: liste_cata_possibles.append(catalogue)
+
+      if len(liste_cata_possibles)==0:          
+          QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+                               tr("Pas de catalogue defini pour le code ") + self.code)
+          self.appliEficas.close()
+          if self.appliEficas.salome == 0 : sys.exit(1)
+          return
 
 
-class READERCATA(object):
+      if self.versionCode is not None:
+          # La version a ete fixee
+          for cata in liste_cata_possibles:
+             if self.versionCode == cata.identifier:
+                self.fic_cata = cata.cata_file_path
+                self.appliEficas.format_fichier = cata.file_format
+                self.appliEficas.format_fichier_in = cata.file_format_in
+      else:
+          cata_choice_list = []
+          for cata in liste_cata_possibles:
+              if cata.selectable:
+                  if cata.default : cata_choice_list.insert(0, cata)
+                  else            : cata_choice_list.append(cata)
+
+          if len(cata_choice_list) == 0:
+              QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+                                   tr("Aucun catalogue trouve"))
+              self.appliEficas.close()
+              if self.appliEficas.salome == 0 : sys.exit(1)
+
+          elif len(cata_choice_list) == 1:
+              self.fic_cata = cata_choice_list[0].cata_file_path
+              self.versionCode = cata_choice_list[0].identifier
+              self.appliEficas.format_fichier = cata_choice_list[0].file_format
+              self.appliEficas.format_fichier_in = cata_choice_list[0].file_format_in
+
+          else:
+              # plusieurs catalogues sont disponibles : il faut demander a l'utilisateur
+              # lequel il veut utiliser ...
+              self.askChoixCatalogue(cata_choice_list)
+              self.demandeCatalogue=True
+
+      if self.fic_cata == None :
+          if self.appliEficas.salome == 0 :
+             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.versionCode)))
+             sys.exit(1)
+          else :
+             self.appliEficas.close()
+             return
+
+
+#------------------------------------
+class ReaderCata (ReaderCataCommun):
+#------------------------------------
 
    def __init__(self,QWParent, appliEficas):
+   # ______________________________________
+
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
       self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
@@ -72,84 +180,14 @@ class READERCATA(object):
       if self.code=="TELEMAC": self.creeDicoCasToCata()
 
 
+
    def openCata(self):
       """ 
           Ouvre le catalogue standard du code courant, cad le catalogue present
           dans le repertoire Cata 
       """
-
-      liste_cata_possibles=[]
-      self.Commandes_Ordre_Catalogue=[]
-
-      all_cata_list = []
-      for catalogue in self.appliEficas.maConfiguration.catalogues:
-          if isinstance(catalogue, CatalogDescription):
-              all_cata_list.append(catalogue)
-          elif isinstance(catalogue, tuple):
-              all_cata_list.append(CatalogDescription.create_from_tuple(catalogue))
-          else:
-              print(("Catalog description cannot be interpreted: ", catalogue))
-
-      # This filter is only useful for codes that have subcodes (like MAP).
-      # Otherwise, the "code" attribute of the catalog description can (should) be None.
-      if self.ssCode is None:
-          liste_cata_possibles = all_cata_list
-      else:
-          for catalogue in all_cata_list:
-              if catalogue.code == self.code and catalogue.file_format == self.ssCode:
-                  liste_cata_possibles.append(catalogue)
-
-      if len(liste_cata_possibles)==0:          
-          QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
-                               tr("Pas de catalogue defini pour le code ") + self.code)
-          self.appliEficas.close()
-          if self.appliEficas.salome == 0 :
-             sys.exit(1)
-          return
-
-
-      if self.versionCode is not None:
-          # La version a ete fixee
-          for cata in liste_cata_possibles:
-             if self.versionCode == cata.identifier:
-                self.fic_cata = cata.cata_file_path
-                self.appliEficas.format_fichier = cata.file_format
-                self.appliEficas.format_fichier_in = cata.file_format_in
-      else:
-          cata_choice_list = []
-          for cata in liste_cata_possibles:
-              if cata.selectable:
-                  if cata.default:
-                      cata_choice_list.insert(0, cata)
-                  else :
-                      cata_choice_list.append(cata)
-          if len(cata_choice_list) == 0:
-              QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
-                                   tr("Aucun catalogue trouve"))
-              self.appliEficas.close()
-              if self.appliEficas.salome == 0 :
-                 sys.exit(1)
-          elif len(cata_choice_list) == 1:
-              self.fic_cata = cata_choice_list[0].cata_file_path
-              self.versionCode = cata_choice_list[0].identifier
-              self.appliEficas.format_fichier = cata_choice_list[0].file_format
-              self.appliEficas.format_fichier_in = cata_choice_list[0].file_format_in
-          else:
-              # plusieurs catalogues sont disponibles : il faut demander a l'utilisateur
-              # lequel il veut utiliser ...
-              self.askChoixCatalogue(cata_choice_list)
-              self.demandeCatalogue=True
-
-      if self.fic_cata == None :
-          if self.appliEficas.salome == 0 :
-             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.versionCode)))
-             sys.exit(1)
-          else :
-             self.appliEficas.close()
-             return
-
-
       # import du catalogue
+      self.choisitCata()
       self.cata = self.importCata(self.fic_cata)
       if not self.cata :          
           QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
@@ -241,39 +279,6 @@ class READERCATA(object):
       rep_cata = os.path.dirname(self.fic_cata)
       self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyseCatalogue(self.fic_cata)
       #print self.Commandes_Ordre_Catalogue
-
-   def askChoixCatalogue(self, cata_choice_list):
-      """
-      Ouvre une fenetre de selection du catalogue dans le cas où plusieurs
-      ont ete definis dans Accas/editeur.ini
-      """      
-      code = getattr(self.appliEficas.maConfiguration, "code", None)
-      if code != None : 
-          title=tr("Choix d une version du code ")+str(code)
-      else :
-          title=tr("Choix d une version ")
-    
-      widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
-      ret=widgetChoix.exec_()
-      
-      
-      lab=str(self.VERSION_EFICAS)+" "
-      lab+=tr(" pour ")
-      lab+=str(self.code) 
-      lab+=tr(" avec le catalogue ")
-      if ret == QDialog.Accepted:
-          cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
-          self.fic_cata = cata.cata_file_path
-          self.versionCode = cata.identifier
-          self.appliEficas.format_fichier = cata.file_format
-          self.appliEficas.format_fichier_in = cata.file_format_in
-          lab+=self.versionCode
-          self.appliEficas.setWindowTitle(lab)
-          #qApp.mainWidget().setCaption(lab)
-          widgetChoix.close()
-      else:
-          widgetChoix.close()
-          raise EficasException()
         
    def traiteIcones(self):
       if self.appliEficas.maConfiguration.ficIcones==None : return

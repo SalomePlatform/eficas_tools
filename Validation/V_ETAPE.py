@@ -50,14 +50,14 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
     """
     """
 
-    def valid_child(self):
+    def validChild(self):
         """ Cette methode teste la validite des mots cles de l'etape """
         for child in self.mc_liste:
             if not child.isValid():
                 return 0
         return 1
 
-    def valid_regles(self, cr):
+    def validRegles(self, cr):
         """ Cette methode teste la validite des regles de l'etape """
         text_erreurs, test_regles = self.verifRegles()
         if not test_regles:
@@ -66,7 +66,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
             return 0
         return 1
 
-    def valid_sdnom(self, cr):
+    def validSdnom(self, cr):
         """ Cette methode teste la validite du nom du concept produit par l'etape """
         valid = 1
         if self.sd.nom != None:
@@ -119,8 +119,8 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
         if self.state == 'unchanged':
             return self.valid
         else:
-            valid = self.valid_child()
-            valid = valid * self.valid_regles(cr)
+            valid = self.validChild()
+            valid = valid * self.validRegles(cr)
 
             if self.reste_val != {}:
                 if cr == 'oui':
@@ -148,7 +148,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                     self.cr.fatal(("Concept is not defined"))
                 valid = 0
             else:
-                valid = valid * self.valid_sdnom(cr)
+                valid = valid * self.validSdnom(cr)
 
             if valid:
                 valid = self.updateSdprod(cr)

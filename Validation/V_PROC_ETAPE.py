@@ -62,8 +62,8 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
         if self.state == 'unchanged':
             return self.valid
         else:
-            valid = self.valid_child()
-            valid = valid * self.valid_regles(cr)
+            valid = self.validChild()
+            valid = valid * self.validRegles(cr)
             if self.reste_val != {}:
                 if cr == 'oui':
                     self.cr.fatal(

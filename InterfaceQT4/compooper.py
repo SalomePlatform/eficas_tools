@@ -149,8 +149,8 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       elif self.object.isValid():
          return "ast-green-square"
       else:
-         valid=self.valid_child()
-         valid=valid * self.valid_regles("non")
+         valid=self.validChild()
+         valid=valid * self.validRegles("non")
          if self.reste_val != {}:
             valid=0
          if valid==0  :

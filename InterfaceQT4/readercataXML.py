@@ -35,7 +35,9 @@ from Extensions.eficas_exception import EficasException
 import uiinfo
 from Efi2Xsd import readerEfficas
 
-class READERCATA:
+from readercata import ReaderCataCommun
+
+class ReaderCata (ReaderCataCommun):
 
    def __init__(self,QWParent, appliEficas):
       self.QWParent=QWParent
@@ -64,16 +66,14 @@ class READERCATA:
 
       #self.fic_cata = 'Cata_MED_FAM.xml'
       #xml = open('/home/A96028/QT5GitEficasTravail/eficas/Med/Cata_MED_FAM.xml').read()
-      self.fic_cata = 'cata_test1.xml'
-      xml = open('/home/A96028/QT5GitEficasTravail/eficas/CataTestXSD/cata_test1.xml').read()
+      #xml = open('/home/A96028/QT5GitEficasTravail/eficas/CataTestXSD/cata_test1.xml').read()
+      self.choisitCata()
+      xml=open(self.fic_cata).read()
       SchemaMed = readerEfficas.efficas.CreateFromDocument(xml)
       SchemaMed.exploreCata() 
-      #self.cata=(SchemaMed,)
       self.cata=SchemaMed
-      #uiinfo.traite_UIinfo(self.cata[0])
       uiinfo.traite_UIinfo(self.cata)
       self.Commandes_Ordre_Catalogue=[]
-      #self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata[0])
       self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
       self.liste_groupes=None
 

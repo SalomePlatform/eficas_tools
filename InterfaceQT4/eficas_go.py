@@ -97,7 +97,7 @@ def lanceEficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=Fals
 
     from . import readercata
     if not hasattr ( Eficas, 'readercata'):
-           monreadercata  = readercata.READERCATA( parent, Eficas )
+           monreadercata  = readercata.ReaderCata( parent, Eficas )
            Eficas.readercata=monreadercata
 
     from .editor import JDCEditor
@@ -162,7 +162,7 @@ def lanceEficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_
 
     from . import readercata
     if not hasattr ( Eficas, 'readercata'):
-           monreadercata  = readercata.READERCATA( parent, Eficas )
+           monreadercata  = readercata.ReaderCata( parent, Eficas )
            Eficas.readercata=monreadercata
 
     from .editor import JDCEditor
