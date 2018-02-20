@@ -71,7 +71,7 @@ class JDCEditorSsIhm :
         self.dict_reels={}
         self.liste_simp_reel=[]
 
-         
+
         if appli != None : self.salome =  self.appliEficas.salome
         else             : self.salome=0
 
@@ -139,7 +139,7 @@ class JDCEditorSsIhm :
                    self.jdc = self.readFile(self.fichier)
                #except :
                #    print ("mauvaise lecture")
-               if self.salome : 
+               if self.salome :
                   try :
                      self.appliEficas.addJdcInSalome( self.fichier)
                   except :
@@ -161,7 +161,7 @@ class JDCEditorSsIhm :
 
         if self.jdc:
             self.jdc.appli = self # a resorber
-            self.jdc.editor = self 
+            self.jdc.editor = self
             self.jdc.lang    = self.appli.langue
             self.jdc.aReafficher=False
             txt_exception  = None
@@ -174,7 +174,7 @@ class JDCEditorSsIhm :
             else:
                 comploader.chargerComposants()
                 self.jdc_item=Objecttreeitem.makeObjecttreeitem( self, "nom", self.jdc )
- 
+
     #-------------------------------#
     def readFile(self, fn):
     #--------------------------------#
@@ -218,7 +218,7 @@ class JDCEditorSsIhm :
             return None
 
         CONTEXT.unsetCurrentStep()
- 
+
         #jdc=self.readercata.cata[0].JdC(procedure=text,
         jdc=self.readercata.cata.JdC(procedure=text,
                                     appli=self,
@@ -243,14 +243,13 @@ class JDCEditorSsIhm :
         texte=""
         if self.code == "CARMELCND" : texte=self._newJDCCND()
         if self.code == "ZCRACKS" : texte=self._newZCRACKS()
-        if self.code == "TELEMAC" : texte=self._newTELEMAC()
         if self.code == "PSEN"    : texte = self._newPSEN()
         if self.code == "PSEN_N1" : texte = self._newPSEN_N1()
 
         #if hasattr(self.readercata.cata[0],'TEXTE_NEW_JDC') : texte=self.readercata.cata[0].TEXTE_NEW_JDC
         if hasattr(self.readercata.cata,'TEXTE_NEW_JDC') : texte=self.readercata.cata.TEXTE_NEW_JDC
 
-       
+
         #jdc=self.readercata.cata[0].JdC( procedure =texte,
         print (self.readercata.cata)
         jdc=self.readercata.cata.JdC( procedure =texte,
@@ -259,7 +258,7 @@ class JDCEditorSsIhm :
                                          cata_ord_dico=self.readercata.cata_ordonne_dico,
                                          rep_mat=self.maConfiguration.rep_mat
                                         )
-        
+
         jdc.lang    = self.appli.langue
         if units is not None:
            jdc.recorded_units=units
@@ -387,7 +386,7 @@ class JDCEditorSsIhm :
         """
 
         fn = six.text_type(fn)
-       
+
         if txt == None :
             txt = self.getTextJDC(self.format,formatLigne=formatLigne)
             eol = '\n'
@@ -415,7 +414,7 @@ class JDCEditorSsIhm :
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
       if format in generator.plugins:
-         
+
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
@@ -470,9 +469,9 @@ class JDCEditorSsIhm :
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
          jdc_formate=self.generator.gener(self.jdc)
-         dico=self.generator.Dico 
+         dico=self.generator.Dico
          return dico
-      else : 
+      else :
          self.afficheInfos(tr("Format %s non reconnu" , self.format),Qt.red)
          return ""
 
@@ -700,10 +699,10 @@ class JDCEditorSsIhm :
            for e in self.jdc.etapes:
               if e.nom == etape : ouChercher=e; break
         if ouChercher==None : return
- 
+
         for mot in listeAvant :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
-              if ouChercher==None : return 
+              if ouChercher==None : return
         monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= ouChercher.addentite(MCFils)
 
@@ -719,7 +718,7 @@ class JDCEditorSsIhm :
     # dans le JDC
         for e in self.jdc.etapes:
             if e.nom == nomEtape : ouChercher=e; break
-        
+
         for mot in listeAvant :
             try :
               ouChercher=ouChercher.get_child(mot,restreint="oui")
@@ -736,7 +735,7 @@ class JDCEditorSsIhm :
            else : maListeDeValeur=monMC.definition.into
         else :
            return 0
-        
+
         monMC.state='changed'
         return 1
 
@@ -757,7 +756,7 @@ class JDCEditorSsIhm :
            for mc in listeMC[0:-1]:
              mcfact=ouChercher.entites[mc]
              ouChercher=mcfact
-           
+
         mcAccas=ouChercher.entites[listeMC[-1]]
         mcAccas.defaut=valeurs
         return 1
@@ -797,7 +796,7 @@ class JDCEditorSsIhm :
         #definitionEtape=getattr(self.jdc.cata[0],etape)
         definitionEtape=getattr(self.jdc.cata,etape)
         ouChercher=definitionEtape
-        for k in listeAvant : 
+        for k in listeAvant :
             ouChercher=ouChercher.entites[k]
         MCADetruire=ouChercher.entites[nomDuMC]
         ouChercher.ordre_mc.remove(nomDuMC)
@@ -813,7 +812,7 @@ class JDCEditorSsIhm :
         #definitionEtape=getattr(self.jdc.cata[0],nomEtape)
         definitionEtape=getattr(self.jdc.cata,nomEtape)
         ouChercher=definitionEtape
-        for k in listeAvant : 
+        for k in listeAvant :
             ouChercher=ouChercher.entites[k]
         from Accas import A_SIMP
         Nouveau=A_SIMP.SIMP(typ,**args)
@@ -837,7 +836,7 @@ class JDCEditorSsIhm :
         #definitionEtape=getattr(self.jdc.cata[0],nomEtape)
         definitionEtape=getattr(self.jdc.cata,nomEtape)
         ouChercher=definitionEtape
-        for k in listeAvant : 
+        for k in listeAvant :
             ouChercher=ouChercher.entites[k]
         from Accas import A_SIMP
         for mc in listeMC :
@@ -875,7 +874,7 @@ class JDCEditorSsIhm :
         ouChercher = etape
         for mot in listeMC[:-1] :
             ouChercher=ouChercher.get_child(mot,restreint="oui")
-            if ouChercher==None : return 
+            if ouChercher==None : return
         MCFils=listeMC[-1]
         monMC=ouChercher.get_child(MCFils,restreint="oui")
         if monMC== None : monMC= etape.addentite(MCFils)
@@ -884,7 +883,7 @@ class JDCEditorSsIhm :
         monMC.valeur=valeurs
         monMC.val=valeurs
         monMC.state='changed'
-        monMC.isvalid() 
+        monMC.isvalid()
 
     #-------------------------------------#
     def ajoutVersionCataDsJDC(self,txt):
@@ -929,7 +928,7 @@ class JDCEditorSsIhm :
 
 
 # Methodes a resorber
-# il faut mettre a jour les catalogues avec 
+# il faut mettre a jour les catalogues avec
 # TEXTE_NEW_JDC
 #
 
@@ -937,14 +936,6 @@ class JDCEditorSsIhm :
     def _new_CF(self):
     #---------------------------#
         texte="CONDUITE_FORCEE();"
-        return texte
-
-    #---------------------------#
-    def _newTELEMAC(self):
-    #---------------------------#
-        #texte="INITIALIZATION();BOUNDARY_CONDITIONS();GENERAL_PARAMETERS();PHYSICAL_PARAMETERS();NUMERICAL_PARAMETERS();"
-        texte="COMPUTATION_ENVIRONMENT();HYDRO();GENERAL_PARAMETERS();NUMERICAL_PARAMETERS()"
-        #texte="TRACERS();"
         return texte
 
     #---------------------------#

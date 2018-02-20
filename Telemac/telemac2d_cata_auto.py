@@ -44,7 +44,7 @@ JdC = JDC_CATA (code = 'TELEMAC2D',
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
-VERSION_CATALOGUE="TRUNK"
+VERSION_CATALOGUE="TRUNK_20180306"
 # -----------------------------------------------------------------------
 COMPUTATION_ENVIRONMENT = PROC(nom= "COMPUTATION_ENVIRONMENT",op = None,
 # -----------------------------------------------------------------------
@@ -224,8 +224,8 @@ The data in this file shall be read on channel 27.""",
             GEOMETRY_FILE_FORMAT = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM',
-                into = ['SERAFIN','SERAFIND','MED'],
-                defaut = 'SERAFIN',
+                into = ['SERAFIN?','SERAFIND','MED'],
+                defaut = 'SERAFIN?',
                 fr = """Format du fichier de geometrie.
 Les valeurs possibles sont :
 - SERAFIN : format standard simple precision pour Telemac;
@@ -312,8 +312,8 @@ example,a comparison with an exact solution.""",
             REFERENCE_FILE_FORMAT = SIMP(statut ='f',
 #           -----------------------------------
                 typ = 'TXM',
-                into = ['SERAFIN','SERAFIND','MED'],
-                defaut = 'SERAFIN',
+                into = ['SERAFIN?','SERAFIND','MED'],
+                defaut = 'SERAFIN?',
                 fr = """Format du fichier de resultats du calcul precedent.
 Les valeurs possibles sont :
 - SERAFIN : format standard simple precision pour Telemac;
@@ -449,8 +449,8 @@ It is also possible to define new boundary conditions.""",
             PREVIOUS_COMPUTATION_FILE_FORMAT = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM',
-                into = ['SERAFIN','SERAFIND','MED'],
-                defaut = 'SERAFIN',
+                into = ['SERAFIN?','SERAFIND','MED'],
+                defaut = 'SERAFIN?',
                 fr = """Format du fichier de resultats du calcul precedent.
 Les valeurs possibles sont :
 - SERAFIN : format standard simple precision pour Telemac;
@@ -527,7 +527,7 @@ VARIABLES FOR GRAPHIC PRINTOUTS in the RESULTS FILE.""",
             VARIABLES_FOR_GRAPHIC_PRINTOUTS = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM', min=0, max='**',
-                into = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1 etc.","All the tracers 1 to 9.","All the tracers 10 to 19.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","Courant number ","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","maximum elevation","time of maximum elevation","maximum velocity","time of maximum velocity","friction velocity","gradient 1, etc. "],
+                into = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1 etc.","All the tracers 1 to 9.","All the tracers 10 to 19.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","Courant number ","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","maximum elevation","time of maximum elevation","maximum velocity","time of maximum velocity","friction velocity","gradient 1, etc. ","reference level for Nestor "],
                 defaut = ["velocity along x axis (m/s)","velocity along y axis (m/s)","water depth (m)","bottom elevation (m)"],
                 fr = """ Noms des variables que l''utilisateur veut ecrire dans le fichier des
 resultats. Chaque variable est representee par une lettre. Le choix des
@@ -649,8 +649,8 @@ example, it will compute H from S and B.""",
             RESULTS_FILE_FORMAT = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM',
-                into = ['SERAFIN','SERAFIND','MED'],
-                defaut = 'SERAFIN',
+                into = ['SERAFIN?','SERAFIND','MED'],
+                defaut = 'SERAFIN?',
                 fr = """Format du fichier de resultats.
 Les valeurs possibles sont :
 - SERAFIN : format standard simple precision pour Telemac;
@@ -673,6 +673,16 @@ SORTIES GRAPHIQUES''.""",
 written,
 the periodicity being given by the key-word:
 GRAPHIC PRINTOUT PERIOD.""",
+            ),
+#           -----------------------------------
+            RESULT_FILE_IN_LONGITUDE_LATITUDE = SIMP(statut ='f',
+#           -----------------------------------
+                typ = bool,
+                defaut = True,
+                fr = """donne les coordonnees dans le fichier resultats en longitude-latitude
+si le fichier geo est aussi donnee en long lat""",
+                ang = """gives result file in longitude latitude if geo file is
+also given in long lat""",
             ),
 #           -----------------------------------
             BINARY_RESULTS_FILE_FORMAT = SIMP(statut ='f',
@@ -965,11 +975,11 @@ The section about boundary conditions is to be read in the manual""",
         STAGE_DISCHARGE_CURVES = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'TXM', max='**',
-            into = ["no","Z(Q)","Q(Z) not programmed"],
+            into = ["no","Z(Q)","Q(Z)"],
             fr = """Indique si une courbe de tarage doit etre utilisee pour une frontiere
-0:non 1:Z(Q) 2: Q(Z) (2 non programme)""",
+0:non 1:Z(Q) 2: Q(Z)""",
             ang = """Says if a discharge-elevation curve must be used for a given boundary
-0:NO 1:Z(Q) 2: Q(Z) (2 not programmed)""",
+0:NO 1:Z(Q) 2: Q(Z)""",
         ),
 #       -----------------------------------
         b_STAGE_DISCHARGE_CURVESG = BLOC(condition="STAGE_DISCHARGE_CURVES != 'no'",
@@ -1238,6 +1248,32 @@ point number   zone number""",
             ),
         ),
 #       -----------------------------------
+        ICE_PROCESSES = FACT(statut='o',
+#       -----------------------------------
+#           -----------------------------------
+            ICE_PROCESSES = SIMP(statut ='f',
+#           -----------------------------------
+                typ = 'I',
+                defaut = 1,
+                fr = """Donne le numero du processus des glaces, avec le numero defini
+sur la base multiplicative de nombres premiers (2, 3, 5, 7, 11, 13,
+...). Par example, 14 (2x7) rend actif les processus 2 et 7.
+Exception a la regle:
+si l''entier est 1, il n''y a pas de couplage;
+si l''entier est 0, tous les effets suivant sont inclus:
+  2- BUDGET THERMIQUE,
+  3-..""",
+                ang = """provides the ice process number with the number being defined
+on the basis of a multiplication of primary numbers (2, 3, 5,
+7, 11, 13, ...). For instance, 14 (2x7) activate processes 2
+and 7. Exception is made for:
+if the number is 1, there will be no ice processes included;
+if the number is 0, all processes are included, as follows:
+  2- THERMIMAL BUDGET,
+  3-..""",
+            ),
+        ),
+#       -----------------------------------
         METEOROLOGY = FACT(statut='f',
 #       -----------------------------------
 #           -----------------------------------
@@ -1441,8 +1477,8 @@ time and space on the mesh""",
             BINARY_ATMOSPHERIC_DATA_FILE_FORMAT = SIMP(statut ='f',
 #           -----------------------------------
                 typ = 'TXM',
-                into = ['SERAFIN','SERAFIND','MED'],
-                defaut = 'SERAFIN',
+                into = ['SERAFIN?','SERAFIND','MED'],
+                defaut = 'SERAFIN?',
                 fr = """Format du fichier binaire de donn\E9es atmospheriques.
 Les valeurs possibles sont :
 - SERAFIN : format standard simple precision pour Telemac;
@@ -1631,7 +1667,7 @@ en temps des sources""",
 information on sources""",
             ),
 #           -----------------------------------
-            BLOBAL_NUMBERS_OF_SOURCE_NODES = SIMP(statut ='f',
+            GLOBAL_NUMBERS_OF_SOURCE_NODES = SIMP(statut ='f',
 #           -----------------------------------
                 typ = 'I', min=0, max='**',
                 fr = """ Numeros globaux des noeuds du maillage sur lequels sont affectes des
@@ -1647,12 +1683,41 @@ locations""",
             WATER_QUALITY_PROCESS = SIMP(statut ='f',
 #           -----------------------------------
                 typ = 'I',
-                defaut = 0,
-                fr = """donne le numero du processus waq (1 ou 2 ou 3
-ou 4 ou 5)
-0- RIEN, 1-O2, 2-BIOMASS, 3-EUTRO 4-MICROPOL 5-THERMIC)""",
-                ang = """gives the waq process number (from 1 to 5)
-0-NOTHING, 1-O2, 2-BIOMASS, 3-EUTRO 4-MICROPOL 5-THERMIC)""",
+                defaut = 1,
+                fr = """Donne le numero du processus de qualite d''eau, defini
+comme une combinaison multiplicative de nombres premiers
+(2,3,5,7,11 et 13) avec les cas particuliers 0 et 1 :
+\begin{itemize}
+\item 0 : tous ;
+\item 1 : rien ;
+\item 2 : O2 ;
+\item 3 : BIOMASS ;
+\item 5 : EUTRO ;
+\item 7 : MICROPOL ;
+\item 11 : THERMIC ;
+\item 13 : AED2.
+\item 17 : Loi de degradation
+\item 19 : Court-cicuit temporaire pour les glaces
+\end{itemize}
+Example: 110 = 2x5x11 activera O2, EUTRO et THERMIC ensemble.
+On notera que AED2, pour l instant, n est pas disponible en 2D""",
+                ang = """Gives the water quality process number, defined as
+a multiplicative combination of prime numbers (2,3,5,7,11
+ et 13) with 0 and 1 having a special role:
+\begin{itemize}
+\item 0: all,
+\item 1: none,
+\item 2: O2,
+\item 3: BIOMASS,
+\item 5: EUTRO,
+\item 7: MICROPOL,
+\item 11: THERMIC,
+\item 13: AED2.
+\item 17: Degradation law
+\item 19: Ghost process for ice modelling
+\end{itemize}
+Example: 110 = 2x5x11 activate O2, EUTRO and THERMIC together.
+It is noted that AED2 is not available in 2D, for the time being.""",
             ),
         ),
 #       -----------------------------------
@@ -2185,6 +2250,15 @@ the product of relevant options shall be made.""",
             fr = """Changement de variable de H en C dans le systeme lineaire final""",
             ang = """Change of variable from H to C in the final linear system""",
         ),
+#       -----------------------------------
+        FINITE_ELEMENT_ASSEMBLY = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'TXM',
+            into = ["normal","Integer I8","Compensated"],
+            defaut = "normal",
+            fr = """1 : normal 2 : avec des entiers I8 3:compense""",
+            ang = """1: normal 2: with I8 integers 3:compensation""",
+        ),
     ),
 #   -----------------------------------
     DISCRETISATIONS_IMPLICITATION = FACT(statut='o',
@@ -2292,7 +2366,7 @@ speeded up when the system is being solved. 3 options are available:
         INITIAL_GUESS_FOR_H = SIMP(statut ='o',
 #       -----------------------------------
             typ = 'TXM',
-            into = ["previous","zero","extrapolation"],
+            into = ["zero","previous","extrapolation"],
             defaut = "previous",
             fr = """ Tir initial du solveur de l''etape de propagation. Offre la
 possibilite de modifier la valeur initiale de DH, accroissement de H, a
@@ -2659,9 +2733,34 @@ of the algorithmic differentiation.""",
 #       -----------------------------------
             typ = 'TXM', min= 2, max= 2,
             fr = """Noms des differentiateurs utilisateurs en 32 caracteres,
-         16 pour le nom, 16 pour l''unite""",
+         16 pour le nom, 16 pour l''unite.""",
             ang = """Name of user differentiators in 32 characters,
          16 for the name, 16 for the unit.""",
+        ),
+#       -----------------------------------
+        AD_SYMBOLIC_LINEAR_SOLVER = SIMP(statut ='f',
+#       -----------------------------------
+            typ = bool,
+            defaut = False,
+            fr = """Permet le solveur lineaire symbolique pour l AD.""",
+            ang = """Enables the symbolic linear solver for AD.""",
+        ),
+#       -----------------------------------
+        AD_LINEAR_SOLVER_RESET_DERIVATIVES = SIMP(statut ='f',
+#       -----------------------------------
+            typ = bool,
+            defaut = True,
+            fr = """Remet a zero les derivees pour l AD.""",
+            ang = """Resets the derivatives for AD.""",
+        ),
+#       -----------------------------------
+        AD_LINEAR_SOLVER_DERIVATIVE_CONVERGENCE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = bool,
+            defaut = True,
+            fr = """Solveur lineaire iteratif : test de convergence des derivees
+pour l AD.""",
+            ang = """Iterative linear solvers: derivative convergence test for AD.""",
         ),
     ),
 #   -----------------------------------
@@ -2721,6 +2820,30 @@ beware, with option 2, a special numbering of points is required""",
             ang = """gives the option for hydrostatic reconstruction
 (used only for finite volumes):
 1: option of Audusse, 2: option of Noelle""",
+        ),
+#       -----------------------------------
+        CONVERGENCE_STUDY = SIMP(statut ='f',
+#       -----------------------------------
+            typ = bool,
+            defaut = False,
+            fr = """Active une etude de convergence par rapport a une
+solution analytique sur un maillage fin""",
+            ang = """Activates a convergence study compared
+to an analytical solution on a fine mesh""",
+        ),
+#       -----------------------------------
+        REFINEMENT_LEVELS = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'I',
+            defaut = 0,
+            fr = """Donne le nombre de raffinements que l''utilisateur
+veut utiliser pour l''etude de convergence
+(en activant CONVERGENCE). Chaque niveau multiplie par 4 le
+nombre d''elements.""",
+            ang = """Gives the number of refinement levels that the
+user wants to use in the convergence study (when activating
+CONVERGENCE). Each level multiplies the number of elements by
+4""",
         ),
     ),
 )
@@ -2785,6 +2908,27 @@ Elder. Utilises uniquement avec le modele de turbulence 2""",
             ang = """Longitudinal and transversal coefficients in elder s formula.
  Used only with turbulence model number 2""",
         ),
+    ),
+#   -----------------------------------
+    ACCURACY_OF_SPALART_ALLMARAS = SIMP(statut ='f',
+#   -----------------------------------
+        typ = 'R',
+        defaut = 1.E-9,
+        fr = """Fixe la precision demandee sur le modele spalart-allmaras pour
+le test d''arret dans l''etape de diffusion et termes sources de k et
+epsilon.""",
+        ang = """Sets the required accuracy for the model spalart-allmaras in
+the diffusion and source-terms step of the k-epsilon model.""",
+    ),
+#   -----------------------------------
+    INFORMATION_ABOUT_SPALART_ALLMARAS_MODEL = SIMP(statut ='f',
+#   -----------------------------------
+        typ = bool,
+        defaut = True,
+        fr = """si oui les informations du solveur du modele spalart-allmaras
+sont imprimees""",
+        ang = """if yes, informations about solver of spalart-allmaras model
+are printed to the listing""",
     ),
 #   -----------------------------------
     SOLVER_INFO = FACT(statut='o',
@@ -3119,9 +3263,9 @@ Read the usermanual section dealing with the boundary conditions""",
                 typ = 'R',
                 defaut = 20.,
                 fr = """TEMPERATURE DE REFERENCE POUR LE CALCUL DES EFFETS DE DENSITE
-A UTILISER AVEC LE MOT-CLE EFFETS DE DENSITE""",
+A UTILISER AVEC LE MOT-CLE \telkey{EFFETS DE DENSITE}""",
                 ang = """REFERENCE TEMPERATURE FOR DENSITY EFFECTS
-TO BE USED WITH THE KEY-WORD DENSITY EFFECTS""",
+TO BE USED WITH THE KEY-WORD \telkey{DENSITY EFFECTS}""",
             ),
         ),
 #       -----------------------------------
@@ -3325,30 +3469,6 @@ if N or PSI SCHEME: 1=explicit 2=predictor-corrector
  the tracer.""",
         ),
     ),
-#   -----------------------------------
-    DEGRADATION = FACT(statut='o',
-#   -----------------------------------
-#       -----------------------------------
-        LAW_OF_TRACERS_DEGRADATION = SIMP(statut ='o',
-#       -----------------------------------
-            typ = 'TXM', min=0, max='**',
-            into = ["NO DEGRADATION","F(T90) LAW"],
-            defaut = ["NO DEGRADATION","NO DEGRADATION"],
-            fr = """Prise en compte d''une loi de decroissance des traceurs""",
-            ang = """Take in account a law for tracers decrease""",
-        ),
-#       -----------------------------------
-        b_LAW_OF_TRACERS_DEGRADATIONG = BLOC(condition="'F(T90) LAW' in LAW_OF_TRACERS_DEGRADATION",
-#       -----------------------------------
-#           -----------------------------------
-            COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION = SIMP(statut ='o',
-#           -----------------------------------
-                typ = 'R', min=0, max='**',
-                fr = """Coefficient 1 de la loi de decroissance des traceurs""",
-                ang = """Coefficient 1 of law for tracers decrease""",
-            ),
-        ),
-    ),
 )
 # -----------------------------------------------------------------------
 PARTICLE_TRANSPORT = PROC(nom= "PARTICLE_TRANSPORT",op = None,
@@ -3421,7 +3541,7 @@ modeled as spheres, and for the other choices see Gaylord et
 al. (1994)""",
             ),
 #           -----------------------------------
-            DIAMETRE_OF_ALGAE = SIMP(statut ='o',
+            DIAMETER_OF_ALGAE = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'R',
                 defaut = 0.1,
@@ -3557,35 +3677,6 @@ are given in the weir data file (see written documentation)""",
         ),
     ),
 #   -----------------------------------
-    SIPHONS = FACT(statut='f',
-#   -----------------------------------
-#       -----------------------------------
-        NUMBER_OF_SIPHONS = SIMP(statut ='f',
-#       -----------------------------------
-            typ = 'I',
-            defaut = 0,
-            fr = """Nombre de siphons traites comme des termes sources ou
-puits. Ces siphons doivent etre decrits comme des sources dans le
-fichier cas. Leurs caracteristiques sont donnees dans le
-fichier de donnees des siphons (voir la documentation ecrite)""",
-            ang = """Number of siphons treated as source terms.
-They must be described as sources in the domain and their features
-are given in the culvert data file (see written documentation)""",
-        ),
-#       -----------------------------------
-        b_NUMBER_OF_SIPHONSG = BLOC(condition="NUMBER_OF_SIPHONS != 0",
-#       -----------------------------------
-#           -----------------------------------
-            SIPHONS_DATA_FILE = SIMP(statut ='o',
-#           -----------------------------------
-                typ = ('Fichier','All Files (*)'),
-                defaut = '',
-                fr = """Fichier de description des siphons presents dans le modele""",
-                ang = """Description of culvert existing in the model""",
-            ),
-        ),
-    ),
-#   -----------------------------------
     CULVERTS = FACT(statut='f',
 #   -----------------------------------
 #       -----------------------------------
@@ -3657,112 +3748,146 @@ is done with the breaches data file.""",
 TIDES = PROC(nom= "TIDES",op = None,
 # -----------------------------------------------------------------------
 #   -----------------------------------
-    BOUNDARY_CONDITIONS = FACT(statut='o',
+    BINARY_DATABASE_1_FOR_TIDE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'),
+        defaut = '',
+        fr = """Base de donnees binaire 1 tiree du fichier du modele de maree.
+ Dans le cas des donnees satellitaires de TPXO, ce fichier correspond
+ aux donnees de niveau d''eau, par exemple h\_tpxo7.2""",
+        ang = """Binary database 1 extracted from the tidal model file.
+ In the case of the TPXO satellite altimetry model, this file should
+ be for free surface level, for instance h\_tpxo7.2""",
+    ),
+#   -----------------------------------
+    BINARY_DATABASE_2_FOR_TIDE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'),
+        defaut = '',
+        fr = """Base de donnees binaire 2 tiree du fichier du modele de maree.
+ Dans le cas des donnees satellitaires de TPXO, ce fichier correspond
+ aux donnees de vitesse de marrees, par exemple u\_tpxo7.2""",
+        ang = """Binary database 2 extracted from the tidal model file.
+ In the case of the TPXO satellite altimetry model, this file should
+ be for tidal velocities, for instance u\_tpxo7.2""",
+    ),
+#   -----------------------------------
+    GEOGRAPHIC_SYSTEM = SIMP(statut ='o',
+#   -----------------------------------
+        typ = 'TXM',
+        into = ["NO DEFAULT VALUE","DEFINED BY USER","WGS84 LONGITUDE/LATITUDE IN REAL DEGREES","WGS84 NORTHERN UTM","WGS84 SOUTHERN UTM","LAMBERT","MERCATOR FOR TELEMAC"],
+        defaut = "NO DEFAULT VALUE",
+        fr = """Systeme de coordonnees geographiques dans lequel est construit
+le modele numerique.
+Indiquer la zone correspondante avec le mot-cle.
+Indique le systeme de coordonnees geographiques dans lequel est
+construit le modele numerique. Les choix possibles sont :
+\begin{itemize}
+\item 0 : defini par l''utilisateur ;
+\item 1 : WGS84 longitude/latitude en degres reels ;
+\item 2 : WGS84 nord UTM ;
+\item 3 : WGS84 sud UTM ;
+\item 4 : Lambert ;
+\item 5 : projection Mercator.
+\end{itemize}""",
+        ang = """Geographic coordinates system in which the numerical model is
+built. Indicate the corresponding zone with the keyword.
+The possible choices are:
+\begin{itemize}
+\item 0: defined by the user,
+\item 1: WGS84 longitude/latitude in real degrees,
+\item 2: WGS84 Northern UTM,
+\item 3: WGS84 Southern UTM,
+\item 4: Lambert,
+\item 5: Mercator projection.
+\end{itemize}""",
+    ),
+#   -----------------------------------
+    b_GEOGRAPHIC_SYSTEMG = BLOC(condition="GEOGRAPHIC_SYSTEM in ['WGS84 NOTHERN UTM','WGS84 SOUTHERN UTM','LAMBERT']",
 #   -----------------------------------
 #       -----------------------------------
-        TIDAL_DATA_BASE = SIMP(statut ='o',
+        ZONE_NUMBER_IN_GEOGRAPHIC_SYSTEM = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'TXM',
-            into = ["NO DEFAULT VALUE","JMJ","TPXO","MISCELLANEOUS (LEGOS-NEA, FES20XX, PREVIMER...)"],
+            into = ["NO DEFAULT VALUE","LAMBERT 1 NORTH","LAMBERT 2 CENTER","LAMBERT 3 SOUTH","LAMBERT 4 CORSICA","LAMBERT 2 EXTENDED","LAMBERT 93","UTM ZONE, E.G."],
             defaut = "NO DEFAULT VALUE",
-            fr = """Pour JMJ, renseigner la localisation du fichier bdd\_jmj et geofin
-dans les mots-cles BASE DE DONNEES DE MAREE et FICHIER DU MODELE DE
-MAREE. Pour TPXO, LEGOS-NEA, FES20XX et PREVIMER, l''utilisateur doit
-telecharger les fichiers de constantes harmoniques sur internet""",
-            ang = """For JMJ, indicate the location of the files bdd\_jmj and geofin with
-keywords TIDE DATA BASE and TIDAL MODEL FILE. For TPXO, LEGOS-NEA,
-FES20XX and PREVIMER, the user has to download files of harmonic
-constituents on the internet""",
+            fr = """Numero de zone (fuseau ou type de projection) lors de
+l''utilisation d''une projection plane. Indiquer le systeme
+geographique dans lequel est construit le modele numerique avec le
+mot-cle \telkey{SYSTEME GEOGRAPHIQUE}.
+Les choix possibles sont :
+\begin{itemize}
+\item 1 : Lambert 1 nord ;
+\item 2 : Lambert 2 centre ;
+\item 3 : Lambert 3 sud ;
+\item 4 : Lambert 4 Corse ;
+\item 22 : Lambert 2 etendu ;
+\item 93 : Lambert 93 ;
+\item X : Valeur UTM de la zone WGS84 (X est le numero de la zone).
+\end{itemize}""",
+            ang = """Number of zone when using a plane projection.
+Indicate the geographic system in which the numerical model is built
+with the keyword \telkey{GEOGRAPHIC SYSTEM}.
+Possible choices are:
+\begin{itemize}
+\item 1: Lambert 1 north,
+\item 2: Lambert 2 center,
+\item 3: Lambert 3 south,
+\item 4: Lambert 4 Corsica,
+\item 22: Lambert 22 extended,
+\item 93: Lambert 93 extended,
+\item X: UTM zone with WGS84 (X is the number of the zone).
+\end{itemize}""",
         ),
-#       -----------------------------------
-        b_TIDAL_DATA_BASEG = BLOC(condition="TIDAL_DATA_BASE == 'TPXO'",
-#       -----------------------------------
-#           -----------------------------------
-            MINOR_CONSTITUENTS_INFERENCE = SIMP(statut ='f',
-#           -----------------------------------
-                typ = bool,
-                defaut = False,
-                fr = """Pour la base de donnees TPXO uniquement.
+    ),
+#   -----------------------------------
+    LAMBERT_93_CONVERSION_FILE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'),
+        defaut = '',
+        fr = """Nom du fichier GR3DF97A, grille de conversion pour Lambert 93.""",
+        ang = """Name of file GR3DF97A, conversion grid for Lambert 93.""",
+    ),
+#   -----------------------------------
+    COEFFICIENT_TO_CALIBRATE_SEA_LEVEL = SIMP(statut ='o',
+#   -----------------------------------
+        typ = 'R',
+        defaut = 0.,
+        fr = """Coefficient pour ajuster le niveau de mer""",
+        ang = """Coefficient to calibrate the sea level""",
+    ),
+#   -----------------------------------
+    GLOBAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER = SIMP(statut ='f',
+#   -----------------------------------
+        typ = 'I',
+        defaut = 0,
+        fr = """Numero global du point par rapport auquel les ondes de maree sont
+dephasees pour debuter le calcul par une pleine mer (en marees
+schematiques seulement). Ne concerne que les bases de constantes
+harmoniques de type TPXO.""",
+        ang = """Global number of the point with respect to which the tidal
+constituents have their phase shifted to start the calculation with a
+high water (for schematic tides only). Only harmonic constants databases
+like TPXO are concerned.""",
+    ),
+#   -----------------------------------
+    MINOR_CONSTITUENTS_INFERENCE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = bool,
+        defaut = False,
+        fr = """Pour la base de donnees TPXO uniquement.
 Interpolation de composantes harmoniques mineures
 a partir de celles lues dans les fichiers d''entree
 lies aux mots-cles BASE BINAIRE 1 DE DONNEES DE MAREE
 et BASE BINAIRE 2 DE DONNEES DE MAREE""",
-                ang = """For TPXO tidal data base only.
+        ang = """For TPXO tidal data base only.
 Inference of minor constituents from the one read in input files
 linked to keywords BINARY DATABASE 1 FOR TIDE
 and BINARY DATABASE 2 FOR TIDE""",
-            ),
-#           -----------------------------------
-            BINARY_DATABASE_1_FOR_TIDE = SIMP(statut ='f',
-#           -----------------------------------
-                typ = ('Fichier','All Files (*)'),
-                defaut = '',
-                fr = """Base de donnees binaire 1 tiree du fichier du modele de maree.
- Dans le cas des donnees satellitaires de TPXO, ce fichier correspond
- aux donnees de niveau d''eau, par exemple h\_tpxo7.2""",
-                ang = """Binary database 1 extracted from the tidal model file.
- In the case of the TPXO satellite altimetry model, this file should
- be for free surface level, for instance h\_tpxo7.2""",
-            ),
-#           -----------------------------------
-            BINARY_DATABASE_2_FOR_TIDE = SIMP(statut ='f',
-#           -----------------------------------
-                typ = ('Fichier','All Files (*)'),
-                defaut = '',
-                fr = """Base de donnees binaire 2 tiree du fichier du modele de maree.
- Dans le cas des donnees satellitaires de TPXO, ce fichier correspond
- aux donnees de vitesse de marrees, par exemple u\_tpxo7.2""",
-                ang = """Binary database 2 extracted from the tidal model file.
- In the case of the TPXO satellite altimetry model, this file should
- be for tidal velocities, for instance u\_tpxo7.2""",
-            ),
-        ),
-#       -----------------------------------
-        TIDAL_MODEL_FILE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)'),
-            defaut = '',
-            fr = """Fichier de geometrie du modele dont sont extraites
-les constantes harmoniques""",
-            ang = """Geometry file of the model from which harmonic constituents
-are extracted""",
-        ),
-#       -----------------------------------
-        ASCII_DATABASE_FOR_TIDE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)'),
-            defaut = '',
-            fr = """Base de donnees de constantes harmoniques
-tirees du fichier du modele de maree.
-Ancien nom en version 6.1 : BASE DE DONNEES DE MAREE""",
-            ang = """Tide data base of harmonic constituents
-extracted from the tidal model file.
-Old name in 6.1 version: TIDE DATA BASE""",
-        ),
-#       -----------------------------------
-        HARMONIC_CONSTANTS_FILE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)'),
-            defaut = '',
-            fr = """Constantes harmoniques extraites du fichier du modele de maree""",
-            ang = """Harmonic constants extracted from the tidalmodel file""",
-        ),
     ),
 #   -----------------------------------
-    PHYSICAL_PARAMETERS = FACT(statut='o',
+    BOUNDARY_CONDITIONS = FACT(statut='o',
 #   -----------------------------------
-#       -----------------------------------
-        TIDE_GENERATING_FORCE = SIMP(statut ='o',
-#       -----------------------------------
-            typ = bool,
-            defaut = False,
-            fr = """Active la prise en compte de la force generatrice de la maree""",
-            ang = """The tide generating force is taken into account.""",
-        ),
-#       -----------------------------------
-        b_TIDE_GENERATING_FORCEG = BLOC(condition="TIDE_GENERATING_FORCE == True",
-#       -----------------------------------
-        ),
 #       -----------------------------------
         OPTION_FOR_TIDAL_BOUNDARY_CONDITIONS = SIMP(statut ='o',
 #       -----------------------------------
@@ -3792,45 +3917,75 @@ given. Possible calibration with the keywords COEFFICIENT TO ADJUST
 TIDAL RANGE, COEFFICENT TO CALIBRATE TIDAL VELOCITIES, and COEFFICIENT
 TO ADJUST SEA LEVEL.""",
         ),
-    ),
-#   -----------------------------------
-    CALIBRATION = FACT(statut='o',
-#   -----------------------------------
 #       -----------------------------------
-        GEOGRAPHIC_SYSTEM = SIMP(statut ='o',
+        TIDAL_DATA_BASE = SIMP(statut ='o',
 #       -----------------------------------
             typ = 'TXM',
-            into = ["NO DEFAULT VALUE","DEFINED BY USER","WGS84 LONGITUDE/LATITUDE IN REAL DEGREES","WGS84 NORTHERN UTM","WGS84 SOUTHERN UTM","LAMBERT","MERCATOR FOR TELEMAC"],
+            into = ["NO DEFAULT VALUE","JMJ","TPXO","MISCELLANEOUS (LEGOS-NEA, FES20XX, PREVIMER...)"],
             defaut = "NO DEFAULT VALUE",
-            fr = """Systeme de coordonnees geographiques dans lequel est construit le
-modele numerique. Indiquer la zone correspondante avec le mot-cle""",
-            ang = """Geographic coordinates system in which the numerical model is built.
-Indicate the corresponding zone with the keyword""",
+            fr = """Pour JMJ, renseigner la localisation du fichier bdd\_jmj et geofin
+dans les mots-cles BASE DE DONNEES DE MAREE et FICHIER DU MODELE DE
+MAREE. Pour TPXO, LEGOS-NEA, FES20XX et PREVIMER, l''utilisateur doit
+telecharger les fichiers de constantes harmoniques sur internet""",
+            ang = """For JMJ, indicate the location of the files bdd\_jmj and geofin with
+keywords TIDE DATA BASE and TIDAL MODEL FILE. For TPXO, LEGOS-NEA,
+FES20XX and PREVIMER, the user has to download files of harmonic
+constituents on the internet""",
         ),
 #       -----------------------------------
-        b_GEOGRAPHIC_SYSTEMG = BLOC(condition="GEOGRAPHIC_SYSTEM in ['WGS84 NOTHERN UTM','WGS84 SOUTHERN UTM','LAMBERT']",
+        b_TIDAL_DATA_BASEG = BLOC(condition="TIDAL_DATA_BASE == 'TPXO'",
 #       -----------------------------------
-#           -----------------------------------
-            ZONE_NUMBER_IN_GEOGRAPHIC_SYSTEM = SIMP(statut ='f',
-#           -----------------------------------
-                typ = 'TXM',
-                into = ["NO DEFAULT VALUE","LAMBERT 1 NORTH","LAMBERT 2 CENTER","LAMBERT 3 SOUTH","LAMBERT 4 CORSICA","LAMBERT 2 EXTENDED","UTM ZONE, E.G."],
-                defaut = "NO DEFAULT VALUE",
-                fr = """Numero de zone (fuseau ou type de projection) lors de l''utilisation
-d''une projection plane. Indiquer le systeme geographique dans lequel
-est construit le modele numerique avec le mot-cle SYSTEME GEOGRAPHIQUE""",
-                ang = """Number of zone when using a plane projection. Indicate the geographic
-system in which the numerical model is built with the keyword GEOGRAPHIC
-SYSTEM""",
-            ),
         ),
 #       -----------------------------------
-        COEFFICIENT_TO_CALIBRATE_SEA_LEVEL = SIMP(statut ='o',
+        HARMONIC_CONSTANTS_FILE = SIMP(statut ='f',
 #       -----------------------------------
-            typ = 'R',
-            defaut = 0.,
-            fr = """Coefficient pour ajuster le niveau de mer""",
-            ang = """Coefficient to calibrate the sea level""",
+            typ = ('Fichier','All Files (*)'),
+            defaut = '',
+            fr = """Constantes harmoniques extraites du fichier du modele de maree""",
+            ang = """Harmonic constants extracted from the tidalmodel file""",
+        ),
+#       -----------------------------------
+        TIDAL_MODEL_FILE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = ('Fichier','All Files (*)'),
+            defaut = '',
+            fr = """Fichier de geometrie du modele dont sont extraites
+les constantes harmoniques""",
+            ang = """Geometry file of the model from which harmonic constituents
+are extracted""",
+        ),
+#       -----------------------------------
+        TIDAL_MODEL_FILE_FORMAT = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'TXM',
+            into = ['SERAFIN?','SERAFIND','MED'],
+            defaut = 'SERAFIN?',
+            fr = """Format du \telkey{FICHIER DU MODELE DE MAREE}.
+Les valeurs possibles sont :
+\begin{itemize}
+\item SERAFIN : format standard simple precision pour \tel ;
+\item SERAFIND: format standard double precision pour \tel ;
+\item MED     : format MED double precision base sur HDF5.
+\end{itemize}""",
+            ang = """Format of the \telkey{TIDAL MODEL FILE}.
+Possible choices are:
+\begin{itemize}
+\item SERAFIN : classical single precision format in \tel,
+\item SERAFIND: classical double precision format in \tel,
+\item MED     : MED double precision format based on HDF5.
+\end{itemize}""",
+        ),
+#       -----------------------------------
+        ASCII_DATABASE_FOR_TIDE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = ('Fichier','All Files (*)'),
+            defaut = '',
+            fr = """Base de donnees de constantes harmoniques
+tirees du fichier du modele de maree.
+Ancien nom en version 6.1 : BASE DE DONNEES DE MAREE""",
+            ang = """Tide data base of harmonic constituents
+extracted from the tidal model file.
+Old name in 6.1 version: TIDE DATA BASE""",
         ),
 #       -----------------------------------
         COEFFICIENT_TO_CALIBRATE_TIDAL_RANGE = SIMP(statut ='o',
@@ -3874,19 +4029,21 @@ databases). The tidal constituents have their phase shifted with respect
 to this point to start the simulation with a high water (for schematic
 tides only).""",
         ),
+    ),
+#   -----------------------------------
+    PHYSICAL_PARAMETERS = FACT(statut='o',
+#   -----------------------------------
 #       -----------------------------------
-        GLOBAL_NUMBER_OF_THE_POINT_TO_CALIBRATE_HIGH_WATER = SIMP(statut ='f',
+        TIDE_GENERATING_FORCE = SIMP(statut ='o',
 #       -----------------------------------
-            typ = 'I',
-            defaut = 0,
-            fr = """Numero global du point par rapport auquel les ondes de maree sont
-dephasees pour debuter le calcul par une pleine mer (en marees
-schematiques seulement). Ne concerne que les bases de constantes
-harmoniques de type TPXO.""",
-            ang = """Global number of the point with respect to which the tidal
-constituents have their phase shifted to start the calculation with a
-high water (for schematic tides only). Only harmonic constants databases
-like TPXO are concerned.""",
+            typ = bool,
+            defaut = False,
+            fr = """Active la prise en compte de la force generatrice de la maree""",
+            ang = """The tide generating force is taken into account.""",
+        ),
+#       -----------------------------------
+        b_TIDE_GENERATING_FORCEG = BLOC(condition="TIDE_GENERATING_FORCE == True",
+#       -----------------------------------
         ),
     ),
 )
@@ -3925,17 +4082,25 @@ variables belong to the other code and are given back in the results
 file.""",
     ),
 #   -----------------------------------
+    COUPLING_DIRECTORY = SIMP(statut ='f',
+#   -----------------------------------
+        typ = 'TXM',
+        defaut = '',
+        fr = """Nom complet du dossier d echange des fichiers
+ pour couplage de codes""",
+        ang = """Name with full path of the directory where the files will
+ be exchanged for coupling""",
+    ),
+#   -----------------------------------
     DELWAQ = FACT(statut='o',
 #   -----------------------------------
 #       -----------------------------------
-        COUPLING_DIRECTORY = SIMP(statut ='f',
+        DELWAQ_STEERING_FILE = SIMP(statut ='f',
 #       -----------------------------------
-            typ = 'TXM',
+            typ = ('Fichier','All Files (*)','Sauvegarde'),
             defaut = '',
-            fr = """Nom complet du dossier d echange des fichiers
- pour couplage de codes""",
-            ang = """Name with full path of the directory where the files will
- be exchanged for coupling""",
+            fr = """Fichier de resultats pour le couplage avec Delwaq""",
+            ang = """Results file for coupling with Delwaq""",
         ),
 #       -----------------------------------
         DELWAQ_PRINTOUT_PERIOD = SIMP(statut ='f',
@@ -3944,6 +4109,30 @@ file.""",
             defaut = 1,
             fr = """Periode de sortie des resultats pour Delwaq""",
             ang = """Printout period for Delwaq file""",
+        ),
+#       -----------------------------------
+        EXCHANGES_BETWEEN_NODES_DELWAQ_FILE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = ('Fichier','All Files (*)','Sauvegarde'),
+            defaut = '',
+            fr = """Fichier de resultats pour le couplage avec Delwaq""",
+            ang = """Results file for coupling with Delwaq""",
+        ),
+#       -----------------------------------
+        NODES_DISTANCES_DELWAQ_FILE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = ('Fichier','All Files (*)','Sauvegarde'),
+            defaut = '',
+            fr = """Fichier de resultats pour le couplage avec Delwaq""",
+            ang = """Results file for coupling with Delwaq""",
+        ),
+#       -----------------------------------
+        BOTTOM_SURFACES_DELWAQ_FILE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = ('Fichier','All Files (*)','Sauvegarde'),
+            defaut = '',
+            fr = """Fichier de resultats pour le couplage avec Delwaq""",
+            ang = """Results file for coupling with Delwaq""",
         ),
 #       -----------------------------------
         VOLUMES_DELWAQ_FILE = SIMP(statut ='f',
@@ -3970,46 +4159,6 @@ file.""",
             ang = """Results file for coupling with Delwaq""",
         ),
 #       -----------------------------------
-        SALINITY_DELWAQ_FILE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)','Sauvegarde'),
-            defaut = '',
-            fr = """Fichier de resultats pour le couplage avec Delwaq""",
-            ang = """Results file for coupling with Delwaq""",
-        ),
-#       -----------------------------------
-        BOTTOM_SURFACES_DELWAQ_FILE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)','Sauvegarde'),
-            defaut = '',
-            fr = """Fichier de resultats pour le couplage avec Delwaq""",
-            ang = """Results file for coupling with Delwaq""",
-        ),
-#       -----------------------------------
-        EXCHANGES_BETWEEN_NODES_DELWAQ_FILE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)','Sauvegarde'),
-            defaut = '',
-            fr = """Fichier de resultats pour le couplage avec Delwaq""",
-            ang = """Results file for coupling with Delwaq""",
-        ),
-#       -----------------------------------
-        NODES_DISTANCES_DELWAQ_FILE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)','Sauvegarde'),
-            defaut = '',
-            fr = """Fichier de resultats pour le couplage avec Delwaq""",
-            ang = """Results file for coupling with Delwaq""",
-        ),
-#       -----------------------------------
-        TEMPERATURE_DELWAQ_FILE = SIMP(statut ='f',
-#       -----------------------------------
-            typ = ('Fichier','All Files (*)','Sauvegarde'),
-            defaut = '',
-            fr = """Fichier de resultats pour le couplage avec Delwaq""",
-            ang = """Results file for coupling with Delwaq""",
-        ),
-#       -----------------------------------
         VELOCITY_DELWAQ_FILE = SIMP(statut ='f',
 #       -----------------------------------
             typ = ('Fichier','All Files (*)','Sauvegarde'),
@@ -4026,7 +4175,7 @@ file.""",
             ang = """Results file for coupling with Delwaq""",
         ),
 #       -----------------------------------
-        DELWAQ_STEERING_FILE = SIMP(statut ='f',
+        TEMPERATURE_DELWAQ_FILE = SIMP(statut ='f',
 #       -----------------------------------
             typ = ('Fichier','All Files (*)','Sauvegarde'),
             defaut = '',
@@ -4034,20 +4183,12 @@ file.""",
             ang = """Results file for coupling with Delwaq""",
         ),
 #       -----------------------------------
-        SALINITY_FOR_DELWAQ = SIMP(statut ='f',
+        SALINITY_DELWAQ_FILE = SIMP(statut ='f',
 #       -----------------------------------
-            typ = bool,
-            defaut = False,
-            fr = """Decide de la sortie de la salinite pour Delwaq""",
-            ang = """Triggers output of salinity for Delwaq""",
-        ),
-#       -----------------------------------
-        TEMPERATURE_FOR_DELWAQ = SIMP(statut ='f',
-#       -----------------------------------
-            typ = bool,
-            defaut = False,
-            fr = """Decide de la sortie de la temperature pour Delwaq""",
-            ang = """Triggers output of temperature for Delwaq""",
+            typ = ('Fichier','All Files (*)','Sauvegarde'),
+            defaut = '',
+            fr = """Fichier de resultats pour le couplage avec Delwaq""",
+            ang = """Results file for coupling with Delwaq""",
         ),
 #       -----------------------------------
         VELOCITY_FOR_DELWAQ = SIMP(statut ='f',
@@ -4064,6 +4205,22 @@ file.""",
             defaut = False,
             fr = """Decide de la sortie du coefficient de diffusion pour Delwaq""",
             ang = """Triggers output of diffusion for Delwaq""",
+        ),
+#       -----------------------------------
+        TEMPERATURE_FOR_DELWAQ = SIMP(statut ='f',
+#       -----------------------------------
+            typ = bool,
+            defaut = False,
+            fr = """Decide de la sortie de la temperature pour Delwaq""",
+            ang = """Triggers output of temperature for Delwaq""",
+        ),
+#       -----------------------------------
+        SALINITY_FOR_DELWAQ = SIMP(statut ='f',
+#       -----------------------------------
+            typ = bool,
+            defaut = False,
+            fr = """Decide de la sortie de la salinite pour Delwaq""",
+            ang = """Triggers output of salinity for Delwaq""",
         ),
     ),
 #   -----------------------------------
@@ -4118,6 +4275,18 @@ file.""",
 (internes non ceux de DELWAQ)""",
             ang = """file for physical parameters of waq processes (local ones of
 Telemac-tracer not those of DELWAQ)""",
+        ),
+    ),
+#   -----------------------------------
+    KHIONE = FACT(statut='o',
+#   -----------------------------------
+#       -----------------------------------
+        KHIONE_STEERING_FILE = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'TXM',
+            defaut = '',
+            fr = """Fichier des parametres physiques pour les processus liees aux glaces""",
+            ang = """Steering file for physical parameters of ice processes""",
         ),
     ),
 )
@@ -4186,8 +4355,8 @@ TELEMAC,DAMO,UTILE,BIEF,HP""",
 #   -----------------------------------
     LIST_OF_FILES = SIMP(statut ='f',
 #   -----------------------------------
-        typ = 'TXM', min=47, max=47,
-        defaut = 'STEERING FILE;DICTIONARY;FORTRAN FILE;GEOMETRY FILE;BOUNDARY CONDITIONS FILE;RESULTS FILE;PREVIOUS COMPUTATION FILE;BOTTOM TOPOGRAPHY FILE;BINARY DATA FILE 1;BINARY DATA FILE 2;FORMATTED DATA FILE 1;FORMATTED DATA FILE 2;BINARY RESULTS FILE;FORMATTED RESULTS FILE;REFERENCE FILE;LIQUID BOUNDARIES FILE;FRICTION DATA FILE;VOLUMES DELWAQ FILE;EXCHANGE AREAS DELWAQ FILE;VERTICAL FLUXES DELWAQ FILE;SALINITY DELWAQ FILE;VELOCITY DELWAQ FILE;DIFFUSIVITY DELWAQ FILE;BOTTOM SURFACES DELWAQ FILE;EXCHANGES BETWEEN NODES DELWAQ FILE;NODES DISTANCES DELWAQ FILE;TEMPERATURE DELWAQ FILE;DELWAQ STEERING FILE;STAGE-DISCHARGE CURVES FILE;SOURCES FILE;SECTIONS INPUT FILE;SECTIONS OUTPUT FILE;OIL SPILL STEERING FILE;HARMONIC CONSTANTS FILE;TIDAL MODEL FILE;ASCII DATABASE FOR TIDE;BINARY DATABASE 1 FOR TIDE;BINARY DATABASE 2 FOR TIDE;WEIRS DATA FILE;SIPHONS DATA FILE;CULVERTS DATA FILE;BREACHES DATA FILE;DROGUES FILE;ZONES FILE;FLUXLINE INPUT FILE;ASCII ATMOSPHERIC DATA FILE;BINARY ATMOSPHERIC DATA FILE',
+        typ = 'TXM', min=46, max=46,
+        defaut = 'STEERING FILE;DICTIONARY;FORTRAN FILE;GEOMETRY FILE;BOUNDARY CONDITIONS FILE;RESULTS FILE;PREVIOUS COMPUTATION FILE;BOTTOM TOPOGRAPHY FILE;BINARY DATA FILE 1;BINARY DATA FILE 2;FORMATTED DATA FILE 1;FORMATTED DATA FILE 2;BINARY RESULTS FILE;FORMATTED RESULTS FILE;REFERENCE FILE;LIQUID BOUNDARIES FILE;FRICTION DATA FILE;VOLUMES DELWAQ FILE;EXCHANGE AREAS DELWAQ FILE;VERTICAL FLUXES DELWAQ FILE;SALINITY DELWAQ FILE;VELOCITY DELWAQ FILE;DIFFUSIVITY DELWAQ FILE;BOTTOM SURFACES DELWAQ FILE;EXCHANGES BETWEEN NODES DELWAQ FILE;NODES DISTANCES DELWAQ FILE;TEMPERATURE DELWAQ FILE;DELWAQ STEERING FILE;STAGE-DISCHARGE CURVES FILE;SOURCES FILE;SECTIONS INPUT FILE;SECTIONS OUTPUT FILE;OIL SPILL STEERING FILE;HARMONIC CONSTANTS FILE;TIDAL MODEL FILE;ASCII DATABASE FOR TIDE;BINARY DATABASE 1 FOR TIDE;BINARY DATABASE 2 FOR TIDE;WEIRS DATA FILE;CULVERTS DATA FILE;BREACHES DATA FILE;DROGUES FILE;ZONES FILE;FLUXLINE INPUT FILE;ASCII ATMOSPHERIC DATA FILE;BINARY ATMOSPHERIC DATA FILE',
         fr = """Noms des fichiers exploites par le code""",
         ang = """File names of the used files""",
     ),
@@ -4216,6 +4385,52 @@ TELEMAC,DAMO,UTILE,BIEF,HP""",
         ang = """Default parallel executable for T2D""",
     ),
 )
+# -----------------------------------------------------------------------
+MISCELLANEOUS = PROC(nom= "MISCELLANEOUS",op = None,
+# -----------------------------------------------------------------------
+    UIinfo = {"groupes": ("CACHE")},
+#   -----------------------------------
+    NESTOR_ACTION_FILE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'), max='**',
+        defaut = '',
+        fr = """Nom du fichier de commandes de nestor""",
+        ang = """Name of the Nestor steering file""",
+    ),
+#   -----------------------------------
+    NESTOR_POLYGON_FILE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'), max='**',
+        defaut = '',
+        fr = """Nom du fichier de polygons de Nestor""",
+        ang = """Name of the Nestor polygon file""",
+    ),
+#   -----------------------------------
+    NESTOR_SURFACE_REFERENCE_FILE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'), max='**',
+        defaut = '',
+        fr = """Nom du fichier de reference surface de Nestor""",
+        ang = """Name of the Nestor file which contains the reference
+         water surface""",
+    ),
+#   -----------------------------------
+    NESTOR_RESTART_FILE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'), max='**',
+        defaut = '',
+        fr = """Nom du fichier de Nestor restart""",
+        ang = """Name of the Nestor restart file""",
+    ),
+)
+TEXTE_NEW_JDC = "\
+COMPUTATION_ENVIRONMENT();\
+HYDRO();\
+GENERAL_PARAMETERS();\
+NUMERICAL_PARAMETERS();\
+TURBULENCE();\
+MISCELLANEOUS();\
+"
 Ordre_Des_Commandes = (
 'COMPUTATION_ENVIRONMENT',
 'HYDRO',
@@ -4228,17 +4443,13 @@ Ordre_Des_Commandes = (
 'HYDRAULIC_STRUCTURES',
 'TIDES',
 'COUPLING',
-'INTERNAL')
-Classement_Commandes_Ds_Arbre = (
-'COMPUTATION_ENVIRONMENT',
-'HYDRO',
-'GENERAL_PARAMETERS',
-'NUMERICAL_PARAMETERS',
-'TURBULENCE',
-'TIDAL_FLATS_INFO',
-'TRACERS',
-'PARTICLE_TRANSPORT',
-'HYDRAULIC_STRUCTURES',
-'TIDES',
-'COUPLING',
-'INTERNAL')
+'INTERNAL',
+'MISCELLANEOUS')
+try:
+    import TelApy
+    source = "eficas"
+except Exception as excpt:
+    source = "Telemac"
+enum = source+'.telemac2d_enum_auto'
+dicoCasEn = source+'.telemac2d_dicoCasEnToCata'
+dicoCasFr = source+'.telemac2d_dicoCasFrToCata'

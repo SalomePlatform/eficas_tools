@@ -23,35 +23,79 @@ from __future__ import absolute_import
 import os,sys
 # repIni sert a localiser le fichier editeur.ini
 # Obligatoire
-repIni=os.path.dirname(os.path.abspath(__file__))
-INSTALLDIR=os.path.join(repIni,'..')
-sys.path[:0]=[INSTALLDIR]
+repIni = os.path.dirname(os.path.abspath(__file__))
+INSTALLDIR = os.path.join(repIni,'..')
+sys.path[:0] = [INSTALLDIR]
 
 
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='ang'
+lang = 'ang'
 #lang='fr'
 #force_langue=True
 
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
-encoding='iso-8859-1'
-docPath=repIni
+encoding = 'iso-8859-1'
+docPath = repIni
 
+try:
+    import TelApy
+    rep_cata = os.path.join(os.environ['HOMETEL'],
+                            'scripts',
+                            'python27',
+                            'eficas')
+except ImportError as excp:
+    print('Using eficas local catalog')
+    rep_cata = repIni
+except Exception as excep:
+    print("Missing HOMETEL in environment")
+    rep_cata = repIni
+
+cata_telemac = {
+      'telemac2d': os.path.join(rep_cata, 'telemac2d_cata_auto.py'),
+      'telemac3d': os.path.join(rep_cata, 'telemac3d_cata_auto.py'),
+      'tomawac': os.path.join(rep_cata, 'tomawac_cata_auto.py'),
+      'artemis': os.path.join(rep_cata, 'artemis_cata_auto.py'),
+      'sisyphe': os.path.join(rep_cata, 'sisyphe_cata_auto.py'),
+      'waqtel': os.path.join(rep_cata, 'waqtel_cata_auto.py'),
+      'stbtel': os.path.join(rep_cata, 'stbtel_cata_auto.py'),
+               }
+print(cata_telemac)
+
+translator_telemac = {\
+      'telemac2d': os.path.join(rep_cata, 'telemac2d_labelCataToIhm'),
+      'telemac3d': os.path.join(rep_cata, 'telemac3d_labelCataToIhm'),
+      'tomawac': os.path.join(rep_cata, 'tomawac_labelCataToIhm'),
+      'artemis': os.path.join(rep_cata, 'artemis_labelCataToIhm'),
+      'sisyphe': os.path.join(rep_cata, 'sisyphe_labelCataToIhm'),
+      'waqtel': os.path.join(rep_cata, 'waqtel_labelCataToIhm'),
+      'stbtel': os.path.join(rep_cata, 'stbtel_labelCataToIhm'),
+                     }
 #
-catalogues=(
-   #('TELEMAC','default',os.path.join(repIni,'Telemac_Cata_nouveau.py'),'TELEMAC','python'),
-   #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','TELEMAC'),
-   #('2D','cas',os.path.join(repIni,'Telemac2d_Cata_auto.py'),'TELEMAC','TELEMAC'),
-   ('TELEMAC','pn',os.path.join(repIni,'telemac2d_V6_cata.py'),'TELEMAC','TELEMAC'),
-   #('2222D','cas',os.path.join(repIni,'telemac2d_V6_cata.py'),'TELEMAC','TELEMAC'),
-   #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'python','TELEMAC3'),
-   ('YOANN','cas',os.path.join(repIni,'Cata.py'),'TELEMAC','TELEMAC'),
-   #('TELEMAC','comm',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC2','python'),
+catalogues = (\
+    #('TELEMAC','default',os.path.join(repIni,'Telemac_Cata_nouveau.py'),'TELEMAC','python'),
+    #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC','TELEMAC'),
+    #('2D','cas',os.path.join(repIni,'Telemac2d_Cata_auto.py'),'TELEMAC','TELEMAC'),
+    ('TELEMAC', 'telemac2d', cata_telemac['telemac2d'], 'TELEMAC', 'TELEMAC'),
+    ('TELEMAC', 'telemac3d', cata_telemac['telemac3d'], 'TELEMAC', 'TELEMAC'),
+    ('TELEMAC', 'tomawac', cata_telemac['tomawac'], 'TELEMAC', 'TELEMAC'),
+    ('TELEMAC', 'artemis', cata_telemac['artemis'], 'TELEMAC', 'TELEMAC'),
+    ('TELEMAC', 'sisyphe', cata_telemac['sisyphe'], 'TELEMAC', 'TELEMAC'),
+    ('TELEMAC', 'waqtel', cata_telemac['waqtel'], 'TELEMAC', 'TELEMAC'),
+    ('TELEMAC', 'stbtel', cata_telemac['stbtel'], 'TELEMAC', 'TELEMAC'),
+    #('2222D','cas',os.path.join(repIni,'telemac2d_V6_cata.py'),'TELEMAC','TELEMAC'),
+    #('TELEMAC','cas',os.path.join(repIni,'Telemac_Cata.py'),'python','TELEMAC3'),
+    #('YOANN', 'cas', os.path.join(repIni, 'Cata.py'), 'TELEMAC', 'TELEMAC'),
+    #('TELEMAC','comm',os.path.join(repIni,'Telemac_Cata.py'),'TELEMAC2','python'),
 )
-mode_nouv_commande="figee"
-affiche         = "ordre"
-translatorFichier_pn  = os.path.join(repIni,'labelCataToIhm')
-#translatorFichier_cas = os.path.join(repIni,'labelCataToIhm')
-#translatorFichier  = os.path.join(repIni,'labelCataToIhm')
-closeFrameRecherche=True
+mode_nouv_commande = "figee"
+affiche = "ordre"
+translatorFichier_pn = os.path.join(repIni, 'labelCataToIhm')
+translatorFichier_telemac2d = translator_telemac['telemac2d']
+translatorFichier_telemac3d = translator_telemac['telemac3d']
+translatorFichier_tomawac = translator_telemac['tomawac']
+translatorFichier_artemis = translator_telemac['artemis']
+translatorFichier_sisyphe = translator_telemac['sisyphe']
+translatorFichier_waqtel = translator_telemac['waqtel']
+translatorFichier_stbtel = translator_telemac['stbtel']
+closeFrameRecherche = True
 differencieSiDefaut = True
