@@ -3,6 +3,7 @@
 import sys,os
 import raw.efficas as efficas
 import types
+import pyxb
 
 sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
 
@@ -152,6 +153,16 @@ dictFACTXMLEficas = {'doc' : {'fr' : 'fr' , 'ang' : 'ang' , 'docu' : 'docu' },
 #
 if __name__ == "__main__":
 
-   xml = open('Cata_MED_FAM.xml').read()
-   SchemaMed = efficas.CreateFromDocument(xml)
-   SchemaMed.exploreCata()
+   #xml = open('Cata_MED_FAM.xml').read()
+   #Cata = efficas.T_cata()
+   #Commande=T_commandes()
+   #T_PROC()
+   #T_SIMP()
+   print (dir(efficas.T_SIMP))
+   print (dir(efficas.T_PROC))
+   print (dir(efficas.T_cata))
+   
+   #pyxb.RequireValidWhenGenerating(False)
+   #print(SchemaMed.toxml("utf-8").decode('utf-8'))
+   
+   #SchemaMed.exploreCata()

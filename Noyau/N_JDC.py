@@ -196,7 +196,11 @@ Causes possibles :
                 if type(obj_cata) == types.ModuleType:
                     init2 = "from " + obj_cata.__name__ + " import *"
                     exec(init2, self.g_context)
-
+                else :
+                   # ici on est en xml
+                   # il faut ajouter ce qu on a construit au contexte
+                   for (k,v) in obj_cata.contexteXML.items() :
+                       self.g_context[k]=v
             # Initialisation du contexte global pour l'evaluation des conditions de BLOC
             # On utilise une copie de l'initialisation du contexte du jdc
             self.condition_context = self.g_context.copy()
