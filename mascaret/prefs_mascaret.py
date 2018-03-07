@@ -24,5 +24,8 @@ closeAutreCommande=True
 closeFrameRechercheCommande=True
 closeArbre=True
 closeCopier=True
-suiteTelemac=True
 
+typeDeCata='XML'
+catalogues=(
+   ('mascaret','mascaret',os.path.join(repIni,'mascaret-1.0.xml'),'python','python'),
+)
