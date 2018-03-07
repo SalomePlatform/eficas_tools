@@ -20,7 +20,60 @@
 # ======================================================================
 
 
-install ( FILES aideAuxConvertisseurs.py configuration_TELEMAC.py dicoCasEnToCata.py dicoCasFrToCata.py enum_Telemac2d_auto.py prefs.py prefs_TELEMAC.py properties.py qtEficas_Telemac.py Telemac2d_Cata_auto.py labelCataToIhm_en.qm labelCataToIhm_fr.qm
+install ( FILES aideAuxConvertisseurs.py \
+                configuration_TELEMAC.py \
+                artemis_dicoCasEnToCata.py \
+                artemis_dicoCasFrToCata.py \
+                artemis_enum_auto.py \
+                artemis_labelCataToIhm_en.qm \
+                artemis_labelCataToIhm_fr.qm \
+                artemis_cata_auto.py \
+                postel3d_dicoCasEnToCata.py \
+                postel3d_dicoCasFrToCata.py \
+                postel3d_enum_auto.py \
+                postel3d_labelCataToIhm_en.qm \
+                postel3d_labelCataToIhm_fr.qm \
+                postel3d_cata_auto.py \
+                sisyphe_dicoCasEnToCata.py \
+                sisyphe_dicoCasFrToCata.py \
+                sisyphe_enum_auto.py \
+                sisyphe_labelCataToIhm_en.qm \
+                sisyphe_labelCataToIhm_fr.qm \
+                sisyphe_cata_auto.py \
+                stbtel_dicoCasEnToCata.py \
+                stbtel_dicoCasFrToCata.py \
+                stbtel_enum_auto.py \
+                stbtel_labelCataToIhm_en.qm \
+                stbtel_labelCataToIhm_fr.qm \
+                stbtel_cata_auto.py \
+                telemac2d_dicoCasEnToCata.py \
+                telemac2d_dicoCasFrToCata.py \
+                telemac2d_enum_auto.py \
+                telemac2d_labelCataToIhm_en.qm \
+                telemac2d_labelCataToIhm_fr.qm \
+                telemac2d_cata_auto.py \
+                telemac3d_dicoCasEnToCata.py \
+                telemac3d_dicoCasFrToCata.py \
+                telemac3d_enum_auto.py \
+                telemac3d_labelCataToIhm_en.qm \
+                telemac3d_labelCataToIhm_fr.qm \
+                telemac3d_cata_auto.py \
+                tomawac_dicoCasEnToCata.py \
+                tomawac_dicoCasFrToCata.py \
+                tomawac_enum_auto.py \
+                tomawac_labelCataToIhm_en.qm \
+                tomawac_labelCataToIhm_fr.qm \
+                tomawac_cata_auto.py \
+                waqtel_dicoCasEnToCata.py \
+                waqtel_dicoCasFrToCata.py \
+                waqtel_enum_auto.py \
+                waqtel_labelCataToIhm_en.qm \
+                waqtel_labelCataToIhm_fr.qm \
+                waqtel_cata_auto.py \
+                prefs.py \
+                prefs_TELEMAC.py \
+                properties.py \
+                qtEficas_Telemac.py \
 	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Telemac
         )
 
