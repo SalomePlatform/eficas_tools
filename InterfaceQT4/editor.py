@@ -772,13 +772,13 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
 
 
     #-----------------------------------------------------------------#
-    def saveFileLeger(self, path = None, saveas= 0,formatLigne="beautifie"):
+    def saveCompleteFile(self, path = None, saveas= 0,formatLigne="beautifie"):
     #-----------------------------------------------------------------#
         extension='.casR'
-        fn = self.fichier
+        fn = self.fichierComplet
         #saveas=True # Pour forcer le nom
-        self.generator=generator.plugins[self.format]()
-        if self.fichier is None or saveas:
+        self.generator=self.maConfiguration.mesGenerators.plugins[self.format]()
+        if self.fichierComplet is None or saveas:
           if path is None: path=self.maConfiguration.savedir
           bOK, fn=self.determineNomFichier(path,extension)
           if bOK == 0 : return (0, None)
@@ -789,17 +789,17 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
           self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
           fn = six.text_type(QDir.toNativeSeparators(fn))
 
-        self.fichier = os.path.splitext(fn)[0]+extension
+        self.fichierComplet = os.path.splitext(fn)[0]+extension
 
-        if hasattr(self.generator, "writeLeger"):
-            self.generator.writeLeger(self.fichier,self.jdc,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
+        if hasattr(self.generator, "writeComplet"):
+            self.generator.writeComplet(self.fichierComplet,self.jdc,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
 
-        if self.salome : self.appliEficas.addJdcInSalome( self.fichier)
+        if self.salome : self.appliEficas.addJdcInSalome( self.fichierComplet)
 
         self.modified = 0
-        nouveauTitre=self.titre+"              "+str(os.path.basename(self.fichier))
+        nouveauTitre=self.titre+"              "+str(os.path.basename(self.fichierComplet))
         self.appliEficas.setWindowTitle(nouveauTitre)
-        return (1, self.fichier)
+        return (1, self.fichierComplet)
 
     #-----------------------------------------------------------------#
     def saveFile(self, path = None, saveas= 0,formatLigne="beautifie"):

@@ -339,7 +339,7 @@ class ReaderCata (ReaderCataCommun):
 
 
    def dumpToXml(self):
-       #from Efi2Xsd import readerEfficas
+       from Efi2Xsd import readerEfficas
        print ('in dumpToXml')
        #newSchema=   xml = open('Cata_MED_FAM.xml').read()
        #SchemaMed = efficas.CreateFromDocument(xml)

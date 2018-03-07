@@ -33,7 +33,7 @@ import traceback
 import six
 from six.moves import range
 from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog
-from PyQt5.QtCore    import QEvent, Qt
+from PyQt5.QtCore    import QEvent, Qt, QTimer
 from PyQt5.QtGui     import QIcon, QPalette
 
 from Extensions.i18n import tr
@@ -231,13 +231,18 @@ class GereListe(object):
           return
        self.ajoutLineEdit()
        self.descendLesLignes()
+       self.chercheLigneVide()
+       QTimer.singleShot(1, self.rendVisibleLigne)
 
    def chercheLigneVide(self):
        for i in range(self.indexDernierLabel) :
           nomLineEdit=self.nomLine+str(i+1)
           courant=getattr(self,nomLineEdit)
           valeur=courant.getValeur()
-          if valeur=="" : courant.setFocus(7);return
+          if valeur=="" : 
+             courant.setFocus(True)
+             self.estVisible=courant
+             return
 
 
    def descendLesLignes(self):

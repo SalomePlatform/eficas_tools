@@ -47,7 +47,7 @@ class MyViewManager(object):
 
        self.myQtab.currentChanged.connect(self.indexChanged)
        self.myQtab.tabCloseRequested.connect(self.closeTab)
-
+        
    def indexChanged(self):
        index=self.myQtab.currentIndex()
        if index in self.dict_editors:
@@ -60,10 +60,10 @@ class MyViewManager(object):
    def handleOpen(self,fichier=None,patron=0,units=None):
        result = None
        if fichier is None:
-            if self.appliEficas.demande==True :
+            if self.appliEficas.demande==True : 
                self.appliEficas.definitCode(None,None)
                if self.appliEficas.code == None:return
-
+            
             if self.appliEficas.code in DictExtensions:
                chaine="JDC (*"+DictExtensions[self.appliEficas.code]+");;"
                extensions=tr(chaine+ "All Files (*)")
@@ -106,7 +106,7 @@ class MyViewManager(object):
            pass
        self.myQtab.removeTab(index)
        return res
-
+       
 
    def run(self):
        index=self.myQtab.currentIndex()
@@ -128,7 +128,7 @@ class MyViewManager(object):
              res=self.handleClose(0,texte)
              if res==2 : return res   # l utilsateur a annule
        return res
-
+        
    def handleRechercher(self):
        #print "passage dans handleRechercher"
        index=self.myQtab.currentIndex()
@@ -148,7 +148,7 @@ class MyViewManager(object):
        if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleDeplier()
-
+   
    def handleEditCopy(self):
        #print "passage dans handleEditCopy"
        index=self.myQtab.currentIndex()
@@ -184,7 +184,7 @@ class MyViewManager(object):
 
 
    def newEditor(self,include=0):
-       if self.appliEficas.demande==True :
+       if self.appliEficas.demande==True : 
            self.appliEficas.definitCode(None,None)
            if self.appliEficas.code == None:return
        maPage=self.getEditor(include=include)
@@ -220,7 +220,7 @@ class MyViewManager(object):
 
    def handleGestionParam(self):
        index=self.myQtab.currentIndex()
-       if index < 0 :
+       if index < 0 : 
           QMessageBox.warning( self.appliEficas,tr(u"Creation Parametre indisponible"),tr(u"les parametres sont lies a un jeu de donnees"))
           return
        self.dict_editors[index].gestionParam()
@@ -251,11 +251,11 @@ class MyViewManager(object):
            self.myQtab.setTabText(index,fileName)
        return ok
 
-   def saveLegerCurrentEditor(self):
+   def saveCompleteCurrentEditor(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return
        editor=self.dict_editors[index]
-       ok, newName = editor.saveFileLeger()
+       ok, newName = editor.saveCompleteFile()
        return ok
 
    def sauveLigneCurrentEditor(self):
@@ -317,7 +317,7 @@ class MyViewManager(object):
        else :
             from .editor import JDCEditor
             editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,include=include)
-            if double != None :
+            if double != None : 
                self.doubles[editor]=double
             if editor.jdc: # le fichier est bien un jdc
                 self.editors.append(editor)
@@ -339,7 +339,8 @@ class MyViewManager(object):
 #PNPNPNPN --> a affiner
         if fichier is None:
             self.untitledCount += 1
-            self.myQtab.addTab(win, tr("Fichier non encore nomme "+ self.appliEficas.readercata.versionCode, self.untitledCount))
+            self.myQtab.addTab(win, tr("Fichier non encore nomme  " + self.appliEficas.readercata.versionCode, self.untitledCount))
+            #self.myQtab.addTab(win, str(self.appliEficas.code))
         else:
             liste=fichier.split('/')
             txt =  liste[-1]
@@ -370,11 +371,11 @@ class MyViewManager(object):
    def checkDirty(self, editor,texte):
         """
         Private method to check dirty status and open a message window.
-
+        
         @param editor editor window to check
         @return flag indicating successful reset of the dirty flag (boolean)
-        """
-        res=1
+        """        
+        res=1 
         if (editor.modified) and (editor in self.doubles) :
             msgBox = QMessageBox(None)
             msgBox.setWindowTitle(tr("Fichier Duplique"))
@@ -409,7 +410,7 @@ class MyViewManager(object):
        if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleAjoutGroup(listeGroup)
-
+  
    def handleFonctionUtilisateur(self,laFonctionUtilisateur, lesArguments):
        # Peut-etre a blinder un peu plus sur le nb d argument
        index=self.myQtab.currentIndex()
@@ -420,7 +421,7 @@ class MyViewManager(object):
                       tr("Selectionner une etape"),
                       tr("Le texte sera inséré après l étape selectionnée"))
 
-       listeParam = []
+       listeParam = [] 
        for p in lesArguments:
           print (p)
           if hasattr(editor,p): listeParam.append(getattr(editor,p))

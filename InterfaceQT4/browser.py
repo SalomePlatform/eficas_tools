@@ -373,7 +373,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         #if self.editor.code == 'ASTER' and not(self.item.isActif()) : 
         # posera des pb si un code decide d appeler FIN un mot clef
         # on resoudera a ce moment la
-        # pour l instant pas de poussiere sous le tapis
+        # pour l pas de poussiere sous le tapis
         #print ('_________________ds affichePanneau pour', self.item.nom)
         if  not(self.item.isActif()) : 
             from .monWidgetInactif import MonWidgetInactif

@@ -202,8 +202,7 @@ if __name__ == "__main__":
 #   print dir(efficas)
 #   print dir(efficas.T_SIMP)
 
-   #xml = open('cata_test1.xml').read()
-   xml = open('Cata_MED_FAM_test.xml').read()
+   xml = open('cata_test1.xml').read()
    SchemaMed = efficas.CreateFromDocument(xml)
    SchemaMed.exploreCata()
    #SchemaMed.dumpXSD()

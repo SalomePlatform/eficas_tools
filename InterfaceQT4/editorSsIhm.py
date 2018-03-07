@@ -61,19 +61,18 @@ class JDCEditorSsIhm :
 
         if debug : print ('dans le init de JDCEditorSsIhm')
         self.appliEficas = appli
-        self.appli = appli
+        self.appli       = appli
         self.fichier     = fichier
         self.jdc         = jdc
         self.first	 = True
         self.jdc_item    = None
-        self.dicoNouveauxMC={}
-        self.dicoNouveauxFact={}
-        self.dict_reels={}
-        self.liste_simp_reel=[]
-
+        self.dicoNouveauxMC   = {}
+        self.dicoNouveauxFact = {}
+        self.dict_reels       = {}
+        self.liste_simp_reel  = []
 
         if appli != None : self.salome =  self.appliEficas.salome
-        else             : self.salome=0
+        else             : self.salome =  0
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code              = self.appliEficas.maConfiguration.code
@@ -107,7 +106,7 @@ class JDCEditorSsIhm :
         try:
           self.maConfiguration.generator_module
           _module = __import__(self.maConfiguration.generator_module)
-          info = _module.entryPoint()
+          info    = _module.entryPoint()
           generator.plugins.addEntryPoint(info)
         except:
           pass
@@ -120,6 +119,9 @@ class JDCEditorSsIhm :
           convert.plugins.addEntryPoint(info)
         except :
           pass
+
+        self.maConfiguration.mesGenerators     = generator
+        self.maConfiguration.mesconvertisseurs = convert
 
         self.fileInfo       = None
         self.lastModified   = 0
@@ -422,17 +424,17 @@ class JDCEditorSsIhm :
             if pourRun : jdc_formate=self.generator.textePourRun
             if self.code == 'TELEMAC' : jdc_formate=self.generator.texteDico
          except ValueError as e:
-            self.afficheInfos( "Erreur a la generation",str(e),'red')
+            self.informe( "Erreur a la generation",str(e),'red')
             return
 
          if not self.generator.cr.estvide():
-            self.afficheInfos("Erreur a la generation","EFICAS ne sait pas convertir ce JDC",'red')
+            self.informe("Erreur a la generation","EFICAS ne sait pas convertir ce JDC",'red')
             return ""
          else:
             return jdc_formate
       else:
          # Il n'existe pas c'est une erreur
-         self.afficheInfos("Format inconnu", self.format +  " non reconnu" )
+         self.informe("Format inconnu", self.format +  " non reconnu" )
          return ""
 
     #------------------------------#

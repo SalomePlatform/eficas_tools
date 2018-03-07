@@ -58,7 +58,7 @@ class TELEMACGenerator(PythonGenerator):
    """
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appli=None,statut="Entier"):
+   def gener(self,obj,format='brut',config=None,appli=None,statut="Leger"):
 
       self.statut        = statut
       self.langue        = appli.langue
@@ -139,8 +139,8 @@ class TELEMACGenerator(PythonGenerator):
 # ecriture de Leger
 #----------------------------------------------------------------------------------------
 
-   def writeLeger(self,fn,jdc,config,appli) :
-       jdc_formate=self.gener(jdc,config=config,appli=appli,statut="Leger")
+   def writeComplet(self,fn,jdc,config,appli) :
+       jdc_formate=self.gener(jdc,config=config,appli=appli,statut="Entier")
        self.writeDefault(fn)
 
 

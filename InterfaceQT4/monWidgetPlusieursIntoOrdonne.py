@@ -131,12 +131,17 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           if len(self.listeValeursCourantes) > aConstruire : aConstruire=len(self.listeValeursCourantes)
           self.indexDernierLabel = aConstruire
           for i in range(1,aConstruire+1): self.ajoutLEResultat(i)
-       else : self.indexDernierLabel= len(self.listeValeursCourantes)
        index=1
        for val in self.listeValeursCourantes :
           nomLE="LEResultat"+str(index)
           courant=getattr(self,nomLE)
           courant.setText(str(val))
+          courant.setReadOnly(True)
+          index=index+1
+       while (index < self.indexDernierLabel) :
+          nomLE="LEResultat"+str(index)
+          courant=getattr(self,nomLE)
+          courant.setText("")
           courant.setReadOnly(True)
           index=index+1
        #self.prepareListeResultat()
@@ -212,7 +217,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       setattr(self,nomLE,nouveauLE)
       
   def ajoutLineEdit(self):
-      #print ('ajoutLineEdit')
+      print ('ajoutLineEdit')
       self.indexDernierLabel=self.indexDernierLabel+1
       self.ajoutLEResultat (self.indexDernierLabel)
 
@@ -287,5 +292,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       self.estVisibleRE.setFocus()
       self.scrollArea.ensureWidgetVisible(self.estVisibleRE,0,0)
 #
+  def rendVisibleLigne(self):
+      self.estVisibleRE=self.estVisible
+      #rendVisibleLigneRE()
 
 

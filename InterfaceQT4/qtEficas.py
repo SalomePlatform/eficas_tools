@@ -314,12 +314,12 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.rechercherDejaLa=True
         self.actionRechercherDsCatalogue.triggered.connect(self.handleRechercherDsCatalogue)
 
-    def ajoutSortieLegere(self):
-        if hasattr(self,'actionSortieLegere') : return
-        self.actionSortieLegere = QAction(self)
-        self.actionSortieLegere.setText(tr("Sortie Legere"))
-        self.menuFichier.insertAction(self.actionEnregistrer_sous,self.actionSortieLegere)
-        self.actionSortieLegere.triggered.connect(self.handleSortieLegere)
+    def ajoutSortieComplete(self):
+        if hasattr(self,'actionSortieComplete') : return
+        self.actionSortieComplete = QAction(self)
+        self.actionSortieComplete.setText(tr("Sortie Complete"))
+        self.menuFichier.insertAction(self.actionEnregistrer_sous,self.actionSortieComplete)
+        self.actionSortieComplete.triggered.connect(self.handleSortieComplete)
 
 
     def MT(self):
@@ -407,7 +407,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.enleverActionsStructures()
         self.enlevernewInclude()
         self.connectRechercherDsCatalogue()
-        self.ajoutSortieLegere()
+        self.ajoutSortieComplete()
 
     def lookSuiteTelemac(self):
         self.enleverActionsStructures()
@@ -793,8 +793,8 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         monOption=OptionPdf(parent=self,modal = 0 ,configuration=self.maConfiguration)
         monOption.show()
 
-    def handleSortieLegere(self):
-        return self.viewmanager.saveLegerCurrentEditor()
+    def handleSortieComplete(self):
+        return self.viewmanager.saveCompleteCurrentEditor()
 
     def handleShowRecentMenu(self):
         """

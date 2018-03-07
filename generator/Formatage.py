@@ -142,7 +142,10 @@ class Formatage (object):
         # on écrit ses fils
         self.formateEtape(element[1:])
       #elif type(element) == types.StringType:
-      elif type(element) == bytes:
+      #elif type(element) == bytes:
+      # PNPNPN -> marre du python 2 et 3
+      # on remplace par else dans if
+      else :
 
         # il s'agit d'un mot-clé simple ou de ')' ou ');' ou '),' ou ');\n'
 

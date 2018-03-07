@@ -151,7 +151,6 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
       # deux lignes pour que le ensureVisible fonctionne
       self.estVisible=nouveauLE
       if self.inInit==False :QTimer.singleShot(1, self.rendVisibleLigne)
-      #if donneLeFocus==True : nouveauLE.setFocus()
 
   def etablitOrdre(self):
       i=0

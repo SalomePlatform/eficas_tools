@@ -33,13 +33,15 @@ class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
 # il faut donc surcharger un certain nb de fonction ici pour eux
 
 
-
-
   def __init__(self,node,editor,etape):
+      #print ("debut de ---------------------- init de MonWidgetCommandeDeplie1Niveau ",node.item.nom)
       MonWidgetCommande.__init__(self,node,editor,etape)
       self.node.plieToutEtReaffiche=self.plieToutEtReaffiche
 
   def afficheMots(self):
+      # Attention
+      # Attention --> cette methode surcharge les methodes des Nodes Fils
+      # Attention
       #print ("debut de ---------------------- ds afficheMots de MonWidgetCommandeDeplie1Niveau ",self.node.item.nom)
       #traceback.print_stack()
       repIcon=self.editor.appliEficas.repIcon
@@ -85,12 +87,18 @@ class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
 
       #print ("fin ------------------------ afficheMots de MonWidgetCommandeDeplie1Niveau ",self.node.item.nom)
 
+  def afficheSuivant(self,aAfficher):
+      fenetre=self.node.tree.itemCourant.fenetre
+      fenetre.afficheSuivant(aAfficher)
+
   def setDepliePourNode(self):
       noeudCourant=self.node.tree.itemCourant
       noeudCourant.setDeplieChildren()
       noeudCourant.afficheCeNiveau()
       pass
 
+
+# -------------------------------------------- Methodes qui surchargent les noeuds fils
 
   def setDepliePourMCList(self):
       #print ('je surcharge setDeplie pour MCList')
@@ -118,15 +126,21 @@ class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
 
   def affichePanneau(self):
       #print ('je surcharge affichePanneau', self.node.tree.itemCourant.item.getLabelText())
-      item=self.node.tree.itemCourant.item
-      self.setDepliePourNode()
+      node=self.node.tree.itemCourant
+      while ( not (hasattr(node,'fenetreIhm')) or node.treeParent.fenetreIhm != 'deplie1Niveau') : 
+            node=node.treeParent
+      self.node.tree.setCurrentItem(node)
+          
+      item=node.item
+      if item.getLabelText()[0] == self.editor.fenetreCentraleAffichee.labelNomCommande.text():
+         return
+      node.setDeplieChildren()
+      node.afficheCeNiveau()
       self.editor.fenetreCentraleAffichee.labelNomCommande.setText(item.getLabelText()[0])
       self.editor.fenetreCentraleAffichee.labelDoc.setText(item.getFr())
 
-  def afficheSuivant(self,aAfficher):
-      fenetre=self.node.tree.itemCourant.fenetre
-      fenetre.afficheSuivant(aAfficher)
+
 
   def getPanel (self):
-      #print ('surcharge ds getPanel')
+      print ('surcharge ds getPanel')
       pass
