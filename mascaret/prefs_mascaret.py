@@ -27,5 +27,5 @@ closeCopier=True
 
 typeDeCata='XML'
 catalogues=(
-   ('mascaret','mascaret',os.path.join(repIni,'mascaret-1.0.xml'),'python','python'),
+   ('mascaret','mascaret',os.path.join(repIni,'cata-mascaret-v1.0.xml'),'python','python'),
 )

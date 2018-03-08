@@ -18,8 +18,8 @@
 	</xs:element>
 	<xs:element name="validators" type="T_validators"/>
 	<xs:element name="plageValeur" type="T_plageValeur"/>
-	<xs:element name="typeAttendu" type="T_name"/>
-	<xs:element name="classeUtilisateurName" type="T_classeUtilisateurName" abstract="true" substitutionGroup="typeAttendu"/>
+	<xs:element name="nomTypeAttendu" type="T_name"/>
+	<xs:element name="classeUtilisateurName" type="T_classeUtilisateurName" abstract="true" substitutionGroup="nomTypeAttendu"/>
 	<xs:element name="SIMP" type="T_SIMP"/>
 	<xs:element name="portee" type="T_portee" default="None"/>
 	<xs:element name="condition" type="T_fonctionUtilisateur"/>
@@ -323,7 +323,7 @@
 			<xs:element ref="valeurDef" minOccurs="0"/>
 			<xs:element ref="valeurSugg" minOccurs="0"/>
 			<xs:element ref="plageValeur" minOccurs="0"/>
-			<xs:element ref="typeAttendu"/>
+			<xs:element ref="nomTypeAttendu"/>
 			<xs:element ref="validators" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute ref="nom" use="required"/>
@@ -437,11 +437,11 @@
 			<xs:enumeration value="VerifTypeTuple"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="T_Bool">
+	<xs:simpleType name="T_bool">
 		<xs:restriction base="xs:boolean"/>
 	</xs:simpleType>
-	<xs:simpleType name="T_list_Bool">
-		<xs:list itemType="T_Bool"/>
+	<xs:simpleType name="T_list_bool">
+		<xs:list itemType="T_bool"/>
 	</xs:simpleType>
 	<xs:simpleType name="T_I">
 		<xs:restriction base="xs:int"/>
@@ -487,7 +487,7 @@
 			<xs:enumeration value="I"/>
 			<xs:enumeration value="R"/>
 			<xs:enumeration value="C"/>
-			<xs:enumeration value="Bool"/>
+			<xs:enumeration value="bool"/>
 			<xs:enumeration value="grma"/>
 			<xs:enumeration value="grno"/>
 			<xs:enumeration value="SalomeEntry"/>
@@ -536,7 +536,7 @@
 		</xs:list>
 	</xs:simpleType>
 	<xs:simpleType name="T_simple">
-		<xs:union memberTypes="T_I T_list_I T_R T_list_R T_C T_list_C T_TXM T_list_TXM T_Bool T_list_Bool T_Repertoire"/>
+		<xs:union memberTypes="T_I T_list_I T_R T_list_R T_C T_list_C T_TXM T_list_TXM T_bool T_list_bool T_Repertoire"/>
 	</xs:simpleType>
 	<!--	<xs:complexType name="T_TXM"/>-->
 	<!--	<xs:simpleType name="T_simple">
@@ -547,7 +547,7 @@
 			<xs:enumeration value="I"/>
 			<xs:enumeration value="R"/>
 			<xs:enumeration value="C"/>
-			<xs:enumeration value="Bool"/>
+			<xs:enumeration value="bool"/>
 			<xs:enumeration value="grma"/>
 			<xs:enumeration value="grno"/>
 			<xs:enumeration value="SalomeEntry"/>

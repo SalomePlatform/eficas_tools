@@ -1,46 +1,43 @@
 # -*- coding: utf-8 -*-
+#            maConfiguration MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
+# (AT YOUR OPTION) ANY LATER VERSION.
 #
-#  Copyright (C) 2012-2013 EDF
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.
 #
-#  This file is part of SALOME HYDRO module.
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.
 #
-#  SALOME HYDRO module is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
 #
-#  SALOME HYDRO module is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with SALOME HYDRO module.  If not, see <http://www.gnu.org/licenses/>.
-
+# ======================================================================
+"""
+    Ce module sert pour charger les paramètres de configuration d'EFICAS
+"""
+# Modules Python
+from InterfaceQT4 import configuration
 import os
 
-from Editeur.catadesc import CatalogDescription
-from InterfaceQT4.configuration import CONFIG_BASE
 
-class CONFIG(CONFIG_BASE):
+class CONFIG(configuration.configBase):
 
-    def __init__(self, appli, repIni):
-        """
-        This class stores the configuration parameters for Eficas
-        """
-        CONFIG_BASE.__init__(self, appli, repIni)
+  #-----------------------------------
+  def __init__(self,appli,repIni):
+  #-----------------------------------
 
-        # Configuration parameters
-        self.savedir    = os.getenv("HOME")
-        self.catalogues = (CatalogDescription("mascaret_V7",
-                                              os.path.join(repIni, "mascaret_V7_cata.py")),)
-        self.lang = 'fr'
+      self.labels_user=['catalogues','lang','force_langue']
+      self.labels_eficas=['lang','rep_cata','catalogues']
 
-    def save_params(self):
-        pass
+      configuration.configBase.__init__(self,appli,'.Eficas_monCode')
 
-def make_config(appli, rep):
-    return CONFIG(appli, rep)
 
-def make_config_style(appli, rep):
-    return None
+def make_config(appli,rep):
+    return CONFIG(appli,rep)
+
