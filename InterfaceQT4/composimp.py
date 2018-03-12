@@ -490,6 +490,9 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
     if self.isValid():
       if self.object.valeur == self.object.definition.defaut :
          return "ast-green-dark-ball"
+      # cas des tuples et des listes
+      if self.object.definition.max > 1 :
+          if list(self.object.valeur) == list(self.object.definition.defaut) : return "ast-green-dark-ball"
       return "ast-green-ball"
     elif self.object.isOblig():
       return "ast-red-ball"
