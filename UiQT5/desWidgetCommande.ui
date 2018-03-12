@@ -425,7 +425,7 @@ QLineEdit:disabled
            </sizepolicy>
           </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -628,7 +628,7 @@ border-radius : 12px
         <x>0</x>
         <y>0</y>
         <width>1110</width>
-        <height>669</height>
+        <height>656</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayoutCommande">
