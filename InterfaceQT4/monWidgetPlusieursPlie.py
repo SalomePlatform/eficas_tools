@@ -74,8 +74,8 @@ class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
 
   def valeurEntree(self):
       valeurTexte=self.lineEditVal.text()
-      print (valeurTexte[0])
-      print (valeurTexte[-1])
+      #print (valeurTexte[0])
+      #print (valeurTexte[-1])
       if valeurTexte[0] == '[' or valeurTexte[0] == '('   : valeurTexte = valeurTexte[1:]
       if valeurTexte[-1] == ']' or valeurTexte[-1] == ')' : valeurTexte = valeurTexte[:-1]
       print (valeurTexte)

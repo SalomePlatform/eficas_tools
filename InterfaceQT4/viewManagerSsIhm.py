@@ -51,13 +51,22 @@ class JdcSsIhmHandler(object):
 #  ---------------------
        self.viewManagerSsIhm.getFileName(self)
 
-   def jdcRapport(self) :
+   def viewJdcRapport(self) :
 #  ---------------------
        self.viewManagerSsIhm.handleViewJdcRapport(self)
+
+   def getJdcRapport(self) :
+#  ---------------------
+       return self.viewManagerSsIhm.handleGetJdcRapport(self)
 
    def getDicoPython(self) :
 #  -------------------------
        return self.viewManagerSsIhm.generDico(self)
+
+   def isJdcValid(self) :
+#  -------------------------
+       return self.viewManagerSsIhm.isJdcValid(self)
+
 
 
 #--------------------------------
@@ -156,6 +165,14 @@ class MyViewManagerSsIhm(object):
         self.dictEditors[handler].viewJdcRapport()
 
 #  ---------------------------------------------
+   def handleGetJdcRapport(self,handler):
+#  ---------------------------------------------
+        if not (handler in self.dictEditors) :
+           print ('editor non trouve')
+           return
+        return self.dictEditors[handler].getJdcRapport()
+
+#  ---------------------------------------------
    def handleViewJdcRapport(self,handler):
 #  ---------------------------------------------
         print (handler)
@@ -173,6 +190,17 @@ class MyViewManagerSsIhm(object):
            print ('editor non trouve')
            return
         return self.dictEditors[handler].generDico()
+
+
+#  ---------------------------------------------
+   def isJdcValid(self,handler):
+#  ---------------------------------------------
+        print (handler)
+        if not (handler in self.dictEditors) :
+           print ('editor non trouve')
+           return
+        return self.dictEditors[handler].jdc.isValid()
+
 
 
 

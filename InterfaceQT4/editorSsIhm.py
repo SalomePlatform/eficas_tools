@@ -362,6 +362,13 @@ class JDCEditorSsIhm :
         strRapport = six.text_type( self.jdc.report() )
         self._viewText(strRapport, "JDC_RAPPORT")
 
+    #-----------------------#
+    def getJdcRapport(self):
+    #-----------------------#
+        # on ajoute les regles
+        strRapport = six.text_type( self.jdc.report() )
+        return strRapport
+
     #---------------------#
     def getFileName(self):
     #---------------------#
