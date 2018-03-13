@@ -209,9 +209,11 @@ class ReaderCata (ReaderCataCommun):
              self.Classement_Commandes_Ds_Arbre=self.cata.Classement_Commandes_Ds_Arbre
       else : self.Classement_Commandes_Ds_Arbre=()
       if hasattr(self.cata,'enum'):
-         _temp= __import__(self.cata.enum,globals(), locals(), ['DicoEnumCasFrToEnumCasEn', 'TelemacdicoEn'], 0)
-         self.DicoEnumCasFrToEnumCasEn = _temp.DicoEnumCasFrToEnumCasEn
-         self.TelemacdicoEn = _temp.TelemacdicoEn
+         try :
+           _temp= __import__(self.cata.enum,globals(), locals(), ['DicoEnumCasFrToEnumCasEn', 'TelemacdicoEn'], 0)
+           self.DicoEnumCasFrToEnumCasEn = _temp.DicoEnumCasFrToEnumCasEn
+           self.TelemacdicoEn = _temp.TelemacdicoEn
+         except : pass
 
       #print self.cata.Ordre_Des_Commandes
 
