@@ -40,7 +40,6 @@ class MonWidgetFactCommun(Groupe):
       self.GroupBox.setText(tr(labeltext))
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
       self.parentQt.commandesLayout.insertWidget(insertIn,self)
-      #else :  self.parentQt.commandesLayout.insertWidget(0,self)
       self.doitAfficherOptionnel=False
 
   def enterEvent(self,event):
@@ -67,5 +66,5 @@ class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
 class MonWidgetFactTableau(Ui_WidgetFact,MonWidgetFactCommun):
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
       MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
-      print ('je passe dans FactTableau')
+      #print ('je passe dans FactTableau')
       MonWidgetFactTableau.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)

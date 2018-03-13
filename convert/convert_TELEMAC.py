@@ -97,12 +97,24 @@ class TELEMACparser(Pythonparser):
 
 
       from Accas import A_BLOC, A_FACT, A_SIMP
-      self.dicoCasToCata            = appli.readercata.dicoCasToCata
+      try :
+        self.dicoCasToCata = appli.readercata.dicoCasToCata
+      except :
+        self.dicoCasToCata = {}
+        print ('pas de dicoCasToCata')
       self.dicoInverse              = appli.readercata.dicoInverse
       self.dicoMC                   = appli.readercata.dicoMC
       self.Ordre_Des_Commandes      = appli.readercata.Ordre_Des_Commandes
-      self.TelemacdicoEn            = appli.readercata.TelemacdicoEn
-      self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+      try :
+        self.TelemacdicoEn            = appli.readercata.TelemacdicoEn
+      except :
+        self.TelemacdicoEn = {}
+        print ('pas de TelemacdicoEn')
+      try :
+        self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+      except :
+        self.DicoEnumCasFrToEnumCasEn = {}
+        print ('pas de DicoEnumCasFrToEnumCasEn')
       
 
       if appli.langue=='fr' :

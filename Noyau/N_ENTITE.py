@@ -90,6 +90,7 @@ class ENTITE(object):
         """
             Cette methode doit retourner un objet dérivé de la classe OBJECT
         """
+     
         raise NotImplementedError("La méthode __call__ de la classe %s doit être implémentée"
                                   % self.__class__.__name__)
 
@@ -260,3 +261,19 @@ class ENTITE(object):
         if self.position not in ('local', 'global', 'global_jdc'):
             self.cr.fatal(_(u"L'attribut 'position' doit valoir 'local', 'global' "
                             u"ou 'global_jdc' : %r"), self.position)
+
+    def dumpXSD(self):
+        args = self.entites.copy()
+        mcs = set()
+        for nom, val in list(args.items()):
+            if val.label == 'SIMP':
+                mcs.add(nom)
+                # XXX
+                # if val.max != 1 and val.type == 'TXM':
+                    # print "#CMD", parent, nom
+            elif val.label == 'FACT':
+                liste=val.dumpXSD()
+                mcs.update(liste)
+        print (self.nom, mcs) 
+        return mcs
+

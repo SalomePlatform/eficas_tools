@@ -344,14 +344,34 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
               t=tuple(liste[i:len(liste)])
             i=i+self.nbValeurs
             if indexDernierRempli < self.indexDernierLabel:
+               print ('if')
                nomLineEdit=self.nomLine+str(indexDernierRempli+1)
                LEARemplir=getattr(self,nomLineEdit) 
                LEARemplir.lineEditVal_1.setText(str(t[0]))
                LEARemplir.lineEditVal_2.setText(str(t[1]))
                if self.nbValeurs== 3 : LEARemplir.lineEditVal_3.setText(str(t[2]))
             else : 
-               self.ajoutLineEdit(t,False)
-            indexDernierRempli = indexDernierRempli + 1
+               print ('eslse')
+               # ne pas appeler ajoutLineEdit(t,False ) pb de boucle pb du a etablitOrdre et a listeWidgetAffichage qui bouge
+               self.indexDernierLabel=self.indexDernierLabel+1
+               nomLineEdit=self.nomLine+str(self.indexDernierLabel)
+
+               if self.nbValeurs == 2 : nouveauLE = TupleCustom2(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
+               else                   : nouveauLE = TupleCustom3(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
+                 
+               print (nomLineEdit)
+               self.verticalLayoutLE.insertWidget(self.indexDernierLabel-1,nouveauLE)
+               setattr(self,nomLineEdit,nouveauLE)
+               print (nouveauLE)
+               nouveauLE.setValeur(t)
+
+               self.listeAffichageWidget.append(nouveauLE.lineEditVal_1)
+               self.listeAffichageWidget.append(nouveauLE.lineEditVal_2)
+               if self.nbValeurs == 3 : self.listeAffichageWidget.append(nouveauLE.lineEditVal_3)
+            indexDernierRempli = indexDernierRempli+1
+
+        self.etablitOrdre()
+
         
 
   def RBListePush(self):

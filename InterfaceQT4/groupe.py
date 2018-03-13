@@ -21,7 +21,7 @@
 
 from __future__ import absolute_import
 from __future__ import print_function
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
@@ -64,6 +64,9 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       if hasattr(self,'RBDeplie')  : self.RBDeplie.clicked.connect(self.setDeplie)
       if hasattr(self,'RBPlie')    : self.RBPlie.clicked.connect( self.setPlie)
       self.setAcceptDrops(True)
+      if hasattr (self, 'commandesLayout'): 
+         spacerItem = QSpacerItem(20, 5, QSizePolicy.Minimum, QSizePolicy.Expanding)
+         self.commandesLayout.addItem(spacerItem)
      
   def donneFocus(self):
       for fenetre in self.listeFocus:

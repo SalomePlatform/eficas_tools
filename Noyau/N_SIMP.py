@@ -25,8 +25,8 @@
 from __future__ import absolute_import
 import types
 
-from . import N_ENTITE
-from . import N_MCSIMP
+from Noyau import N_ENTITE
+from Noyau import N_MCSIMP
 
 
 class SIMP(N_ENTITE.ENTITE):
@@ -95,6 +95,7 @@ class SIMP(N_ENTITE.ENTITE):
         if self.min     == '**' : self.min     = float('-inf')
         if self.val_min == '**' : self.val_min = float('-inf')
         self.fenetreIhm=fenetreIhm
+        #self.creeT_SIMP()
 
     def verifCata(self):
         """
@@ -115,3 +116,40 @@ class SIMP(N_ENTITE.ENTITE):
             de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
         """
         return self.class_instance(nom=nom, definition=self, val=val, parent=parent)
+
+    def creeT_SIMP(self):
+        from Efi2Xsd.readerEfficas import monSIMP
+        from Efi2Xsd.mapDesTypes import dictSIMPEficasXML
+        
+        self.objXML=monSIMP()
+        for nomEficasArg in dictSIMPEficasXML :
+           argu=getattr(self,nomEficasArg)
+           nomXMLarg=dictSIMPEficasXML[nomEficasArg]
+           if not isinstance(nomXMLarg, (list, tuple)) :
+              print(nomXMLarg, argu)
+              #if nomEficasArg  in listeParamDeTypeTypeAttendu:
+              #   typeAttendu = self.typ
+                 
+              setattr(self.objXML, nomXMLarg, argu)
+           
+
+
+# for nomXMLArg in dir(self) :
+#          if nomXMLArg in self.dictATraiter :
+#              nomEficasArg=self.dictATraiter[nomXMLArg]
+#              argu=getattr(self,nomXMLArg)
+#              if argu==None : continue
+#
+#              if type(nomEficasArg) == types.DictionaryType:
+#                 for nomXML in list(nomEficasArg.keys()):
+#                      arguDecoupe=getattr(argu,nomXML)
+#                      nomEficasDecoupe=nomEficasArg[nomXML]
+#                      if arguDecoupe == None : continue
+#                      self.dictArgsEficas[nomEficasDecoupe]=arguDecoupe
+#              else :
+#                self.dictArgsEficas[nomEficasArg] = argu
+#
+# 
+#        
+#       
+#

@@ -187,10 +187,8 @@ class FacultatifOuOptionnel(object):
       self.node.delete()
 
   def setValide(self):
-      #print " c est le moment de gerer le passage au suivant"
       if not(hasattr (self,'RBValide')) : return
       couleur=self.node.item.getIconName()
-      if not self.editor.maConfiguration.differencieSiDefaut and couleur == 'ast-green-dark-ball' : couleur="ast-green-ball"
       monIcone = QIcon(self.repIcon+"/" + couleur + ".png")
       self.RBValide.setIcon(monIcone)
 

@@ -487,12 +487,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
 
   def getIconName(self):
-    if self.isValid():
-      if self.object.valeur == self.object.definition.defaut :
-         return "ast-green-dark-ball"
-      # cas des tuples et des listes
-      if self.object.definition.max > 1 :
-          if list(self.object.valeur) == list(self.object.definition.defaut) : return "ast-green-dark-ball"
+    if self.appli.maConfiguration.differencieSiDefaut and self.isValid():
+      if self.object.definition.defaut != None :
+         if self.object.valeur == self.object.definition.defaut : return "ast-green-dark-ball"
+         if self.object.definition.max > 1 and list(self.object.valeur) == list(self.object.definition.defaut) : return "ast-green-dark-ball"
       return "ast-green-ball"
     elif self.object.isOblig():
       return "ast-red-ball"
