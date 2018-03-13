@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cata xmlns="http://chercheurs.edf.com/logiciels/efficas" xmlns:efficas="http://chercheurs.edf.com/logiciels/efficas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://chercheurs.edf.com/logiciels/efficas file:///Z:/home_fayolle/MED_SVN/PASCALE/XSD/Model%20Efficas%20(1.1)%20%20v6%20ext.xsd">
+<cata xmlns="http://chercheurs.edf.com/logiciels/efficas" xmlns:efficas="http://chercheurs.edf.com/logiciels/efficas" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://chercheurs.edf.com/logiciels/efficas file:///Z:/home_fayolle/MED_SVN/PASCALE/XSD/Model%20Efficas%20(1.1)%20%20v7%20ext.xsd">
 <commandes>
 <PROC  efficas:nom="PROC1">
     <doc efficas:fr="Voilà De la Documentation intelligente avec les accents éèàçùöûîâ"/>
@@ -27,13 +27,11 @@
 		 <valeurDef><typesimple>42</typesimple></valeurDef>
 		<typeAttendu>I</typeAttendu>
 	</SIMP>
-    <!--
-	<SIMP efficas:nom="SIMP5" efficas:min_occurs="2" efficas:max_occurs="-1">
+<!--	<SIMP efficas:nom="SIMP5" efficas:min_occurs="2" efficas:max_occurs="-1">
 		 <valeurDef><typesimple xsi:type="T_list_I">52 53</typesimple></valeurDef>
 		<typeAttendu>I</typeAttendu>
 	</SIMP>
-    -->
-</FACT>
+--></FACT>
 </PROC>
 </commandes>
 </cata>

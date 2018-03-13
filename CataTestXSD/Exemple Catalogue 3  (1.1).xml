@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://chercheurs.edf.com/logiciels/efficas" xmlns:efficas="http://chercheurs.edf.com/logiciels/efficas" xsi:schemaLocation="http://chercheurs.edf.com/logiciels/efficas ../Efi2Xsd/ModeleEficas/Model%20Efficas%20(1.1)%20%20v9.xsd">
+	<commandes>
+		<OPER efficas:nom="CREECARTE">
+			<SIMP efficas:nom="UNITE" efficas:statut="f" efficas:minOccurences="1" efficas:maxOccurences="1">
+				<!-- La cohérence entre minOccurences et maxOccurences n'est pas vérifié -->
+				<valeurDef>
+					<!-- Essai liste : si maxOccurences == 1 ne devrait pas pouvoir être une liste -->
+					<!--					<typesimple xsi:type="efficas:T_list_I">21 22</typesimple>-->
+					<!-- Erreurs volontaires : -->
+					<!--					<typesimple xsi:type="efficas:T_I">21 34 </typesimple>-->
+								           <!--<valeurDef xsi:type="T_I">21 2.2</valeurDef>-->
+					<typesimple xsi:type="efficas:T_I">21</typesimple>
+				</valeurDef>
+				<nomTypeAttendu>I</nomTypeAttendu>
+			</SIMP>
+			<typeCree>carte</typeCree>
+		</OPER>
+		<OPER efficas:nom="CREECARTEFLUX">
+			<SIMP efficas:nom="NOMFLUX" efficas:statut="o">
+				<valeurDef>
+					<TXM>dsd</TXM>
+				</valeurDef>
+				<nomTypeAttendu>TXM</nomTypeAttendu>
+			</SIMP>
+			<typeCree>carte_flux_r</typeCree>
+		</OPER>
+		<OPER efficas:nom="CREEMAILLE">
+			<SIMP efficas:nom="NOEUDS" efficas:statut="o" efficas:minOccurences="1" efficas:maxOccurences="-1">
+				<!-- La cohérence entre la cardinalité et le type de valeur par défaut n'est pas vérifié -->
+				<!-- La cohérence entre la cardinalité et la taille de la liste n'est pas vérifié -->
+				<valeurDef>
+					<typesimple xsi:type="efficas:T_list_I">1 2</typesimple>
+				</valeurDef>
+				<!-- La cohérence entre T_list_I et le 'I' du typeAttendu n'est pas vérifié-->
+				<nomTypeAttendu>I</nomTypeAttendu>
+			</SIMP>
+			<typeCree>maille</typeCree>
+		</OPER>
+		<PROC efficas:nom="E1">
+			<efficas:regles>
+				<!--				<EXCLUS>ETAT_INIT RESULTAT</EXCLUS>-->
+				<EXCLUS>RESULTAT</EXCLUS>
+				<EXCLUS>ETAT_INIT</EXCLUS>
+			</efficas:regles>
+			<FACT efficas:nom="ETAT_INIT" efficas:statut="f" efficas:maxOccurences="-1">
+				<SIMP efficas:nom="GROUP_MA_1" efficas:statut="o" efficas:maxOccurences="-1">
+					<nomTypeAttendu>I</nomTypeAttendu>
+					<validators>NoRepeat</validators>
+				</SIMP>
+				<SIMP efficas:nom="GROUP_NO_2" efficas:statut="o" efficas:maxOccurences="-1">
+					<nomTypeAttendu>I</nomTypeAttendu>
+					<validators>NoRepeat</validators>
+				</SIMP>
+			</FACT>
+			<FACT efficas:nom="RESULTAT" efficas:statut="o">
+				<SIMP efficas:nom="DEPL" efficas:statut="o">
+					<nomTypeAttendu>R</nomTypeAttendu>
+					<validators>NoRepeat</validators>
+				</SIMP>
+				<SIMP efficas:nom="VITE" efficas:statut="f">
+					<nomTypeAttendu>R</nomTypeAttendu>
+					<validators>NoRepeat</validators>
+				</SIMP>
+				<SIMP efficas:nom="ACCE" efficas:statut="f">
+					<nomTypeAttendu>R</nomTypeAttendu>
+					<validators>NoRepeat</validators>
+				</SIMP>
+			</FACT>
+		</PROC>
+		<PROC efficas:nom="E2">
+			<regles>
+				<UN_PARMI>CONCEPT</UN_PARMI>
+				<UN_PARMI>CONCEPT2</UN_PARMI>
+			</regles>
+			<FACT efficas:nom="CONCEPT">
+				<SIMP efficas:nom="NOM" efficas:statut="o" efficas:maxOccurences="-1">
+					<!-- On attend une classe utilisateur quelconque, elle n'est pas nommée -->
+					<nomTypeAttendu>classeUtilisateur</nomTypeAttendu>
+					<validators>NoRepeat</validators>
+				</SIMP>
+				<SIMP efficas:nom="CHAINE" efficas:statut="f">
+					<nomTypeAttendu>TXM</nomTypeAttendu>
+				</SIMP>
+				<SIMP efficas:nom="POSITION" efficas:statut="f">
+					<valeurDef>
+						<typesimple xsi:type="efficas:T_I">1</typesimple>
+					</valeurDef>
+					<nomTypeAttendu>I</nomTypeAttendu>
+				</SIMP>
+				<SIMP efficas:nom="TOUT" efficas:statut="f">
+					<plageValeur>
+						<into>
+							<TXM>OUI Avec Des Blancs</TXM>
+							<TXM>NON</TXM>
+							<!-- TODO : On ne devrait pas pouvoir mixer des types différents -->
+							<!--						<typesimple xsi:type="T_I">1</typesimple>-->
+							<!-- Ds un autre cas de type attendu, on pourrait avoir une séquence de tuples -->
+							<!-- <tuple>OUI NON</tuple>						-->
+							<!-- TODO : Vérifier que les tuples sont de type homogène -->
+							<!-- <tuple>OUI NON 2</tuple> -->
+						</into>
+					</plageValeur>
+					<nomTypeAttendu>TXM</nomTypeAttendu>
+				</SIMP>
+			</FACT>
+			<!-- Test unicité : Ne devrait pas passer -->
+			<SIMP efficas:nom="CONCEPT1">
+				<nomTypeAttendu>I</nomTypeAttendu>
+			</SIMP>
+			<FACT efficas:nom="CONCEPT2">
+				<SIMP efficas:nom="essai1">
+					<nomTypeAttendu>I</nomTypeAttendu>
+				</SIMP>
+			</FACT>
+		</PROC>
+		<!-- Test unicité -->
+		<PROC efficas:nom="E3">
+			<SIMP efficas:nom="DEFORMATION" efficas:statut="f">
+				<valeurDef>
+					<TXM>PETIT</TXM>
+				</valeurDef>
+				<plageValeur>
+					<into>
+						<!-- Il n'est pas necessaire d'utiliser les "" ds les tuples -->
+						<TXM>PETIT</TXM>
+						<TXM>PETIT</TXM>
+					</into>
+				</plageValeur>
+				<nomTypeAttendu>TXM</nomTypeAttendu>
+			</SIMP>
+			<BLOC efficas:nom="b_blocIn">
+				<SIMP efficas:nom="ITER_INTE_PAS" efficas:statut="f">
+					<valeurDef>
+						<typesimple xsi:type="efficas:T_I">0</typesimple>
+					</valeurDef>
+					<nomTypeAttendu>I</nomTypeAttendu>
+				</SIMP>
+				<SIMP efficas:nom="ALGO_INTE" efficas:statut="f">
+					<plageValeur>
+						<into>
+							<TXM>ANALYTIQUE</TXM>
+							<TXM>SACANTE</TXM>
+							<TXM>DEKKER</TXM>
+							<TXM>NEWTON_ID</TXM>
+							<TXM>BRENT</TXM>
+						</into>
+					</plageValeur>
+					<nomTypeAttendu>TXM</nomTypeAttendu>
+				</SIMP>
+				<SIMP efficas:nom="CARTE" efficas:statut="f">
+					<nomTypeAttendu xsi:type="T_nomClasseUtilisateur" efficas:nom="carte">classeUtilisateur</nomTypeAttendu>
+					<!-- REM : Les deux lignes suivantes sont équivalentes et ne permettent pas de spécifier le nom du type utilisateur, le type anonyme hérite de la classe efficas de base -->
+					<!--  					<nomTypeAttendu xsi:type="T_classe_utilisateur_name">T_classe_utilisateur</nomTypeAttendu>-->
+					<!--  					<nomTypeAttendu>T_classe_utilisateur</nomTypeAttendu>-->
+					<!-- REM : La ligne suivante est interdite par abstraction -->
+					<!--					<classeUtilisateurName efficas:nom="carte">T_classe_utilisateur</classeUtilisateurName>-->
+				</SIMP>
+				<BLOC efficas:nom="b_carte">
+					<SIMP efficas:nom="CONTRAINTE" efficas:statut="o" efficas:maxOccurences="-1">
+						<doc efficas:fr="Options pour le calcul des contraintes et efforts généralisés"/>
+						<plageValeur>
+							<into>
+								<fonctionUtilisateur>C_NOM_CHAM_INTO(phenomene='CONTRAINTE',categorie='lin')</fonctionUtilisateur>
+							</into>
+						</plageValeur>
+						<nomTypeAttendu>TXM</nomTypeAttendu>
+						<validators>NoRepeat</validators>
+					</SIMP>
+					<condition/>
+				</BLOC>
+				<condition>"DEFORMATION in ('PETIT','PETIT_REAC','GROT_GDEP')"</condition>
+			</BLOC>
+		</PROC>
+		<PROC efficas:nom="testSIMPList">
+			<!-- (la validation des éléments de la liste n'est pas possible en xsd) :-->
+			<!-- (essayer de vérifier la taille de liste en fonction de maxOccurences) :-->
+			<SIMP efficas:nom="testListI" efficas:minOccurences="0" efficas:maxOccurences="2">
+			   <valeurDef><typesimple xsi:type="T_list_I">12 13</typesimple></valeurDef>
+			   <plageValeur>
+				   <into><typesimple xsi:type="T_list_I">12 13</typesimple> </into>
+				   <into><typesimple xsi:type="T_list_I">22 23</typesimple> </into>
+				   <into><typesimple xsi:type="T_list_I">33</typesimple> </into>
+			   </plageValeur>
+			     <!-- Vérifier la cohérence entre le nomTypeAttendu et les valeurs définies-->
+			    <nomTypeAttendu>I</nomTypeAttendu>
+			</SIMP>
+			<!--Ex 3.2 (idem 2.2, idem 1.2)-->
+			<SIMP efficas:nom="testListTuple" efficas:minOccurences="0" efficas:maxOccurences="2">
+			   <valeurDef><tuple n="3">12 13 14</tuple><tuple n="3">15 16 17</tuple></valeurDef>
+			   <plageValeur>
+				   <into><tuple n="3">22 23 24</tuple><tuple n="3">25 26 27</tuple></into>
+				   <into><tuple n="3">12 13 14</tuple><tuple n="3">15 16 17</tuple></into>
+				   <into><tuple n="3">32 33 34</tuple><tuple n="3">35 36 37</tuple></into>
+				   <into><tuple n="3">42 43 44</tuple><tuple n="3">45 46 47</tuple></into>
+				   <into><tuple n="3">2 3 4</tuple></into>		   
+			   </plageValeur>
+			   <nomTypeAttendu>tuple</nomTypeAttendu>
+			</SIMP>
+			<SIMP efficas:nom="testListTXM" efficas:minOccurences="0" efficas:maxOccurences="2">
+			   <valeurDef><TXM>a a</TXM><TXM>b b</TXM><TXM>c c</TXM></valeurDef>
+			   <plageValeur>
+				   <into><TXM>a1 a1</TXM><TXM>b1 b1</TXM><TXM>c1 c1</TXM></into>
+				   <into><TXM>a2</TXM><TXM>b2 b2 b2 b22</TXM><TXM>c1 c1</TXM></into>
+			   </plageValeur>
+			    <nomTypeAttendu>TXM</nomTypeAttendu>
+			</SIMP>
+		</PROC>
+	</commandes>
+</cata>

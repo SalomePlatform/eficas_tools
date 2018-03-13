@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- édité avec XMLSpy v2018 sp1 (http://www.altova.com) par Fayolle (EDF R&D) -->
-<!-- edited with XMLSpy v2015 rel. 4 (http://www.altova.com) by USER1 (EDF-DSP) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns="http://chercheurs.edf.com/logiciels/efficas" xmlns:efficas="http://chercheurs.edf.com/logiciels/efficas" xmlns:altova="http://www.altova.com/xml-schema-extensions" targetNamespace="http://chercheurs.edf.com/logiciels/efficas" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0" vc:minVersion="1.1">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns="http://chercheurs.edf.com/logiciels/efficas" xmlns:efficas="http://chercheurs.edf.com/logiciels/efficas" targetNamespace="http://chercheurs.edf.com/logiciels/efficas" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0" vc:minVersion="1.1">
 	<xs:element name="doc" type="T_doc"/>
 	<xs:element name="cata" type="T_cata"/>
 	<xs:element name="regles" type="T_regles"/>
@@ -18,13 +16,13 @@
 	</xs:element>
 	<xs:element name="validators" type="T_validators"/>
 	<xs:element name="plageValeur" type="T_plageValeur"/>
-	<xs:element name="nomTypeAttendu" type="T_name"/>
-	<xs:element name="classeUtilisateurName" type="T_classeUtilisateurName" abstract="true" substitutionGroup="nomTypeAttendu"/>
+	<xs:element name="nomTypeAttendu" type="T_nomTypeAttendu"/>
+	<xs:element name="nomClasseUtilisateur" type="T_nomClasseUtilisateur" abstract="true" substitutionGroup="nomTypeAttendu"/>
 	<xs:element name="SIMP" type="T_SIMP"/>
 	<xs:element name="portee" type="T_portee" default="None"/>
 	<xs:element name="condition" type="T_fonctionUtilisateur"/>
-	<xs:element name="borneSup" type="T_typeAttendu"/>
-	<xs:element name="borneInf" type="T_typeAttendu"/>
+	<xs:element name="borneSup" type="T_borne"/>
+	<xs:element name="borneInf" type="T_borne"/>
 	<!--	<xs:element name="into" type="T_into"/>-->
 	<xs:element name="into" type="T_into"/>
 	<!--	<xs:element name="into_plus_fonction" type="T_into" abstract="true" substitutionGroup="into"/>-->
@@ -59,10 +57,10 @@
 				<xs:element ref="borneSup" minOccurs="0"/>
 				<xs:element ref="borneInf" minOccurs="0"/>
 			</xs:sequence>
-			<xs:element ref="into"/>
+			<xs:element ref="into" maxOccurs="unbounded"/>
 		</xs:choice>
 	</xs:complexType>
-	<xs:complexType name="T_accasCommon">
+	<xs:complexType name="T_accasCommun">
 		<xs:sequence>
 			<xs:element ref="regles" minOccurs="0"/>
 			<xs:element ref="doc" minOccurs="0"/>
@@ -151,7 +149,7 @@
 	</xs:element>
 	<xs:complexType name="T_OPER">
 		<xs:complexContent>
-			<xs:extension base="T_accasCommon">
+			<xs:extension base="T_accasCommun">
 				<xs:sequence>
 					<xs:element ref="typeCree"/>
 				</xs:sequence>
@@ -165,7 +163,7 @@
 			<xs:annotation>
 				<xs:documentation>SIMP devrait être selectionné que si .//SIMP[portee='Global']</xs:documentation>
 			</xs:annotation>
-			<xs:selector xpath="./efficas:BLOC | ./efficas:FACT| ./efficas:SIMP"/>
+			<xs:selector xpath="./efficas:BLOC | ./efficas:FACT | ./efficas:SIMP"/>
 			<xs:field xpath="@efficas:nom"/>
 		</xs:key>
 		<xs:keyref name="Proc_Ref_A_Name_In_Exclus" refer="Key_Name_In_Proc">
@@ -235,7 +233,7 @@
 	</xs:element>
 	<xs:complexType name="T_PROC">
 		<xs:complexContent>
-			<xs:extension base="T_accasCommon">
+			<xs:extension base="T_accasCommun">
 				<xs:attribute ref="subroutine"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -258,7 +256,7 @@
 	<!-- Définition par restriction -->
 	<!--	<xs:complexType name="T_FACT">
 		<xs:complexContent>
-			<xs:restriction base="T_accasCommon">
+			<xs:restriction base="T_accasCommun">
 				<xs:sequence>
 					<xs:element ref="regles" minOccurs="0"/>
 					<xs:element ref="doc" minOccurs="0"/>
@@ -273,7 +271,7 @@
 	</xs:complexType>-->
 	<xs:complexType name="T_FACT">
 		<xs:complexContent>
-			<xs:extension base="T_accasCommon">
+			<xs:extension base="T_accasCommun">
 				<xs:attribute ref="statut"/>
 				<xs:attribute ref="minOccurences" default="1"/>
 				<xs:attribute ref="maxOccurences" default="1">
@@ -305,7 +303,7 @@
 	</xs:element>
 	<xs:complexType name="T_BLOC">
 		<xs:complexContent>
-			<xs:extension base="T_accasCommon">
+			<xs:extension base="T_accasCommun">
 				<xs:sequence>
 					<xs:element ref="condition"/>
 				</xs:sequence>
@@ -381,19 +379,22 @@
 		<xs:restriction base="xs:string"/>
 	</xs:simpleType>
 	<!-- TODO: Exclure mots clés python|efficas -->
-	<xs:simpleType name="AT_nom">
+	<xs:simpleType name="T_pythonIdentifiant">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="([A-Z]|[a-z]|_)([A-Z]|[a-z]|_|[0-9])*"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="AT_nom">
+		<xs:restriction base="T_pythonIdentifiant"/>
+	</xs:simpleType>
 	<xs:simpleType name="T_predicat1">
-		<xs:list itemType="AT_nom"/>
+		<xs:list itemType="T_pythonIdentifiant"/>
 		<!-- TODO: Supprimer la liste -->
 	</xs:simpleType>
 	<xs:complexType name="T_predicat2">
 		<xs:sequence>
 			<xs:element name="p1" type="T_predicat1" minOccurs="1"/>
-			<xs:element name="p2" type="AT_nom" minOccurs="1"/>
+			<xs:element name="p2" type="T_pythonIdentifiant" minOccurs="1"/>
 		</xs:sequence>
 		<!-- TODO: Supprimer la séquence -->
 	</xs:complexType>
@@ -427,7 +428,7 @@
 	</xs:simpleType>
 -->
 	<xs:simpleType name="AT_subroutine">
-		<xs:restriction base="AT_nom"/>
+		<xs:restriction base="T_pythonIdentifiant"/>
 	</xs:simpleType>
 	<xs:simpleType name="T_validators">
 		<xs:restriction base="xs:string">
@@ -455,12 +456,17 @@
 	<xs:simpleType name="T_list_R">
 		<xs:list itemType="T_R"/>
 	</xs:simpleType>
-	<xs:simpleType name="T_TXM">
-		<xs:restriction base="AT_nom"/>
+	<!--	<xs:simpleType name="T_TXM">
+		<xs:restriction base="xs:string"/>
 	</xs:simpleType>
 	<xs:simpleType name="T_list_TXM">
 		<xs:list itemType="T_TXM"/>
 	</xs:simpleType>
+-->
+	<!--<xs:simpleType name="T_list_TXM">
+	<xs:restriction base="T_list_TXM2"> <xs:maxLength value="1"/><xs:minLength value="1"/></xs:restriction>
+</xs:simpleType>
+-->
 	<!--fonctionne mais ne permet pas de créer une liste de liste -->
 	<xs:simpleType name="T_C">
 		<xs:restriction>
@@ -476,14 +482,13 @@
 	<xs:simpleType name="T_list_C">
 		<xs:list itemType="xs:double"/>
 	</xs:simpleType>
-	<xs:simpleType name="T_nameBase">
-		<xs:restriction base="AT_nom"/>
+	<xs:simpleType name="T_nomTypeAttenduBase">
+		<xs:restriction base="T_pythonIdentifiant"/>
 	</xs:simpleType>
 	<xs:simpleType name="T_simpleName">
-		<xs:restriction base="T_nameBase">
+		<xs:restriction base="T_nomTypeAttenduBase">
 			<xs:enumeration value="Fichier"/>
 			<xs:enumeration value="Repertoire"/>
-			<xs:enumeration value="TXM"/>
 			<xs:enumeration value="I"/>
 			<xs:enumeration value="R"/>
 			<xs:enumeration value="C"/>
@@ -493,34 +498,39 @@
 			<xs:enumeration value="SalomeEntry"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<!-- On ne peut pas rendre abstrait un simpleType && 
-          Il n'est pas possible de dériver par restriction un simplecontent d'un type complex qui
-          lui peut être abstrait.
-    -->
-	<xs:simpleType name="T_classeUtilisateurTypeName">
-		<xs:restriction base="T_name">
-			<xs:enumeration value="T_classeUtilisateur"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:complexType name="T_classeUtilisateurName">
-		<xs:simpleContent>
-			<xs:extension base="T_classeUtilisateurTypeName">
-				<xs:attribute ref="nom" use="required"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-	<xs:simpleType name="T_name">
+	<xs:simpleType name="T_nomTypeAttendu">
 		<xs:union memberTypes="T_simpleName">
 			<xs:simpleType>
-				<xs:restriction base="AT_nom">
-					<xs:enumeration value="T_matriceDouble"/>
-					<xs:enumeration value="T_matriceSymetriqueDouble"/>
-					<xs:enumeration value="T_tuple"/>
-					<xs:enumeration value="T_classeUtilisateur"/>
+				<xs:restriction base="T_pythonIdentifiant">
+					<xs:enumeration value="TXM"/>
+					<xs:enumeration value="matriceDouble"/>
+					<xs:enumeration value="matriceSymetriqueDouble"/>
+					<xs:enumeration value="tuple"/>
+					<xs:enumeration value="classeUtilisateur"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
+	<!-- On ne peut pas rendre abstrait un simpleType && 
+          Il n'est pas possible de dériver par restriction un simplecontent d'un type complex qui
+          lui peut être abstrait.
+    -->
+	<!-- Le type T_nomDuTypeClasseUtilisateur est réduit à l'énumeration "classeUtilisateur"
+          et utilisé dans le type T_nomClasseUtilisateur pour y ajouter un attribut nom
+    -->
+	<xs:simpleType name="T_nomDuTypeClasseUtilisateur">
+		<xs:restriction base="T_nomTypeAttendu">
+			<xs:enumeration value="classeUtilisateur"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Le nom de la classe utilisateur est donnée dans l'attribut nom-->
+	<xs:complexType name="T_nomClasseUtilisateur">
+		<xs:simpleContent>
+			<xs:extension base="T_nomDuTypeClasseUtilisateur">
+				<xs:attribute ref="nom" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
 	<xs:complexType name="T_grma"/>
 	<xs:complexType name="T_grno"/>
 	<xs:complexType name="T_SalomeEntry"/>
@@ -536,24 +546,14 @@
 		</xs:list>
 	</xs:simpleType>
 	<xs:simpleType name="T_simple">
-		<xs:union memberTypes="T_I T_list_I T_R T_list_R T_C T_list_C T_TXM T_list_TXM T_bool T_list_bool T_Repertoire"/>
+		<xs:union memberTypes="T_I T_list_I T_R T_list_R T_C T_list_C T_bool T_list_bool T_Repertoire"/>
 	</xs:simpleType>
-	<!--	<xs:complexType name="T_TXM"/>-->
-	<!--	<xs:simpleType name="T_simple">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Fichier"/>
-			<xs:enumeration value="Repertoire"/>
-			<xs:enumeration value="TXM"/>
-			<xs:enumeration value="I"/>
-			<xs:enumeration value="R"/>
-			<xs:enumeration value="C"/>
-			<xs:enumeration value="bool"/>
-			<xs:enumeration value="grma"/>
-			<xs:enumeration value="grno"/>
-			<xs:enumeration value="SalomeEntry"/>
-		</xs:restriction>
+	<xs:simpleType name="T_TXM">
+		<xs:annotation>
+			<xs:documentation>les TXM peuvent contenir des espaces, pour créer une liste de TXM, il faut donc répéter le nom de la balise.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
 	</xs:simpleType>
--->
 	<xs:simpleType name="T_list_Double">
 		<xs:list itemType="xs:double"/>
 	</xs:simpleType>
@@ -579,7 +579,7 @@
 		<xs:list itemType="xs:anySimpleType"/>
 	</xs:simpleType>
 -->
-	<!-- Le fait de ne pas déclarer une liste risque d'être problématique pour le parsing : A voir-->
+	<!-- Le fait de ne pas déclarer une liste risque d'être problématique pour le parsing : Problème résolu avec une séquence de tuple -->
 	<xs:complexType name="T_tuple">
 		<xs:simpleContent>
 			<xs:extension base="xs:anySimpleType">
@@ -588,9 +588,10 @@
 		</xs:simpleContent>
 	</xs:complexType>
 	<xs:simpleType name="T_classeUtilisateur">
-		<xs:restriction base="AT_nom"/>
+		<xs:restriction base="T_pythonIdentifiant"/>
 	</xs:simpleType>
 	<xs:element name="typesimple" type="T_simple"/>
+	<xs:element name="TXM" type="T_TXM"/>
 	<xs:element name="matriceDouble" type="T_matriceDouble"/>
 	<xs:element name="matriceSymetriqueDouble" type="T_matriceSymetriqueDouble"/>
 	<xs:element name="tuple" type="T_tuple"/>
@@ -630,7 +631,8 @@
 	<xs:complexType name="T_into">
 		<xs:choice>
 			<!--			<xs:element ref="typesimple" type="T_Base"/>-->
-			<xs:element ref="typesimple" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="typesimple" minOccurs="0"/>
+			<xs:element ref="TXM" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="matriceDouble" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="matriceSymetriqueDouble" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="tuple" minOccurs="0" maxOccurs="unbounded"/>
@@ -643,10 +645,22 @@
 			<xs:restriction base="T_into">
 				<xs:choice>
 					<xs:element ref="typesimple" minOccurs="0" maxOccurs="1"/>
-					<xs:element ref="matriceDouble" minOccurs="0" maxOccurs="1"/>
-					<xs:element ref="matriceSymetriqueDouble" minOccurs="0" maxOccurs="1"/>
-					<xs:element ref="tuple" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="TXM" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="matriceDouble" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="matriceSymetriqueDouble" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="tuple" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element ref="classeUtilisateur" minOccurs="0" maxOccurs="1"/>
+				</xs:choice>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="T_borne">
+		<xs:complexContent>
+			<xs:restriction base="T_into">
+				<xs:choice>
+					<xs:element ref="typesimple" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="TXM" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="fonctionUtilisateur" minOccurs="0" maxOccurs="1"/>
 				</xs:choice>
 			</xs:restriction>
 		</xs:complexContent>
