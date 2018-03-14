@@ -109,15 +109,18 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             widget=MonWidgetHeure(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.waitTuple() :
-            if self.item.object.definition.type[0].ntuple == 2:
-               from InterfaceQT4.monWidgetSimpTuple2 import MonWidgetSimpTuple2
-               widget=MonWidgetSimpTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif self.item.object.definition.type[0].ntuple == 3 :
-               from InterfaceQT4.monWidgetSimpTuple3 import MonWidgetSimpTuple3
-               widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            else :
-               print ("Pas de Tuple de longueur > 3")
-               print ("Prevenir la maintenance ")
+            num=self.item.object.definition.type[0].ntuple
+            nomDeLaClasse = 'MonWidgetSimpTuple'+str(num)
+            nomDuFichier  = 'InterfaceQT4.monWidgetSimpTupleN'
+            #try :
+            if 1 :
+               _temp = __import__(nomDuFichier, globals(), locals(), [nomDeLaClasse], 0)
+               print (_temp)
+               MonWidgetSimpTuple =  getattr(_temp,nomDeLaClasse)
+            #except :
+            #   print ("Pas de Tuple de longueur : ", num)
+            #   print ("Prevenir la maintenance ")
+            widget=MonWidgetSimpTuple(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.waitComplex():
             from InterfaceQT4.monWidgetSimpComplexe import MonWidgetSimpComplexe
@@ -189,15 +192,18 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             if self.item.object.definition.fenetreIhm == 'Tableau' :
                from InterfaceQT4.monWidgetTableau import MonWidgetTableau
                widget=MonWidgetTableau(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif self.item.object.definition.type[0].ntuple == 2:
-               from InterfaceQT4.monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
-               widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif self.item.object.definition.type[0].ntuple == 3 :
-               from InterfaceQT4.monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
-               widget=MonWidgetPlusieursTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            else :
-               print ("Pas de Tuple de longueur > 3")
-               print ("Prevenir la maintenance ")
+            else  :
+               num=self.item.object.definition.type[0].ntuple
+               nomDeLaClasse = 'MonWidgetPlusieursTuple'+str(num)
+               nomDuFichier  = 'InterfaceQT4.monWidgetPlusieursTupleN'
+               try:
+                  _temp = __import__(nomDuFichier, globals(), locals(), [nomDeLaClasse], 0)
+                  MonWidgetPlusieursTuple =  getattr(_temp,nomDeLaClasse)
+               except :
+                  print ("Pas de Tuple de longueur : ", num)
+                  print ("Prevenir la maintenance ")
+               widget=MonWidgetPlusieursTuple(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+
           elif self.item.hasInto():
             if self.item.isListSansOrdreNiDoublon():
                
@@ -215,7 +221,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                   from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            #print 8
             if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
                from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
                widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
@@ -491,6 +496,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       if self.object.definition.defaut != None :
          if self.object.valeur == self.object.definition.defaut : return "ast-green-dark-ball"
          if self.object.definition.max > 1 and list(self.object.valeur) == list(self.object.definition.defaut) : return "ast-green-dark-ball"
+      return "ast-green-ball"
+    elif self.isValid():
       return "ast-green-ball"
     elif self.object.isOblig():
       return "ast-red-ball"
