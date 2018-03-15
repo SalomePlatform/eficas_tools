@@ -44,7 +44,6 @@ class MonRBButtonCustom(QCheckBox):
          mapalette.setColor( QPalette.Base, Qt.green )
          self.setPalette( mapalette );
          self.setText(tr(texte))
-         print ('jjjjjjjjjjjj')
          try :
            monToolTip=monOptionnel.parentMC.dictToolTipMc[texte]
            self.setToolTip(monToolTip)
@@ -97,18 +96,25 @@ class MonPBButtonCustom(QWidget,Ui_customPB):
       if couleur != None :
          print ( 'je change pour ', texte)
          self.monPb.setText(texte)
-         self.monPb.setStyleSheet('QPushButton {background-color: #A3C1DA; color: red;}')
-         mapalette=self.monPb.palette()
-         mapalette.setColor( QPalette.ButtonText, Qt.red )
-         self.monPb.setPalette( mapalette )
+         self.monPb.setStyleSheet( "background:rgb(229,62,30);\n"
+"border-radius : 10px;\n"
+"border-width : 30 px;\n"
+"border-color : beige;\n"
+"\n"
+"")
+
+
+         #mapalette=self.monPb.palette()
+         #mapalette.setColor( QPalette.ButtonText, Qt.red )
+         #self.monPb.setPalette( mapalette )
          self.monPb.update()
-         self.update()
+         #self.update()
          try :
            monToolTip=monOptionnel.parentMC.dictToolTipMc[texte]
            self.monPb.setToolTip(monToolTip)
          except :
            pass
-      #self.monPb.setText(texte)
+      self.monPb.setText(texte)
       self.monPb.clicked.connect(self.ajoutMC)
 
       self.texte=texte

@@ -196,12 +196,13 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                num=self.item.object.definition.type[0].ntuple
                nomDeLaClasse = 'MonWidgetPlusieursTuple'+str(num)
                nomDuFichier  = 'InterfaceQT4.monWidgetPlusieursTupleN'
-               try:
+               #try:
+               if 1 :
                   _temp = __import__(nomDuFichier, globals(), locals(), [nomDeLaClasse], 0)
                   MonWidgetPlusieursTuple =  getattr(_temp,nomDeLaClasse)
-               except :
-                  print ("Pas de Tuple de longueur : ", num)
-                  print ("Prevenir la maintenance ")
+               #except :
+               #   print ("Pas de Tuple de longueur : ", num)
+               #   print ("Prevenir la maintenance ")
                widget=MonWidgetPlusieursTuple(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           elif self.item.hasInto():

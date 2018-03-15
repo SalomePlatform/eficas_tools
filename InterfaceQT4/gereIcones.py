@@ -223,7 +223,7 @@ class FacultatifOuOptionnel(object):
   def choixSaisi(self):
       fction=str(self.CBScripts.currentText())
       numero= self.dictCommandes[fction]
-      self.node.AppelleFonction(numero,nodeTraite=self.node)
+      self.node.appelleFonction(numero,nodeTraite=self.node)
       #self.reaffiche()
 
 class ContientIcones(object):

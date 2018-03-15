@@ -42,6 +42,13 @@ from InterfaceQT4.gereListe             import GereListe
 from InterfaceQT4.gereListe             import LECustom
 from Tuple2                             import Ui_Tuple2
 from Tuple3                             import Ui_Tuple3
+from Tuple4                             import Ui_Tuple4
+from Tuple5                             import Ui_Tuple5
+from Tuple6                             import Ui_Tuple6
+from Tuple7                             import Ui_Tuple7
+from Tuple8                             import Ui_Tuple8
+from Tuple9                             import Ui_Tuple9
+from Tuple10                            import Ui_Tuple10
 
 
 #--------------------------
@@ -154,7 +161,6 @@ class TupleCustom(object) :
 #-------------------------------------------------
 class TupleCustom2(QWidget,Ui_Tuple2,TupleCustom):
 #-------------------------------------------------
-
   def __init__(self,tailleTuple,parent,parentQt,index):
   #-------------------
       TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
@@ -162,11 +168,68 @@ class TupleCustom2(QWidget,Ui_Tuple2,TupleCustom):
 #-------------------------------------------------
 class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
 #-------------------------------------------------
-
   def __init__(self,tailleTuple,parent,parentQt,index):
   #-----------------------------------------------------
       TupleCustom. __init__(self,tailleTuple,parent,parentQt,index)
       
+#-------------------------------------------------
+class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+#-------------------------------------------------
+class TupleCustom4(QWidget,Ui_Tuple4,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+#-------------------------------------------------
+class TupleCustom5(QWidget,Ui_Tuple5,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+#-------------------------------------------------
+class TupleCustom6(QWidget,Ui_Tuple6,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+#-------------------------------------------------
+class TupleCustom7(QWidget,Ui_Tuple7,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+#-------------------------------------------------
+class TupleCustom8(QWidget,Ui_Tuple8,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+#-------------------------------------------------
+class TupleCustom9(QWidget,Ui_Tuple9,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+#-------------------------------------------------
+class TupleCustom10(QWidget,Ui_Tuple10,TupleCustom):
+#-------------------------------------------------
+  def __init__(self,tailleTuple,parent,parentQt,index):
+  #-------------------
+      TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+
+
+
 
 
 # -------------------------------------------- #
@@ -212,16 +275,25 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          self.indexDernierLabel=self.indexDernierLabel-1
          return
 
-      if self.nbValeurs == 2 : nouveauLE = TupleCustom2(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
-      else                   : nouveauLE = TupleCustom3(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
+      nomCustomTuple='TupleCustom'+str(self.nbValeurs)
+      laClasseDuTuple=globals()[nomCustomTuple]
+      nouveauLE=laClasseDuTuple(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
+
+      #if self.nbValeurs == 2 : nouveauLE = TupleCustom2(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
+      #else                   : nouveauLE = TupleCustom3(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
                  
       self.verticalLayoutLE.insertWidget(self.indexDernierLabel-1,nouveauLE)
       setattr(self,nomLineEdit,nouveauLE)
       if valeur != None : nouveauLE.setValeur(valeur)
 
-      self.listeAffichageWidget.append(nouveauLE.lineEditVal_1)
-      self.listeAffichageWidget.append(nouveauLE.lineEditVal_2)
-      if self.nbValeurs == 3 : self.listeAffichageWidget.append(nouveauLE.lineEditVal_3)
+      for i in range(self.nbValeurs) :
+          num=i+1
+          nomLineEdit='lineEditVal_'+str(num)
+          lineEditVal=getattr(nouveauLE,nomLineEdit)
+          self.listeAffichageWidget.append(lineEditVal)
+      #self.listeAffichageWidget.append(nouveauLE.lineEditVal_1)
+      #self.listeAffichageWidget.append(nouveauLE.lineEditVal_2)
+      #if self.nbValeurs == 3 : self.listeAffichageWidget.append(nouveauLE.lineEditVal_3)
 
       self.etablitOrdre()
 
@@ -243,7 +315,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
        if self.editor.code == 'PSEN' : self.RBListePush()
        valeurs=self.node.item.getValeur()
        min,max=self.node.item.getMinMax()
-       if max == "**" or max > 5 : aCreer=5
+       if max == "**" or max > 8 : aCreer= 8
        else : aCreer=max 
 
        if valeurs == () or valeurs == None :
@@ -344,30 +416,30 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
               t=tuple(liste[i:len(liste)])
             i=i+self.nbValeurs
             if indexDernierRempli < self.indexDernierLabel:
-               print ('if')
-               nomLineEdit=self.nomLine+str(indexDernierRempli+1)
-               LEARemplir=getattr(self,nomLineEdit) 
-               LEARemplir.lineEditVal_1.setText(str(t[0]))
-               LEARemplir.lineEditVal_2.setText(str(t[1]))
-               if self.nbValeurs== 3 : LEARemplir.lineEditVal_3.setText(str(t[2]))
+
+               nomLEARemplir=self.nomLine+str(indexDernierRempli+1)
+               LEARemplir=getattr(self,nomLEARemplir) 
+               for n in range(self.nbValeurs) :
+                  nomLineEdit='lineEditVal_'+str(n+1)
+                  lineEditVal=getattr(LEARemplir,nomLineEdit)
+                  lineEditVal.setText(str(t[n]))
             else : 
-               print ('eslse')
                # ne pas appeler ajoutLineEdit(t,False ) pb de boucle pb du a etablitOrdre et a listeWidgetAffichage qui bouge
                self.indexDernierLabel=self.indexDernierLabel+1
                nomLineEdit=self.nomLine+str(self.indexDernierLabel)
 
-               if self.nbValeurs == 2 : nouveauLE = TupleCustom2(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
-               else                   : nouveauLE = TupleCustom3(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
+               nomCustomTuple='TupleCustom'+str(self.nbValeurs)
+               laClasseDuTuple=globals()[nomCustomTuple]
+               nouveauLE=laClasseDuTuple(self.nbValeurs,self.scrollArea,self,self.indexDernierLabel)
                  
-               print (nomLineEdit)
                self.verticalLayoutLE.insertWidget(self.indexDernierLabel-1,nouveauLE)
                setattr(self,nomLineEdit,nouveauLE)
-               print (nouveauLE)
                nouveauLE.setValeur(t)
 
-               self.listeAffichageWidget.append(nouveauLE.lineEditVal_1)
-               self.listeAffichageWidget.append(nouveauLE.lineEditVal_2)
-               if self.nbValeurs == 3 : self.listeAffichageWidget.append(nouveauLE.lineEditVal_3)
+               for n in range(self.nbValeurs) :
+                  nomLineEdit='lineEditVal_'+str(n+1)
+                  lineEditVal=getattr(nouveauLE,nomLineEdit)
+                  self.listeAffichageWidget.append(lineEditVal)
             indexDernierRempli = indexDernierRempli+1
 
         self.etablitOrdre()
