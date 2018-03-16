@@ -416,8 +416,8 @@ class MyViewManager(object):
        index=self.myQtab.currentIndex()
        if index < 0 : return
        editor=self.dict_editors[index]
-       if editor.getEtapeCourante == None :
-          QMessageBox.information( self,
+       if editor.getEtapeCourante() == None :
+          QMessageBox.information( self.appliEficas,
                       tr("Selectionner une etape"),
                       tr("Le texte sera inséré après l étape selectionnée"))
 
