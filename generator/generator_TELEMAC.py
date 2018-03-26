@@ -62,7 +62,10 @@ class TELEMACGenerator(PythonGenerator):
 
       self.statut        = statut
       self.langue        = appli.langue
-      self.TelemacdicoEn = appli.readercata.TelemacdicoEn
+      try : self.TelemacdicoEn = appli.readercata.TelemacdicoEn
+      except : 
+        print ('Attention : pas de TelemacdicoEn declare') 
+        self.TelemacdicoEn = {}
       self.DicoEnumCasEnInverse = {}
       #from enum_Telemac2d_auto       import self.TelemacdicoEn
       for motClef in self.TelemacdicoEn:
@@ -86,7 +89,12 @@ class TELEMACGenerator(PythonGenerator):
       else : self.listeTelemac = ()
 
       self.dicoCataToCas={}
-      self.dicoCasToCata=appli.readercata.dicoCasToCata
+      try :
+        self.dicoCasToCata=appli.readercata.dicoCasToCata
+      except :
+        print ('Attention pas de dicoCasToCata declare')
+        self.dicoCasToCata={}
+        self.dicoCataToCas={} 
       for motClef in self.dicoCasToCata:
            self.dicoCataToCas[self.dicoCasToCata[motClef]]=motClef
 
