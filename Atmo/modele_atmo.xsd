@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2015 rel. 4 (http://www.altova.com) by USER1 (EDF-DSP) -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:atmos="http://chercheurs.edf.com/logiciels/atmos" targetNamespace="http://chercheurs.edf.com/logiciels/atmos" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<simpleType name="T_Wind_Speed">
+		<restriction base="int"/>
+	</simpleType>
+	<simpleType name="T_Speed_Unit">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="T_Measurement">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="T_Value">
+		<restriction base="int"/>
+	</simpleType>
+	<simpleType name="T_Ground_roughness">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="T_Unit">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="T_Cover_type">
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="T_Atmos">
+		<sequence>
+			<element name="Wind" type="atmos:T_Wind" minOccurs="1" maxOccurs="1"/>
+			<element name="Ground" type="atmos:T_Ground" minOccurs="1" maxOccurs="1"/>
+			<element name="Cover" type="atmos:T_Cover" minOccurs="1" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_Wind">
+		<sequence>
+			<element name="Wind_Speed" type="atmos:T_Wind_Speed" minOccurs="1"/>
+			<element name="Speed_Unit" type="atmos:T_Speed_Unit" minOccurs="1"/>
+			<element name="Measurement" type="atmos:T_Measurement" minOccurs="1"/>
+			<element name="B_enter_mesure" type="atmos:T_B_enter_mesure" minOccurs="0" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_B_enter_mesure">
+		<sequence>
+			<element name="Value" type="atmos:T_Value" minOccurs="1"/>
+			<element name="Unit" type="atmos:T_Unit" minOccurs="1"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_Ground">
+		<sequence>
+			<element name="Ground_roughness" type="atmos:T_Ground_roughness" minOccurs="1"/>
+			<element name="B_enter_ground" type="atmos:T_B_enter_ground" minOccurs="0" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_B_enter_ground">
+		<sequence>
+			<element name="Value" type="atmos:T_Value" minOccurs="1"/>
+			<element name="Unit" type="atmos:T_Unit" minOccurs="1"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_Cover">
+		<sequence>
+			<element name="Cover_type" type="atmos:T_Cover_type" minOccurs="1"/>
+			<element name="B_enter_cover" type="atmos:T_B_enter_cover" minOccurs="0" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_B_enter_cover">
+		<sequence>
+			<element name="Value" type="atmos:T_Value" minOccurs="1"/>
+		</sequence>
+	</complexType>
+	<element name="Atmos" type="atmos:T_Atmos"/>
+</schema>
