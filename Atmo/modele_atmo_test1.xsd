@@ -30,23 +30,32 @@
 			<element name="Wind" type="atmos:T_Wind" minOccurs="1" maxOccurs="1"/>
 		</sequence>
 	</complexType>
-	<complexType name="T_Wind">
-		<sequence>
-			<element name="Wind_Speed1" type="atmos:T_Wind_Speed1"/>
+
+    <complexType name="T_Mesure1">
 			<sequence>
 				<element name="Value1" type="atmos:T_Value1"/>
 				<element name="Unit1" type="atmos:T_Unit1"/>
-			</sequence>
+			</sequence>    
+    </complexType>
+    <complexType name="T_Mesure">
+			<sequence>
+				<element name="Value" type="atmos:T_Value"/>
+				<element name="Unit" type="atmos:T_Unit"/>
+			</sequence>    
+    </complexType>
+    
+	<complexType name="T_Wind">
+		<sequence>
+			<element name="Wind_Speed1" type="atmos:T_Wind_Speed1"/>
+			<element name="Mesure1" type="atmos:T_Mesure1"/>
+
 			<element name="B_enter_mesure" type="atmos:T_B_enter_mesure" minOccurs="0" maxOccurs="1"/>
 		</sequence>
 	</complexType>
 	<complexType name="T_B_enter_mesure">
 		<sequence>
 			<element name="Wind_Speed" type="atmos:T_Wind_Speed"/>
-			<sequence>
-				<element name="Value" type="atmos:T_Value"/>
-				<element name="Unit" type="atmos:T_Unit"/>
-			</sequence>
+			<element name="Mesure" type="atmos:T_Mesure"/>
 		</sequence>
 	</complexType>
 	<element name="Atmos" type="atmos:T_Atmos"/>
