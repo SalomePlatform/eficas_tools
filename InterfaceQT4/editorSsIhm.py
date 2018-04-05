@@ -364,6 +364,13 @@ class JDCEditorSsIhm :
         self._viewText(strRapport, "JDC_RAPPORT")
 
     #-----------------------#
+    def viewJdcRegles(self):
+    #-----------------------#
+        # on ajoute les regles
+        texte_global, test_global =  self.jdc.verifRegles() 
+        self._viewText(texte_global, "JDC_REGLES")
+
+    #-----------------------#
     def getJdcRapport(self):
     #-----------------------#
         # on ajoute les regles
