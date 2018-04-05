@@ -94,6 +94,7 @@ class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
   def setDepliePourNode(self):
       noeudCourant=self.node.tree.itemCourant
       noeudCourant.setDeplieChildren()
+      if self.editor.fenetreCentraleAffichee == noeudCourant.fenetre : return
       noeudCourant.afficheCeNiveau()
       pass
 
@@ -142,5 +143,5 @@ class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
 
 
   def getPanel (self):
-      print ('surcharge ds getPanel')
+      #print ('surcharge ds getPanel')
       pass

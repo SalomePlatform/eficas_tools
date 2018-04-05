@@ -45,6 +45,9 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
   def __init__(self,node,editor,definition,obj):
       self.listeAffichageWidget=[]
       Groupe.__init__(self,node,editor,None,definition,obj,1,self)
+      from InterfaceQT4 import composimp
+      if isinstance(self.node ,composimp.Node):
+         widget=self.node.getPanelGroupe(self,self.maCommande)
       self.afficheOptionnel()
       self.inhibe=False
 

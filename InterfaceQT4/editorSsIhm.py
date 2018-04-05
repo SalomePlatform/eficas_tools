@@ -63,6 +63,7 @@ class JDCEditorSsIhm :
         self.appliEficas = appli
         self.appli       = appli
         self.fichier     = fichier
+        self.fichierComplet  = fichier
         self.jdc         = jdc
         self.first	 = True
         self.jdc_item    = None

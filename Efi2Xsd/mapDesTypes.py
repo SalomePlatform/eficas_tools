@@ -1,3 +1,22 @@
+class Tuple:
+  def __init__(self,ntuple):
+    self.ntuple=ntuple
+
+  def __convert__(self,valeur):
+    if type(valeur) == types.StringType:
+      return None
+    if len(valeur) != self.ntuple:
+      return None
+    return valeur
+
+  def info(self):
+    return "Tuple de %s elements" % self.ntuple
+
+  __repr__=info
+  __str__=info
+
+
+
 def inverseDico(dicoSource) :
 #---------------------------
     dicoInverse = {}
@@ -10,7 +29,7 @@ def inverseDico(dicoSource) :
         dicoInverse[elt][att]=clef
     return dicoInverse
      
-dictSIMPEficasXML= { 'typ'        : 'typeAttendu',
+dictSIMPEficasXML= { 'typ'        : 'nomTypeAttendu',
                      'statut'     : 'statut', 
                      'min'        : 'minOccurences',
                      'max'        : 'maxOccurences', 
@@ -37,10 +56,20 @@ dictFACTEficasXML = { 'statut'     : 'statut',
                       'ang'        : ('doc','ang'), 
                       'fr'         : ('doc','fr',),
                       'docu'       : ('doc','docu'),
+                      'regles'     : 'regles',
                       'validators' : 'validators' ,
                     }
 
 dictFACTXMLEficas =  inverseDico(dictFACTEficasXML)
+
+dictBLOCEficasXML = { 'statut'     : 'statut', 
+                      'ang'        : ('doc','ang'), 
+                      'fr'         : ('doc','fr',),
+                      'regles'     : 'regles',
+                      'condition'  : 'condition' ,
+                    }
+
+dictBLOCXMLEficas =  inverseDico(dictBLOCEficasXML)
 
 dictPROCEficasXML =  { 'nom'        : 'nom',
                        'regles'     : 'regles',
@@ -56,12 +85,16 @@ dictPROCEficasXML =  { 'nom'        : 'nom',
 
 dictPROCXMLEficas = inverseDico(dictPROCEficasXML)
 
-listeParamDeTypeTypeAttendu = ( 'defaut', 'sug', 'val_min', 'val_max', 'into')
-listeParamDeTypeStr         = ('fr', 'docu', 'ang', 'nom' )
-dicoPourCast                = { 'I' : int, 'R' : float }
+dictOPEREficasXML = dictPROCEficasXML
+dictOPERXMLEficas = dictPROCXMLEficas
 
-listeParamTjsEnListe        = ('into')
-listeParamEnListeSiMax      = ('defaut', 'into', 'sug') 
+dicoPourCast                = { 'I' : int, 'R' : float, 'bool' : bool ,   }
+
+listeParamDeTypeTypeAttendu = ( 'defaut', 'sug', 'val_min', 'val_max', 'into', 'intoSug')
+listeParamDeTypeStr         = ('fr', 'docu', 'ang', 'nom' )
+
+listeParamTjsSequence        = ('into' , 'intoSug')
+listeParamSelonType           = ('defaut', 'sug', 'into', 'intoSug') 
 
 if __name__ == "__main__":
    import pprint

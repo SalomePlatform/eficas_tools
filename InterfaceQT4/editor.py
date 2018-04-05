@@ -76,7 +76,6 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         self.widgetOptionnel=None
         self.fenetreCentraleAffichee=None
         self.dejaDansPlieTout=False
-        self.afficheCommandesPliees = True
         self.listeDesListesOuvertes=set()
         self.afficheListesPliees=True
         if appli!=None and hasattr(appli,"statusBar"): self.sb = appli.statusBar()
@@ -93,8 +92,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
 
         #self.affiche=self.appliEficas.maConfiguration.affiche
 
-        if self.code in ['MAP','CARMELCND','PSEN'] : self.afficheCommandesPliees=False
-        #if self.code in ['MAP','CARMELCND'] : self.afficheCommandesPliees=False
+        if self.code in ['MAP','CARMELCND','PSEN'] : self.editor.maConfiguration.afficheCommandesPliees=False
         if self.code in ['MAP',]: self.fermeArbre()
         #   self.widgetTree.close()
         #   self.widgetTree=None
@@ -109,8 +107,9 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         self.node_selected = []
         self.deplier = True
         self.message=''
+        self.afficheApresInsert=False
+        if self.maConfiguration.closeArbre    : self.afficheApresInsert=True
         if self.code in ['Adao','ADAO','MAP'] : self.afficheApresInsert=True
-        else                                  : self.afficheApresInsert=False
         if self.code in ['TELEMAC',]          : self.enteteQTree='premier'
         else                                  : self.enteteQTree='complet'
         if self.code in ['Adao','ADAO','TELEMAC'] : self.affichePlie=True

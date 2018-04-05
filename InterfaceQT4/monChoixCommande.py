@@ -134,7 +134,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       nodeCourrant=self.node.tree.currentItem()
       if nodeCourrant==None: nodeCourrant=self.node.tree.racine
       if self.name != None :
-         plier=self.editor.afficheCommandesPliees
+         plier=self.editor.maConfiguration.afficheCommandesPliees
          if nodeCourrant==self.node : nouveau=self.node.appendChild(self.name,'first',plier)
          else : nouveau=nodeCourrant.appendBrother(self.name,plier=plier)
       else :
@@ -144,7 +144,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
       #if self.editor.afficheApresInsert==True : nouveau.plieToutEtReaffiche()
       if self.editor.afficheApresInsert == True :
            #if self.editor.affichePlie==True:  nouveau.plieToutEtReaffiche()
-           if self.editor.afficheCommandesPliees ==True:  nouveau.plieToutEtReaffiche()
+           if self.editor.maConfiguration.afficheCommandesPliees ==True:  nouveau.plieToutEtReaffiche()
            else : nouveau.deplieToutEtReaffiche()
            nouveau.fenetre.donnePremier()
            #nouveau.deplieToutEtReaffiche()

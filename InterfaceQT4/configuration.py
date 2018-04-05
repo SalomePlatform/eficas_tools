@@ -116,6 +116,8 @@ class configBase(object):
       self.nombreDeBoutonParLigne=0
       self.translatorFichier=None
       self.dicoImages= {}
+      self.dicoIcones= {}
+      self.afficheCommandesPliees = True
       self.simpleClic= False
       self.afficheOptionnelVide=False
       self.afficheListesPliees=True

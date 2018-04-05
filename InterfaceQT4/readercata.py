@@ -230,6 +230,7 @@ class ReaderCata (ReaderCataCommun):
       if self.appliEficas.ssIhm == False : self.appliEficas.setWindowTitle(self.titre)
       self.appliEficas.titre=self.titre
       self.QWParent.titre=self.titre
+      #self.dumpXsd()
 
 
    def importCata(self,cata):
@@ -343,10 +344,13 @@ class ReaderCata (ReaderCataCommun):
    def dumpToXml(self):
        pass
        #from Efi2Xsd import readerEfficas
-       #print ('in dumpToXml')
        #newSchema=   xml = open('Cata_MED_FAM.xml').read()
        #SchemaMed = efficas.CreateFromDocument(xml)
        #SchemaMed.alimenteCata(self.cata)
 
+   def dumpXsd(self):
+       from Efi2Xsd.dumpToXsd import dumpXsd
+       print ('dumpToXsd : ', self)
+       dumpXsd(self)
 
 

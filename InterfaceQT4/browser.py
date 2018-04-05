@@ -78,10 +78,10 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.inhibeExpand=True
         self.expandItem(self.racine)
         self.inhibeExpand=False
-        #print "self.editor.afficheCommandesPliees", self.editor.afficheCommandesPliees
+        #print ("self.editor.maConfiguration.afficheCommandesPliees", self.editor.maConfiguration.afficheCommandesPliees)
         if self.racine.children !=[] :  
            #self.editor.initSplitterSizes(3)
-           if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
+           if self.editor.maConfiguration.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
            else : self.racine.children[0].deplieToutEtReaffiche()
            self.racine.children[0].fenetre.donnePremier()
         else : 
@@ -135,7 +135,7 @@ class JDCTree( QTreeWidget,GereRegles ):
         item.select()
 
     def handleExpandedItem(self,item):
-        #print "handleExpandedItem pour ", item.item.nom, self.inhibeExpand
+        #print ("handleExpandedItem pour ", item.item.nom, self.inhibeExpand)
         #import traceback
         #traceback.print_stack()
         if self.inhibeExpand == True : return
@@ -169,7 +169,7 @@ class JDCTree( QTreeWidget,GereRegles ):
             estUneFeuille=(isinstance(item,composimp.Node))
              # il faut afficher le parent
             if estUneFeuille                        : itemParent.affichePanneau()
-            elif self.editor.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
+            elif self.editor.maConfiguration.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
             else                                    : itemParent.affichePanneau()
 
 
@@ -182,7 +182,13 @@ class JDCTree( QTreeWidget,GereRegles ):
 
         try :
            fr = item.item.getFr()
-           if self.editor: self.editor.afficheCommentaire(six.text_type(fr))
+           chaineDecoupee= fr.split('\n')
+           if len(chaineDecoupee) > 3 :
+              txt='\n'.join(chaineDecoupee[0:2])+'...\nfull help : double clicked on validity chip of '+ str(item.item.nom)+ ' in central widget'
+           else : txt=fr
+
+           if self.editor: 
+              self.editor.afficheCommentaire(six.text_type(txt))
         except:
             pass
         item.select()
@@ -337,7 +343,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
 
     def afficheCeNiveau(self):
-        #print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
+        print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
             self.editor.widgetCentraleLayout.removeItem(widget)
@@ -852,10 +858,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.inhibeExpand=False
 
     def plieToutEtReaffiche(self):
-        if self.item.getNom() == 'RAFFINEMENT' : 
-           import traceback
-           traceback.print_stack()
-           print (a)
+        #print ('plieToutEtReaffiche', self.item.getNom())
         from InterfaceQT4 import compojdc
         if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
         self.inhibeExpand=True
@@ -876,7 +879,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def setPlie(self):
         #print "je mets inhibeExpand a true dans setPlie"
-        #print "je suis dans plieTout", self.item.getNom()
+        #print ("je suis dans plieTout", self.item.getNom())
         from . import compojdc
         if self.fenetre == self.editor.fenetreCentraleAffichee  and isinstance(self.treeParent,compojdc.Node): 
            return

@@ -77,7 +77,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
        self.setIconesFichier()
        self.setIconesSalome()
        self.setIconesGenerales()
-       #self.setCommentaire()
+       self.setCommentaire()
        self.setZoneInfo()
      
 

@@ -32,13 +32,13 @@
 	</complexType>
 
     <complexType name="T_Mesure1">
-			<sequence>
+			<sequence maxOccurs="4">
 				<element name="Value1" type="atmos:T_Value1"/>
 				<element name="Unit1" type="atmos:T_Unit1"/>
 			</sequence>    
     </complexType>
     <complexType name="T_Mesure">
-			<sequence>
+			<sequence maxOccurs="4">
 				<element name="Value" type="atmos:T_Value"/>
 				<element name="Unit" type="atmos:T_Unit"/>
 			</sequence>    

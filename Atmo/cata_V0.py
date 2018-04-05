@@ -38,7 +38,7 @@ class Tuple:
   __repr__=info
   __str__=info
 
-JdC = JDC_CATA(regles = (UN_PARMI('TELEMAC2D',)),
+JdC = JDC_CATA(regles = (UN_PARMI('Atmos',)),
                         )
 
 
@@ -47,7 +47,7 @@ Atmos = PROC(
     nom = "Atmos", op = None,
     fr = u"Définition d'un cas d'étude Atmosphérique",
     ang = u"Definition of  study case",
-    Wind = FACT( statut='o',
+    Wind = FACT( statut='f',
     Wind_Speed = SIMP(statut = "o", typ = 'I', sug=20),
     Speed_Unit = SIMP(statut = "o", typ = 'TXM',
                       into = ('knots','mph','m/s'),
@@ -76,4 +76,10 @@ Atmos = PROC(
                        ),
     ),
 
+    ZONE = FACT (  statut='o',
+           max='**',
+           Distance = SIMP(statut='o',typ='R'),
+           Resolution = SIMP(statut='o',typ='R'),
+           Ratio = SIMP(statut='o',typ='R'),
+          ),
 )

@@ -34,8 +34,9 @@ lang='fr'
 encoding='iso-8859-1'
 
 #
+#typeDeCata='XML'
 catalogues=(
-   ('Atmo','V2017',os.path.join(repIni,'Cata_V0.py'),'python','python'),
+   ('Atmo','V2017',os.path.join(repIni,'cata_reduit.py'),'python','python'),
 )
 nombreDeBoutonParLigne=4
 simpleClic=True

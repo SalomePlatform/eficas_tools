@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2015 rel. 4 (http://www.altova.com) by USER1 (EDF-DSP) -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:atmos="http://chercheurs.edf.com/logiciels/atmos" targetNamespace="http://chercheurs.edf.com/logiciels/atmos" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<simpleType name="T_Wind_Speed">
+		<restriction base="int"/>
+	</simpleType>
+	<complexType name="T_Atmos">
+		<sequence>
+			<element name="Wind_Speed" type="atmos:T_Wind_Speed" minOccurs="1" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	<element name="Atmos" type="atmos:T_Atmos"/>
+</schema>

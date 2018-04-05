@@ -9,16 +9,17 @@ sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
 
 from Accas import *
 
-# traiter le cas des tuples
 
 # ds l init du SIMP il manque siValide et fenetreIhm
 
 from mapDesTypes import dictSIMPEficasXML, dictSIMPXMLEficas
 from mapDesTypes import dictFACTEficasXML, dictFACTXMLEficas
 from mapDesTypes import dictPROCEficasXML, dictPROCXMLEficas
+from mapDesTypes import dictOPEREficasXML, dictOPERXMLEficas
+from mapDesTypes import dictBLOCEficasXML, dictBLOCXMLEficas
+from mapDesTypes import dicoPourCast
 from mapDesTypes import listeParamDeTypeTypeAttendu, listeParamDeTypeStr, dicoPourCast
-from mapDesTypes import listeParamEnListeSiMax,  listeParamTjsEnListe
-
+from mapDesTypes import listeParamTjsSequence, listeParamSelonType
 
 
 # ------------------------------
@@ -53,8 +54,8 @@ class objetDefinitionAccas:
             self.dictArgsEficas['min']=int(self.dictArgsEficas['min'])
 
       if 'max' in list(self.dictArgsEficas.keys()): 
-            if self.dictArgsEficas['max']== -1   :  self.dictArgsEficas['max']="**"
-            else                                 :  self.dictArgsEficas['max']=int(self.dictArgsEficas['max'])
+         if self.dictArgsEficas['max']== -1 :  self.dictArgsEficas['max']="**"
+         else  :  self.dictArgsEficas['max']=int(self.dictArgsEficas['max'])
 
       for param in list(self.dictArgsEficas.keys()):
           if param in listeParamDeTypeStr :
@@ -63,9 +64,6 @@ class objetDefinitionAccas:
       # En 2.7 a revoir en 3 ? necessaire
       self.nomObj=str(self.nom)
      
-      
-          
-         
    def getAccasEquivalent(self):
    # ---------------------------
        return self.nomObj, self.objAccas
@@ -74,7 +72,7 @@ class objetDefinitionAccas:
 # ---------------------------------------------------------
 class objetComposeDefinitionAccas (objetDefinitionAccas):
 # ---------------------------------------------------------
-    def exploreArbre(self):
+    def exploreArbre(self,cata):
     # --------------------------
       liste=[]
       for obj in self.content(): liste.append(obj)
@@ -82,7 +80,7 @@ class objetComposeDefinitionAccas (objetDefinitionAccas):
       # PNPNPN essayer de comprendre reverse ou non
 
       for obj in liste: 
-          if  hasattr(obj,'explore') : obj.explore ()
+          if  hasattr(obj,'explore') : obj.explore(cata)
           if  hasattr(obj,'getAccasEquivalent') : 
               nom,objetAccas=obj.getAccasEquivalent()
               self.dictArgsEficas[nom]=objetAccas
@@ -91,9 +89,9 @@ class objetComposeDefinitionAccas (objetDefinitionAccas):
 class monSIMP (efficas.T_SIMP,  objetDefinitionAccas):
 # ----------------------------------------------------
 
-   def explore(self):
+   def explore(self,cata):
    # --------------------
-   # 2 arguments pour ne pas avoir a differencier les appels explore
+      #print ("je passe dans  explore pour SIMP ", self.nom)
       self.dictATraiter= dictSIMPXMLEficas
       self.argumentXMLToEficas()
 
@@ -102,42 +100,96 @@ class monSIMP (efficas.T_SIMP,  objetDefinitionAccas):
 
    def argumentXMLToEficas(self):
    # ----------------------------
+      #print self.nom
       objetDefinitionAccas.argumentXMLToEficas(self)
-      self.convertitEnListes()
-      self.convertitLesTypes()
 
-   def estListe(self):
+      if self.attendTuple() :
+          #nbDElts=type(listeDElt[0]) 
+          print self.nomTypeAttendu
+
+
+      self.traiteLesSequences()
+      print (self.dictArgsEficas)
+      #self.convertitLesTypes()
+
+   def attendListe(self):
    # ---------------
-       if hasattr(self,'max') and self.max > 1 : return True
-       else : return False
+      if 'max' in self.dictArgsEficas :
+        if self.dictArgsEficas['max'] > 1 : return True
+        if self.dictArgsEficas['max'] == "**"  : return True
+      return False
 
    def attendTuple(self):
-   # -------------------
+   # -----------------
+       if self.dictArgsEficas['typ'] != 'tuple' : return False
+       return True
+  
+   def attendTXM(self):
+   # ----------------
+       if self.dictArgsEficas['typ'] == 'TXM' : return True
        return False
+  
 
-   def convertitEnListes(self):
-   # ------------------------
-   # Cas des Tuples non traites
-       for param in listeParamTjsEnListe :
+   def traiteLesSequences(self):
+   # ---------------------------
+       listeDeListe=self.attendListe()
+       for param in listeParamTjsSequence :
           if  param in self.dictArgsEficas :
-              if not self.attendTuple() :
-                 self.dictArgsEficas[param]=[self.dictArgsEficas[param],]
+              if listeDeListe == False: 
+                listeDElt=self.dictArgsEficas[param][0].content()
+                listeRetour=self.convertitListeDsLeBonType(listeDElt)
+                self.dictArgsEficas[param]=listeRetour
+              else :
+                 listeResultat=[]
+                 # on transforme en liste pour traiter chaque elt de la liste
+                 for i in range(len(self.dictArgsEficas[param])):
+                     if self.dictArgsEficas[param][i].typesimple != None :
+                        lesElts=self.dictArgsEficas[param][i].typesimple
+                     else :
+                        lesElts=self.dictArgsEficas[param][i].content()
+                     if (not(isinstance(lesElts,list)) and not (isinstance(lesElts,tuple))):
+                        lesElts=(lesElts,)
+                        lesEltsTransformes=self.convertitListeDsLeBonType(lesElts)
+                     lesEltsTransformes=self.convertitListeDsLeBonType(lesElts)
+                     listeResultat.append(lesEltsTransformes)
+                 self.dictArgsEficas[param]=listeResultat
+              #print ('fin de traiteLesSequences pour', self.nom, ' param :', param, 'listeResultat',self.dictArgsEficas[param])
 
-       if self.estListe() :
-         for param in listeParamEnListeSiMax:
-             if param in self.dictArgsEficas :
-                if not self.attendTuple() :
-                   self.dictArgsEficas[param]=[self.dictArgsEficas[param],]
+
+   def convertitListeDsLeBonType(self,listeDElt):
+   # -------------------------------------------
+   # Cas des Tuples non traites
+       typeAttendu = self.dictArgsEficas['typ']
+       if typeAttendu in list(dicoPourCast.keys()):
+          nouvelleListe=[]
+          castDsLeTypeAttendu=dicoPourCast[typeAttendu]
+          for valeurACaster in listeDElt :
+              val=castDsLeTypeAttendu(valeurACaster)
+              nouvelleListe.append(val)
+          return nouvelleListe
+       elif self.attendTuple() :
+          nbDElts=type(listeDElt[0]).n
+         
+       else : return listeDElt
+        
+     
 
    def convertitLesTypes(self):
    # ------------------------
    # Cas des Tuples non traites
+   # Cas des fonctions utilisateurs non traites
 
        typeAttendu = self.dictArgsEficas['typ']
        if typeAttendu in list(dicoPourCast.keys()):
+          castDsLeTypeAttendu=dicoPourCast[typeAttendu]
           for param in listeParamDeTypeTypeAttendu :
              if param in list(self.dictArgsEficas.keys()):
-                castDsLeTypeAttendu=dicoPourCast[typeAttendu]
+                if param in listeParamEnListeSelonType or param in listeParamTjsEnListe : 
+                   print ('typeAttendu',typeAttendu)
+                   print (self.dictArgsEficas[param])
+                   print (self.dictArgsEficas[param].content())
+                   print (self.dictArgsEficas[param].content())
+                   return
                 valeurACaster=self.dictArgsEficas[param].typesimple
                 if not isinstance(valeurACaster, (list, tuple)) :
                    val=castDsLeTypeAttendu(valeurACaster)
@@ -151,13 +203,13 @@ class monSIMP (efficas.T_SIMP,  objetDefinitionAccas):
 # -------------------------------------------------------
 class monFACT(efficas.T_FACT, objetComposeDefinitionAccas):
 # -------------------------------------------------------
-   def explore(self):
+   def explore(self,cata):
    # --------------------
-      print "je passe dans  explore pour FACT ", self.nom
+      #print "je passe dans  explore pour FACT ", self.nom
 
       self.dictATraiter= dictFACTXMLEficas
       self.argumentXMLToEficas()
-      self.exploreArbre()
+      self.exploreArbre(cata)
       self.objAccas=A_FACT.FACT(**self.dictArgsEficas)
 
 
@@ -169,12 +221,48 @@ class monPROC(efficas.T_PROC, objetComposeDefinitionAccas):
       print "je passe dans  explore pour PROC ", self.nom
       self.dictATraiter= dictPROCXMLEficas
       self.argumentXMLToEficas()
-      self.exploreArbre()
+      self.exploreArbre(cata)
       self.dictArgsEficas['op']=None
 
       self.objAccas=A_PROC.PROC(**self.dictArgsEficas)
       setattr(cata, self.nomObj,self.objAccas)
       cata.contexteXML[self.nomObj]=self.objAccas
+
+# ---------------------------------------------------------
+class monOPER(efficas.T_OPER, objetComposeDefinitionAccas):
+# ---------------------------------------------------------
+   def explore(self,cata):
+# ------------------------
+      print "je passe dans  explore pour OPER", self.nom
+      self.cata=cata
+      self.dictATraiter= dictOPERXMLEficas
+      self.argumentXMLToEficas()
+      self.exploreArbre(cata)
+
+      textCreationClasse='class '+str(self.typeCree)+'(ASSD): pass\n'
+      exec(textCreationClasse,globals())
+      maClasseCreee=globals()[self.typeCree]
+      self.dictArgsEficas['sd_prod']  = maClasseCreee
+      cata.contexteXML[self.typeCree] = maClasseCreee
+      
+      self.dictArgsEficas['op'] = None
+      self.objAccas=A_OPER.OPER(**self.dictArgsEficas)
+      setattr(cata, self.nomObj,self.objAccas)
+      cata.contexteXML[self.nomObj] = self.objAccas
+
+# ---------------------------------------------------------
+class monBLOC(efficas.T_BLOC, objetComposeDefinitionAccas):
+# ---------------------------------------------------------
+   def explore(self,cata):
+# ------------------------
+      print ('je passe dans explore pour BLOC', self.nom)
+      self.cata=cata
+      self.dictATraiter= dictBLOCXMLEficas
+      self.argumentXMLToEficas()
+      self.exploreArbre(cata)
+      self.objAccas=A_BLOC.BLOC(**self.dictArgsEficas)
+      setattr(cata, self.nomObj,self.objAccas)
+      cata.contexteXML[self.nomObj] = self.objAccas
 
 # ------------------------------
 class monCata(efficas.T_cata):
@@ -196,6 +284,8 @@ class monCata(efficas.T_cata):
 efficas.T_SIMP._SetSupersedingClass(monSIMP)
 efficas.T_FACT._SetSupersedingClass(monFACT)
 efficas.T_PROC._SetSupersedingClass(monPROC)
+efficas.T_OPER._SetSupersedingClass(monOPER)
+efficas.T_BLOC._SetSupersedingClass(monBLOC)
 efficas.T_cata._SetSupersedingClass(monCata)
 
 if __name__ == "__main__":
@@ -203,7 +293,7 @@ if __name__ == "__main__":
 #   print dir(efficas.T_SIMP)
 
    #xml = open('cata_test1.xml').read()
-   xml = open('Cata_MED_FAM_test.xml').read()
+   xml = open('cata.xml').read()
    SchemaMed = efficas.CreateFromDocument(xml)
    SchemaMed.exploreCata()
    #SchemaMed.dumpXSD()
