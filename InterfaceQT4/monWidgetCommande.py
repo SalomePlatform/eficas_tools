@@ -117,7 +117,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.editor.inhibeSplitter=0
         self.monOptionnel=self.editor.widgetOptionnel
       self.afficheOptionnel()
-      spacerItem = QSpacerItem(21, 20, QSizePolicy.Expanding, QSizePolicy.Expanding)
+      spacerItem = QSpacerItem(21, 500, QSizePolicy.Expanding, QSizePolicy.Expanding)
       #spacerItem = QSpacerItem(21, 20, QSizePolicy.Preferred, QSizePolicy.Preferred)
       #self.commandesLayout.addItem(spacerItem)
       self.verticalLayoutCommande.addItem(spacerItem)

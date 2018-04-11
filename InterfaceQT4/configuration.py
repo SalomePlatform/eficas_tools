@@ -126,6 +126,8 @@ class configBase(object):
       self.repIcones=None
       self.differencieSiDefaut=False
       self.typeDeCata='Python'
+      self.dumpXSD=False
+      self.afficheIhm=True
 
 
  

@@ -89,7 +89,6 @@ class JDCEditorSsIhm :
               from InterfaceQT4   import readercata
            self.readercata  = readercata.ReaderCata( self, self.appliEficas )
            self.appliEficas.readercata=self.readercata
-           self.readercata.dumpToXml()
            self.appliEficas.code=self.code
         else :
            self.readercata=self.appliEficas.readercata
@@ -98,6 +97,7 @@ class JDCEditorSsIhm :
 
         self.format =  self.appliEficas.format_fichier
 
+        if self.appliEficas.maConfiguration.dumpXSD==True : self.appliEficas.dumpXsd()
         self.dict_reels={}
         self.liste_simp_reel=[]
         self.dicoNouveauxMC={}
@@ -136,12 +136,12 @@ class JDCEditorSsIhm :
         self.nouveau=0
         if self.fichier is not None:        #  fichier jdc fourni
             if jdc==None :
-               print ('PNPN : chgt try en if')
-               #try :
-               if 1 :
+               #print ('PNPN : chgt try en if')
+               try :
+               #if 1 :
                    self.jdc = self.readFile(self.fichier)
-               #except :
-               #    print ("mauvaise lecture")
+               except :
+                   print ("mauvaise lecture")
                if self.salome :
                   try :
                      self.appliEficas.addJdcInSalome( self.fichier)
@@ -200,7 +200,7 @@ class JDCEditorSsIhm :
              p.readfile(fn)
 
              if p.text=="" : self.nouveau=1
-             print ('PNPN --> CIST a faire')
+             #print ('PNPN --> CIST a faire')
 
              pareil,texteNew=self.verifieChecksum(p.text)
              if  not pareil :
@@ -254,7 +254,7 @@ class JDCEditorSsIhm :
 
 
         #jdc=self.readercata.cata[0].JdC( procedure =texte,
-        print (self.readercata.cata)
+        #print (self.readercata.cata)
         jdc=self.readercata.cata.JdC( procedure =texte,
                                          appli=self,
                                          cata=self.readercata.cata,
@@ -337,8 +337,11 @@ class JDCEditorSsIhm :
     #-----------------------#
        if 'dico' in generator.plugins:
          self.generator=generator.plugins['dico']()
+         #print (self.generator)
          jdc_formate=self.generator.gener(self.jdc)
+         #print (jdc_formate)
          dico=self.generator.Dico
+         #print (dico)
          return dico
 
     #-----------------------#
@@ -362,6 +365,13 @@ class JDCEditorSsIhm :
         # on ajoute les regles
         strRapport = six.text_type( self.jdc.report() )
         self._viewText(strRapport, "JDC_RAPPORT")
+
+    #-----------------------#
+    def viewJdcRegles(self):
+    #-----------------------#
+        # on ajoute les regles
+        texte_global, test_global =  self.jdc.verifRegles() 
+        self._viewText(texte_global, "JDC_REGLES")
 
     #-----------------------#
     def getJdcRapport(self):
@@ -478,6 +488,7 @@ class JDCEditorSsIhm :
     #---------------------#
       if 'dicoImbrique' in generator.plugins:
          self.generator=generator.plugins['dicoImbrique']()
+         #print (self.generator)
          jdc_formate=self.generator.gener(self.jdc)
          dico=self.generator.Dico
          return dico
