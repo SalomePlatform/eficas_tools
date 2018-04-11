@@ -27,6 +27,7 @@
 	<xs:element name="into" type="T_into"/>
 	<!--	<xs:element name="into_plus_fonction" type="T_into" abstract="true" substitutionGroup="into"/>-->
 	<xs:attribute name="nom" type="AT_nom"/>
+	<xs:attribute name="version" type="xs:string"/>
 	<xs:attribute name="fr" type="xs:string"/>
 	<xs:attribute name="ang" type="xs:string"/>
 	<xs:attribute name="docu" type="AT_docu"/>
@@ -44,6 +45,8 @@
 		<xs:sequence>
 			<xs:element ref="commandes" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+	    <xs:attribute ref="nom"/>
+	    <xs:attribute ref="version"/>
 	</xs:complexType>
 	<xs:complexType name="T_commandes">
 		<xs:choice minOccurs="0" maxOccurs="unbounded">
