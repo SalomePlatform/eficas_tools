@@ -35,13 +35,13 @@ from PyQt5.QtCore    import QTimer, QSize, Qt
 # Modules Eficas
 from Extensions.i18n import tr
 
-from .feuille                import Feuille
-from desWidgetPlusieursBase import Ui_WidgetPlusieursBase 
-from .politiquesValidation   import PolitiquePlusieurs
-from .qtSaisie               import SaisieValeur
-from .gereListe              import GereListe
-from .gereListe              import GerePlie
-from .gereListe              import LECustom
+from InterfaceQT4.feuille                import Feuille
+from UiQT5.desWidgetPlusieursBase        import Ui_WidgetPlusieursBase 
+from InterfaceQT4.politiquesValidation   import PolitiquePlusieurs
+from InterfaceQT4.qtSaisie               import SaisieValeur
+from InterfaceQT4.gereListe              import GereListe
+from InterfaceQT4.gereListe              import GerePlie
+from InterfaceQT4.gereListe              import LECustom
 
 dicoLongueur={2:95,3:125,4:154,5:183,6:210,float('inf'):210}
 hauteurMax=253

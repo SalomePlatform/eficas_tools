@@ -153,6 +153,11 @@ class AppliSsIhm:
         ok = editor.saveFileAs()
         print ('ok ',ok)
 
+    def dumpXsd(self):
+        current_cata    = CONTEXT.getCurrentCata()
+        current_cata.dumpXsd()
+        if self.maConfiguration.afficheIhm==False : exit()
+
 #,self.fileSaveAs
 #,self.fileClose
 #,self.fileExit

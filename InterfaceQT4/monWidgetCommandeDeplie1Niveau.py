@@ -27,6 +27,7 @@ import traceback
 
 from PyQt5.QtGui import QIcon
 from InterfaceQT4.monWidgetCommande import MonWidgetCommande
+from PyQt5.QtWidgets  import QSpacerItem, QSizePolicy
 
 class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
 # Attention au MCLIST qui ne sont pas des MCFACT
@@ -37,6 +38,8 @@ class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
       #print ("debut de ---------------------- init de MonWidgetCommandeDeplie1Niveau ",node.item.nom)
       MonWidgetCommande.__init__(self,node,editor,etape)
       self.node.plieToutEtReaffiche=self.plieToutEtReaffiche
+      spacerItem = QSpacerItem(21, 600, QSizePolicy.Expanding, QSizePolicy.Expanding)
+      self.verticalLayoutCommande.addItem(spacerItem)
 
   def afficheMots(self):
       # Attention

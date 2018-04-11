@@ -94,16 +94,8 @@ class MonPBButtonCustom(QWidget,Ui_customPB):
       QWidget.__init__(self)
       self.setupUi(self)
       if couleur != None :
-         print ( 'je change pour ', texte)
          self.monPb.setText(texte)
-         self.monPb.setStyleSheet( "background:rgb(229,62,30);\n"
-"border-radius : 10px;\n"
-"border-width : 30 px;\n"
-"border-color : beige;\n"
-"\n"
-"")
-
-
+         self.monPb.setStyleSheet('QPushButton {background-color: #A3C1DA; color: red;}')
          #mapalette=self.monPb.palette()
          #mapalette.setColor( QPalette.ButtonText, Qt.red )
          #self.monPb.setPalette( mapalette )
@@ -139,7 +131,7 @@ class MonGroupeOptionnel (QWidget,Ui_groupeOptionnel):
   """
   """
   def __init__(self,liste,liste_rouge,parentQt,parentMC):
-     #print "dans init de monWidgetOptionnel ", parentQt, liste,parentMC
+     #print ("dans init de monWidgetOptionnel ", parentQt, liste,parentMC)
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.listeChecked=[]
