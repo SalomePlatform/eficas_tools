@@ -519,16 +519,17 @@ class JDCEditorSsIhm :
     #-----------------------------------------------------------------#
         if fileName != None :
            self.fichier = fileName
-           return self.saveFileLeger()
+           return self.saveFileLeger(fileName)
         return self.saveFileLeger()
 
     #-----------------------------------------------------------------#
-    def saveFileLeger(self, fichier, formatLigne="beautifie"):
+    def saveFileComplet(self, fichier = None, formatLigne="beautifie"):
     #-----------------------------------------------------------------#
         fn = fichier
         self.generator=generator.plugins[self.format]()
-        if hasattr(self.generator, "writeLeger"):
-            self.generator.writeLeger(fichier,self.jdc,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
+        print (self.generator)
+        if hasattr(self.generator, "writeComplet"):
+            self.generator.writeComplet(fichier,self.jdc,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
 
 
 # ---------------------------------------------
@@ -580,7 +581,7 @@ class JDCEditorSsIhm :
         if not (self.writeFile(fichier,formatLigne=formatLigne)): return (0, None)
         self.fichierOut = fichier
 
-        if self.jdc.isvalid() != 0 and hasattr(self.generator, "writeDefault"):
+        if self.jdc.isValid() != 0 and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fichier)
         elif self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fichier)

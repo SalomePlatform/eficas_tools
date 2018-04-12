@@ -67,6 +67,14 @@ class JdcSsIhmHandler(object):
 #  -------------------------
        return self.viewManagerSsIhm.isJdcValid(self)
 
+   def fileSaveAs(self,fileName):
+#  -------------------------
+       return self.viewManagerSsIhm.fileSaveAs(self,fileName)
+
+   def fileLegerSaveAs(self,fileName):
+#  -----------------------------------
+       return self.viewManagerSsIhm.fileLegerSaveAs(self,fileName)
+
 
 
 #--------------------------------
@@ -202,6 +210,23 @@ class MyViewManagerSsIhm(object):
         return self.dictEditors[handler].jdc.isValid()
 
 
+#  ---------------------------------------------
+   def fileSaveAs(self,handler,fileName):
+#  ---------------------------------------------
+        print (handler)
+        if not (handler in self.dictEditors) :
+           print ('editor non trouve')
+           return
+        return self.dictEditors[handler].saveFile(fileName)
+
+#  ---------------------------------------------
+   def fileLegerSaveAs(self, handler,fileName):
+#  ---------------------------------------------
+#        print (handler)
+        if not (handler in self.dictEditors) :
+           print ('editor non trouve')
+           return
+        self.dictEditors[handler].saveFileLegerAs(fileName)
 
 
 #   def handleClose(self,doitSauverRecent = 1,texte=tr('&Quitter')):
