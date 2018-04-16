@@ -78,7 +78,7 @@ class MonWidgetPlusieursPlie (Ui_WidgetPlusieursPlie,Feuille):
       #print (valeurTexte[-1])
       if valeurTexte[0] == '[' or valeurTexte[0] == '('   : valeurTexte = valeurTexte[1:]
       if valeurTexte[-1] == ']' or valeurTexte[-1] == ')' : valeurTexte = valeurTexte[:-1]
-      print (valeurTexte)
+      #print (valeurTexte)
       listeValeursBrutes=valeurTexte.split(',')
       if listeValeursBrutes == [] or listeValeursBrutes == None : 
          self.lineEditVal.setText(str(self.listeValeursCourantes))

@@ -62,7 +62,7 @@ class TupleCustom(object) :
       self.tailleTuple=tailleTuple
       self.parent=parent
       self.parentQt=parentQt
-      self.valeur=None
+      self.valeur=[]
       self.index=index
       self.inFocusOutEvent=False
 
@@ -75,6 +75,7 @@ class TupleCustom(object) :
          courant.returnPressed.connect(self.valueChange)
          courant.numDsLaListe = i+1
          courant.tupleCustomParent=self
+         courant.parentTuple = self
 
 
   def valueChange(self):
@@ -135,6 +136,14 @@ class TupleCustom(object) :
 
   def getValeur(self):
   #----------------------
+      self.valeur=[]
+      vide=True
+      for i in range(self.tailleTuple):
+         nomLE="lineEditVal_"+str(i+1)
+         courant=getattr(self,nomLE)
+         self.valeur.append(courant.valeur)
+         if courant.valeur!= None : vide = False 
+      if vide : self.valeur=[]
       return self.valeur
 
   def text(self):
@@ -341,11 +350,13 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
       aLeFocus=self.focusWidget()
       listeComplete=[]
       libre=False
+      #print (self.indexDernierLabel)
       for i in range(self.indexDernierLabel) :
           nom=self.nomLine+str(i+1)
           courant=getattr(self,nom)
           valeurTuple=courant.valeur
-          if valeurTuple == None or valeurTuple== "": 
+          #print (courant, i, valeurTuple)
+          if valeurTuple == None or valeurTuple== "" or valeurTuple==[]: 
              libre=True
              continue
           validite,comm,comm2,listeRetour= self.politique.ajoutTuple(valeurTuple,listeComplete)
@@ -354,6 +365,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
              self.editor.afficheInfos(comm+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
              return
           listeComplete.append(tuple(courant.valeur))
+      #print ('listeComplete', listeComplete)
       if listeComplete == [] : listeComplete=None
       self.node.item.setValeur(listeComplete)
 

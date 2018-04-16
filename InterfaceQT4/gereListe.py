@@ -53,9 +53,13 @@ class LECustom(QLineEdit):
         self.num=i
         self.dansUnTuple=False
         self.numDsLaListe=-1
+        self.parentTuple=None
+        self.valeur=None
 
  def focusInEvent(self,event):
-     #print "dans focusInEvent de LECustom"
+     #print ("dans focusInEvent de LECustom")
+     self.parentQt.aEuLeFocus=True
+     self.aEuLeFocus=True
      self.parentQt.LineEditEnCours=self
      self.parentQt.numLineEditEnCours=self.num
      self.parentQt.textSelected=self.text()
@@ -63,32 +67,43 @@ class LECustom(QLineEdit):
      QLineEdit.focusInEvent(self,event)
 
  def focusOutEvent(self,event):
+     #print (self.aEuLeFocus)
      self.setStyleSheet("border: 0px")
      if self.dansUnTuple    : self.setStyleSheet("background:rgb(235,235,235); border: 0px;")
      elif self.num % 2 == 1 : self.setStyleSheet("background:rgb(210,210,210)")
      else                   : self.setStyleSheet("background:rgb(235,235,235)")
+     if self.aEuLeFocus:
+       self.aEuLeFocus=False
+       self.litValeur()
+       if self.dansUnTuple : self.parentTuple.getValeur()
+     QLineEdit.focusOutEvent(self,event)
        
     
-     
-     from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
+ def litValeur(self):
+     #print ("dans litValeur de LECustom")
+     self.aEuLeFocus=False
+     val=str(self.text())
+     if str(val)=="" or val==None :
+        self.valeur=None
+        return
      try :
-       #if isinstance (self.parentQt, MonWidgetPlusieursBase) and not self.parentQt.inFocusOutEvent : 
-       #  self.parentQt.inFocusOutEvent=True
-       #  self.parentQt.changeValeur(changeDePlace=True,oblige=False)
-       #  self.parentQt.inFocusOutEvent=False
-
-       #if isinstance(self,LECustomTuple)  and  not self.tupleCustomParent.inFocusOutEvent:
-       #  self.tupleCustomParent.inFocusOutEvent=True
-       #  self.tupleCustomParent.valueChange()
-       #  self.tupleCustomParent.inFocusOutEvent=False
-       QLineEdit.focusOutEvent(self,event)
-     except : pass
-
+       valeur=eval(val,{})
+     except :
+       try :
+          d=self.parentQt.parentQt.objSimp.jdc.getContexteAvant(self.parentQt.objSimp. etape)
+          valeur=eval(val,d)
+       except :
+          valeur=val
+     self.valeur=valeur
+     #print ('self.valeur', self.valeur)
+     
+     
  def clean(self):
      self.setText("")
 
  def getValeur(self):
-     return self.text()
+     #return self.text()
+     return self.valeur
 
  def setValeur(self,valeur):
      self.setText(valeur)
@@ -140,6 +155,8 @@ class GereListe(object):
           self.PBAlpha.clicked.connect(self.alphaPushed)
           self.PBFind.clicked.connect(self.findPushed)
           self.LEFiltre.returnPressed.connect(self.LEFiltreReturnPressed)
+       if hasattr(self, 'PBValideFeuille'):
+          self.PBValideFeuille.clicked.connect(self.changeValeur)
 
    def filtreListe(self):
        l=[]
