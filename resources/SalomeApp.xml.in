@@ -12,7 +12,6 @@
     <parameter name="EFICAS" value="%EFICAS_ROOT_DIR%/share/salome/resources/eficas"/>
   </section>
   <section name="eficas_help">
-    <parameter name="sub_menu"     value="%1 module"/>
-    <parameter name="User's Guide" value="%EFICAS_ROOT_DIR%/share/doc/salome/gui/EFICAS/index.html"/>
+    <parameter name="User's Guide/%1 module/User's Guide" value="%EFICAS_ROOT_DIR%/share/doc/salome/gui/EFICAS/index.html"/>
   </section>
 </document>
