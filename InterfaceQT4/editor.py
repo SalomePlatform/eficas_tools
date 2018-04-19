@@ -92,7 +92,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
 
         #self.affiche=self.appliEficas.maConfiguration.affiche
 
-        if self.code in ['MAP','CARMELCND','PSEN'] : self.editor.maConfiguration.afficheCommandesPliees=False
+        if self.code in ['MAP','CARMELCND','PSEN'] : self.maConfiguration.afficheCommandesPliees=False
         if self.code in ['MAP',]: self.fermeArbre()
         #   self.widgetTree.close()
         #   self.widgetTree=None
