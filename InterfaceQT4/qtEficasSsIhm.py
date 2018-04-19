@@ -74,7 +74,6 @@ class AppliSsIhm:
         self.multi=multi
         if self.multi : 
               print ('pas de multi sans ihm')
-              exit()
 
 
         if langue=='fr': self.langue=langue

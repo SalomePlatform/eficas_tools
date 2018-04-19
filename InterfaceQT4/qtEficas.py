@@ -164,10 +164,10 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
            self.cleanPath()
            from InterfaceQT4.monChoixCode import MonChoixCode
            widgetChoix = MonChoixCode(self)
-           #ret=widgetChoix.exec_()
-           widgetChoix.show()
+           ret=widgetChoix.exec_()
+           #widgetChoix.show()
         if self.code == None:return # pour le cancel de la fenetre choix code
-        AppliSsIhm.definitCode(self,code,ssCode)
+        AppliSsIhm.definitCode(self,self.code,ssCode)
 
         #PN --> pb d exception qui font planter salome
         # plus supporte en python 3
