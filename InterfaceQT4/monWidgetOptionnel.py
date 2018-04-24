@@ -31,7 +31,7 @@ from .monGroupeOptionnel import MonGroupeOptionnel
 # Import des panels
 class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   def __init__(self,parentQt):
-     #print ("dans init de monWidgetOptionnel ", parentQt )
+     print ("dans init de monWidgetOptionnel ", parentQt )
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.dicoMCWidgetOptionnel={}
@@ -45,6 +45,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
         self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
         self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].deleteLater()
+     if liste==[] : return
      groupe = MonGroupeOptionnel(liste,liste_rouge,self,MC)
      self.groupesOptionnelsLayout.insertWidget(0,groupe)
      self.dicoMCWidgetOptionnel[MC.node.item.nom]=groupe
@@ -55,6 +56,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
       genea =MC.obj.getGenealogie()
       #print (genea)
       for k in list(self.dicoMCWidgetOptionnel.keys()):
+          #print (k)
           #if k not in genea :  print ( k)
           if k not in genea :  
              self.dicoMCWidgetOptionnel[k].close()
