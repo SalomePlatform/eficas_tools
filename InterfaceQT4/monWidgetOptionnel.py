@@ -31,7 +31,7 @@ from .monGroupeOptionnel import MonGroupeOptionnel
 # Import des panels
 class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
   def __init__(self,parentQt):
-     print ("dans init de monWidgetOptionnel ", parentQt )
+     #print ("dans init de monWidgetOptionnel ", parentQt )
      QWidget.__init__(self,None)
      self.setupUi(self)
      self.dicoMCWidgetOptionnel={}
