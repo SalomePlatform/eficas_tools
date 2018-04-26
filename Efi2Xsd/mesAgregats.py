@@ -7,84 +7,96 @@ import types
 sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
 
 
-import  Atmo.raw.atmo_test1 as modeleMetier 
 
 class X_MCSIMP:
 # -------------
       
    def buildObjPyxb(self) :
+      if not self.cata.modeleMetier : return
       #print ('X_MCSIMP buildObjPyxb', self.nom, self)
       self.monNomDeClasseModeleMetier='T_'+self.nom
-      self.maClasseModeleMetier=getattr(modeleMetier,self.monNomDeClasseModeleMetier)
+      self.maClasseModeleMetier=getattr(self.cata.modeleMetier,self.monNomDeClasseModeleMetier)
       if self.val != None : self.objPyxb=self.maClasseModeleMetier(self.val)
-      else                 : self.objPyxb=self.maClasseModeleMetier()
+      else                : self.objPyxb=self.maClasseModeleMetier()
       #print ('fin X_MCSIMP', self.objPyxb, self.nom,self)
 
 
-   def setValeur(self,val):
-       print  ('a faire PNPNPNPN')
+   def setValeurObjPyxb(self,newVal):
+       if not self.cata.modeleMetier : return
+       print ('setValeurObjPyxb')
+       if newVal != None : nvlObj=self.maClasseModeleMetier(newVal)
+       else              : nvlObj=self.maClasseModeleMetier()
+       self.val=newVal
+       self.objPyxb=nvlObj
+       setattr(self.parent.objPyxb, self.nom, nvlObj)
       
 
 class X_MCCOMPO:
 # --------------
 # 
    def buildObjPyxb(self,mc_list) :
+      if not self.cata.modeleMetier : return
       print ('X_MCCOMPO buildObjPyxb', self.nom, self)
       self.monNomDeClasseModeleMetier='T_'+self.nom
-      self.maClasseModeleMetier=getattr(modeleMetier,self.monNomDeClasseModeleMetier)
+      self.maClasseModeleMetier=getattr(self.cata.modeleMetier,self.monNomDeClasseModeleMetier)
       listArg=[]
       for objAccas in mc_list :
-         listArg.append(objAccas.objPyxb)
+         from Accas.A_MCLIST import MCList
+         if isinstance(objAccas,MCList) :
+            for mcfact in objAccas : listArg.append(mcfact.objPyxb)
+         else : listArg.append(objAccas.objPyxb)
+      print (listArg)
       self.objPyxb=self.maClasseModeleMetier(*listArg)
-      print ('fin MCCOMPO', self.objPyxb, self.nom,self,self.objPyxb.content())
 
-class X_MCFACT:
+class X_MCFACT :
 # --------------
 #   Pour un MCFACT : 
 #   le buildObjPyxb  sera  pris en charge par X_MCLIST 
 #   on ne fait rien
  
    def buildObjPyxb(self,mc_list):
+      #print ('X_MCFACT buildObjPyxb debut et fin', self.nom, self)
       pass
 
 class X_MCLIST:
 # --------------
  
+  
    def buildObjPyxb(self,factList):
+      if not self.cata.modeleMetier : return
       #print ('X_MCLIST buildObjPyxb', self.nom, self)
+
       self.monNomDeClasseModeleMetier='T_'+self.nom
-      self.maClasseModeleMetier=getattr(modeleMetier,self.monNomDeClasseModeleMetier)
-      listArg=[]
+      self.maClasseModeleMetier=getattr(self.cata.modeleMetier,self.monNomDeClasseModeleMetier)
       for objAccas in factList :
-          #print objAccas.nom
+          listArg=[]
           for objAccasFils in objAccas.mc_liste :
-              #print (objAccasFils)
-              #print (objAccasFils.nom)
-              #print (objAccasFils.objPyxb)
               listArg.append(objAccasFils.objPyxb)
-      #         print (objAccasFils.objPyxb)
-      self.objPyxb=self.maClasseModeleMetier(*listArg)
-      #print (self.objPyxb.content())
-      #print ('fin MCLIST', self.objPyxb, self.nom,self)
+          objAccas.objPyxb=self.maClasseModeleMetier(*listArg)
+          #print (objAccas , 'ds MCLIST a pour obj pyxb', objAccas.objPyxb)
 
 class X_JDC:
 # ----------
  
    def  __init__(self):
-      print ('--------- init du X_JDC')
+      #print ('X_JDC buildObjPyxb',  self)
+      if not self.cata.modeleMetier : return
       self.monNomDeClasseModeleMetier=self.code
-      self.maClasseModeleMetier=getattr(modeleMetier,self.monNomDeClasseModeleMetier)
+      self.maClasseModeleMetier=getattr(self.cata.modeleMetier,self.monNomDeClasseModeleMetier)
       self.objPyxb=self.maClasseModeleMetier()
+      #print ('fin X_JDC buildObjPyxb', self.objPyxb, self)
 
-   def ajoutEtapeAPyxb(self,etape):
+   def enregistreEtapePyxb(self,etape):
      # OK seulement si sequence (choice ? ...)
-       print ('----------------------------------------------------------------------------------------------je suis la')
-       self.objPyxb.append(etape.objPyxb)
-       self.toxml()
+      print ('ds enregistreEtapePyxb', etape.nom)
+      if not self.cata.modeleMetier : return
+      self.objPyxb.append(etape.objPyxb)
+      #self.toXml()
 
-   def toxml(self):
-       print(self.objPyxb.toDOM().toprettyxml())
-       print(self.objPyxb.toxml())
+   def toXml(self):
+      if not self.cata.modeleMetier : return
+      print(self.objPyxb.toDOM().toprettyxml())
+      print(self.objPyxb.toxml())
         
    
 
