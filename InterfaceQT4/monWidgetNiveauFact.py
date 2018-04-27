@@ -27,6 +27,7 @@ except : pass
 import types
 
 from desWidgetNiveauFact import Ui_WidgetNiveauFact
+from InterfaceQT4.monWidgetOptionnel import MonWidgetOptionnel
 from InterfaceQT4.groupe import Groupe
 
 from PyQt5.QtWidgets  import  QWidget
@@ -53,6 +54,8 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
          self.listeBoutonAChanger.append(widget.RBValide)
       self.afficheOptionnel()
       self.inhibe=False
+      self.labelDoc.setText(self.node.item.getFr())
+      self.labelNomCommande.setText(self.node.item.getLabelText()[0])
 
   def reaffiche(self,nodeAVoir=None):
       self.node.setDeplieChildren()
