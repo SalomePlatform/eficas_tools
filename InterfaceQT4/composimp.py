@@ -112,13 +112,13 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
             num=self.item.object.definition.type[0].ntuple
             nomDeLaClasse = 'MonWidgetSimpTuple'+str(num)
             nomDuFichier  = 'InterfaceQT4.monWidgetSimpTupleN'
-            #try :
-            if 1 :
+            try :
+            #if 1 :
                _temp = __import__(nomDuFichier, globals(), locals(), [nomDeLaClasse], 0)
-               print (_temp)
+               #print (_temp)
                MonWidgetSimpTuple =  getattr(_temp,nomDeLaClasse)
-            #except :
-            #   print ("Pas de Tuple de longueur : ", num)
+            except :
+               print ("Pas de Tuple de longueur : ", num)
             #   print ("Prevenir la maintenance ")
             widget=MonWidgetSimpTuple(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
