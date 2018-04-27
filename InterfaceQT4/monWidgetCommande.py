@@ -91,7 +91,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
        
       if hasattr(self,'LENom'): self.LENom.returnPressed.connect(self.nomChange)
    
-      if self.editor.code in ['Adao','ADAO'] and self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
+      if self.editor.code in ['Adao','ADAO'] or self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
                       self.frameAffichage.close()
 
       if self.editor.code in ['CARMELCND',] : self.closeAutreCommande()

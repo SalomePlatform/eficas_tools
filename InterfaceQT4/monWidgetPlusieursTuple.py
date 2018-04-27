@@ -173,14 +173,11 @@ class TupleCustom2(QWidget,Ui_Tuple2,TupleCustom):
   def __init__(self,tailleTuple,parent,parentQt,index):
   #-------------------
       TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+      if self.parentQt.editor.maConfiguration.closeParenthese :
+           self.label_5.close()
+           self.label_7.close()
 
-#-------------------------------------------------
-class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
-#-------------------------------------------------
-  def __init__(self,tailleTuple,parent,parentQt,index):
-  #-----------------------------------------------------
-      TupleCustom. __init__(self,tailleTuple,parent,parentQt,index)
-      
+
 #-------------------------------------------------
 class TupleCustom3(QWidget,Ui_Tuple3,TupleCustom):
 #-------------------------------------------------
@@ -236,6 +233,9 @@ class TupleCustom10(QWidget,Ui_Tuple10,TupleCustom):
   def __init__(self,tailleTuple,parent,parentQt,index):
   #-------------------
       TupleCustom.__init__(self,tailleTuple,parent,parentQt,index)
+      if self.parentQt.editor.maConfiguration.closeParenthese :
+           self.label_5.close()
+           self.label_7.close()
 
 
 

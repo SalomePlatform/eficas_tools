@@ -30,6 +30,7 @@ from desWidgetNiveauFact import Ui_WidgetNiveauFact
 from InterfaceQT4.groupe import Groupe
 
 from PyQt5.QtWidgets  import  QWidget
+from PyQt5.QtGui  import  QIcon
 
 
 from Extensions.i18n import tr
@@ -44,10 +45,12 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
   """
   def __init__(self,node,editor,definition,obj):
       self.listeAffichageWidget=[]
+      self.listeBoutonAChanger=[]
       Groupe.__init__(self,node,editor,None,definition,obj,1,self)
       from InterfaceQT4 import composimp
       if isinstance(self.node ,composimp.Node):
          widget=self.node.getPanelGroupe(self,self.maCommande)
+         self.listeBoutonAChanger.append(widget.RBValide)
       self.afficheOptionnel()
       self.inhibe=False
 
@@ -160,7 +163,15 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
       self.monOptionnel.titre(self.obj.nom)
       self.monGroupe=self.monOptionnel.afficheOptionnel(liste,liste_rouge,self)
       
+  def setValide(self):
+     Groupe.setValide(self)
+     for bouton in self.listeBoutonAChanger:
+         couleur=self.node.item.getIconName()
+         monIcone = QIcon(self.repIcon+"/" + couleur + ".png")
+         bouton.setIcon(monIcone)
 
 class MonWidgetNiveauFactTableau(MonWidgetNiveauFact):
   def __init__(self,node,editor,definition,obj):
       MonWidgetNiveauFact.__init__(self,node,editor,definition,obj)
+
+

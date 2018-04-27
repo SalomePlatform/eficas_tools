@@ -343,7 +343,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
 
     def afficheCeNiveau(self):
-        print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
+        #print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
             self.editor.widgetCentraleLayout.removeItem(widget)
@@ -678,6 +678,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         #print ("onValid pour ", self.item.nom)
         if self.JESUISOFF==1 : return
         if hasattr(self,'fenetre') and self.fenetre: 
+           print (self.fenetre)
+           print (self)
+           print (dir(self))
            try :
              self.fenetre.setValide()
            except :
