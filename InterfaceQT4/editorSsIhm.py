@@ -141,7 +141,7 @@ class JDCEditorSsIhm :
                #if 1 :
                    self.jdc = self.readFile(self.fichier)
                except :
-                   print ("mauvaise lecture")
+                   print ("mauvaise lecture du fichier")
                if self.salome :
                   try :
                      self.appliEficas.addJdcInSalome( self.fichier)

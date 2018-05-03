@@ -227,7 +227,8 @@
           </property>
           <property name="icon">
            <iconset theme="go-up">
-            <normaloff>.</normaloff>.</iconset>
+            <normaloff/>
+           </iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -265,7 +266,8 @@
           </property>
           <property name="icon">
            <iconset theme="go-down">
-            <normaloff>.</normaloff>.</iconset>
+            <normaloff/>
+           </iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -455,16 +457,7 @@
             <property name="spacing">
              <number>2</number>
             </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
+            <property name="margin">
              <number>0</number>
             </property>
             <item>
@@ -524,7 +517,8 @@
          </property>
          <property name="icon">
           <iconset theme="text-x-generic">
-           <normaloff>.</normaloff>.</iconset>
+           <normaloff/>
+          </iconset>
          </property>
          <property name="iconSize">
           <size>

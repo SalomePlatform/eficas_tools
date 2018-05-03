@@ -36,7 +36,6 @@ def import_zone_MT(listeparam):
 
 def import_zone(listeparam):
     #texte="ZONE(NOEUDS=(_F(NOM='N1',POSITION_AXIALE=0.0,), _F(NOM='N2',POSITION_AXIALE=0.1,), _F(NOM='N3',POSITION_AXIALE=0.2,), _F(NOM='N4',POSITION_AXIALE=0.3,),),),"
-    from txtZone import texte
     #texte="sansnom="+texte
     editor=listeparam[0]
     itemWidget=listeparam[1]
@@ -53,10 +52,14 @@ def import_zone(listeparam):
       oldItem.supprimeNoeud()
 
 def import_zone_from_menu(editor,etape):
-    texte="ZONE(NOEUDS=(_F(NOM='N1',POSITION_AXIALE=0.0,), _F(NOM='N2',POSITION_AXIALE=0.1,), _F(NOM='N3',POSITION_AXIALE=0.2,), _F(NOM='N4',POSITION_AXIALE=0.3,),),),"
-    retour = editor.updateJdcAfterEtape(etape,texte)
+    #print ('import_zone_from_menu', editor,etape)
+    #texte="ZONE(NOEUDS=(_F(NOM='N1',POSITION_AXIALE=0.0,), _F(NOM='N2',POSITION_AXIALE=0.1,), _F(NOM='N3',POSITION_AXIALE=0.2,), _F(NOM='N4',POSITION_AXIALE=0.3,),),),"
+    from txtZonePN2018 import texte
+    print (etape)
+    #retour = editor.updateJdcAfterEtape(etape,texte)
+    editor.updateJdc(etape,texte)
 
-def import_ligne(listeparam):
+def import_ligne(editor, etapeCourante):
     print ('in import_ligne')
 
 # le dictionnaire des commandes a la structure suivante :
@@ -70,9 +73,9 @@ def import_ligne(listeparam):
 #	- toolTip
 dict_commandes={
 	'LIGNE_ARBRE':((view_ligne_arbre,"View",('item',),False,True,"affiche dans Geom la representation de la ligne d'arbre"),),
- 	'ZONE':(
-               (view_zone,"View",('item',),False,True,"affiche dans Geom la representation de la zone "),
-               (import_zone,"import_zone",('editor','self'),False,False,"import de fichier zone"),)
+ 	'ZONE':( (view_zone,"View",('item',),False,True,"affiche dans Geom la representation de la zone "),
+               #(import_zone,"import_zone",('editor','self'),False,False,"import de fichier zone")
+               )
                }
 
 # le dictionnaire des menus a la structure suivante 
@@ -88,7 +91,7 @@ dict_commandes={
 dict_menu = {
       'Ajout Elts' : (
        #(import_zone,"import_zone",('editor','self'),False,False,"import de fichier zone"),
-       (import_zone_from_menu,"import_zone",('editor','etapeCourante'),),
+       (import_zone_from_menu,"import_zone_from_menu",('editor','etapeCourante'),),
        (import_ligne,"import_ligne",('editor','etapeCourante'),),
        )
        }

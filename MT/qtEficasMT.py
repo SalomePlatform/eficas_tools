@@ -35,4 +35,14 @@ sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 
 import prefs
 from InterfaceQT4 import eficas_go
+import cProfile, pstats, StringIO
+pr = cProfile.Profile()
+pr.enable()
+#eficas_go.lanceEficas_ssIhm_reecrit(code='MT',fichier = 'gros_modele_MT.comm',ou = 'toto',cr=True)
 eficas_go.lanceEficas(code=prefs.code)
+pr.disable()
+s = StringIO.StringIO()
+sortby = 'cumulative'
+ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+ps.print_stats()
+print s.getValue()
