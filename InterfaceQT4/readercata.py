@@ -288,7 +288,7 @@ class ReaderCata (ReaderCataCommun):
         ficIcones=self.appliEficas.maConfiguration.ficIcones
         fichierIcones = __import__(ficIcones, globals(), locals(), [], -1)
         self.appliEficas.maConfiguration.dicoIcones=fichierIcones.dicoDesIcones.dicoIcones
-        self.appliEficas.maConfiguration.dicoImages=fichierIcones.dicoDesIcones.dicoIcones
+        self.appliEficas.maConfiguration.dicoImages=fichierIcones.dicoDesIcones.dicoImages
       except:
         print ("Pas de fichier associe contenant des liens sur les icones ")
         self.appliEficas.maConfiguration.dicoIcones={}

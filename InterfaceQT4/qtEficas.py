@@ -120,6 +120,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         if  hasattr (self, 'maConfiguration') and self.maConfiguration.boutonDsMenuBar  : 
             self.blEnteteCommmande = QBoxLayout(0)
             self.blEnteteCommmande.insertWidget(0,self.toolBarCommande)
+            self.toolBarCommande.setIconSize(QSize(96,96))
             self.blEnteteGlob.insertLayout(-1,self.blEnteteCommmande)
         else :
             self.toolBarCommande.close()

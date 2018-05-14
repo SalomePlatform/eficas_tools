@@ -419,7 +419,9 @@ class MyViewManager(object):
        if editor.getEtapeCourante() == None :
           QMessageBox.information( self.appliEficas,
                       tr("Selectionner une etape"),
-                      tr("Le texte sera inséré après l étape selectionnée"))
+                      tr("Le texte sera inséré après l étape selectionnée"),
+                      tr("Creer un materiau vide et inserer"))
+          return
 
        listeParam = [] 
        for p in lesArguments:
