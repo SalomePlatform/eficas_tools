@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2015 rel. 4 (http://www.altova.com) by USER1 (EDF-DSP) -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:atmos="http://chercheurs.edf.com/logiciels/atmos" targetNamespace="http://chercheurs.edf.com/logiciels/atmos" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<simpleType name="T_Wind_Speed">
+		<restriction base="int"/>
+	</simpleType>
+	<simpleType name="T_Speed_Unit">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="T_Bloc_Wind_Speed">
+		<restriction base="int"/>
+	</simpleType>
+	<simpleType name="T_Bloc_Speed_Unit">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="T_Value">
+		<restriction base="int"/>
+	</simpleType>
+	<simpleType name="T_Unit">
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="T_Bloc_Value">
+		<restriction base="int"/>
+	</simpleType>
+	<simpleType name="T_Bloc_Unit">
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="T_Atmos">
+		<sequence>
+			<element name="Wind" type="atmos:T_Wind" minOccurs="1" maxOccurs="1"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_Mesure">
+		<sequence maxOccurs="4">
+			<element name="Value" type="atmos:T_Value"/>
+			<element name="Unit" type="atmos:T_Unit"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_Bloc_Mesure">
+		<sequence maxOccurs="4">
+			<element name="Bloc_Value" type="atmos:T_Bloc_Value"/>
+			<element name="Bloc_Unit" type="atmos:T_Bloc_Unit"/>
+		</sequence>
+	</complexType>
+	<complexType name="T_Wind">
+		<sequence>
+			<element name="Wind_Speed" type="atmos:T_Wind_Speed"/>
+			<element name="Mesure" type="atmos:T_Mesure"/>
+			<group ref="atmos:T_Bloc_enter_mesure" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<element name="Atmos" type="atmos:T_Atmos"/>
+	<group name="T_Bloc_enter_mesure">
+		<sequence>
+			<element name="Bloc_Wind_Speed" type="atmos:T_Bloc_Wind_Speed"/>
+			<element name="Bloc_Mesure" type="atmos:T_Bloc_Mesure" minOccurs="0"/>
+		</sequence>
+	</group>
+</schema>
