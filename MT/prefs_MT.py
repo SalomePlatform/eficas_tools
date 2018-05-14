@@ -35,10 +35,12 @@ encoding='iso-8859-1'
 
 #
 catalogues=(
-   ('MT','V2017',os.path.join(repIni,'MT_Cata_V2017.py'),'python','python'),
+   #('MT','V2017',os.path.join(repIni,'MT_Cata_V2017.py'),'python','python'),
+   ('MT','V2018',os.path.join(repIni,'MT_Cata_V2018.py'),'python','python'),
 )
 nombreDeBoutonParLigne=4
 simpleClic=True
-closeFrameRechercheCommande=True
+#closeFrameRechercheCommande=True
+closeParenthese=True
 boutonDsMenuBar=True
 ficIcones='images.dicoDesIcones'

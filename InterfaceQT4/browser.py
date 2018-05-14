@@ -163,11 +163,15 @@ class JDCTree( QTreeWidget,GereRegles ):
 
         while not (hasattr (itemParent,'getPanel')) : 
            if itemParent.plie==True : itemParent.setDeplie()
+           itemAvant=itemParent
            itemParent=itemParent.treeParent 
 
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
             estUneFeuille=(isinstance(item,composimp.Node))
              # il faut afficher le parent
+            if estUneFeuille and itemParent.fenetreIhm=='deplie1Niveau' : 
+               itemAvant.afficheCeNiveau()
+               return
             if estUneFeuille                        : itemParent.affichePanneau()
             elif self.editor.maConfiguration.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
             else                                    : itemParent.affichePanneau()
@@ -343,7 +347,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
 
     def afficheCeNiveau(self):
-        print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
+        #print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
             self.editor.widgetCentraleLayout.removeItem(widget)
@@ -358,6 +362,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         monObjet=self.item.object
         if maDefinition.fenetreIhm=='Tableau' : self.maFenetreCadre=MonWidgetNiveauFactTableau(self,self.editor,maDefinition,monObjet)
         else : self.maFenetreCadre=MonWidgetNiveauFact(self,self.editor,maDefinition,monObjet)
+        
         self.fenetre=self.maFenetreCadre
         self.editor.widgetCentraleLayout.addWidget(self.maFenetreCadre)
         self.editor.fenetreCentraleAffichee=self.maFenetreCadre

@@ -84,7 +84,7 @@ class Groupe(QWidget,FacultatifOuOptionnel):
            if node.appartientAUnNoeudPlie==True : continue
            #print "je suis apres le if pour ",node.item.nom
            widget=node.getPanelGroupe(self,self.maCommande)
-           #print "widget pour ", node.item.nom, widget
+           #print ("widget pour ", node.item.nom, widget)
            self.listeFocus.append(node.fenetre)
       #print "fin pour " , self.node.item.nom
 

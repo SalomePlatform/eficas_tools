@@ -92,7 +92,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
 
         #self.affiche=self.appliEficas.maConfiguration.affiche
 
-        if self.code in ['MAP','CARMELCND','PSEN'] : self.editor.maConfiguration.afficheCommandesPliees=False
+        if self.code in ['MAP','CARMELCND','PSEN'] : self.maConfiguration.afficheCommandesPliees=False
         if self.code in ['MAP',]: self.fermeArbre()
         #   self.widgetTree.close()
         #   self.widgetTree=None
@@ -847,6 +847,8 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
            self.tree.racine.item.getObject().nom=os.path.basename(newName)
            self.tree.racine.updateNodeLabel()
 
+        #print ('sortie du XML')
+        #self.jdc.toXml()
 
         if self.jdc.isValid() != 0 and hasattr(self.generator, "writeDefault"):
         #if hasattr(self.generator, "writeDefault"):
@@ -942,13 +944,11 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         return ulfile, jdcText
 
     #-----------------------------------#
-    def updateJdc(self, itemApres,texte):
+    def updateJdc(self, etape,texte):
     #------------------------------------#
     # ajoute une etape  de JdC a partir d un texte
-        monItem=itemApres
-        etape=monItem.item.object
         CONTEXT.setCurrentStep(etape)
-        etape.buildIncludeInclude(texte)
+        etape.buildIncludeEtape(texte)
         self.tree.racine.buildChildren()
 
     #-----------------------------------#

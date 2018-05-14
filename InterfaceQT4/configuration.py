@@ -127,7 +127,9 @@ class configBase(object):
       self.differencieSiDefaut=False
       self.typeDeCata='Python'
       self.dumpXSD=False
+      self.withXSD=False
       self.afficheIhm=True
+      self.closeParenthese=False
 
 
  

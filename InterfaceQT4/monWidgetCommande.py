@@ -93,6 +93,8 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
    
       if self.editor.code in ['Adao','ADAO'] and self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
                       self.frameAffichage.close()
+      if self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
+         self.closeAutreCommande()
 
       if self.editor.code in ['CARMELCND',] : self.closeAutreCommande()
       self.racine=self.node.tree.racine

@@ -79,7 +79,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisee par ops.POURSUITE et INCLUDE
     """
-    #print ("getContexteJdc",self,self.nom)
+    #print ("getContexteJdc",self,self.nom, text)
     # On recupere l'etape courante
     step=CONTEXT.getCurrentStep()
     #try:
@@ -89,7 +89,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # le contexte courant. Ce dictionnaire est reactualise regulierement.
        # Si on veut garder l'etat du contexte fige, il faut en faire une copie.
        context_ini = self.parent.getContexteAvant(self).copy()
-       print ("getContexteJdc",context_ini.keys())
 
        # Indispensable avant de creer un nouveau JDC
        CONTEXT.unsetCurrentStep()
@@ -119,6 +118,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           format=self.parent.appli.appliEficas.format_fichier
           #on force a python pour Carmel
           if format=="CARMEL3D" : format="python"
+          import convert
           if format in convert.plugins :
               # Le convertisseur existe on l'utilise
               p=convert.plugins[format]()
@@ -133,6 +133,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
                   self.text_converted=1
 
 
+       if hasattr(self,'sd') and self.sd != None : context_ini[self.sd.nom]=self.sd
        j=self.JdC_aux( procedure=text, nom=fichier,
                                 appli=self.jdc.appli,
                                 cata=self.jdc.cata,
@@ -526,11 +527,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     import Extensions.jdc_include
     self.JdC_aux=Extensions.jdc_include.JdC_include
     # un include partage la table des unites avec son parent (jdc)
-    self.buildJdcauxInclude(text)
 
 
-
-  def buildIncludeEtape(self,text,doitEtreValide):
+  def buildIncludeEtape(self,text,doitEtreValide = 0):
     import Extensions.jdc_include
     self.JdC_aux=Extensions.jdc_include.JdC_include
     # un include partage la table des unites avec son parent (jdc)
@@ -538,6 +537,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     # Attention fonctionne pour import_Zone de MT
     # a adapter eventuellement
     try :
+    #if 1 :
        contexte = self.getContexteJdc(None,text,doitEtreValide)
     except EficasException: 
        return 0
@@ -616,7 +616,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     print ("makeContexteInclude",fichier)
     # on recupere le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.getContexteJdc(fichier,text)
-    print ("makeContexteInclude",fichier)
     if contexte == None :
       raise EficasException("Impossible de construire le jeu de commandes correspondant au fichier")
     else:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1232</width>
-    <height>656</height>
+    <width>1094</width>
+    <height>304</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -443,8 +443,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1109</width>
-             <height>526</height>
+             <width>947</width>
+             <height>205</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -583,6 +583,13 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="PBValideFeuille">
+       <property name="text">
+        <string>Valide</string>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer_2">

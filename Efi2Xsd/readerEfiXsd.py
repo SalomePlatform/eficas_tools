@@ -17,8 +17,8 @@ from mapDesTypes import dictFACTEficasXML, dictFACTXMLEficas
 from mapDesTypes import dictPROCEficasXML, dictPROCXMLEficas
 from mapDesTypes import dictOPEREficasXML, dictOPERXMLEficas
 from mapDesTypes import dictBLOCEficasXML, dictBLOCXMLEficas
-from mapDesTypes import dicoPourCast
-from mapDesTypes import listeParamDeTypeTypeAttendu, listeParamDeTypeStr, dicoPourCast
+from mapDesTypes import dictPourCast
+from mapDesTypes import listeParamDeTypeTypeAttendu, listeParamDeTypeStr, dictPourCast
 from mapDesTypes import listeParamTjsSequence, listeParamSelonType
 
 
@@ -160,9 +160,9 @@ class monSIMP (efficas.T_SIMP,  objetDefinitionAccas):
    # -------------------------------------------
    # Cas des Tuples non traites
        typeAttendu = self.dictArgsEficas['typ']
-       if typeAttendu in list(dicoPourCast.keys()):
+       if typeAttendu in list(dictPourCast.keys()):
           nouvelleListe=[]
-          castDsLeTypeAttendu=dicoPourCast[typeAttendu]
+          castDsLeTypeAttendu=dictPourCast[typeAttendu]
           for valeurACaster in listeDElt :
               val=castDsLeTypeAttendu(valeurACaster)
               nouvelleListe.append(val)
@@ -180,8 +180,8 @@ class monSIMP (efficas.T_SIMP,  objetDefinitionAccas):
    # Cas des fonctions utilisateurs non traites
 
        typeAttendu = self.dictArgsEficas['typ']
-       if typeAttendu in list(dicoPourCast.keys()):
-          castDsLeTypeAttendu=dicoPourCast[typeAttendu]
+       if typeAttendu in list(dictPourCast.keys()):
+          castDsLeTypeAttendu=dictPourCast[typeAttendu]
           for param in listeParamDeTypeTypeAttendu :
              if param in list(self.dictArgsEficas.keys()):
                 if param in listeParamEnListeSelonType or param in listeParamTjsEnListe : 
@@ -277,9 +277,9 @@ class monCata(efficas.T_cata):
       #print dir(self.JdC)
       
      
-   def dumpXSD(self):
-      for etape in self.contexteXML.values() :
-          etape.dumpXSD()
+   #def dumpXSD(self):
+   #   for etape in self.contexteXML.values() :
+   #       etape.dumpXSD()
 
 efficas.T_SIMP._SetSupersedingClass(monSIMP)
 efficas.T_FACT._SetSupersedingClass(monFACT)

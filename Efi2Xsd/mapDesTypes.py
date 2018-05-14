@@ -88,7 +88,8 @@ dictPROCXMLEficas = inverseDico(dictPROCEficasXML)
 dictOPEREficasXML = dictPROCEficasXML
 dictOPERXMLEficas = dictPROCXMLEficas
 
-dicoPourCast                = { 'I' : int, 'R' : float, 'bool' : bool ,   }
+dictPourCast                = { 'I' : int, 'R' : float, 'bool' : bool ,   }
+dictNomsDesTypes = { 'I' : 'int', 'R' : 'float', bool : 'bool' , 'TXM' : 'string', 'Fichier' : 'string'   }
 
 listeParamDeTypeTypeAttendu = ( 'defaut', 'sug', 'val_min', 'val_max', 'into', 'intoSug')
 listeParamDeTypeStr         = ('fr', 'docu', 'ang', 'nom' )
@@ -116,3 +117,6 @@ if __name__ == "__main__":
    print ('\n\n')
    print ('dictPROCXMLEficas')
    pp.pprint(dictPROCXMLEficas)
+   print ('\n\n')
+   print ('dictNomsDesTypes')
+   pp.pprint(dictNomsDesTypes )

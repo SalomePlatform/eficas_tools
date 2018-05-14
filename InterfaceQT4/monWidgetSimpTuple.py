@@ -79,7 +79,7 @@ class MonWidgetSimpTuple(Feuille):
                 else :        s=s+'"'
              courant.setText(s)
           texteValeur+=str(courant.text())
-          print (texteValeur)
+          #print (texteValeur)
           if i+1 != self.nbValeurs : texteValeur+=','
       validite,commentaire=self.politique.recordValeur(texteValeur)
       if not validite:self.editor.afficheInfos(commentaire+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
