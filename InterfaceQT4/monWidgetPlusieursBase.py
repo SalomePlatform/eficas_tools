@@ -36,7 +36,7 @@ from PyQt5.QtCore    import QTimer, QSize, Qt
 from Extensions.i18n import tr
 
 from InterfaceQT4.feuille                import Feuille
-from UiQT5.desWidgetPlusieursBase        import Ui_WidgetPlusieursBase 
+from desWidgetPlusieursBase              import Ui_WidgetPlusieursBase 
 from InterfaceQT4.politiquesValidation   import PolitiquePlusieurs
 from InterfaceQT4.qtSaisie               import SaisieValeur
 from InterfaceQT4.gereListe              import GereListe
