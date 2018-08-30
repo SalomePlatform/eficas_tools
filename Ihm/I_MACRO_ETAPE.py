@@ -163,8 +163,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # Erreurs dans l'INCLUDE. On garde la memoire du fichier 
        # mais on n'insere pas les concepts
        # On retablit l'etape courante step
-       print (j.cr)
-       print ("valid ",j.isValid())
+       #print (j.cr)
+       #print ("valid ",j.isValid())
        CONTEXT.unsetCurrentStep()
        CONTEXT.setCurrentStep(step)
        raise EficasException(tr("Impossible de relire le fichier %s \n ")+ six.text_type(j.cr))
@@ -174,7 +174,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        # L'INCLUDE n'est pas valide.
        # on produit un rapport d'erreurs
        cr=j.report()
-       print ('cr', cr)
+       #print ('cr', cr)
        # On retablit l'etape courante step
        CONTEXT.unsetCurrentStep()
        CONTEXT.setCurrentStep(step)
@@ -613,7 +613,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     """
         Cette methode sert a craer un contexte en interpratant un texte source Python.
     """
-    print ("makeContexteInclude",fichier)
+    #print ("makeContexteInclude",fichier)
     # on recupere le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.getContexteJdc(fichier,text)
     if contexte == None :
@@ -627,7 +627,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # g_context est utilise pour avoir les concepts produits par la macro
       # contexte_fichier_init est utilise pour avoir les concepts supprimes par la macro
       self.contexte_fichier_init = contexte
-    print ("fin makeContexteInclude",fichier)
+    #print ("fin makeContexteInclude",fichier)
 
   def reevalueFichierInitObsolete(self):
       """Recalcule les concepts produits par le fichier enregistre"""
