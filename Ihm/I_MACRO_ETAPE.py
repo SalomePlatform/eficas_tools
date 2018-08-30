@@ -545,6 +545,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     for e in self.etapes: 
         e.niveau=self.niveau
         e.parent=self.parent
+        e.state='change'
 
     index=self.jdc.etapes.index(self)
     self.jdc.etapes=self.jdc.etapes[:index+1]+self.etapes+self.jdc.etapes[index+1:]

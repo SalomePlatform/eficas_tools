@@ -39,7 +39,9 @@ class MonLayoutBouton :
 
       self.appliEficas = appliEficas
       self.buttonGroup = QButtonGroup()
-      for nomEtape in self.appliEficas.readercata.cata_ordonne_dico:
+    
+      for etape in self.appliEficas.readercata.cata.JdC.commandes :
+        nomEtape = etape.nom
         toolButton = QToolButton(self.appliEficas.toolBarCommande)
         icon = QIcon()
         if nomEtape in self.appliEficas.maConfiguration.dicoIcones:
