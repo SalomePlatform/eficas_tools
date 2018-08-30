@@ -86,7 +86,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
   def changeTout(self,int):
-       print ('changeTout')
+       #print ('changeTout')
        if self.inhibe : return
        self.inhibe=True
        if not(self.CBCheck.isChecked()) : 
@@ -111,7 +111,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
        self.changeValeur()
 
   def setValeurs(self):
-       print ('setValeurs')
+       #print ('setValeurs')
        self.listeValeursCourantes =self.node.item.getValeur()
        if self.listeValeursCourantes ==  None : self.listeValeursCourantes=[]
        #print "ds set Valeur", self.listeValeursCourantes, self.node.item.getValeur()
@@ -168,7 +168,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
        
 
   def ajoutCB(self,index,valeur=None):
-      print ('ajoutCB')
+      #print ('ajoutCB')
       nomCB="lineEditVal"+str(index)
       if hasattr(self,nomCB) : return
       nouveauCB = QCheckBox(self.scrollArea)
@@ -184,7 +184,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
   def ajout1Valeur(self,valeur=None):
-        print ('ajout1Valeur')
+        #print ('ajout1Valeur')
         if valeur == None : return
         liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
         if validite == 0 : return
@@ -202,7 +202,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
   def changeValeur(self):
-      print ('changeValeur')
+      #print ('changeValeur')
       if self.inhibe == True: return
       if hasattr(self,'LEFiltre') :self.noircirResultatFiltre()
       self.listeValeursCourantesAvant=self.listeValeursCourantes
@@ -235,7 +235,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
   def prepareListeResultatFiltre(self):
-      print ('prepareListeResultatFiltre')
+      #print ('prepareListeResultatFiltre')
       filtre=str(self.LEFiltre.text())
       for cb in self.listeCB:
           texte=cb.text() 
@@ -248,12 +248,12 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
             self.listeCbRouge.append(cb)
 
   def prepareListeResultat(self):
-      print ('prepareListeResultat')
+      #print ('prepareListeResultat')
       self.clearAll()
       self.setValeurs()
 
   def clearAll(self):
-      print ('clearAll')
+      #print ('clearAll')
       for cb in self.listeCB :
          cb.setText("")
 

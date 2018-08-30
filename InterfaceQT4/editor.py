@@ -420,7 +420,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
       # si possible on renomme l objet comme le noeud couper
 
       if (self.QWParent.edit == "couper"):
-         print ('je pass la')
+         #print ('je pass la')
          if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
            QMessageBox.critical( self, tr("Deplacement refuse"),tr('Deplacement refuse entre 2 fichiers. Seule la copie est autorisee '))
 
@@ -521,9 +521,9 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
          nodeOuAjouter=self.node_selected[0]
          if nodeOuAjouter != self.tree.racine :
             while  nodeOuAjouter.treeParent != self.tree.racine:
-                   print (nodeOuAjouter)
+                   #print (nodeOuAjouter)
                    nodeOuAjouter=nodeOuAjouter.treeParent
-                   print (nodeOuAjouter.parent == self.tree.racine)
+                   #print (nodeOuAjouter.parent == self.tree.racine)
          nouveau=nodeOuAjouter.appendBrother(nomEtape)
       try : 
         self.node_selected[0].setSelected(False)
@@ -1023,13 +1023,13 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     def ajoutMCFact(self,etape,MCFils,listeAvant=()):
     #----------------------------------------------#
     # dans le JDC
-        print ('ajoutMCFact')
+        #print ('ajoutMCFact')
         ouChercher=etape
-        print (ouChercher)
+        #print (ouChercher)
         for mot in listeAvant :
               ouChercher=ouChercher.getChild(mot,restreint="oui")
-              print (mot)
-              print (ouChercher)
+              #print (mot)
+              #print (ouChercher)
         monMC=etape.getChild(ouChercher,restreint="oui")
         if monMC== None : monMC= ouChercher.addEntite(MCFils)
         monMC.isValid()
@@ -1115,7 +1115,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     #-----------------------
     def getEtapeCourante(self) :
     #-----------------------
-      print (self.tree.selectedItems())
+      #print (self.tree.selectedItems())
       if len(self.tree.selectedItems()) != 1 : return None
       etape=self.tree.selectedItems()[0].item.object.getEtape()
       return etape

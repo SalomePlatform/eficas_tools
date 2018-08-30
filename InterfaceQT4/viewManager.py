@@ -419,7 +419,7 @@ class MyViewManager(object):
        if editor.getEtapeCourante() == None :
           QMessageBox.information( self.appliEficas,
                       tr("Selectionner une etape"),
-                      tr("Le texte ne peut pas etre insere dans un fichier vide,\nCreer un materiau vide et inserer le catalogue apres"))
+                      tr("Le texte ne peut pas etre insere dans un fichier vide,\nCreer un materiau vide ou une zone vide et inserer le catalogue apres"))
           return
 
        listeParam = [] 

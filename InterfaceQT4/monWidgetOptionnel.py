@@ -42,9 +42,11 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.vireLesAutres(MC)
    
      if MC.node.item.nom in self.dicoMCWidgetOptionnel :
+        #print (MC.node.item.nom)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
         self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].deleteLater()
+        del self.dicoMCWidgetOptionnel[MC.node.item.nom]
      if liste==[] : return
      groupe = MonGroupeOptionnel(liste,liste_rouge,self,MC)
      self.groupesOptionnelsLayout.insertWidget(0,groupe)

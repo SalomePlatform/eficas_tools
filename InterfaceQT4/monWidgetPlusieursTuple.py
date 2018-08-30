@@ -412,7 +412,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
 
         validite,comm,comm2,listeRetour= self.politique.ajoutNTuple(listeComplete)
         if not validite : 
-           self.editor.afficheInfos(texte,Qt.red)
+           self.editor.afficheInfos(comm+comm2,Qt.red)
            return
 
         # on calcule le dernier lineedit rempli avant de changer la valeur

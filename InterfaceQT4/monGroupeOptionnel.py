@@ -81,12 +81,12 @@ class MonRBButtonCustom(QCheckBox):
         maDefinition = self.monOptionnel.parentMC.definition.entites[self.texte]
         maLangue =  self.monOptionnel.parentMC.jdc.lang
         if hasattr(maDefinition,maLangue): 
-          monAide = getattr(maDefinition,self.monOptionnel.parentMC.jdc.lang)
+          self.monAide = getattr(maDefinition,self.monOptionnel.parentMC.jdc.lang)
         else : 
-          monAide = ""
+          self.monAide = ""
       except :
-          monAide = ""
-      self.monOptionnel.parentMC.editor.afficheCommentaire(monAide)
+          self.monAide = ""
+      self.monOptionnel.parentMC.editor.afficheCommentaire(self.monAide)
   
 class MonPBButtonCustom(QWidget,Ui_customPB):
 

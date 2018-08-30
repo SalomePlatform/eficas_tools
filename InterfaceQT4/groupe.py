@@ -41,7 +41,6 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       QWidget.__init__(self,None)
       self.node=node
       self.node.fenetre=self
-      if self.node.item.nom == 'MASSES' : traceback.print_stack()
       self.setupUi(self)
       self.editor=editor
       self.obj=obj
