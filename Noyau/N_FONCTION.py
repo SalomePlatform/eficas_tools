@@ -121,7 +121,7 @@ class formule(ASSD):
         if self.accessible():
             TypeProl = {
                 'E': 'EXCLU', 'L': 'LINEAIRE', 'C': 'CONSTANT', 'I': 'INTERPRE'}
-            sd = sd_formule(self.get_name())
+            sd = sd_formule(self.getName())
             prol = sd.PROL.get()
             nova = sd.NOVA.get()
             if prol is None or nova is None:

@@ -22,9 +22,10 @@ from __future__ import absolute_import
 import re
 from Extensions.i18n import tr
 
+#import traceback
+#traceback.print_stack()
 
-from .convert_python import PythonParser
-import six
+from convert.convert_python import Pythonparser
 from six.moves import range
 try:
   basestring
@@ -65,10 +66,10 @@ pattern_ContientDouble=re.compile (r"^.*''.*$")
 
 
 #Si le code n est pas Telemac
-try :
-   from enum_Telemac2d_auto       import TelemacdicoEn
-except :
-   pass
+#try :
+#   from enum_Telemac2d_auto       import self.TelemacdicoEn
+#except :
+#   pass
 
 from Extensions import localisation
 
@@ -80,29 +81,46 @@ def entryPoint():
    """
    return {
           'name' : 'TELEMAC',
-          'factory' : TELEMACParser
+          'factory' : TELEMACparser
           }
 
-class TELEMACParser(PythonParser):
+class TELEMACparser(Pythonparser):
    """
-   This converter works like PythonParser, except that it also initializes all
+   This converter works like Pythonparser, except that it also initializes all
    model variables to None in order to avoid Python syntax errors when loading
    a file with a different or inexistent definition of variables.
    """
+
+   
 
    def convert(self, outformat, appli=None):
 
 
       from Accas import A_BLOC, A_FACT, A_SIMP
-      self.dicoCasToCata=appli.readercata.dicoCasToCata
-      self.dicoInverse=appli.readercata.dicoInverse
-      self.dicoMC=appli.readercata.dicoMC
-      self.Ordre_Des_Commandes=appli.readercata.Ordre_Des_Commandes
+      try :
+        self.dicoCasToCata = appli.readercata.dicoCasToCata
+      except :
+        self.dicoCasToCata = {}
+        print ('pas de dicoCasToCata')
+      self.dicoInverse              = appli.readercata.dicoInverse
+      self.dicoMC                   = appli.readercata.dicoMC
+      self.Ordre_Des_Commandes      = appli.readercata.Ordre_Des_Commandes
+      try :
+        self.TelemacdicoEn            = appli.readercata.TelemacdicoEn
+      except :
+        self.TelemacdicoEn = {}
+        print ('pas de TelemacdicoEn')
+      try :
+        self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+      except :
+        self.DicoEnumCasFrToEnumCasEn = {}
+        print ('pas de DicoEnumCasFrToEnumCasEn')
+      
 
       if appli.langue=='fr' :
-          from enum_Telemac2d_auto       import DicoEnumCasFrToEnumCasEn
-          for k in DicoEnumCasFrToEnumCasEn :
-              TelemacdicoEn[k]=DicoEnumCasFrToEnumCasEn[k]
+          #from enum_Telemac2d_auto       import DicoEnumCasFrToEnumCasEn
+          for k in self.DicoEnumCasFrToEnumCasEn :
+              self.TelemacdicoEn[k]=self.DicoEnumCasFrToEnumCasEn[k]
 
       text=""
       self.dictSimp={}
@@ -237,7 +255,7 @@ class TELEMACParser(PythonParser):
 
       dicoParMC={}
       for simp in self.dictSimp:
-          if simp in TELEMACParser.__dict__ : TELEMACParser.__dict__[simp](self,)
+          if simp in TELEMACparser.__dict__ : TELEMACparser.__dict__[simp](self,)
 
       for simp in self.dictSimp:
           if simp not in self.dicoInverse :
@@ -317,8 +335,8 @@ class TELEMACParser(PythonParser):
 
    def convertFACT(self,obj,nom,valeur):
        # traitement LIQUID_BOUNDARIES
-       if nom in TELEMACParser.__dict__ :
-          TELEMACParser.__dict__[nom](self,)
+       if nom in TELEMACparser.__dict__ :
+          TELEMACparser.__dict__[nom](self,)
           return
        self.textePy +=  nom + "=_F( "
        self.traiteMC(valeur)
@@ -359,9 +377,9 @@ class TELEMACParser(PythonParser):
           try    : valeur=eval(valeur,{})
           except : pass
 
-          if nom in TelemacdicoEn:
+          if nom in self.TelemacdicoEn:
              try    :
-               valeur=TelemacdicoEn[nom][valeur]
+               valeur=self.TelemacdicoEn[nom][valeur]
                self.textePy += nom + "= '" + str(valeur) +"',"
                return
              except : pass
@@ -418,8 +436,8 @@ class TELEMACParser(PythonParser):
           # Attention : on attend une liste mais on a une seule valeur!
              try :    oldValeur=eval(oldValeur,{})
              except : pass
-             if nom in TelemacdicoEn :
-                v=TelemacdicoEn[nom][oldValeur]
+             if nom in self.TelemacdicoEn :
+                v=self.TelemacdicoEn[nom][oldValeur]
                 self.textePy += nom + "= ('" + str(v) +"',),"
              else :
                 self.textePy += nom + "= (" + str(oldValeur) +",),"
@@ -431,8 +449,8 @@ class TELEMACParser(PythonParser):
           for v in valeur :
             try :    v=eval(v,{})
             except : pass
-            if nom in TelemacdicoEn:
-               try    : v=TelemacdicoEn[nom][v]
+            if nom in self.TelemacdicoEn:
+               try    : v=self.TelemacdicoEn[nom][v]
                except : pass
             newVal.append(v)
           self.textePy += nom + "=" + str(newVal) +","
@@ -440,6 +458,7 @@ class TELEMACParser(PythonParser):
 
 
    def tri(self, listeIn):
+      if len(listeIn) == 0 : return listeIn
       if len(listeIn) == 1 : return listeIn
       if self.Ordre_Des_Commandes == None : return listeIn
       listeOut=[listeIn[0],]

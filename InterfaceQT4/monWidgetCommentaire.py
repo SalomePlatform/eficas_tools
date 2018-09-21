@@ -76,7 +76,7 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
       else : self.node.tree.racine.select()
 
   def remplitTexte(self):
-      texte=self.node.item.get_valeur()
+      texte=self.node.item.getValeur()
       self.commentaireTE.setText(texte)
       if self.editor.code == "CARMELCND" and texte[0:16]=="Cree - fichier :" :
          self.commentaireTE.setReadOnly(True)
@@ -91,7 +91,7 @@ class MonWidgetCommentaire(QWidget,Ui_WidgetCommentaire,FacultatifOuOptionnel):
 
   def TexteCommentaireEntre(self):
       texte=str(self.commentaireTE.toPlainText())
-      self.editor.init_modif()
-      self.node.item.set_valeur(texte)
-      self.node.update_node_texte()
+      self.editor.initModif()
+      self.node.item.setValeur(texte)
+      self.node.updateNodeTexte()
 

@@ -36,7 +36,7 @@ import types
 import traceback
 import re
 from .N_ASSD import ASSD
-from .N_types import is_int, is_float_or_int, is_complex, is_number, is_str, is_sequence
+from .N_types import isInt, isFloat_or_int, isComplex, isNumber, isStr, isSequence
 from Extensions.i18n import tr
 import six
 from six.moves import range
@@ -119,7 +119,7 @@ class ListProtocol(Protocol):
         elif obj == None:
             # pas de valeur affecte. La cardinalite vaut 0
             return obj
-        elif is_str(obj):
+        elif isStr(obj):
             # il s'agit d'une chaine. La cardinalite vaut 1
             return (obj,)
         else:
@@ -150,19 +150,19 @@ class TypeProtocol(PProtocol):
         err = ""
         for type_permis in typ:
             if type_permis == 'R':
-                if is_float_or_int(obj):
+                if isFloat_or_int(obj):
                     return obj
             elif type_permis == 'I':
-                if is_int(obj):
+                if isInt(obj):
                     return obj
             elif type_permis == 'C':
-                if self.is_complexe(obj):
+                if self.isComplexe(obj):
                     return obj
             elif type_permis == 'TXM':
-                if is_str(obj): 
+                if isStr(obj): 
                    return obj
             elif type_permis == 'shell':
-                if is_str(obj):
+                if isStr(obj):
                     return obj
             elif type_permis == 'Fichier':
                 import os
@@ -197,7 +197,7 @@ class TypeProtocol(PProtocol):
                   raise ValError( "%s n'est pas un fichier ou un repertoire valide" % repr(obj))
             elif type(type_permis) == type or isinstance(type_permis, type):
                 try:
-                    if self.is_object_from(obj, type_permis):
+                    if self.isObjectFrom(obj, type_permis):
                         return obj
                 except Exception as err:
                     pass
@@ -212,9 +212,9 @@ class TypeProtocol(PProtocol):
         raise ValError(
             tr("%s (de type %s) n'est pas d'un type autorise: %s %s") % (repr(obj), type(obj), typ, err))
 
-    def is_complexe(self, valeur):
+    def isComplexe(self, valeur):
         """ Retourne 1 si valeur est un complexe, 0 sinon """
-        if is_number(valeur):
+        if isNumber(valeur):
             # Pour permettre l'utilisation de complexes Python (accepte les
             # entiers et réels)
             return 1
@@ -235,7 +235,7 @@ class TypeProtocol(PProtocol):
             else:
                 return 0
 
-    def is_object_from(self, objet, classe):
+    def isObjectFrom(self, objet, classe):
         """
            Retourne 1 si objet est une instance de la classe classe, 0 sinon
         """
@@ -296,7 +296,7 @@ class IntoProtocol(PProtocol):
         else:
             # on est dans le cas d'un ensemble continu de valeurs possibles
             # (intervalle)
-            if is_float_or_int(obj):
+            if isFloat_or_int(obj):
                 if val_min == '**':
                     val_min = obj - 1
                 if val_max == '**':
@@ -317,7 +317,7 @@ class MinStr(object):
         self.max = max
 
     def __convert__(self, valeur):
-        if is_str(valeur) and self.min <= len(valeur) <= self.max: return valeur
+        if isStr(valeur) and self.min <= len(valeur) <= self.max: return valeur
         raise ValError(
             "%s n'est pas une chaine de longueur comprise entre %s et %s" % (valeur, self.min, self.max))
 
@@ -358,7 +358,7 @@ class Valid(PProtocol):
         """
         return self.info()
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         """
            Cette méthode permet d'avoir un message d'erreur pour un item
            dans une liste dans le cas ou le validateur fait des vérifications
@@ -368,10 +368,10 @@ class Valid(PProtocol):
         """
         return " "
 
-    def info_erreur_liste(self):
+    def infoErreurListe(self):
         """
            Cette méthode a un comportement complémentaire de celui de
-           info_erreur_item. Elle retourne un message d'erreur lié uniquement
+           infoErreurItem. Elle retourne un message d'erreur lié uniquement
            aux vérifications sur la liste elle meme et pas sur ses items.
            Dans le cas où le validateur ne fait pas de vérification sur des
            listes, elle retourne une chaine vide
@@ -391,19 +391,19 @@ class Valid(PProtocol):
         """
         raise NotImplementedError("Must be implemented")
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         """
            La methode verif du validateur effectue une validation complete de
            la valeur. valeur peut etre un scalaire ou une liste. Le validateur
            doit traiter les 2 aspects s'il accepte des listes (dans ce cas la
-           methode is_list doit retourner 1).
+           methode isList doit retourner 1).
            La methode valid_item sert pour effectuer des validations partielles
            de liste. Elle doit uniquement verifier la validite d'un item de
            liste mais pas les caracteristiques de la liste.
         """
         return 0
 
-    def valide_liste_partielle(self, liste_courante):
+    def valideListePartielle(self, liste_courante):
         """
            Cette methode retourne un entier qui indique si liste_courante est partiellement valide (valeur 1)
            ou invalide (valeur 0). La validation partielle concerne les listes en cours de construction : on
@@ -414,7 +414,7 @@ class Valid(PProtocol):
         """
         return self.verif(liste_courante)
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Cette methode sert a realiser des verifications du validateur lui meme.
             Elle est facultative et retourne 1 (valide) par defaut.
@@ -427,7 +427,7 @@ class Valid(PProtocol):
         """
         return 1
 
-    def is_list(self):
+    def isList(self):
         """
            Cette méthode retourne un entier qui indique si le validateur
            permet les listes (valeur 1) ou ne les permet pas (valeur 0).
@@ -435,7 +435,7 @@ class Valid(PProtocol):
         """
         return 0
 
-    def has_into(self):
+    def hasInto(self):
         """
            Cette méthode retourne un entier qui indique si le validateur
            propose une liste de choix (valeur 1) ou n'en propose pas.
@@ -443,25 +443,25 @@ class Valid(PProtocol):
         """
         return 0
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         """
            Cette méthode retourne la liste de choix proposée par le validateur.
            Si le validateur ne propose pas de liste de choix, la méthode
            retourne None.
            L'argument d'entrée liste_courante, s'il est différent de None, donne
            la liste des choix déjà effectués par l'utilisateur. Dans ce cas, la
-           méthode get_into doit calculer la liste des choix en en tenant
+           méthode getInto doit calculer la liste des choix en en tenant
            compte. Par exemple, si le validateur n'autorise pas les répétitions,
            la liste des choix retournée ne doit pas contenir les choix déjà
            contenus dans liste_courante.
            L'argument d'entrée into_courant, s'il est différent de None, donne
            la liste des choix proposés par d'autres validateurs. Dans ce cas,
-           la méthode get_into doit calculer la liste des choix à retourner
+           la méthode getInto doit calculer la liste des choix à retourner
            en se limitant à cette liste initiale. Par exemple, si into_courant
            vaut (1,2,3) et que le validateur propose la liste de choix (3,4,5),
            la méthode ne doit retourner que (3,).
 
-           La méthode get_into peut retourner une liste vide [], ce qui veut
+           La méthode getInto peut retourner une liste vide [], ce qui veut
            dire qu'il n'y a pas (ou plus) de choix possible. Cette situation
            peut etre normale : l''utilisateur a utilisé tous les choix, ou
            résulter d'une incohérence des validateurs :
@@ -478,12 +478,12 @@ class ListVal(Valid):
         des listes.
     """
 
-    def is_list(self):
+    def isList(self):
         return 1
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         """
-           Cette méthode get_into effectue un traitement général qui consiste
+           Cette méthode getInto effectue un traitement général qui consiste
            a filtrer la liste de choix into_courant, si elle existe, en ne
            conservant que les valeurs valides (appel de la méthode valid).
         """
@@ -499,30 +499,30 @@ class ListVal(Valid):
     def convert(self, valeur):
         """
            Méthode convert pour les validateurs de listes. Cette méthode
-           fait appel à la méthode convert_item sur chaque élément de la
+           fait appel à la méthode convertItem sur chaque élément de la
            liste.
         """
-        if is_sequence(valeur):
+        if isSequence(valeur):
             for val in valeur:
-                self.convert_item(val)
+                self.convertItem(val)
             return valeur
         else:
-            return self.convert_item(valeur)
+            return self.convertItem(valeur)
 
     def verif(self, valeur):
         """
            Méthode verif pour les validateurs de listes. Cette méthode
-           fait appel à la méthode verif_item sur chaque élément de la
+           fait appel à la méthode verifItem sur chaque élément de la
            liste. Si valeur est un paramètre, on utilise sa valeur effective
            valeur.valeur.
         """
-        if is_sequence(valeur):
+        if isSequence(valeur):
             for val in valeur:
-                if not self.verif_item(val):
+                if not self.verifItem(val):
                     return 0
             return 1
         else:
-            return self.verif_item(valeur)
+            return self.verifItem(valeur)
 
 
 class Compulsory(ListVal):
@@ -533,7 +533,7 @@ class Compulsory(ListVal):
     registry = {}
 
     def __init__(self, elem=()):
-        if not is_sequence(elem):
+        if not isSequence(elem):
             elem = (elem,)
         Valid.__init__(self, elem=elem)
         self.elem = elem
@@ -545,7 +545,7 @@ class Compulsory(ListVal):
     def default(self, valeur, elem):
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return 1
 
     def convert(self, valeur):
@@ -559,11 +559,11 @@ class Compulsory(ListVal):
                 tr("%s ne contient pas les elements obligatoires : %s ") % (valeur, elem))
         return valeur
 
-    def has_into(self):
+    def hasInto(self):
         return 1
 
     def verif(self, valeur):
-        if not is_sequence(valeur):
+        if not isSequence(valeur):
             liste = list(valeur)
         else:
             liste = valeur
@@ -572,7 +572,7 @@ class Compulsory(ListVal):
                 return 0
         return 1
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr("La valeur n'est pas dans la liste des choix possibles")
 
 
@@ -584,7 +584,7 @@ class Together(ListVal):
     registry = {}
 
     def __init__(self, elem=()):
-        if not is_sequence(elem):
+        if not isSequence(elem):
             elem = (elem,)
         Valid.__init__(self, elem=elem)
         self.elem = elem
@@ -596,7 +596,7 @@ class Together(ListVal):
     def default(self, valeur, elem):
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return 1
 
     def convert(self, valeur):
@@ -609,11 +609,11 @@ class Together(ListVal):
             raise ValError(tr("%s ne contient pas les elements devant etre presents ensemble: %s ") %( valeur, elem))
         return valeur
 
-    def has_into(self):
+    def hasInto(self):
         return 1
 
     def verif(self, valeur):
-        if not is_sequence(valeur):
+        if not isSequence(valeur):
             liste = list(valeur)
         else:
             liste = valeur
@@ -624,7 +624,7 @@ class Together(ListVal):
         if ( compte != len( list(self.elem) ) ): return 0
         return 1
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr("La valeur n'est pas dans la liste des choix possibles")
 
 
@@ -636,7 +636,7 @@ class Absent(ListVal):
     registry = {}
 
     def __init__(self, elem=()):
-        if not is_sequence(elem):
+        if not isSequence(elem):
             elem = (elem,)
         Valid.__init__(self, elem=elem)
         self.elem = elem
@@ -648,7 +648,7 @@ class Absent(ListVal):
     def default(self, valeur, elem):
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return 1
 
     def convert(self, valeur):
@@ -659,11 +659,11 @@ class Absent(ListVal):
                 raise ValError(tr("%s n'est pas autorise : %s ")% (v, elem))
         return valeur
 
-    def has_into(self):
+    def hasInto(self):
         return 1
 
     def verif(self, valeur):
-        if not is_sequence(valeur):
+        if not isSequence(valeur):
             liste = list(valeur)
         else:
             liste = valeur
@@ -671,7 +671,7 @@ class Absent(ListVal):
             if val in liste: return 0
         return 1
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr("La valeur n'est pas dans la liste des choix possibles")
 
 
@@ -687,7 +687,7 @@ class NoRepeat(ListVal):
     def info(self):
         return tr("Pas de doublon dans la liste")
 
-    def info_erreur_liste(self):
+    def infoErreurListe(self):
         return tr("Les doublons ne sont pas permis")
 
     def default(self, valeur):
@@ -702,11 +702,11 @@ class NoRepeat(ListVal):
             self.liste.append(v)
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return 1
 
     def verif(self, valeur):
-        if is_sequence(valeur):
+        if isSequence(valeur):
             liste = list(valeur)
             for val in liste:
                 if liste.count(val) != 1:
@@ -715,9 +715,9 @@ class NoRepeat(ListVal):
         else:
             return 1
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         """
-        Methode get_into spécifique pour validateur NoRepeat, on retourne
+        Methode getInto spécifique pour validateur NoRepeat, on retourne
         une liste de choix qui ne contient aucune valeur de into_courant
         déjà contenue dans liste_courante
         """
@@ -750,7 +750,7 @@ class LongStr(ListVal):
     def info(self):
         return (tr("longueur de la chaine entre %s et %s") %( self.low, self.high))
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr("Longueur de la chaine incorrecte")
 
     def convert(self, valeur):
@@ -758,7 +758,7 @@ class LongStr(ListVal):
             v = self.adapt(val)
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         try:
             self.adapt(valeur)
             return 1
@@ -766,7 +766,7 @@ class LongStr(ListVal):
             return 0
 
     def default(self, valeur, low, high):
-        if not is_str(valeur):
+        if not isStr(valeur):
             raise ValError ("%s n'est pas une chaine" % repr(valeur))
         if valeur[0] == "'" and valeur[-1] == "'":
             low = low + 2
@@ -791,7 +791,7 @@ class OnlyStr(ListVal):
     def info(self):
         return tr("regarde si c'est une chaine")
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr("Ce n'est pas une chaine")
 
     def convert(self, valeur):
@@ -799,7 +799,7 @@ class OnlyStr(ListVal):
             v = self.adapt(val)
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         try:
             self.adapt(valeur)
             return 1
@@ -807,7 +807,7 @@ class OnlyStr(ListVal):
             return 0
 
     def default(self, valeur):
-        if not is_str(valeur):
+        if not isStr(valeur):
             raise ValError (tr("%s n'est pas une chaine") % repr(valeur))
         return valeur
 
@@ -827,7 +827,7 @@ class OrdList(ListVal):
     def info(self):
         return ("liste %s" % self.ord)
 
-    def info_erreur_liste(self):
+    def infoErreurListe(self):
         return (tr("La liste doit etre en ordre %s") % self.ord)
 
     def convert(self, valeur):
@@ -849,12 +849,12 @@ class OrdList(ListVal):
         self.val = valeur
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return 1
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         """
-        Methode get_into spécifique pour validateur OrdList, on retourne
+        Methode getInto spécifique pour validateur OrdList, on retourne
         une liste de choix qui ne contient aucune valeur de into_courant
         dont la valeur est inférieure à la dernière valeur de
         liste_courante, si elle est différente de None.
@@ -884,7 +884,7 @@ class OrVal(Valid):
     """
 
     def __init__(self, validators=()):
-        if not is_sequence(validators):
+        if not isSequence(validators):
             validators = (validators,)
         self.validators = []
         for validator in validators:
@@ -905,32 +905,32 @@ class OrVal(Valid):
                 pass
         raise ValError(tr("%s n'est pas du bon type")% repr(valeur))
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         l = []
         for v in self.validators:
-            err = v.info_erreur_item()
+            err = v.infoErreurItem()
             if err != " ":
                 l.append(err)
         chaine = " \n ou ".join(l)
         return chaine
 
-    def info_erreur_liste(self):
+    def infoErreurListe(self):
         l = []
         for v in self.validators:
-            err = v.info_erreur_liste()
+            err = v.infoErreurListe()
             if err != " ":
                 l.append(err)
         chaine = " \n ou ".join(l)
         return chaine
 
-    def is_list(self):
+    def isList(self):
         """
            Si plusieurs validateurs sont reliés par un OU
            il suffit qu'un seul des validateurs attende une liste
            pour qu'on considère que leur union attend une liste.
         """
         for validator in self.validators:
-            v = validator.is_list()
+            v = validator.isList()
             if v:
                 return 1
         return 0
@@ -942,17 +942,17 @@ class OrVal(Valid):
                 return 1
         return 0
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         for validator in self.validators:
-            v = validator.verif_item(valeur)
+            v = validator.verifItem(valeur)
             if v:
                 return 1
         return 0
 
-    def verif_cata(self):
+    def verifCata(self):
         infos = []
         for validator in self.validators:
-            v = validator.verif_cata()
+            v = validator.verifCata()
             if not v:
                 infos.append(validator.cata_info)
         if infos:
@@ -961,7 +961,7 @@ class OrVal(Valid):
         self.cata_info = ""
         return 1
 
-    def has_into(self):
+    def hasInto(self):
         """
         Dans le cas ou plusieurs validateurs sont reliés par un OU
         il faut que tous les validateurs proposent un choix pour
@@ -970,12 +970,12 @@ class OrVal(Valid):
         En revanche, Enum(1,2,3) OU Enum(4,5,6) propose un choix (1,2,3,4,5,6)
         """
         for validator in self.validators:
-            v = validator.has_into()
+            v = validator.hasInto()
             if not v:
                 return 0
         return 1
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         """
         Dans le cas ou plusieurs validateurs sont reliés par un OU
         tous les validateurs doivent proposer un choix pour
@@ -987,20 +987,20 @@ class OrVal(Valid):
         """
         validator_into = []
         for validator in self.validators:
-            v_into = validator.get_into(liste_courante, into_courant)
+            v_into = validator.getInto(liste_courante, into_courant)
             if v_into is None:
                 return v_into
             validator_into.extend(v_into)
         return validator_into
 
-    def valide_liste_partielle(self, liste_courante=None):
+    def valideListePartielle(self, liste_courante=None):
         """
          Méthode de validation de liste partielle pour le validateur Or.
          Si un des validateurs gérés par le validateur Or considère la
          liste comme valide, le validateur Or la considère comme valide.
         """
         for validator in self.validators:
-            v = validator.valide_liste_partielle(liste_courante)
+            v = validator.valideListePartielle(liste_courante)
             if v:
                 return 1
         return 0
@@ -1015,7 +1015,7 @@ class AndVal(Valid):
     """
 
     def __init__(self, validators=()):
-        if not is_sequence(validators):
+        if not isSequence(validators):
             validators = (validators,)
         self.validators = []
         for validator in validators:
@@ -1037,28 +1037,28 @@ class AndVal(Valid):
             valeur = validator.convert(valeur)
         return valeur
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         chaine = ""
         a = 1
         for v in self.validators:
-            if v.info_erreur_item() != " ":
+            if v.infoErreurItem() != " ":
                 if a == 1:
-                    chaine = v.info_erreur_item()
+                    chaine = v.infoErreurItem()
                     a = 0
                 else:
-                    chaine = chaine + " \n et " + v.info_erreur_item()
+                    chaine = chaine + " \n et " + v.infoErreurItem()
         return chaine
 
-    def info_erreur_liste(self):
+    def infoErreurListe(self):
         chaine=""
         a = 1
         for v in self.validators:
-            if v.info_erreur_liste() != " ":
+            if v.infoErreurListe() != " ":
                 if a == 1:
-                    chaine = v.info_erreur_liste()
+                    chaine = v.infoErreurListe()
                     a = 0
                 else:
-                    chaine = chaine + " \n et " + v.info_erreur_liste()
+                    chaine = chaine + " \n et " + v.infoErreurListe()
         return chaine
 
     def verif(self, valeur):
@@ -1069,19 +1069,19 @@ class AndVal(Valid):
                 return 0
         return 1
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         for validator in self.validators:
-            v = validator.verif_item(valeur)
+            v = validator.verifItem(valeur)
             if not v:
                 # L'info n'est probablement pas la meme que pour verif ???
                 self.local_info = validator.info()
                 return 0
         return 1
 
-    def verif_cata(self):
+    def verifCata(self):
         infos = []
         for validator in self.validators:
-            v = validator.verif_cata()
+            v = validator.verifCata()
             if not v:
                 infos.append(validator.cata_info)
         if infos:
@@ -1090,7 +1090,7 @@ class AndVal(Valid):
         self.cata_info = ""
         return 1
 
-    def valide_liste_partielle(self, liste_courante=None):
+    def valideListePartielle(self, liste_courante=None):
         """
          Méthode de validation de liste partielle pour le validateur And.
          Tous les validateurs gérés par le validateur And doivent considérer
@@ -1098,12 +1098,12 @@ class AndVal(Valid):
          comme valide.
         """
         for validator in self.validators:
-            v = validator.valide_liste_partielle(liste_courante)
+            v = validator.valideListePartielle(liste_courante)
             if not v:
                 return 0
         return 1
 
-    def is_list(self):
+    def isList(self):
         """
         Si plusieurs validateurs sont reliés par un ET
         il faut que tous les validateurs attendent une liste
@@ -1112,12 +1112,12 @@ class AndVal(Valid):
         Range(2,5) ET Pair attend une liste
         """
         for validator in self.validators:
-            v = validator.is_list()
+            v = validator.isList()
             if v == 0:
                 return 0
         return 1
 
-    def has_into(self):
+    def hasInto(self):
         """
         Dans le cas ou plusieurs validateurs sont reliés par un ET
         il suffit qu'un seul validateur propose un choix pour
@@ -1126,12 +1126,12 @@ class AndVal(Valid):
         En revanche, entier pair ET superieur à 10 ne propose pas de choix
         """
         for validator in self.validators:
-            v = validator.has_into()
+            v = validator.hasInto()
             if v:
                 return 1
         return 0
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         """
         Dans le cas ou plusieurs validateurs sont reliés par un ET
         il suffit qu'un seul validateur propose un choix pour
@@ -1142,7 +1142,7 @@ class AndVal(Valid):
         En revanche, Enum(1,2,3) ET Enum(4,5,6) ne propose pas de choix.
         """
         for validator in self.validators:
-            into_courant = validator.get_into(liste_courante, into_courant)
+            into_courant = validator.getInto(liste_courante, into_courant)
             if into_courant in ([], None):
                 break
         return into_courant
@@ -1198,19 +1198,19 @@ class RangeVal(ListVal):
     def info(self):
         return (tr("valeur dans l'intervalle %s , %s") %( self.low, self.high))
 
-    def convert_item(self, valeur):
+    def convertItem(self, valeur):
         if valeur > self.low and valeur < self.high:
             return valeur
         raise ValError(tr("%s devrait etre comprise entre %s et %s") % (valeur, self.low, self.high))
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return valeur > self.low and valeur < self.high
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return (tr("la valeur %s doit etre comprise entre %s et %s") % (valeur, self.low, self.high))
 
 
-    def verif_cata(self):
+    def verifCata(self):
         if self.low > self.high:
             return 0
         return 1
@@ -1234,13 +1234,13 @@ class CardVal(Valid):
     def info(self):
         return (tr("longueur de liste comprise entre  %s et %s") %(self.min, self.max))
 
-    def info_erreur_liste(self):
+    def infoErreurListe(self):
         return (tr("Le cardinal de la liste doit etre compris entre %s et %s") % (self.min, self.max))
 
-    def is_list(self):
+    def isList(self):
         return self.max == '**' or self.max > 1
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         if into_courant is None:
             return None
         elif liste_courante is None:
@@ -1253,7 +1253,7 @@ class CardVal(Valid):
             return []
 
     def convert(self, valeur):
-        if is_sequence(valeur):
+        if isSequence(valeur):
             l = len(valeur)
         elif valeur is None:
             l = 0
@@ -1267,11 +1267,11 @@ class CardVal(Valid):
                 tr("%s devrait etre de longueur superieure a %s") % (valeur, self.min))
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return 1
 
     def verif(self, valeur):
-        if is_sequence(valeur):
+        if isSequence(valeur):
             if self.max != '**' and len(valeur) > self.max:
                 return 0
             if self.min != '**' and len(valeur) < self.min:
@@ -1284,12 +1284,12 @@ class CardVal(Valid):
                 return 0
             return 1
 
-    def verif_cata(self):
+    def verifCata(self):
         if self.min != '**' and self.max != '**' and self.min > self.max:
             return 0
         return 1
 
-    def valide_liste_partielle(self, liste_courante=None):
+    def valideListePartielle(self, liste_courante=None):
         validite = 1
         if liste_courante != None:
             if len(liste_courante) > self.max:
@@ -1313,7 +1313,7 @@ class PairVal(ListVal):
     def info(self):
         return _(u"valeur paire")
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr("La valeur saisie doit etre paire")
 
     def convert(self, valeur):
@@ -1327,13 +1327,13 @@ class PairVal(ListVal):
     def default(self, valeur):
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         if type(valeur) not in six.integer_types:
             return 0
         return valeur % 2 == 0
 
     def verif(self, valeur):
-        if is_sequence(valeur):
+        if isSequence(valeur):
             for val in valeur:
                 if val % 2 != 0:
                     return 0
@@ -1353,7 +1353,7 @@ class EnumVal(ListVal):
     """
 
     def __init__(self, into=()):
-        if not is_sequence(into):
+        if not isSequence(into):
             into = (into,)
         self.into = into
         self.cata_info = ""
@@ -1361,21 +1361,21 @@ class EnumVal(ListVal):
     def info(self):
         return ("valeur dans %s" % self.into)
 
-    def convert_item(self, valeur):
+    def convertItem(self, valeur):
         if valeur in self.into:
             return valeur
         raise ValError(
             tr("%s contient des valeurs hors des choix possibles: %s ") % (valeur, self.into))
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         if valeur not in self.into:
             return 0
         return 1
 
-    def has_into(self):
+    def hasInto(self):
         return 1
 
-    def get_into(self, liste_courante=None, into_courant=None):
+    def getInto(self, liste_courante=None, into_courant=None):
         if into_courant is None:
             liste_choix = list(self.into)
         else:
@@ -1385,7 +1385,7 @@ class EnumVal(ListVal):
                     liste_choix.append(e)
         return liste_choix
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr("La valeur n'est pas dans la liste des choix possibles")
 
 
@@ -1395,7 +1395,7 @@ def ImpairVal(valeur):
         Cette fonction est un validateur. Elle verifie que la valeur passee
         est bien un nombre impair.
     """
-    if is_sequence(valeur):
+    if isSequence(valeur):
         for val in valeur:
             if val % 2 != 1:
                 return 0
@@ -1425,7 +1425,7 @@ class F1Val(Valid):
         return (tr("valeur %s pour la somme des cles A et B ") % self.somme)
 
     def verif(self, valeur):
-        if is_sequence(valeur):
+        if isSequence(valeur):
             for val in valeur:
                 if not "A" in val:
                     return 0
@@ -1457,13 +1457,13 @@ class FunctionVal(Valid):
     def info(self):
         return self.function.info
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return self.function.info
 
     def verif(self, valeur):
         return self.function(valeur)
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return self.function(valeur)
 
     def convert(self, valeur):
@@ -1510,10 +1510,10 @@ class TypeVal(ListVal):
             return value
         raise ValError
 
-    def convert_item(self, valeur):
+    def convertItem(self, valeur):
         return self.coerce(valeur)
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         try:
             self.coerce(valeur)
         except:
@@ -1553,7 +1553,7 @@ class InstanceVal(ListVal):
     def info(self):
         return (tr("valeur d'instance de %s") % self.aClass.__name__)
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         if not isinstance(valeur, self.aClass):
             return 0
         return 1
@@ -1567,18 +1567,18 @@ class VerifTypeTuple(ListVal):
         self.cata_info = ""
 
     def info(self):
-        return tr(": verifie les types dans un tuple")
+        return tr(": verifie les \ntypes dans un tuple")
 
-    def info_erreur_liste(self):
+    def infoErreurListe(self):
         return tr("Les types entres ne sont pas permis")
 
     def default(self, valeur):
         return valeur
 
-    def is_list(self):
+    def isList(self):
         return 1
 
-    def convert_item(self, valeur):
+    def convertItem(self, valeur):
         if len(valeur) != len(self.typeDesTuples):
             raise ValError(
                 tr("%s devrait etre de type  %s ") %( valeur, self.typeDesTuples))
@@ -1589,7 +1589,7 @@ class VerifTypeTuple(ListVal):
                     tr("%s devrait etre de type  %s ") % (valeur, self.typeDesTuples))
         return valeur
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         try:
             if len(valeur) != len(self.typeDesTuples):
                 return 0
@@ -1609,7 +1609,7 @@ class VerifTypeTuple(ListVal):
             if type(valeur) in (int, int):
                 return 1
         elif type_permis == 'C':
-            if self.is_complexe(valeur):
+            if self.isComplexe(valeur):
                 return 1
         elif type_permis == 'TXM':
             if type(valeur) == bytes:
@@ -1622,7 +1622,7 @@ class VerifTypeTuple(ListVal):
         if type(valeur) in (list, tuple):
             liste = list(valeur)
             for val in liste:
-                if self.verif_item(val) != 1:
+                if self.verifItem(val) != 1:
                     return 0
             return 1
 
@@ -1647,19 +1647,19 @@ class VerifExiste(ListVal):
         self.niveauVerif = niveauVerif
         self.MCSimp = None
         self.listeDesFreres = ()
-        self.fonctions = ('verifie_liste', 'set_MCSimp')
+        self.fonctions = ('verifieListe', 'set_MCSimp')
 
-    def is_list(self):
+    def isList(self):
         return 1
 
-    def verifie_liste(self, liste):
+    def verifieListe(self, liste):
         self.set_MCSimp(self.MCSimp)
         for item in liste:
             if not(item in self.listeDesFreres):
                 return 0
         return 1
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         self.set_MCSimp(self.MCSimp)
         if valeur in self.listeDesFreres:
             return 1
@@ -1675,9 +1675,9 @@ class VerifExiste(ListVal):
             k = k - 1
         # on met la liste à jour
         parent.forceRecalcul = self.niveauVerif
-        self.listeDesFreres = parent.liste_mc_presents()
+        self.listeDesFreres = parent.listeMcPresents()
 
-    def convert_item(self, valeur):
+    def convertItem(self, valeur):
         if valeur in self.listeDesFreres:
             return valeur
         raise ValError(
@@ -1699,16 +1699,16 @@ class RegExpVal(ListVal):
     def info(self):
         return tr('Une chaîne correspondant au motif ') + str(self.pattern) + tr(" est attendue")
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return tr('Une chaîne correspondant au motif ') + str(self.pattern) + tr(" est attendue")
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         if self.compiled_regexp.match(valeur):
             return 1
         else:
             return (0, self.errormsg % {"value": valeur, "pattern": self.pattern})
 
-    def convert_item(self, valeur):
+    def convertItem(self, valeur):
         if self.compiled_regexp.match(valeur):
             return valeur
         else:
@@ -1733,7 +1733,7 @@ class FileExtVal(RegExpVal):
     def info(self):
         return ('Un nom de fichier se terminant par ".%s" est attendu.' % self.ext)
 
-    def info_erreur_item(self):
+    def infoErreurItem(self):
         return ('Un nom de fichier se terminant par ".%s" est attendu.' % self.ext)
 
 class CreeMotClef(object):
@@ -1749,30 +1749,30 @@ class CreeMotClef(object):
         if hasattr(parent, 'inhibeValidator') and parent.inhibeValidator: return lval
 
 
-        if parent.get_child(self.MotClef) == None : longueur=0
-        else : longueur=len(parent.get_child(self.MotClef))
+        if parent.getChild(self.MotClef) == None : longueur=0
+        else : longueur=len(parent.getChild(self.MotClef))
 
-        pos=parent.get_index_child(self.MCSimp.nom)+1
+        pos=parent.getIndexChild(self.MCSimp.nom)+1
         while longueur < valeur : 
            parent.inhibeValidator=1
-           parent.addentite(self.MotClef,pos)
+           parent.addEntite(self.MotClef,pos)
            pos=pos+1
            parent.inhibeValidator=0
-           longueur=len(parent.get_child(self.MotClef))
+           longueur=len(parent.getChild(self.MotClef))
 
         if longueur > valeur : 
            parent.inhibeValide=1
-           parentObj=parent.get_child(self.MotClef)
-           obj=parent.get_child(self.MotClef)[-1]
-           parentObj.suppentite(obj)
-           longueur=len(parent.get_child(self.MotClef))
+           parentObj=parent.getChild(self.MotClef)
+           obj=parent.getChild(self.MotClef)[-1]
+           parentObj.suppEntite(obj)
+           longueur=len(parent.getChild(self.MotClef))
            parent.inhibeValide=0
         return lval
 
     def info(self):
         return "Cree le bon nombre de Mot %s"  % self.MotClef
 
-    def verif_item(self, valeur):
+    def verifItem(self, valeur):
         return 1
 
     def set_MCSimp(self, MCSimp):

@@ -68,13 +68,12 @@ class Formatage (object):
        self.sep = ':'
        self.l_max = 72
 
-  def formate_jdc(self):
+  def formateJdc(self):
     comment=re.compile("\n#")
     commentaireavant=0
     for etape in self.l_jdc:
       self.count = self.count+1
       self.texte_etape = ''
-      #if type(etape)==types.ListType:
       if type(etape)==list:
         # L'etape est sous la forme d'une liste dont le premier element est une chaine
         self.indent=[]
@@ -82,7 +81,7 @@ class Formatage (object):
         self.indent_courant = self.indent[0]
         self.texte_etape = '\n' + etape[0]
         if len(etape)>1 :
-          self.formate_etape(etape[1:])
+          self.formateEtape(etape[1:])
       else :
         # L'etape est deja sous forme de chaine de caracteres
         self.indent=[]
@@ -111,7 +110,7 @@ class Formatage (object):
   
   
 
-  def formate_etape(self,liste):
+  def formateEtape(self,liste):
     """
         Enrichissement de la chaine de caracteres representant l'etape (attribut
         texte_etape de l'objet Formatage).
@@ -124,7 +123,7 @@ class Formatage (object):
 
     ind = 0
     for element in liste :
-      if type(element) == types.ListType:
+      if type(element)==list:
 
         # il s'agit d'un mot-clé facteur
         # on écrit son nom (element[0])
@@ -140,22 +139,25 @@ class Formatage (object):
         self.indent.insert(length,self.indent[length-1]+len(element[0]))
         self.indent_courant = self.indent[length]
         # on écrit ses fils
-        self.formate_etape(element[1:])
+        self.formateEtape(element[1:])
       #elif type(element) == types.StringType:
-      elif type(element) == bytes:
+      #elif type(element) == bytes:
+      # PNPNPN -> marre du python 2 et 3
+      # on remplace par else dans if
+      else :
 
         # il s'agit d'un mot-clé simple ou de ')' ou ');' ou '),' ou ');\n'
 
         if element in l_patterns_fin_mcf :
-              self.traite_mcfact(s_mcfact=element,ind=ind)
+              self.traiteMcfact(s_mcfact=element,ind=ind)
         elif element in l_patterns_fin_etape :
-              self.traite_etape(s_etape=element,ind=ind)
+              self.traiteEtape(s_etape=element,ind=ind)
         else :
-              self.traite_mcsimp(s_mcsimp=element,ind=ind)
+              self.traiteMcsimp(s_mcsimp=element,ind=ind)
 
       ind = 1
 
-  def traite_etape(self,s_etape,ind) :
+  def traiteEtape(self,s_etape,ind) :
       """
           Traite une partie du jdc formaté : s_etape, une chaîne de caractères
           contenant une étape
@@ -172,7 +174,7 @@ class Formatage (object):
           self.indent_courant=self.indent[0]
       self.texte_etape = self.texte_etape + s_etape.strip()
 
-  def traite_mcfact(self,s_mcfact,ind) :
+  def traiteMcfact(self,s_mcfact,ind) :
       """
           Traite une partie du jdc formaté : s_mcfact, une chaîne de caractères
           contenant un mot-clef facteur.
@@ -191,7 +193,7 @@ class Formatage (object):
       return
 
 
-  def traite_mcsimp(self,s_mcsimp,ind) :
+  def traiteMcsimp(self,s_mcsimp,ind) :
       """
           Traite une partie du jdc formaté : s_mcsimp, une chaîne de caractères
           contenant un mot-clef simple.
@@ -223,7 +225,7 @@ class Formatage (object):
           # il faut couper ...
           #nom,valeur = string.split(s_mcsimp,self.sep,1)
           nom,valeur = str.split(s_mcsimp,self.sep,1)
-          chaine = self.creer_chaine(nom,valeur,'\n'+self.indent_courant*' ',ind)
+          chaine = self.creerChaine(nom,valeur,'\n'+self.indent_courant*' ',ind)
           #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + s_mcsimp.strip()
           self.texte_etape = self.texte_etape + chaine
       return
@@ -240,9 +242,9 @@ class Formatage (object):
     return len(texte[texte.rfind('\n'):-1])
     
 
-  def creer_chaine(self,nom,valeur,increment,ind):
+  def creerChaine(self,nom,valeur,increment,ind):
     """
-        La methode creer_chaine reconstitue un objet Eficas à partir de
+        La methode creerChaine reconstitue un objet Eficas à partir de
              - son nom,
              - sa valeur.
     """
@@ -302,8 +304,8 @@ class FormatageLigne(Formatage) :
   def __init__(self,l_jdc,code=None,mode=None,sep='=',l_max="**"):
       Formatage.__init__(self,l_jdc,code=None,mode=None,sep='=',l_max="**")
       
-  def formate_jdc(self):
-      texte1=Formatage.formate_jdc(self)
+  def formateJdc(self):
+      texte1=Formatage.formateJdc(self)
       newText=""
       lignes=texte1.split("\n")
       texte=""

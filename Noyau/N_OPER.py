@@ -86,7 +86,7 @@ class OPER(N_ENTITE.ENTITE):
     label = 'OPER'
     nommage = nommage
 
-    def __init__(self, nom, op, sd_prod, reentrant='n', repetable='o', fr="",ang="",
+    def __init__(self, nom, op=None, sd_prod=None, reentrant='n', repetable='o', fr="",ang="",fenetreIhm=None,
                  docu="", regles=(), op_init=None, niveau = None, UIinfo=None, **args):
         """
            Méthode d'initialisation de l'objet OPER. Les arguments sont utilisés pour initialiser
@@ -100,6 +100,7 @@ class OPER(N_ENTITE.ENTITE):
         self.ang = ang
         self.repetable = repetable
         self.docu = docu
+        self.fenetreIhm= fenetreIhm
         if type(regles) == tuple:
             self.regles = regles
         else:
@@ -108,26 +109,26 @@ class OPER(N_ENTITE.ENTITE):
         # operateur sauf si == None
         self.op_init = op_init
         self.entites = args
-        current_cata = CONTEXT.get_current_cata()
+        current_cata = CONTEXT.getCurrentCata()
         if niveau == None:
             self.niveau = None
             current_cata.enregistre(self)
         else:
-            self.niveau = current_cata.get_niveau(niveau)
+            self.niveau = current_cata.getNiveau(niveau)
             self.niveau.enregistre(self)
         self.UIinfo = UIinfo
         self.affecter_parente()
-        self.check_definition(self.nom)
+        self.checkDefinition(self.nom)
 
     def __call__(self, reuse=None, **args):
         """
             Construit l'objet ETAPE a partir de sa definition (self),
             puis demande la construction de ses sous-objets et du concept produit.
         """
-        nomsd = self.nommage.GetNomConceptResultat(self.nom)
+        nomsd = self.nommage.getNomConceptResultat(self.nom)
         etape = self.class_instance(oper=self, reuse=reuse, args=args)
-        etape.McBuild()
-        return etape.Build_sd(nomsd)
+        etape.MCBuild()
+        return etape.buildSd(nomsd)
 
     def make_objet(self, mc_list='oui'):
         """
@@ -138,20 +139,20 @@ class OPER(N_ENTITE.ENTITE):
         """
         etape = self.class_instance(oper=self, reuse=None, args={})
         if mc_list == 'oui':
-            etape.McBuild()
+            etape.MCBuild()
         return etape
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Méthode de vérification des attributs de définition
         """
-        self.check_regles()
-        self.check_fr()
-        self.check_reentrant()
-        self.check_docu()
-        self.check_nom()
-        self.check_op(valmin=0)
-        self.verif_cata_regles()
+        self.checkRegles()
+        self.checkFr()
+        self.checkReentrant()
+        self.checkDocu()
+        self.checkNom()
+        self.checkOp(valmin=0)
+        self.verifCataRegles()
 
     def supprime(self):
         """

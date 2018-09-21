@@ -20,9 +20,11 @@
 from __future__ import absolute_import
 from Noyau import N_BLOC
 from Ihm import I_ENTITE
-from . import A_MCBLOC
+from Accas import A_MCBLOC
+from Efi2Xsd.AccasXsd  import X_BLOC
 
-class BLOC(N_BLOC.BLOC,I_ENTITE.ENTITE):
+
+class BLOC(N_BLOC.BLOC,X_BLOC,I_ENTITE.ENTITE):
    class_instance=A_MCBLOC.MCBLOC
    def __init__(self,*tup,**args):
       I_ENTITE.ENTITE.__init__(self)

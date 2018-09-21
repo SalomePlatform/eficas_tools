@@ -24,11 +24,11 @@ class JDC_CATA:
   def __init__(self):
     self.l_noms_entites=[]
 
-  def get_liste_cmd(self):
+  def getListeCmd(self):
     self.l_noms_entites.sort()
     return self.l_noms_entites
 
-  def get_docu(self):
+  def getDocu(self):
     return
 
 

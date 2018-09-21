@@ -43,7 +43,7 @@ class TroisDPilote(object):
       if format in generator.plugins :
          # Le generateur existe on l'utilise
          g=generator.plugins[format]()
-         g.init_jdc(self.node.get_jdc())
+         g.initJdc(self.node.getJdc())
          texte=g.gener(self.node)
       else:
          print ("Le generateur n'a pas ete trouve")

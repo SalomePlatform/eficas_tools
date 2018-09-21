@@ -21,10 +21,10 @@ from __future__ import absolute_import
 from Noyau import N_ETAPE
 from Validation import V_ETAPE
 from Ihm import I_ETAPE
+from Efi2Xsd.MCAccasXsd  import X_MCCOMPO
 
-class ETAPE(I_ETAPE.ETAPE,V_ETAPE.ETAPE,
-            N_ETAPE.ETAPE):
+class ETAPE(I_ETAPE.ETAPE,V_ETAPE.ETAPE,X_MCCOMPO,N_ETAPE.ETAPE):
    def __init__(self,oper=None,reuse=None,args={}):
-      # Pas de constructeur pour B_ETAPE.ETAPE
+      print ('------------- ETAPE accas', oper.nom, args)
       N_ETAPE.ETAPE.__init__(self,oper,reuse,args)
       V_ETAPE.ETAPE.__init__(self)

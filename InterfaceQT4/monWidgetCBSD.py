@@ -44,34 +44,34 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.determineChoix()
         self.setValeursApresBouton()
-        self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
+        self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
 
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.CBChoix)
-        #print self.objSimp.isoblig()
+        #print self.objSimp.isOblig()
 
 
   def setValeursApresBouton(self):
-      if self.objSimp.get_valeur()==None : 
+      if self.objSimp.getValeur()==None : 
          self.CBChoix.setCurrentIndex(-1)
          return
-      valeur=self.objSimp.get_valeur()
+      valeur=self.objSimp.getValeur()
       if not(type(valeur) == str) : valeur=str(valeur)
       self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
       
   def determineChoix(self):
-      self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
+      self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
 
       for choix in self.monSimpDef.into:
           if not(type(choix) == str) : choix=str(choix)
-          self.CBChoix.currentIndexChanged.connect(self.ChoixSaisi)
+          self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
           self.CBChoix.addItem(choix)
       self.CBChoix.setEditable(True)
       monCompleteur=QCompleter(listeChoix,self) 
       monCompleteur.setCompletionMode(QCompleter.PopupCompletion) 
       self.CBChoix.setCompleter(monCompleteur)
 
-  def ChoixSaisi(self):
+  def choixSaisi(self):
       valeur=str(self.CBChoix.currentText())
-      SaisieValeur.LEValeurPressed(self,valeur)
+      SaisieValeur.LEvaleurPressed(self,valeur)
       self.reaffiche()

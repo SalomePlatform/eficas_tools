@@ -20,9 +20,11 @@
 from __future__ import absolute_import
 from Noyau import N_OPER
 from Ihm import I_ENTITE
-from . import A_ETAPE 
+from Accas import A_ETAPE 
+from Efi2Xsd.AccasXsd  import X_OPER
 
-class OPER(N_OPER.OPER,I_ENTITE.ENTITE):
+
+class OPER(N_OPER.OPER,X_OPER,I_ENTITE.ENTITE):
    class_instance=A_ETAPE.ETAPE
    def __init__(self,*tup,**args):
       I_ENTITE.ENTITE.__init__(self)

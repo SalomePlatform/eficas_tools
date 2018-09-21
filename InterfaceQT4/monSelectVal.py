@@ -28,7 +28,7 @@ except : pass
 from desSelectVal import Ui_DSelVal
 from Extensions.i18n import tr
 
-from PyQt5.QtWidgets import QDialog, QFileDialog
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPalette
 
@@ -56,17 +56,17 @@ class MonSelectVal(DSelVal):
         self.connecterSignaux()
 
   def connecterSignaux(self) :
-        self.Bespace.clicked.connect(self.SelectEsp)
-        self.BpointVirgule.clicked.connect(self.SelectPoint)
-        self.Bvirgule.clicked.connect(self.SelectVir)
+        self.Bespace.clicked.connect(self.selectEsp)
+        self.BpointVirgule.clicked.connect(self.selectPoint)
+        self.Bvirgule.clicked.connect(self.selectVir)
         self.BImportSel.clicked.connect(self.BImportSelPressed)
         self.BImportTout.clicked.connect(self.BImportToutPressed)
         self.parent.editor.sb.messageChanged.connect(self.messageAChanger)
 
   def connecterSignauxQT4(self) :
-        self.connect(self.Bespace,SIGNAL("clicked()"),self.SelectEsp)
-        self.connect(self.BpointVirgule,SIGNAL("clicked()"),self.SelectPoint)
-        self.connect(self.Bvirgule,SIGNAL("clicked()"),self.SelectVir)
+        self.connect(self.Bespace,SIGNAL("clicked()"),self.selectEsp)
+        self.connect(self.BpointVirgule,SIGNAL("clicked()"),self.selectPoint)
+        self.connect(self.Bvirgule,SIGNAL("clicked()"),self.selectVir)
         self.connect(self.BImportSel,SIGNAL("clicked()"),self.BImportSelPressed)
         self.connect(self.BImportTout,SIGNAL("clicked()"),self.BImportToutPressed)
         self.connect(self.parent.editor.sb,SIGNAL("messageChanged(QString)"),self.messageAChanger)
@@ -84,21 +84,26 @@ class MonSelectVal(DSelVal):
 
   def readVal(self):
         if self.file == "" : return
-        f = open(self.file, "r")
-        self.texte = f.read()
-        f.close()
+        try :
+          f = open(self.file, "r")
+          self.texte = f.read()
+          f.close()
+        except :
+          QMessageBox.warning( self,tr( "Fichier Indisponible"),tr( "Lecture impossible"))
+          self.texte=""
+          return
 
   def initVal(self):
         self.TBtext.clear()
         self.TBtext.setText(self.texte)
 
-  def SelectEsp(self):
+  def selectEsp(self):
         self.separateur=" "
         
-  def SelectVir(self):
+  def selectVir(self):
         self.separateur=","
         
-  def SelectPoint(self):
+  def selectPoint(self):
         self.separateur=";"
         
   def BImportSelPressed(self):
@@ -106,13 +111,13 @@ class MonSelectVal(DSelVal):
         texte = self.TBtext.textCursor().selectedText()
         textTraite=texte.replace(u'\u2029',"\n")
         self.textTraite=str(textTraite)
-        self.Traitement()
+        self.traitement()
         
   def BImportToutPressed(self):
         self.textTraite=self.texte
-        self.Traitement()
+        self.traitement()
 
-  def Traitement(self):
+  def traitement(self):
         if self.textTraite == "" : return
         if self.textTraite[-1]=="\n" : self.textTraite=self.textTraite[0:-1]
         self.textTraite=self.textTraite.replace("\n",self.separateur)
@@ -122,10 +127,10 @@ class MonSelectVal(DSelVal):
           if val != '' and val != ' ' and val != self.separateur :
             val=str(val)
             try :
+            #if 1 :
                val2=eval(val,{})
                liste.append(val2)
             except :
               pass
         self.parent.ajoutNValeur(liste) 
         
-

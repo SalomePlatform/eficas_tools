@@ -45,7 +45,7 @@ class EXCLUS(object):
         #  on compte le nombre de mots cles presents
         text = ''
         count = 0
-        args = self.liste_to_dico(args)
+        args = self.listeToDico(args)
         for mc in self.mcs:
             if mc in args:
                 count = count + 1

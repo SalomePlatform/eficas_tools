@@ -37,10 +37,10 @@ class ENTITE_JDC(object) :
     def __init__(self):
         self.texte = ''
 
-    def set_text(self,texte):
+    def setText(self,texte):
         self.texte = texte
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         """
         self.texte = self.texte +texte
@@ -55,7 +55,7 @@ class COMMENTAIRE(ENTITE_JDC):
         t=repr(self.texte)
         return "COMMENTAIRE(u"+t+")\n"
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en enlevant le # initial
         """
@@ -68,7 +68,7 @@ class COMMENTAIRE(ENTITE_JDC):
         
 class AFFECTATION(ENTITE_JDC):
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en enlevant tout retour chariot et tout point virgule
         """
@@ -85,7 +85,7 @@ class AFFECTATION(ENTITE_JDC):
 
 class COMMANDE_COMMENTARISEE(ENTITE_JDC):
 
-    def append_text(self,texte):
+    def appendText(self,texte):
         """
         Ajoute texte a self.texte en enlevant les doubles commentaires
         """
@@ -152,7 +152,7 @@ class PARSEUR_PYTHON(object):
         self.buffer=[]
         self.buffer_indent=""
 
-    def getoptions(self):
+    def getOptions(self):
         m= self.optionprog.match(self.line)
         if m:
            option=m.group(1)
@@ -168,18 +168,18 @@ class PARSEUR_PYTHON(object):
         self.line= self.texte.readline()
         #print "line:",self.line
         # option ?
-        self.getoptions()
+        self.getOptions()
         return self.line
 
-    def get_texte(self,appli=None):
+    def getTexte(self,appli=None):
         """
            Retourne le texte issu de l'analyse
         """
         for tk in tokenize.generate_tokens(self.readline):
-            self.process_token(tk)
+            self.processToken(tk)
         return self.out
 
-    def process_token(self, tk):
+    def processToken(self, tk):
         """
         """
         ttype, tstring, spos, epos, line = tk
@@ -205,7 +205,7 @@ class PARSEUR_PYTHON(object):
             return
 
         if ttype != tokenize.DEDENT and ttype != tokenize.INDENT and self.please_indent:
-            self.do_indent()
+            self.doIndent()
 
         fn(tstring)
         self.lastrow, self.lastcol = epos
@@ -220,17 +220,17 @@ class PARSEUR_PYTHON(object):
 
         self.out=self.out+tstring
 
-    def output_com(self,tstring):
+    def outputCom(self,tstring):
         self.out=self.out+tstring
 
-    def update_indent(self):
-        #print "update_indent",len(self.indent_list[-1]),len(self.buffer_indent)
+    def updateIndent(self):
+        #print "updateIndent",len(self.indent_list[-1]),len(self.buffer_indent)
         if len(self.indent_list[-1]) > len(self.buffer_indent):
            self.out=self.out+(len(self.indent_list[-1]) - len(self.buffer_indent))*" "
            self.buffer_indent=self.indent_list[-1]
 
-    def do_indent(self):
-        #print "indentation dans do_indent",len(self.indent_list)
+    def doIndent(self):
+        #print "indentation dans doIndent",len(self.indent_list)
 
         self.out=self.out+self.indent_list[-1]
         self.buffer_indent=self.indent_list[-1]
@@ -245,7 +245,7 @@ class PARSEUR_PYTHON(object):
         #   print len(self.indent_list),self.please_indent
         for ob in self.buffer:
            self.out= self.out+ str(ob)
-           self.do_indent()
+           self.doIndent()
         self.buffer=[]
         self.objet_courant=None
 
@@ -259,8 +259,8 @@ class PARSEUR_PYTHON(object):
               self.affectation=0
            else:
               # affectation en cours, on ajoute
-              if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-              self.affectation_courante.append_text(tstring)
+              if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+              self.affectation_courante.appendText(tstring)
               return
            
         if self.objet_courant:
@@ -287,15 +287,15 @@ class PARSEUR_PYTHON(object):
                  if not self.buffer:self.buffer_indent=self.indent_list[-1]
                  self.objet_courant=COMMANDE_COMMENTARISEE()
                  self.buffer.append(self.objet_courant)
-                 self.objet_courant.append_text(tstring)
+                 self.objet_courant.appendText(tstring)
                  self.please_indent = None
               elif isinstance(self.objet_courant,COMMENTAIRE):
                  self.objet_courant=COMMANDE_COMMENTARISEE()
                  self.buffer.append(self.objet_courant)
-                 self.objet_courant.append_text(tstring)
+                 self.objet_courant.appendText(tstring)
                  self.please_indent = None
               else:
-                 self.objet_courant.append_text(tstring)
+                 self.objet_courant.appendText(tstring)
                  self.please_indent = None
            else:
               # commentaire inline
@@ -317,15 +317,15 @@ class PARSEUR_PYTHON(object):
                  if not self.buffer:self.buffer_indent=self.indent_list[-1]
                  self.objet_courant=COMMENTAIRE()
                  self.buffer.append(self.objet_courant)
-                 self.objet_courant.append_text(tstring)
+                 self.objet_courant.appendText(tstring)
                  self.please_indent = None
               elif isinstance(self.objet_courant,COMMANDE_COMMENTARISEE):
                  self.objet_courant=COMMENTAIRE()
                  self.buffer.append(self.objet_courant)
-                 self.objet_courant.append_text(tstring)
+                 self.objet_courant.appendText(tstring)
                  self.please_indent = None
               else:
-                 self.objet_courant.append_text(tstring)
+                 self.objet_courant.appendText(tstring)
                  self.please_indent = None
            else:
               # commentaire inline
@@ -338,7 +338,7 @@ class PARSEUR_PYTHON(object):
 
     def NAME(self, tstring):
         if self.buffer:
-           self.update_indent()
+           self.updateIndent()
         self.flush_buffer()
 
         if self.affectation ==1:
@@ -346,22 +346,22 @@ class PARSEUR_PYTHON(object):
            # on ne veut pas des expressions qui commencent par NAME=NAME(NAME=
            # on en prend le chemin : on met affectation a 3 pour le signaler
            # on attend d'en savoir plus
-           if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-           self.affectation_courante.append_text(tstring)
+           if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+           self.affectation_courante.appendText(tstring)
            self.affectation=3
            return
         elif self.affectation ==4:
            # on a une expression qui commence par NAME=NAME(NAME
            # il s'agit tres probablement d'une commande
            # on annule l'affectation en cours
-           if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-           self.affectation_courante.append_text(tstring)
+           if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+           self.affectation_courante.appendText(tstring)
            self.affectation=5
            return
         elif self.affectation == 2:
            # affectation en cours, on ajoute
-           if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-           self.affectation_courante.append_text(tstring)
+           if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+           self.affectation_courante.appendText(tstring)
            self.affectation=2
            return
         self.affectation=0
@@ -381,8 +381,8 @@ class PARSEUR_PYTHON(object):
         self.flush_buffer()
         if self.affectation>=1:
            # affectation en cours, on ajoute
-           if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-           self.affectation_courante.append_text(tstring)
+           if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+           self.affectation_courante.appendText(tstring)
            self.affectation=2
            return
         self.output(tstring)
@@ -410,8 +410,8 @@ class PARSEUR_PYTHON(object):
         elif tstring == '(' and self.affectation == 3:
            # on a deja trouve NAME=NAME
            # on passe affectation a 4
-           if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-           self.affectation_courante.append_text(tstring)
+           if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+           self.affectation_courante.appendText(tstring)
            self.affectation=4
            return
         elif tstring == ';' and self.affectation>=1:
@@ -422,8 +422,8 @@ class PARSEUR_PYTHON(object):
            self.affectation=0
         elif self.affectation>=1:
            # on complete l'affectation
-           if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-           self.affectation_courante.append_text(tstring)
+           if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+           self.affectation_courante.appendText(tstring)
            self.affectation=2
            return
 
@@ -443,7 +443,7 @@ class PARSEUR_PYTHON(object):
         #print "indentation dans INDENT",len(self.indent_list),len(tstring)
         self.affectation=0
         if self.buffer:
-           self.update_indent()
+           self.updateIndent()
         self.flush_buffer()
 
     def DEDENT(self, tstring):
@@ -452,7 +452,7 @@ class PARSEUR_PYTHON(object):
            self.out= self.out+ str(self.buffer[0])
            if len(self.buffer) > 1:
               for ob in self.buffer[1:]:
-                  self.do_indent()
+                  self.doIndent()
                   self.out= self.out+ str(ob)
            self.buffer=[]
            self.objet_courant=None
@@ -466,8 +466,8 @@ class PARSEUR_PYTHON(object):
         self.flush_buffer()
         if self.affectation>=1:
            # affectation en cours, on ajoute
-           if self.thiscol > self.lastcol :self.affectation_courante.append_text((self.thiscol - self.lastcol)*" ")
-           self.affectation_courante.append_text(tstring)
+           if self.thiscol > self.lastcol :self.affectation_courante.appendText((self.thiscol - self.lastcol)*" ")
+           self.affectation_courante.appendText(tstring)
            self.affectation=2
            return
         self.output(tstring)
@@ -902,6 +902,6 @@ def POST_GOUJ_ops(self,TABLE):
        f.close()
     else:
        t=text
-    txt = PARSEUR_PYTHON(t).get_texte()
+    txt = PARSEUR_PYTHON(t).getTexte()
     print (txt)
     compile(txt,"<string>",'exec')

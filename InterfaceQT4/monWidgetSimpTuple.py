@@ -32,9 +32,9 @@ from PyQt5.QtCore import Qt
 # Modules Eficas
 from Extensions.i18n import tr
 
-from .feuille               import Feuille
-from .politiquesValidation  import PolitiqueUnique
-from .qtSaisie              import SaisieValeur
+from InterfaceQT4.feuille               import Feuille
+from InterfaceQT4.politiquesValidation  import PolitiqueUnique
+from InterfaceQT4.qtSaisie              import SaisieValeur
 
 
 class MonWidgetSimpTuple(Feuille):
@@ -46,7 +46,7 @@ class MonWidgetSimpTuple(Feuille):
         self.setFocusPolicy(Qt.StrongFocus)
 
   def setValeurs(self):
-       valeur=self.node.item.get_valeur()
+       valeur=self.node.item.getValeur()
        for i in range(self.nbValeurs) :
            nomLineEdit="lineEditVal"+str(i+1)
            courant=getattr(self,nomLineEdit)
@@ -56,7 +56,7 @@ class MonWidgetSimpTuple(Feuille):
 
   def valeursPressed(self):
       aLeFocus=self.focusWidget()
-      self.editor.affiche_infos("")
+      self.editor.afficheInfos("")
       texteValeur=""
       for i in range(self.nbValeurs) :
           nomLineEdit="lineEditVal"+str(i+1)
@@ -79,9 +79,10 @@ class MonWidgetSimpTuple(Feuille):
                 else :        s=s+'"'
              courant.setText(s)
           texteValeur+=str(courant.text())
+          #print (texteValeur)
           if i+1 != self.nbValeurs : texteValeur+=','
-      validite,commentaire=self.politique.RecordValeur(texteValeur)
-      if not validite:self.editor.affiche_infos(commentaire+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
+      validite,commentaire=self.politique.recordValeur(texteValeur)
+      if not validite:self.editor.afficheInfos(commentaire+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
 
       # Passage au champ suivant
       nom=aLeFocus.objectName()[11:]

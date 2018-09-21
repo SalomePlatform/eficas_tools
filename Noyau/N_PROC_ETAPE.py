@@ -56,14 +56,14 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
         N_ETAPE.ETAPE.__init__(self, oper, reuse=None, args=args, niveau=5)
         self.reuse = None
 
-    def Build_sd(self):
+    def buildSd(self):
         """
             Cette methode applique la fonction op_init au contexte du parent
             et lance l'exécution en cas de traitement commande par commande
             Elle doit retourner le concept produit qui pour une PROC est toujours None
             En cas d'erreur, elle leve une exception : AsException ou EOFError
         """
-        if not self.isactif():
+        if not self.isActif():
             return
         try:
             if self.parent:
@@ -103,7 +103,7 @@ class PROC_ETAPE(N_ETAPE.ETAPE):
         """
         visitor.visitPROC_ETAPE(self)
 
-    def update_context(self, d):
+    def updateContext(self, d):
         """
            Met à jour le contexte de l'appelant passé en argument (d)
            Une PROC_ETAPE n ajoute pas directement de concept dans le contexte

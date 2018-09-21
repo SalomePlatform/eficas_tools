@@ -38,7 +38,7 @@ def lineToDict(line):
         i+=len(word)
     return h
 
-def DictToLine(d):
+def dictToLine(d):
     """Transformation inverse: à partir d'un dictionnaire retourne une ligne"""
     cols = d
     cols.sort()

@@ -43,7 +43,7 @@ class MCBLOC(V_MCCOMPO.MCCOMPO):
 
     txt_nat = u"Bloc :"
 
-    def isvalid(self, sd='oui', cr='non'):
+    def isValid(self, sd='oui', cr='non'):
         """
            Methode pour verifier la validite du MCBLOC. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -60,13 +60,13 @@ class MCBLOC(V_MCCOMPO.MCCOMPO):
                 old_valid = self.valid
             else:
                 old_valid = None
-            for child in self.mc_liste:
-                if not child.isvalid():
+            for child in self.mcListe:
+                if not child.isValid():
                     valid = 0
                     break
             # Apres avoir verifie la validite de tous les sous-objets, on verifie
             # la validite des regles
-            text_erreurs, test_regles = self.verif_regles()
+            text_erreurs, test_regles = self.verifRegles()
             if not test_regles:
                 if cr == 'oui':
                     self.cr.fatal( "Regle(s) non respectee(s) : %s" % text_erreurs)
@@ -74,5 +74,5 @@ class MCBLOC(V_MCCOMPO.MCCOMPO):
             self.valid = valid
             self.state = 'unchanged'
             if not old_valid or old_valid != self.valid:
-                self.init_modif_up()
+                self.initModifUp()
             return self.valid

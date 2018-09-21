@@ -30,7 +30,7 @@ from . import N_ENTITE
 from . import N_MCFACT
 from . import N_MCLIST
 from .N__F import _F
-from .N_types import is_sequence
+from .N_types import isSequence
 
 from . import N_OBJECT
 
@@ -54,7 +54,7 @@ class FACT(N_ENTITE.ENTITE):
     list_instance = N_MCLIST.MCList
     label = 'FACT'
 
-    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,ang="",
+    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,ang="",fenetreIhm=None, 
                  min=0, max=1, validators=None, **args):
         """
             Un mot-clé facteur est caractérisé par les attributs suivants :
@@ -67,6 +67,7 @@ class FACT(N_ENTITE.ENTITE):
               - max
               - position
               - docu
+              - fenetreIhm
         """
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs
@@ -86,8 +87,9 @@ class FACT(N_ENTITE.ENTITE):
         self.entites = args
         self.position = None
         self.affecter_parente()
+        self.fenetreIhm = fenetreIhm
 
-    def __call__(self, val, nom, parent):
+    def __call__(self, val, nom, parent, dicoPyxbDeConstruction = None):
         """
             Construit la structure de donnee pour un mot cle facteur a partir
             de sa definition (self) de sa valeur (val), de son nom (nom) et de
@@ -118,7 +120,7 @@ class FACT(N_ENTITE.ENTITE):
                 # On ne devrait jamais passer par la
                 print ("On ne devrait jamais passer par la")
                 return None
-        elif is_sequence(val) and len(val) == 0 and self.statut == 'o':
+        elif isSequence(val) and len(val) == 0 and self.statut == 'o':
                 # On est dans le cas où le mcfact est présent mais est une liste/tuple
                 # vide. Il est obligatoire donc on l'initialise. Les règles, mots-clés
                 # obligatoires diront si un mcfact vide est accepté.
@@ -128,31 +130,37 @@ class FACT(N_ENTITE.ENTITE):
         l = self.list_instance()
         l.init(nom=nom, parent=parent)
         if type(val) in (tuple, list, self.list_instance):
+            indice=0
             for v in val:
                 if type(v) == dict or isinstance(v, _F):
                     objet = self.class_instance(
-                        nom=nom, definition=self, val=v, parent=parent)
+                        nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction[indice])
+                    indice=indice+1
                     l.append(objet)
                 elif isinstance(v, self.class_instance):
+# if faut gerer ici --> on passe la avec une liste de concept ? 
+# PNPN --> si pyxb
                     l.append(v)
                 else:
                     l.append(N_OBJECT.ErrorObj(self, v, parent, nom))
         elif type(val) == dict or isinstance(val, _F):
             objet = self.class_instance(
-                nom=nom, definition=self, val=val, parent=parent)
+                nom=nom, definition=self, val=val, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
             l.append(objet)
         elif isinstance(val, self.class_instance):
+# idem --> quand passe t on la 
             l.append(val)
         else:
             l.append(N_OBJECT.ErrorObj(self, val, parent, nom))
-
+        l.cata=l.jdc.cata
+        l.buildObjPyxb(l)
         return l
 
-    def verif_cata(self):
-        self.check_min_max()
-        self.check_fr()
-        self.check_regles()
-        self.check_statut()
-        self.check_docu()
-        self.check_validators()
-        self.verif_cata_regles()
+    def verifCata(self):
+        self.checkMinMax()
+        self.checkFr()
+        self.checkRegles()
+        self.checkStatut()
+        self.checkDocu()
+        self.checkValidators()
+        self.verifCataRegles()

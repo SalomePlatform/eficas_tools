@@ -39,7 +39,7 @@ from PyQt5.QtWidgets  import  QScrollBar
 class MonWidgetPlusieursASSDIntoOrdonne (MonWidgetPlusieursIntoOrdonne):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-        self.NumLineEditEnCours=0
+        self.numLineEditEnCours=0
         MonWidgetPlusieursIntoOrdonne.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
        
 
@@ -48,7 +48,7 @@ class MonWidgetPlusieursASSDIntoOrdonne (MonWidgetPlusieursIntoOrdonne):
        for i in self.listeLE: i.close()
        self.listeLE=[]
        self.vScrollBar = self.scrollArea.verticalScrollBar()
-       self.listeAAfficher = self.node.item.get_sd_avant_du_bon_type()
+       self.listeAAfficher = self.node.item.getSdAvantDuBonType()
 
        if len(self.listeAAfficher) == 0 :
           self.ajoutLE(0)

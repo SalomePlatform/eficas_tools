@@ -143,7 +143,7 @@ def printNode(node):
         printNode(c)
 
 #------------------------
-def Parser(src,atraiter):
+def parser(src,atraiter):
 #------------------------
     """Parse le texte src et retourne un arbre syntaxique (root).
 
@@ -216,7 +216,7 @@ def Parser(src,atraiter):
                 c.src=src
                 c.endline=linenum
                 decal=len(line)-line.rindex(')')
-                c.lastparen=len(src)-decal
+                c.lastParen=len(src)-decal
                 if debug:print "logical line %s %s:" % (c.lineno,c.endline),src
                 break
             line=iterlines.next()
@@ -226,7 +226,7 @@ def Parser(src,atraiter):
 
 
 #-----------------
-def lastparen(src):
+def lastParen(src):
 #-----------------
     """Retourne la position de la derniere parenthese fermante dans src a partir du debut de la string
 
@@ -250,7 +250,7 @@ def lastparen(src):
                 return i
 
 #-------------------
-def lastparen2(src):
+def lastParen2(src):
 #-------------------
     """Retourne la position de la derniere parenthese fermante dans src a partir du debut de la string
 

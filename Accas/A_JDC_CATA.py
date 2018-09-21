@@ -21,8 +21,9 @@ from __future__ import absolute_import
 from . import A_JDC
 from Noyau import N_JDC_CATA
 from Ihm import I_JDC_CATA
+from Efi2Xsd.AccasXsd  import X_JDC_CATA
 
-class JDC_CATA(I_JDC_CATA.JDC_CATA,N_JDC_CATA.JDC_CATA):
+class JDC_CATA(I_JDC_CATA.JDC_CATA,N_JDC_CATA.JDC_CATA,X_JDC_CATA):
    class_instance=A_JDC.JDC
    def __init__(self,*pos,**kw):
       #print pos

@@ -38,8 +38,16 @@ if ihmDir not in sys.path : sys.path.append(ihmDir)
 if ihmQTDir not in sys.path : sys.path.append(ihmQTDir)
 if editeurDir not in sys.path :sys.path.append(editeurDir)
 
+def getEficasSsIhm(code=None,fichier=None,ssCode=None,multi=False,langue='en',versionCode=None):
+    #print (versionCode)
+    from InterfaceQT4.qtEficasSsIhm import AppliSsIhm
+    Eficas=AppliSsIhm(code=code,salome=0,ssCode=ssCode,multi=multi,langue=langue,versionCode=versionCode)
+    from Editeur  import session
+    options=session.parse(['ssIhm','-k',code,'-v',versionCode])
+    return Eficas
 
-def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
+
+def lanceEficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
     """
         Lance l'appli EFICAS
     """
@@ -51,14 +59,26 @@ def lance_eficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
 
     from InterfaceQT4.qtEficas import Appli
     app = QApplication(sys.argv)
+
+    #import cProfile, pstats, StringIO
+    #pr = cProfile.Profile()
+    #pr.enable()
+
     Eficas=Appli(code=code,salome=0,ssCode=ssCode,multi=multi,langue=langue)
+    #pr.disable()
+    #s = StringIO.StringIO()
+    #sortby = 'cumulative'
+    #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    #ps.print_stats()
+    #print (s.getValue())
+
     Eficas.show()
 
     res=app.exec_()
     sys.exit(res)
 
 
-def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=False,langue='en'):
+def lanceEficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=False,langue='en'):
     """
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
@@ -77,24 +97,24 @@ def lance_eficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=Fal
 
     from . import readercata
     if not hasattr ( Eficas, 'readercata'):
-           monreadercata  = readercata.READERCATA( parent, Eficas )
+           monreadercata  = readercata.ReaderCata( parent, Eficas )
            Eficas.readercata=monreadercata
 
     from .editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
     return monEditeur
 
-def lance_eficas_ssIhm_cherche_Groupes(code=None,fichier=None,ssCode=None,version=None):
-    monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
-    print((monEditeur.cherche_Groupes()))
+def lanceEficas_ssIhm_chercheGroupes(code=None,fichier=None,ssCode=None,version=None):
+    monEditeur=lanceEficas_ssIhm(code,fichier,ssCode,version)
+    print((monEditeur.chercheGroupes()))
 
-def lance_eficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=None):
-    monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version)
+def lanceEficas_ssIhm_cherche_cr(code=None,fichier=None,ssCode=None,version=None):
+    monEditeur=lanceEficas_ssIhm(code,fichier,ssCode,version)
     print((monEditeur.jdc.cr))
 
-def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False,debug=False,leger=False,langue='ang'):
-    #print 'lance_eficas_ssIhm_reecrit', fichier
-    monEditeur=lance_eficas_ssIhm(code,fichier,ssCode,version,langue=langue)
+def lanceEficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou=None,cr=False,debug=False,leger=False,langue='ang'):
+    #print 'lanceEficas_ssIhm_reecrit', fichier
+    monEditeur=lanceEficas_ssIhm(code,fichier,ssCode,version,langue=langue)
     if ou == None : 
        fileName=fichier.split(".")[0]+"_reecrit.comm"
        fn=fichier.split(".")[0]+"_cr.txt"
@@ -116,7 +136,7 @@ def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,o
          sortby = 'cumulative'
          ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
          ps.print_stats()
-         print (s.getvalue())
+         print (s.getValue())
 
     elif not leger : monEditeur.saveFileAs(fileName=fileName)
     else : monEditeur.saveFileLegerAs(fileName=fileName)
@@ -125,7 +145,7 @@ def lance_eficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,o
        f.write(str(monEditeur.jdc.report()))
        f.close()
 
-def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):
+def lanceEficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):
     """
         Lance l'appli EFICAS pour trouver les noms des groupes
     """
@@ -142,7 +162,7 @@ def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION
 
     from . import readercata
     if not hasattr ( Eficas, 'readercata'):
-           monreadercata  = readercata.READERCATA( parent, Eficas )
+           monreadercata  = readercata.ReaderCata( parent, Eficas )
            Eficas.readercata=monreadercata
 
     from .editor import JDCEditor
@@ -151,11 +171,10 @@ def lance_eficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION
     parameters=getJdcParameters(texte,macro)
     return parameters
 
-def getEficasSsIhm(code='Adao',version='V0'):
-    from .qtEficasSsIhm import AppliSsIhm
-    app = QApplication(sys.argv)
-    Eficas=Appli(code=code,ssCode=None,salome=0)
-    return Eficas
+#def getEficasSsIhm(code='Adao',versionCode='V0'):
+#    from .qtEficasSsIhm import AppliSsIhm
+#    Eficas=AppliSsIhm(code=code,ssCode=None,salome=0)
+#    return Eficas
 
 def getJdcParameters(jdc,macro):
     """
@@ -191,6 +210,6 @@ def loadJDC(filename):
 if __name__ == "__main__":
     import sys
     sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
-    lance_eficas(code=None,fichier=None,ssCode=None,multi=True)
+    lanceEficas(code=None,fichier=None,ssCode=None,multi=True)
     
 

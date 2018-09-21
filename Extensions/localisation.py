@@ -27,7 +27,7 @@ from PyQt5.QtCore import QTranslator
 code_translator = QTranslator()
 eficas_translator = QTranslator()
 
-def localise(application, locale=None,file=None,translatorFichier=None, debug=False ):
+def localise(application, locale=None,file=None,translatorFichier=None, debug=True ):
     """
     """
     from PyQt5.QtCore import QLibraryInfo

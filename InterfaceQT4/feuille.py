@@ -27,7 +27,7 @@ import types,os
 import traceback
 
 from PyQt5.QtWidgets import QToolButton ,QWidget
-from PyQt5.QtGui import QFont, QFontMetrics
+from PyQt5.QtGui import QFont, QFontMetrics, QFontInfo, QPalette
 from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
@@ -36,7 +36,8 @@ from .gereIcones import ContientIcones
 from .gereIcones import FacultatifOuOptionnel
 from .qtSaisie    import SaisieValeur
 
-nomMax=250
+nomMax=230
+# empirique les metrics ne fonctionnent pas 
 # ---------------------------------------------------------------------- #
 class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 # --------------------------------------------------------------------- #
@@ -83,18 +84,27 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    def setNom(self):
        self.debutToolTip=""
        nomTraduit=tr(self.objSimp.nom)
+       #metrix= QFontMetrics(self.label.font())
+       #maxLongueur = self.label.width() - 2
+       #print ('______________________')
+       #print (nomTraduit)
+       #print (self.label.font().pixelSize())
+       #longueur2 = metrix.boundingRect(nomTraduit).width()
        longueur=QFontMetrics(self.label.font()).width(nomTraduit)
        if longueur >= nomMax :
          nouveauNom=self.formate(nomTraduit)
          self.label.setText(nouveauNom)
        else :   
          self.label.setText(nomTraduit)
+       #clidedText = metrics.elidedText(text, Qt.ElideRight, label.width());
+       #if (clippedText != nomTraduit): self.label.setToolTip(nomTraduit)
+       #self.label.setText(clippedText)
 
-   def agrandit(self):
+   #def agrandit(self):
        # inutile pour certains widgets
-       if self.height() < 40 :
-          self.setMinimumHeight(50)
-          self.resize(self.width(),200)
+   #    if self.height() < 40 :
+   #       self.setMinimumHeight(50)
+   #       self.resize(self.width(),200)
 
    #def mousePressEvent(self, event):
      #print 'mousePressEvent'
@@ -132,30 +142,31 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
         else :
            if mc.min == mc.max:
                commentaire=tr("Entrez ")+str(mc.min)+" "+tr(d_aides[type])+'\n'
+           elif mc.max == float('inf') :
+               commentaire=tr("Entrez une liste de ") + tr(d_aides[type])+'\n'
            else :
                commentaire=tr("Entrez entre ")+"\n"+str(mc.min)+(" et  ")+str(mc.max) +" " +tr(d_aides[type])+'\n'
         aideval=self.node.item.aide()
         commentaire=commentaire +  tr(aideval)
-        self.monCommentaireLabel.setText(str(commentaire))
         return str(commentaire)
 
 
    def setSuggestion(self):
-      if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "":
-         suggere=str('<html><head/><body><p><span style=" font-size:8pt;">suggestion : ')+str(self.monSimpDef.get_sug())+"</span></p></body></html>"
+      if self.monSimpDef.getSug() != None and self.monSimpDef.getSug() != "":
+         suggere=str('<html><head/><body><p><span style=" font-size:8pt;">suggestion : ')+str(self.monSimpDef.getSug())+"</span></p></body></html>"
          if hasattr(self,'lineEditVal'): self.lineEditVal.setToolTip(suggere)
 
    def setCommentaire(self):
       c  = self.debutToolTip
       #if self.node.item.definition.validators : c+=self.node.item.definition.validators.aide()
       self.aide=c
-      if self.objSimp.get_fr() != None and self.objSimp.get_fr() != "":
-          #c2 = '<html><head/><body><p>'+c+self.objSimp.get_fr().decode('latin-1','replace')+"</p></body></html>"
-          c2 = '<html><head/><body><p>'+c+self.objSimp.get_fr()
-          #c2 = '<html><head/><body><p>'+c+self.objSimp.get_fr()+"</p></body></html>"
+      if self.objSimp.getFr() != None and self.objSimp.getFr() != "":
+          #c2 = '<html><head/><body><p>'+c+self.objSimp.getFr().decode('latin-1','replace')+"</p></body></html>"
+          c2 = '<html><head/><body><p>'+c+self.objSimp.getFr()
+          #c2 = '<html><head/><body><p>'+c+self.objSimp.getFr()+"</p></body></html>"
           self.label.setToolTip(c2)
-          #self.aide=self.objSimp.get_fr().decode('latin-1','ignore')+" "+c
-          self.aide=self.objSimp.get_fr()+" "+c
+          #self.aide=self.objSimp.getFr().decode('latin-1','ignore')+" "+c
+          self.aide=self.objSimp.getFr()+" "+c
       else :
          c+=self.finCommentaire()
          if c != "" and c != None :
@@ -201,8 +212,8 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
 
    def setZoneInfo(self):
       # info=str(self.nom)+'  '
-      # if self.monSimpDef.get_fr() != None and self.monSimpDef.get_fr() != "": info+=self.monSimpDef.get_sug() +" "
-      # if self.monSimpDef.get_sug() != None and self.monSimpDef.get_sug() != "": info+="Valeur suggeree : "self.monSimpDef.get_sug()
+      # if self.monSimpDef.getFr() != None and self.monSimpDef.getFr() != "": info+=self.monSimpDef.getSug() +" "
+      # if self.monSimpDef.getSug() != None and self.monSimpDef.getSug() != "": info+="Valeur suggeree : "self.monSimpDef.getSug()
       pass
 
    def reaffiche(self):
@@ -219,7 +230,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
          #nodeAVoir.fenetre.setFocus()
          # return  # on est bien postionne
 
-         if self.objSimp.isvalid() and hasattr(self, 'AAfficher'):
+         if self.objSimp.isValid() and hasattr(self, 'AAfficher'):
             nodeAVoir=self.parentQt.node.chercheNoeudCorrespondant(self.objSimp)
             try :
                index=self.editor.fenetreCentraleAffichee.listeAffichageWidget.index(nodeAVoir.fenetre.AAfficher)
@@ -233,7 +244,7 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
             except :
                pass
       else :
-         if self.objSimp.isvalid() and hasattr(self, 'AAfficher'):
+         if self.objSimp.isValid() and hasattr(self, 'AAfficher'):
             try :
                self.setValeursApresBouton()
             except :
@@ -253,25 +264,16 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
    #   QWidget.enterEvent(self,event)
 
    def traiteClicSurLabel(self,texte):
-       aide=self.aide.encode('latin-1', 'ignore').decode('latin-1')+"\n"+self.aideALaSaisie().encode('latin-1', 'ignore').decode('latin-1')
-       self.editor.affiche_commentaire(aide)
+       #aide=self.aide.encode('latin-1', 'ignore').decode('latin-1')+"\n"+self.aideALaSaisie().encode('latin-1', 'ignore').decode('latin-1')
+       try :
+          aide=self.aide+"\n"+self.aideALaSaisie()
+       except :
+          aide=self.aideALaSaisie()
+       self.editor.afficheCommentaire(aide)
 
    def formate(self,t):
-       if t.find('_')==0 :
-          newText=t[0:19]+'\n'+t[19:]
-       else:
-          listeNom=t.split('_')
-          newTexte=""
-          ligne=""
-          for n in listeNom:
-            if len(ligne)+len(n) < 25 : 
-               newTexte=newTexte+"_"+n
-               ligne+="_"+n
-            else :
-               newTexte=newTexte+"\n_"+n
-               ligne=""
-          #newTexte=t[0:t.rfind('_')]+'\n'+ t[t.rfind('_'):]
-          newText=newTexte[1:]
+       l=len(t)//2
+       newText=t[0:l]+'-\n'+t[l:]
        return newText
       
 

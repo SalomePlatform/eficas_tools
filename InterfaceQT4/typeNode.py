@@ -27,12 +27,9 @@ from PyQt5.QtWidgets import QAction, QMenu, QMessageBox
 from Extensions.i18n import tr
 import types
 
-
-
 #---------------------------#
 class PopUpMenuRacine(object) :
 #---------------------------#
-
 
     def createPopUpMenu(self):
         #print "createPopUpMenu"
@@ -53,7 +50,7 @@ class PopUpMenuNodeMinimal(object) :
 #---------------------------#
 
     def createPopUpMenu(self):
-        #print "createPopUpMenu"
+        #print ("createPopUpMenu")
         #self.appliEficas.salome=True
         self.createActions()
         self.menu = QMenu(self.tree)
@@ -65,12 +62,12 @@ class PopUpMenuNodeMinimal(object) :
         if hasattr(self.appliEficas, 'mesScripts'):
             if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
-               if self.tree.currentItem().item.get_nom() in self.dict_commandes_mesScripts : 
+               if self.tree.currentItem().item.getNom() in self.dict_commandes_mesScripts : 
                    self.ajoutScript()
     
     def ajoutScript(self):
-
     # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
+    # a revoir avec un menu et un connect sur le triggered sur le menu ?
         if hasattr(self.appliEficas, 'mesScripts'):
             if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
@@ -79,7 +76,7 @@ class PopUpMenuNodeMinimal(object) :
         from Extensions import jdc_include
         if isinstance(self.item.jdc,jdc_include.JDC_INCLUDE) : return
 
-        listeCommandes=self.dict_commandes_mesScripts[self.tree.currentItem().item.get_nom()]
+        listeCommandes=self.dict_commandes_mesScripts[self.tree.currentItem().item.getNom()]
         if type(listeCommandes) != tuple: listeCommandes=(listeCommandes,)
         numero=0
         for commande in listeCommandes :
@@ -89,33 +86,32 @@ class PopUpMenuNodeMinimal(object) :
            tip=commande[5]
            self.action=QAction(label,self.tree)
            self.action.setStatusTip(tip)
-           if numero==4: self.action.triggered.connect(self.AppelleFonction4)
-           if numero==3: self.action.triggered.connect(self.AppelleFonction3); numero=4
-           if numero==2: self.action.triggered.connect(self.AppelleFonction2); numero=3
-           if numero==1: self.action.triggered.connect(self.AppelleFonction1); numero=2
-           if numero==0: self.action.triggered.connect(self.AppelleFonction0); numero=1
+           if numero==4: self.action.triggered.connect(self.appelleFonction4)
+           if numero==3: self.action.triggered.connect(self.appelleFonction3); numero=4
+           if numero==2: self.action.triggered.connect(self.appelleFonction2); numero=3
+           if numero==1: self.action.triggered.connect(self.appelleFonction1); numero=2
+           if numero==0: self.action.triggered.connect(self.appelleFonction0); numero=1
            self.menu.addAction(self.action)
 
 
-    def AppelleFonction0(self):
-        self.AppelleFonction(0)
+    def appelleFonction0(self):
+        self.appelleFonction(0)
 
-    def AppelleFonction1(self):
-        self.AppelleFonction(1)
+    def appelleFonction1(self):
+        self.appelleFonction(1)
 
-    def AppelleFonction2(self):
-        self.AppelleFonction(2)
+    def appelleFonction2(self):
+        self.appelleFonction(2)
 
-    def AppelleFonction3(self):
-        self.AppelleFonction(3)
+    def appelleFonction3(self):
+        self.appelleFonction(3)
 
-    def AppelleFonction4(self):
-        self.AppelleFonction(4)
+    def appelleFonction4(self):
+        self.appelleFonction(4)
 
-
-    def AppelleFonction(self,numero,nodeTraite=None):
+    def appelleFonction(self,numero,nodeTraite=None):
         if nodeTraite==None : nodeTraite=self.tree.currentItem()
-        nomCmd=nodeTraite.item.get_nom()
+        nomCmd=nodeTraite.item.getNom()
         if hasattr(self.appliEficas, 'mesScripts'):
             if self.editor.code in  self.editor.appliEficas.mesScripts :
                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
@@ -125,7 +121,7 @@ class PopUpMenuNodeMinimal(object) :
         conditionValid=commande[4]
 
 
-        if (nodeTraite.item.isvalid() == 0 and conditionValid == True):
+        if (nodeTraite.item.isValid() == 0 and conditionValid == True):
                  QMessageBox.warning( None, 
                              tr("item invalide"),
                              tr("l item doit etre valide"),)
@@ -150,26 +146,6 @@ class PopUpMenuNodeMinimal(object) :
         
 
 
-    def createActionsQT4(self):
-        self.CommApres = QAction(tr('apres'),self.tree)
-        self.tree.connect(self.CommApres,SIGNAL("triggered()"),self.addCommApres)
-        self.CommApres.setStatusTip(tr("Insere un commentaire apres la commande "))
-        self.CommAvant = QAction(tr('avant'),self.tree)
-        self.tree.connect(self.CommAvant,SIGNAL("triggered()"),self.addCommAvant)
-        self.CommAvant.setStatusTip(tr("Insere un commentaire avant la commande "))
-
-        self.ParamApres = QAction(tr('apres'),self.tree)
-        self.tree.connect(self.ParamApres,SIGNAL("triggered()"),self.addParametersApres)
-        self.ParamApres.setStatusTip(tr("Insere un parametre apres la commande "))
-        self.ParamAvant = QAction(tr('avant'),self.tree)
-        self.tree.connect(self.ParamAvant,SIGNAL("triggered()"),self.addParametersAvant)
-        self.ParamAvant.setStatusTip(tr("Insere un parametre avant la commande "))
-
-        self.Supprime = QAction(tr('Supprimer'),self.tree)
-        self.tree.connect(self.Supprime,SIGNAL("triggered()"),self.supprimeNoeud)
-        self.Supprime.setStatusTip(tr("supprime le mot clef "))
-        self.Documentation = QAction(tr('Documentation'),self.tree)
-        self.tree.connect(self.Documentation,SIGNAL("triggered()"),self.viewDoc)
 
     def createActions(self):
         self.CommApres = QAction(tr('apres'),self.tree)
@@ -199,12 +175,12 @@ class PopUpMenuNodeMinimal(object) :
 
     def viewDoc(self):
         self.node=self.tree.currentItem()
-        cle_doc = self.node.item.get_docu()
+        cle_doc = self.node.item.getDocu()
         if cle_doc == None :
             QMessageBox.information( self.editor,tr( "Documentation Vide"), \
                                     tr("Aucune documentation n'est associee a ce noeud"))
             return
-        commande = self.editor.appliEficas.CONFIGURATION.exec_acrobat
+        commande = self.editor.appliEficas.maConfiguration.exec_acrobat
         try :
             f=open(commande,"rb")
         except :
@@ -215,7 +191,7 @@ class PopUpMenuNodeMinimal(object) :
         if cle_doc.startswith('http:'):
            fichier = cle_doc
         else :
-            fichier = os.path.abspath(os.path.join(self.editor.CONFIGURATION.path_doc,
+            fichier = os.path.abspath(os.path.join(self.editor.maConfiguration.path_doc,
                                        cle_doc))
             try :
                f=open(fichier,"rb")
@@ -247,6 +223,10 @@ class PopUpMenuNodeMinimal(object) :
         item= self.tree.currentItem()
         item.addComment(False)
 
+    def deplieCeNiveau(self):
+        item= self.tree.currentItem()
+        item.deplieCeNiveau()
+
 #--------------------------------------------#
 class PopUpMenuNodePartiel (PopUpMenuNodeMinimal):
 #---------------------------------------------#
@@ -271,12 +251,12 @@ class PopUpMenuNode(PopUpMenuNodePartiel) :
     def createPopUpMenu(self):
         PopUpMenuNodePartiel.createPopUpMenu(self)
         self.Commente = QAction(tr('ce noeud'),self.tree)
-        self.Commente.triggered.connect(self.Commenter)
+        self.Commente.triggered.connect(self.commenter)
         self.Commente.setStatusTip(tr("commente le noeud "))
         self.commentMenu.addAction(self.Commente)
         self.menu.removeAction(self.Supprime)
         self.menu.addAction(self.Supprime)
 
-    def Commenter(self):
+    def commenter(self):
         item= self.tree.currentItem()
         item.commentIt()

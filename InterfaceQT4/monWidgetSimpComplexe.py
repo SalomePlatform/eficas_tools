@@ -46,8 +46,8 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         self.setFocusPolicy(Qt.StrongFocus)
         self.LEImag.returnPressed.connect(self.LEImagRPressed)
         self.LEReel.returnPressed.connect(self.LEReelRPressed)
-        self.RBRI.clicked.connect(self.ValeurPressed )
-        self.RBMP.clicked.connect(self.ValeurPressed )
+        self.RBRI.clicked.connect(self.valeurPressed )
+        self.RBMP.clicked.connect(self.valeurPressed )
         self.LEComp.returnPressed.connect(self.LECompRPressed)
         self.maCommande.listeAffichageWidget.append(self.LEComp)
         #self.maCommande.listeAffichageWidget.append(self.RBRI)
@@ -58,7 +58,7 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
 
   def setValeurs(self):
        self.politique=PolitiqueUnique(self.node,self.editor)
-       valeur=self.node.item.get_valeur()
+       valeur=self.node.item.getValeur()
        if valeur == None or valeur == '' : return
        if type(valeur) not in (list,tuple) :
            self.LEComp.setText(str(valeur))
@@ -81,15 +81,15 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
           v=eval(valeur,d)
         except :
           commentaire=tr("expression invalide")
-          self.editor.affiche_infos(commentaire,Qt.red)
+          self.editor.afficheInfos(commentaire,Qt.red)
           return
         try :
           i=v.imag
-          self.editor.affiche_infos(commentaire)
-          self.ValeurPressed()
+          self.editor.afficheInfos(commentaire)
+          self.valeurPressed()
         except :
           commentaire=tr("l expression n est pas de la forme a+bj")
-          self.editor.affiche_infos(commentaire,Qt.red)
+          self.editor.afficheInfos(commentaire,Qt.red)
 
   def LEReelRPressed(self):
         self.LEComp.clear()
@@ -97,11 +97,11 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         valeur = str(self.LEReel.text())
         try :
           a=locale.atof(valeur)
-          self.editor.affiche_infos(commentaire)
+          self.editor.afficheInfos(commentaire)
         except :
           commentaire=tr("expression invalide")
-          self.editor.affiche_infos(commentaire,Qt.red)
-        if self.LEImag.text()!="" : self.ValeurPressed()
+          self.editor.afficheInfos(commentaire,Qt.red)
+        if self.LEImag.text()!="" : self.valeurPressed()
 
   def LEImagRPressed(self):
         self.LEComp.clear()
@@ -109,11 +109,11 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
         valeur = str(self.LEImag.text())
         try :
           a=locale.atof(valeur)
-          self.editor.affiche_infos(commentaire)
+          self.editor.afficheInfos(commentaire)
         except :
           commentaire=tr("expression invalide")
-          self.editor.affiche_infos(commentaire,Qt.red)
-        if self.LEReel.text()!="" : self.ValeurPressed()
+          self.editor.afficheInfos(commentaire,Qt.red)
+        if self.LEReel.text()!="" : self.valeurPressed()
 
   def finCommentaire(self):
       commentaire="valeur de type complexe"
@@ -127,28 +127,28 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
           v=eval(valeur,d)
         except :
           commentaire=tr("expression invalide")
-          self.editor.affiche_infos(commentaire,Qt.red)
+          self.editor.afficheInfos(commentaire,Qt.red)
           return None
         try :
           i=v.imag
         except :
           commentaire=tr("expression n est pas de la forme a+bj")
-          self.editor.affiche_infos(commentaire,Qt.red)
+          self.editor.afficheInfos(commentaire,Qt.red)
           return None
         return v
 
 
-  def ValeurPressed(self):
+  def valeurPressed(self):
       if self.LEComp.text()== ""  and (self.LEReel.text()=="" or self.LEImag.text()=="") :
          return
       if self.LEComp.text()== "" : valeur = self.getValeurRI()
       else :
           if self.LEReel.text() != "" or self.LEImag.text() != "" :
               commentaire=tr("entrer une seule valeur SVP")
-              self.editor.affiche_infos(commentaire,Qt.red)
+              self.editor.afficheInfos(commentaire,Qt.red)
               return
           valeur=  self.getValeurComp()
-      self.politique.RecordValeur(valeur)
+      self.politique.recordValeur(valeur)
       self.reaffiche()
       self.parentQt.donneFocus()
 
@@ -163,7 +163,7 @@ class MonWidgetSimpComplexe (Ui_WidgetSimpComplexe,Feuille):
          l.append("RI")
       else :
          commentaire=tr("saisir le type de complexe")
-         self.editor.affiche_infos(commentaire,Qt.red)
+         self.editor.afficheInfos(commentaire,Qt.red)
          return None
       try :
          l.append(locale.atof(str(self.LEReel.text())))

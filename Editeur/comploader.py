@@ -23,11 +23,11 @@
 
      - composants : dictionnaire de stockage des relations entre types
        d'objet du noyau et types d'item
-     - charger_composants() : fonction de chargement des composants. Retourne
+     - chargerComposants() : fonction de chargement des composants. Retourne
        le dictionnaire composants.
      - gettreeitem(object) -> type d'item : fonction qui retourne un type
        d'item correspondant au type de l'objet noyau fourni.
-     - make_objecttreeitem(appli,labeltext, object, setfunction=None) -> item : fonction qui retourne un item
+     - makeObjecttreeitem(appli,labeltext, object, setFunction=None) -> item : fonction qui retourne un item
        correspondant a l'objet noyau fourni.
 """
 # import generaux
@@ -35,22 +35,18 @@ from __future__ import absolute_import
 import os,glob,types
 
 # Dictionnaire {object : item} permettant d'associer un item a un object
-# Ce dictionnaire est renseigne par la methode charger_composants 
+# Ce dictionnaire est renseigne par la methode chargerComposants 
 composants = {}
 
-def charger_composants(Ihm="QT"):
+def chargerComposants(Ihm="QT"):
     """
         Cette fonction a pour but de charger tous les modules composants graphiques
         (fichiers compo*.py dans le meme repertoire que ce module )
-        et de remplir le dictionnaire composants utilise par make_objecttreeitem
+        et de remplir le dictionnaire composants utilise par makeObjecttreeitem
     """
     reper=os.path.dirname(__file__)
-    if Ihm == "TK" :
-       repertoire=reper+"/../InterfaceTK"
-       package="InterfaceTK"
-    else :
-       repertoire=reper+"/../InterfaceQT4"
-       package="InterfaceQT4"
+    repertoire=reper+"/../InterfaceQT4"
+    package="InterfaceQT4"
     listfich=glob.glob(os.path.join(repertoire, "compo*.py"))
     for fichier in listfich:
         m= os.path.basename(fichier)[:-3]
@@ -89,12 +85,11 @@ def gettreeitem(object):
     itemtype=composants[None]
     return itemtype
 
-def make_objecttreeitem(appli,labeltext, object, setfunction=None):
+def makeObjecttreeitem(appli,labeltext, object, setFunction=None):
     """
        Cette fonction permet de construire et de retourner un objet
        de type item associe a l'object passe en argument.
     """
     c = gettreeitem(object)
-    #print appli,labeltext, object, setfunction
-    return c(appli,labeltext, object, setfunction)
+    return c(appli,labeltext, object, setFunction)
 

@@ -22,7 +22,7 @@ try :
    from builtins import object
 except :
    pass
-from .N_utils import import_object
+from .N_utils import importObject
 
 
 class OPS(object):
@@ -36,7 +36,7 @@ class OPS(object):
 
     def __call__(self, *args, **kwargs):
         """Import the real function and call it."""
-        func = import_object(self.uri)
+        func = importObject(self.uri)
         return func(*args, **kwargs)
 
 

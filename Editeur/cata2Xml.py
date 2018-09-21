@@ -56,7 +56,7 @@ class CatalogueXML(object):
                 self.first.append(comment)
                 self.reglesUtilisees=[]
                 self.validatorsUtilises=[]
-                self.constr_list_txt_cmd()
+                self.constrListTxtCmd()
                 self.ecrire_fichier()
 
 
@@ -70,7 +70,7 @@ class CatalogueXML(object):
                 except :
                    print(("Impossible d'ecrire le fichier : "+ str(self.fichier)))
 
-        def constr_list_txt_cmd(self):
+        def constrListTxtCmd(self):
                 mesCommandes=self.cata.JdC.commandes
                 self.commandes=ET.SubElement(self.first,'commandes')
                 for maCommande in mesCommandes:
@@ -100,7 +100,7 @@ if __name__ == "__main__" :
         import readercata
         monreadercata  = readercata.READERCATA( parent, parent )
         Eficas.readercata=monreadercata
-        monCata=monreadercata.cata[0]
+        monCata=monreadercata.cata
 
         monCataXML=CatalogueXML(monCata,code)
 

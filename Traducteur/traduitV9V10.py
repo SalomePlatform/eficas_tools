@@ -124,11 +124,11 @@ def traduc(infile,outfile,flog=None):
 
     #####RESORPTION
 
-    GenereErreurPourCommande(jdc,("POST_ZAC",))
-    GenereErreurMCF(jdc,"AFFE_CHAR_MECA","GRAPPE_FLUIDE")
-    GenereErreurMCF(jdc,"DEFI_MATERIAU","LMARC")
-    GenereErreurMCF(jdc,"DEFI_MATERIAU","LMARC_FO")
-    GenereErreurMCF(jdc,"AFFE_CHAR_MECA","ARLEQUIN")
+    genereErreurPourCommande(jdc,("POST_ZAC",))
+    genereErreurMCF(jdc,"AFFE_CHAR_MECA","GRAPPE_FLUIDE")
+    genereErreurMCF(jdc,"DEFI_MATERIAU","LMARC")
+    genereErreurMCF(jdc,"DEFI_MATERIAU","LMARC_FO")
+    genereErreurMCF(jdc,"AFFE_CHAR_MECA","ARLEQUIN")
 
 
     #####SOLVEUR
@@ -141,34 +141,34 @@ def traduc(infile,outfile,flog=None):
     # */SOLVEUR/PARTITION --> AFFE_MODELE (ou MODI_MODELE)/PARTITION/PARTITION
 
 
-    GenereErreurMotCleInFact(jdc,"CALC_PRECONT","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"CALC_PRECONT","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"DYNA_LINE_HARM","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"DYNA_LINE_HARM","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"DYNA_LINE_TRAN","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"DYNA_LINE_TRAN","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"DYNA_TRAN_MODAL","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"DYNA_TRAN_MODAL","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"MACR_ASCOUF_CALC","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"MACR_ASCOUF_CALC","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"MACR_ASPIQ_CALC","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"MACR_ASPIQ_CALC","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"MACRO_MATR_AJOU","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"MACRO_MATR_AJOU","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"MECA_STATIQUE","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"MECA_STATIQUE","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"MODE_STATIQUE","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"MODE_STATIQUE","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"STAT_NON_LINE","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"STAT_NON_LINE","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"THER_LINEAIRE","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"THER_LINEAIRE","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"THER_NON_LINE","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"THER_NON_LINE","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"THER_NON_LINE_MO","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"THER_NON_LINE_MO","SOLVEUR","PARTITION")
-    GenereErreurMotCleInFact(jdc,"DYNA_NON_LINE","SOLVEUR","PARALLELISME")
-    GenereErreurMotCleInFact(jdc,"DYNA_NON_LINE","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"CALC_PRECONT","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"CALC_PRECONT","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"DYNA_LINE_HARM","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"DYNA_LINE_HARM","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"DYNA_LINE_TRAN","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"DYNA_LINE_TRAN","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"DYNA_TRAN_MODAL","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"DYNA_TRAN_MODAL","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"MACR_ASCOUF_CALC","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"MACR_ASCOUF_CALC","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"MACR_ASPIQ_CALC","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"MACR_ASPIQ_CALC","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"MACRO_MATR_AJOU","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"MACRO_MATR_AJOU","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"MECA_STATIQUE","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"MECA_STATIQUE","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"MODE_STATIQUE","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"MODE_STATIQUE","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"STAT_NON_LINE","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"STAT_NON_LINE","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"THER_LINEAIRE","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"THER_LINEAIRE","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"THER_NON_LINE","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"THER_NON_LINE","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"THER_NON_LINE_MO","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"THER_NON_LINE_MO","SOLVEUR","PARTITION")
+    genereErreurMotCleInFact(jdc,"DYNA_NON_LINE","SOLVEUR","PARALLELISME")
+    genereErreurMotCleInFact(jdc,"DYNA_NON_LINE","SOLVEUR","PARTITION")
 
     ####################### traitement mot cle INCREMENT redecoupage en temps #######################
     renameMotCleSiRegle(jdc,"STAT_NON_LINE","INCREMENT","INCREMENT_NEW",((("INCREMENT","SUBD_METHODE"),"existeMCsousMCF"),),1)
@@ -270,7 +270,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCle(jdc,"CALC_MODAL","SOLVEUR",pasDeRegle())
 
     ##################### traitement DYNA_TRAN-MODAL ADAPT #################
-    ChangementValeur(jdc,"DYNA_TRAN_MODAL","METHODE",{"ADAPT":"ADAPT_ORDRE2"})
+    changementValeur(jdc,"DYNA_TRAN_MODAL","METHODE",{"ADAPT":"ADAPT_ORDRE2"})
 
     #################### traitement STAT/DYNA_NON_LINE OBSERVATION SUIVI_DDL=NON ###########
     removeMotCleInFactCourantSiRegle(jdc,"STAT_NON_LINE","OBSERVATION","SUIVI_DDL",((("SUIVI_DDL","NON",jdc),"MCsousMCFcourantaPourValeur"),))
@@ -288,24 +288,24 @@ def traduc(infile,outfile,flog=None):
     #####COMPORTEMENT/CARA
 
     ###################  traitement AFFE_MODELE/SHB8 ##########################
-    ChangementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",{"SHB8":"SHB"})
+    changementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",{"SHB8":"SHB"})
     
     ###################  traitement COMP_ELAS et COMP_INCR  DEFORMATION = GREEN ##############"
     dGREEN={"GREEN_GR":"GROT_GDEP","GREEN":"GROT_GDEP","REAC_GEOM":"GROT_GDEP","EULER_ALMANSI":"GROT_GDEP","COROTATIONNEL":"GDEF_HYPO_ELAS"}
-    ChangementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_ELAS","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_ELAS","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_ELAS","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"CALCUL","COMP_ELAS","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"POST_GP","COMP_ELAS","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"CALC_G","COMP_ELAS","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"CALCUL","COMP_INCR","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"CALC_NO","COMP_INCR","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"LIRE_RESU","COMP_INCR","DEFORMATION",dGREEN)
-    ChangementValeurDsMCF(jdc,"MACR_ECREVISSE","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_ELAS","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_ELAS","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_ELAS","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"CALCUL","COMP_ELAS","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"POST_GP","COMP_ELAS","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"CALC_G","COMP_ELAS","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"CALCUL","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"CALC_NO","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"LIRE_RESU","COMP_INCR","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"MACR_ECREVISSE","COMP_INCR","DEFORMATION",dGREEN)
 
     ###################### traitement COMP_INCR/COMP_ELAS RESO_INTE ##########
     dALGOI={"RUNGE_KUTTA_2":"RUNGE_KUTTA","RUNGE_KUTTA_4":"RUNGE_KUTTA"}
@@ -325,21 +325,21 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFactCourantSiRegle(jdc,"LIRE_RESU","COMP_INCR","RESO_INTE",((("RESO_INTE","IMPLICITE",jdc),"MCsousMCFcourantaPourValeur"),))
     removeMotCleInFactCourantSiRegle(jdc,"MACR_ECREVISSE","COMP_INCR","RESO_INTE",((("RESO_INTE","IMPLICITE",jdc),"MCsousMCFcourantaPourValeur"),))
 
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_ELAS","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_ELAS","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"CALCUL","COMP_ELAS","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"CALCUL","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"MACR_ASCOUF_CALC","COMP_ELAS","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"MACR_ASCOUF_CALC","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"MACR_ASPIQF_CALC","COMP_ELAS","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"MACR_ASPIQ_CALC","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"CALC_NO","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"LIRE_RESU","COMP_INCR","RESO_INTE",dALGOI)
-    ChangementValeurDsMCF(jdc,"MACR_ECREVISSE","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_ELAS","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"STAT_NON_LINE","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_ELAS","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"DYNA_NON_LINE","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"CALCUL","COMP_ELAS","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"CALCUL","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"MACR_ASCOUF_CALC","COMP_ELAS","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"MACR_ASCOUF_CALC","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"MACR_ASPIQF_CALC","COMP_ELAS","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"MACR_ASPIQ_CALC","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"CALC_PRECONT","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"CALC_NO","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"LIRE_RESU","COMP_INCR","RESO_INTE",dALGOI)
+    changementValeurDsMCF(jdc,"MACR_ECREVISSE","COMP_INCR","RESO_INTE",dALGOI)
 
     renameMotCleInFact(jdc,"STAT_NON_LINE","COMP_ELAS","RESO_INTE","ALGO_INTE")
     renameMotCleInFact(jdc,"STAT_NON_LINE","COMP_INCR","RESO_INTE","ALGO_INTE")
@@ -363,18 +363,18 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"STAT_NON_LINE","COMP_ELAS","ITER_INTE_PAS",pasDeRegle(),0)
 
     ###################### traitement CALC_G/COMP_INCR/RELATION ELAS_VMIS_PUIS ####
-    ChangementValeurDsMCF(jdc,"CALC_G","COMP_INCR","RELATION",{"ELAS_VMIS_PUIS":"VMIS_ISOT_PUIS"})
+    changementValeurDsMCF(jdc,"CALC_G","COMP_INCR","RELATION",{"ELAS_VMIS_PUIS":"VMIS_ISOT_PUIS"})
 
     ########################" traitement DEFI_COMPOR/MULTIFIBRE/DEFORMATION=REAC_GEOM #########
-    ChangementValeurDsMCF(jdc,"DEFI_COMPOR","MULTIFIBRE","DEFORMATION",dGREEN)
+    changementValeurDsMCF(jdc,"DEFI_COMPOR","MULTIFIBRE","DEFORMATION",dGREEN)
 
     ####################### traitement DEFI_COMPOR/MONOCRISTAL/ECOULEMENT #############
     dECOULEMENT={"ECOU_VISC1":"MONO_VISC1","ECOU_VISC2":"MONO_VISC2","ECOU_VISC3":"MONO_VISC3","KOCKS_RAUCH":"MONO_DD_KR"}
-    ChangementValeurDsMCF(jdc,"DEFI_COMPOR","MONOCRISTAL","ECOULEMENT",dECOULEMENT)
+    changementValeurDsMCF(jdc,"DEFI_COMPOR","MONOCRISTAL","ECOULEMENT",dECOULEMENT)
     dISOT={"ECRO_ISOT1":"MONO_ISOT1","ECRO_ISOT2":"MONO_ISOT2"}
     dCINE={"ECRO_CINE1":"MONO_CINE1","ECRO_CINE2":"MONO_CINE2"}
-    ChangementValeurDsMCF(jdc,"DEFI_COMPOR","MONOCRISTAL","ECRO_ISOT",dISOT)
-    ChangementValeurDsMCF(jdc,"DEFI_COMPOR","MONOCRISTAL","ECRO_CINE",dCINE)
+    changementValeurDsMCF(jdc,"DEFI_COMPOR","MONOCRISTAL","ECRO_ISOT",dISOT)
+    changementValeurDsMCF(jdc,"DEFI_COMPOR","MONOCRISTAL","ECRO_CINE",dCINE)
 
     ################### traitement DEFI_MATERIAU monocristallin #######
     renameMotCle(jdc,"DEFI_MATERIAU","ECOU_VISC1","MONO_VISC1")
@@ -397,10 +397,10 @@ def traduc(infile,outfile,flog=None):
 
     removeMotCleInFact(jdc,"AFFE_CARA_ELEM","DISCRET_2D","SYME")
     removeMotCleInFact(jdc,"AFFE_CARA_ELEM","DISCRET","SYME")
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"AFFE_CARA_ELEM","DISCRET","SYME='NON'",((("CARA",dlist_DISCRET,jdc),"MCsousMCFcourantaPourValeurDansListe"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"AFFE_CARA_ELEM","DISCRET_2D","SYME='NON'",((("CARA",dlist_DISCRET,jdc),"MCsousMCFcourantaPourValeurDansListe"),))
-    ChangementValeurDsMCF(jdc,"AFFE_CARA_ELEM","DISCRET_2D","CARA",dDISCRET)
-    ChangementValeurDsMCF(jdc,"AFFE_CARA_ELEM","DISCRET","CARA",dDISCRET)
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"AFFE_CARA_ELEM","DISCRET","SYME='NON'",((("CARA",dlist_DISCRET,jdc),"MCsousMCFcourantaPourValeurDansListe"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"AFFE_CARA_ELEM","DISCRET_2D","SYME='NON'",((("CARA",dlist_DISCRET,jdc),"MCsousMCFcourantaPourValeurDansListe"),))
+    changementValeurDsMCF(jdc,"AFFE_CARA_ELEM","DISCRET_2D","CARA",dDISCRET)
+    changementValeurDsMCF(jdc,"AFFE_CARA_ELEM","DISCRET","CARA",dDISCRET)
 
     #####CHARGEMENT
     
@@ -409,21 +409,21 @@ def traduc(infile,outfile,flog=None):
 
     renameMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","ITER_MULT_MAXI","ITER_CONT_MULT")
     renameMotCleInFact(jdc,"AFFE_CHAR_MECA","CONTACT","NB_REAC_GEOM","NB_ITER_GEOM")
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"AFFE_CHAR_MECA","CONTACT","RESOLUTION='NON'",((("METHODE","VERIF",jdc),"MCsousMCFcourantaPourValeur"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"AFFE_CHAR_MECA","CONTACT","RESOLUTION='NON'",((("METHODE","VERIF",jdc),"MCsousMCFcourantaPourValeur"),))
     copyMotClefInOperToFact(jdc,"AFFE_CHAR_MECA","MODELE","CONTACT")
     moveMCFToCommand(jdc,"AFFE_CHAR_MECA","CONTACT","DEFI_CONTACT","ZONE")
     removeMotCle(jdc,"AFFE_CHAR_MECA","CONTACT",pasDeRegle(),1)
 
     
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","METHODE")
-    AjouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","METHODE='LIAISON_UNIL'",pasDeRegle())
+    ajouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","METHODE='LIAISON_UNIL'",pasDeRegle())
     copyMotClefInOperToFact(jdc,"AFFE_CHAR_MECA","MODELE","LIAISON_UNILATER")
     moveMCFToCommand(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","DEFI_CONTACT","ZONE")
     removeMotCle(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER",pasDeRegle(),1)
     
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","METHODE")
-    AjouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","METHODE='LIAISON_UNIL'",pasDeRegle())
-    AjouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","FORMULATION='LIAISON_UNIL'",pasDeRegle())
+    ajouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","METHODE='LIAISON_UNIL'",pasDeRegle())
+    ajouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","FORMULATION='LIAISON_UNIL'",pasDeRegle())
     copyMotClefInOperToFact(jdc,"AFFE_CHAR_MECA_F","MODELE","LIAISON_UNILATER")
     moveMCFToCommand(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","DEFI_CONTACT","ZONE")
     removeMotCle(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER",pasDeRegle(),1)
@@ -434,12 +434,12 @@ def traduc(infile,outfile,flog=None):
     chercheOperInsereMotCleSiRegle(jdc,"DEFI_CONTACT","FORMULATION='LIAISON_UNIL'",((("ZONE","METHODE","LIAISON_UNIL",jdc),"MCsousMCFaPourValeur"),))
     liste_meth_ZONE=["GCP","CONTRAINTE","LAGRANGIEN","PENALISATION"]
     chercheOperInsereMotCleSiRegle(jdc,"DEFI_CONTACT","FORMULATION='DISCRETE'",((("ZONE","METHODE",liste_meth_ZONE,jdc),"MCsousMCFaPourValeurDansListe"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='LAGRANGIEN'",((("METHODE","LAGRANGIEN",jdc),"MCsousMCFcourantaPourValeur"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_FROT='LAGRANGIEN'",((("METHODE","LAGRANGIEN",jdc),"MCsousMCFcourantaPourValeur"),(("COULOMB",),"existeMCsousMCFcourant"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='GCP'",((("METHODE","GCP",jdc),"MCsousMCFcourantaPourValeur"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='PENALISATION'",((("METHODE","PENALISATION",jdc),"MCsousMCFcourantaPourValeur"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_FROT='PENALISATION'",((("METHODE","PENALISATION",jdc),"MCsousMCFcourantaPourValeur"),(("COULOMB",),"existeMCsousMCFcourant"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='CONTRAINTE'",((("METHODE","CONTRAINTE",jdc),"MCsousMCFcourantaPourValeur"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='LAGRANGIEN'",((("METHODE","LAGRANGIEN",jdc),"MCsousMCFcourantaPourValeur"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_FROT='LAGRANGIEN'",((("METHODE","LAGRANGIEN",jdc),"MCsousMCFcourantaPourValeur"),(("COULOMB",),"existeMCsousMCFcourant"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='GCP'",((("METHODE","GCP",jdc),"MCsousMCFcourantaPourValeur"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='PENALISATION'",((("METHODE","PENALISATION",jdc),"MCsousMCFcourantaPourValeur"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_FROT='PENALISATION'",((("METHODE","PENALISATION",jdc),"MCsousMCFcourantaPourValeur"),(("COULOMB",),"existeMCsousMCFcourant"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='CONTRAINTE'",((("METHODE","CONTRAINTE",jdc),"MCsousMCFcourantaPourValeur"),))
     removeMotCleInFact(jdc,"DEFI_CONTACT","ZONE","METHODE")
     
     
@@ -491,11 +491,11 @@ def traduc(infile,outfile,flog=None):
     renameMotCleSiRegle(jdc,"COMB_SISM_MODAL","COMB_MULT_APPUI","GROUP_APPUI",((("MULTI_APPUI","DECORRELE",jdc),"MCaPourValeur"),),1)
 
     ########################  traitement DYNA_TRAN_MODAL ##################
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"DYNA_TRAN_MODAL","CHOC","FROTTEMENT='COULOMB'",((("COULOMB",),"existeMCsousMCFcourant"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"DYNA_TRAN_MODAL","CHOC","FROTTEMENT='COULOMB'",((("COULOMB",),"existeMCsousMCFcourant"),))
 
     ######################### traitement AFFE_CHAR_MECA PESANTEUR ROTATION#################
-    EclaMotCleToFact(jdc,"AFFE_CHAR_MECA","PESANTEUR","GRAVITE","DIRECTION")
-    EclaMotCleToFact(jdc,"AFFE_CHAR_MECA","ROTATION","VITESSE","AXE")
+    eclaMotCleToFact(jdc,"AFFE_CHAR_MECA","PESANTEUR","GRAVITE","DIRECTION")
+    eclaMotCleToFact(jdc,"AFFE_CHAR_MECA","ROTATION","VITESSE","AXE")
     moveMotClefInOperToFact(jdc,"AFFE_CHAR_MECA","CENTRE","ROTATION")
 
     ######################## traitement DEFI_BASE_MODALE ##############
@@ -516,20 +516,20 @@ def traduc(infile,outfile,flog=None):
 
     #######################  traitement PROJ_CHAMP  #####################
     renameMotCle(jdc,"PROJ_CHAMP","CHAM_NO","CHAM_GD",1,pasDeRegle())
-    ChangementValeur(jdc,"PROJ_CHAMP","METHODE",{ "ELEM":"COLLOCATION"})
+    changementValeur(jdc,"PROJ_CHAMP","METHODE",{ "ELEM":"COLLOCATION"})
 
     ####################### traitement MACR_ADAP_MAIL ##############"
-    ChangementValeur(jdc,"MACR_ADAP_MAIL","TYPE_VALEUR_INDICA",{"V_ABSOLUE":"ABSOLU","V_RELATIVE":"RELATIF"})
+    changementValeur(jdc,"MACR_ADAP_MAIL","TYPE_VALEUR_INDICA",{"V_ABSOLUE":"ABSOLU","V_RELATIVE":"RELATIF"})
     renameMotCle(jdc,"MACR_ADAP_MAIL","INDICATEUR","NOM_CHAM")
     renameMotCle(jdc,"MACR_ADAP_MAIL","NOM_CMP_INDICA","NOM_CMP")
     renameMotCle(jdc,"MACR_ADAP_MAIL","TYPE_OPER_INDICA","USAGE_CHAMP")
     renameMotCle(jdc,"MACR_ADAP_MAIL","TYPE_VALEUR_INDICA","USAGE_CMP")
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"MACR_ADAP_MAIL","ZONE","TYPE='BOITE'",((("RAYON",),"nexistepasMCsousMCFcourant"),))
-    AjouteMotClefDansFacteurCourantSiRegle(jdc,"MACR_ADAP_MAIL","ZONE","TYPE='SPHERE'",((("RAYON",),"existeMCsousMCFcourant"),))
-    ChangementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",{"V9_5":"V10_1"})
-    ChangementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",{"V9_N":"V10_1_N"})
-    ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V9_5":"V10_1"})
-    ChangementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V9_N":"V10_1_N"})
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"MACR_ADAP_MAIL","ZONE","TYPE='BOITE'",((("RAYON",),"nexistepasMCsousMCFcourant"),))
+    ajouteMotClefDansFacteurCourantSiRegle(jdc,"MACR_ADAP_MAIL","ZONE","TYPE='SPHERE'",((("RAYON",),"existeMCsousMCFcourant"),))
+    changementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",{"V9_5":"V10_1"})
+    changementValeur(jdc,"MACR_ADAP_MAIL","VERSION_HOMARD",{"V9_N":"V10_1_N"})
+    changementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V9_5":"V10_1"})
+    changementValeur(jdc,"MACR_INFO_MAIL","VERSION_HOMARD",{"V9_N":"V10_1_N"})
 
     ###################### traitement de POST_CHAM_XFEM  #################
     removeMotCle(jdc,"POST_CHAM_XFEM","MODELE",pasDeRegle(),0)
@@ -567,7 +567,7 @@ def traduc(infile,outfile,flog=None):
      ######### traitement CALC_ELEM/TYPE_ESTI ####
     dESTI={"ERRE_ELEM_SIGM":"ERME_ELEM","ERZ1_ELEM_SIGM":"ERZ1_ELEM","ERZ2_ELEM_SIGM":"ERZ2_ELEM",
             "QIRE_ELEM_SIGM":"QIRE_ELEM","QIZ1_ELEM_SIGM":"QIZ1_ELEM","QIZ2_ELEM_SIGM":"QIZ2_ELEM"}
-    ChangementValeur(jdc,"CALC_ELEM","TYPE_ESTI",dESTI)
+    changementValeur(jdc,"CALC_ELEM","TYPE_ESTI",dESTI)
 
     ######### suppression CALC_ELEM/NORME ######
     removeMotCle(jdc,"CALC_ELEM","NORME",pasDeRegle(),0)
@@ -613,42 +613,42 @@ def traduc(infile,outfile,flog=None):
              "VARI_NOEU_ELGA":"VARI_NOEU","VARI_ELNO_ELGA":"VARI_ELNO",
              "INDI_LOCA_ELGA":"INDL_ELGA"}
     #"FORC_NODA":"FORC_NOEU","REAC_NODA":"REAC_NOEU"
-    ChangementValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VARC","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"COMB_FOURIER","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"CREA_CHAMP","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"CREA_RESU","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"EXTR_RESU","ARCHIVAGE","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"IMPR_RESU","RESU","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"LIRE_RESU","FORMAT_MED","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"LIRE_RESU","FORMAT_IDEAS","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"LIRE_RESU","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"MACR_ADAP_MAIL","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"MACR_ASPIC_CALC","IMPRESSION","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"MACR_LIGN_COUPE","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"MODI_REPERE","MODI_CHAM","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"POST_ELEM","INTEGRALE","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"POST_ELEM","MINMAX","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"POST_RCCM","RESU_MECA","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",dOPTION)    
-    ChangementValeur(jdc,"PROJ_CHAMP","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"PROJ_MESU_MODAL","MODELE_MESURE","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"RECU_FONCTION","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"REST_GENE_PHYS","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"REST_SOUS_STRUC","NOM_CHAM",dOPTION)
-    ChangementValeur(jdc,"REST_SPEC_PHYS","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"TEST_RESU","RESU","NOM_CHAM",dOPTION)
-    ChangementValeurDsMCF(jdc,"TEST_RESU","GENE","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VARC","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"COMB_FOURIER","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"CREA_CHAMP","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"CREA_RESU","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"EXTR_RESU","ARCHIVAGE","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"IMPR_RESU","RESU","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"LIRE_RESU","FORMAT_MED","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"LIRE_RESU","FORMAT_IDEAS","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"LIRE_RESU","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"MACR_ADAP_MAIL","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"MACR_ASPIC_CALC","IMPRESSION","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"MACR_LIGN_COUPE","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"MODI_REPERE","MODI_CHAM","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"POST_ELEM","INTEGRALE","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"POST_ELEM","MINMAX","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"POST_RCCM","RESU_MECA","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",dOPTION)    
+    changementValeur(jdc,"PROJ_CHAMP","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"PROJ_MESU_MODAL","MODELE_MESURE","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"RECU_FONCTION","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"REST_GENE_PHYS","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"REST_SOUS_STRUC","NOM_CHAM",dOPTION)
+    changementValeur(jdc,"REST_SPEC_PHYS","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"TEST_RESU","RESU","NOM_CHAM",dOPTION)
+    changementValeurDsMCF(jdc,"TEST_RESU","GENE","NOM_CHAM",dOPTION)
     
-    ChangementValeur(jdc,"CALC_CHAM_ELEM","OPTION",dOPTION)
-    ChangementValeur(jdc,"CALC_ELEM","OPTION",dOPTION)
-    ChangementValeur(jdc,"CALC_META","OPTION",dOPTION)
-    ChangementValeur(jdc,"CALC_NO","OPTION",dOPTION)
-    ChangementValeur(jdc,"COMB_SISM_MODAL","OPTION",dOPTION)
-    ChangementValeur(jdc,"MECA_STATIQUE","OPTION",dOPTION)
-    ChangementValeurDsMCF(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","OPTION",dOPTION)
-    ChangementValeur(jdc,"THER_NON_LINE","OPTION",dOPTION)
+    changementValeur(jdc,"CALC_CHAM_ELEM","OPTION",dOPTION)
+    changementValeur(jdc,"CALC_ELEM","OPTION",dOPTION)
+    changementValeur(jdc,"CALC_META","OPTION",dOPTION)
+    changementValeur(jdc,"CALC_NO","OPTION",dOPTION)
+    changementValeur(jdc,"COMB_SISM_MODAL","OPTION",dOPTION)
+    changementValeur(jdc,"MECA_STATIQUE","OPTION",dOPTION)
+    changementValeurDsMCF(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","OPTION",dOPTION)
+    changementValeur(jdc,"THER_NON_LINE","OPTION",dOPTION)
 
-    ############ Message si SuppressionValeurs ou Valeurs ambigue CALC_ELEM/OPTION
+    ############ Message si suppressionValeurs ou Valeurs ambigue CALC_ELEM/OPTION
     rOPTION=("'DEUL_ELGA_DEPL'","'DEUL_ELGA_TEMP'","'DURT_ELGA_META'",
              "'ERRE_ELNO_DEPL'", "'ERRE_NOEU_ELEM'", "'ERRE_ELNO_ELEM'","'EPSP_NOEU_ZAC'","'HYDR_ELNO_ELGA'",
              "'SIGM_NOEU_ZAC'","'SIGM_ELNO_SIEF'","'SIGM_NOEU_SIEF'","'SIPO_ELNO_SIEF'","'SIPO_NOEU_SIEF'",
@@ -657,47 +657,47 @@ def traduc(infile,outfile,flog=None):
     # Options ambigue :  PRES_ELNO_DBEL --> prac_elno/prme_elno, ERRE* --> ERME_ELNO ou ERTH_ELNO selon PHENOMENE
     # En commentaires les commandes non concernees par rOPTION
     
-    GenereErreurValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VARC","NOM_CHAM",rOPTION)
-    #GenereErreurValeur(jdc,"COMB_FOURIER","NOM_CHAM",rOPTION)
-    GenereErreurValeur(jdc,"CREA_CHAMP","NOM_CHAM",rOPTION)
-    GenereErreurValeur(jdc,"CREA_RESU","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"EXTR_RESU","ARCHIVAGE","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"IMPR_RESU","RESU","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"LIRE_RESU","FORMAT_MED","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"LIRE_RESU","FORMAT_IDEAS","NOM_CHAM",rOPTION)
-    GenereErreurValeur(jdc,"LIRE_RESU","NOM_CHAM",rOPTION)
-    GenereErreurValeur(jdc,"MACR_ADAP_MAIL","NOM_CHAM",rOPTION)
-    #GenereErreurDsMCF(jdc,"MACR_ASPIC_CALC","IMPRESSION","NOM_CHAM",rOPTION)
-    GenereErreurValeur(jdc,"MACR_LIGN_COUPE","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"MODI_REPERE","MODI_CHAM","NOM_CHAM",rOPTION)
-    #GenereErreurValeurDsMCF(jdc,"POST_RCCM","RESU_MECA","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"POST_ELEM","INTEGRALE","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"POST_ELEM","MINMAX","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",rOPTION)    
-    GenereErreurValeur(jdc,"PROJ_CHAMP","NOM_CHAM",rOPTION)
-    #GenereErreurValeurDsMCF(jdc,"PROJ_MESU_MODAL","MODELE_MESURE","NOM_CHAM",rOPTION)
-    GenereErreurValeur(jdc,"RECU_FONCTION","NOM_CHAM",rOPTION)
-    #GenereErreurValeur(jdc,"REST_GENE_PHYS","NOM_CHAM",rOPTION)
-    #GenereErreurValeur(jdc,"REST_SOUS_STRUC","NOM_CHAM",rOPTION)
-    #GenereErreurValeur(jdc,"REST_SPEC_PHYS","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"TEST_RESU","RESU","NOM_CHAM",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"TEST_RESU","GENE","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VARC","NOM_CHAM",rOPTION)
+    #genereErreurValeur(jdc,"COMB_FOURIER","NOM_CHAM",rOPTION)
+    genereErreurValeur(jdc,"CREA_CHAMP","NOM_CHAM",rOPTION)
+    genereErreurValeur(jdc,"CREA_RESU","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"EXTR_RESU","ARCHIVAGE","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"IMPR_RESU","RESU","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"LIRE_RESU","FORMAT_MED","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"LIRE_RESU","FORMAT_IDEAS","NOM_CHAM",rOPTION)
+    genereErreurValeur(jdc,"LIRE_RESU","NOM_CHAM",rOPTION)
+    genereErreurValeur(jdc,"MACR_ADAP_MAIL","NOM_CHAM",rOPTION)
+    #genereErreurDsMCF(jdc,"MACR_ASPIC_CALC","IMPRESSION","NOM_CHAM",rOPTION)
+    genereErreurValeur(jdc,"MACR_LIGN_COUPE","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"MODI_REPERE","MODI_CHAM","NOM_CHAM",rOPTION)
+    #genereErreurValeurDsMCF(jdc,"POST_RCCM","RESU_MECA","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"POST_ELEM","INTEGRALE","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"POST_ELEM","MINMAX","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",rOPTION)    
+    genereErreurValeur(jdc,"PROJ_CHAMP","NOM_CHAM",rOPTION)
+    #genereErreurValeurDsMCF(jdc,"PROJ_MESU_MODAL","MODELE_MESURE","NOM_CHAM",rOPTION)
+    genereErreurValeur(jdc,"RECU_FONCTION","NOM_CHAM",rOPTION)
+    #genereErreurValeur(jdc,"REST_GENE_PHYS","NOM_CHAM",rOPTION)
+    #genereErreurValeur(jdc,"REST_SOUS_STRUC","NOM_CHAM",rOPTION)
+    #genereErreurValeur(jdc,"REST_SPEC_PHYS","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"TEST_RESU","RESU","NOM_CHAM",rOPTION)
+    genereErreurValeurDsMCF(jdc,"TEST_RESU","GENE","NOM_CHAM",rOPTION)
     
-    GenereErreurValeur(jdc,"CALC_CHAM_ELEM","OPTION",rOPTION)
-    GenereErreurValeur(jdc,"CALC_ELEM","OPTION",rOPTION)
-    #GenereErreurValeur(jdc,"CALC_META","OPTION",rOPTION)
-    GenereErreurValeur(jdc,"CALC_NO","OPTION",rOPTION)
-    #GenereErreurValeur(jdc,"COMB_SISM_MODAL","OPTION",rOPTION)
-    #GenereErreurValeur(jdc,"MECA_STATIQUE","OPTION",rOPTION)
-    GenereErreurValeurDsMCF(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","OPTION",rOPTION)
-    #GenereErreurValeur(jdc,"THER_NON_LINE","OPTION",rOPTION)        
+    genereErreurValeur(jdc,"CALC_CHAM_ELEM","OPTION",rOPTION)
+    genereErreurValeur(jdc,"CALC_ELEM","OPTION",rOPTION)
+    #genereErreurValeur(jdc,"CALC_META","OPTION",rOPTION)
+    genereErreurValeur(jdc,"CALC_NO","OPTION",rOPTION)
+    #genereErreurValeur(jdc,"COMB_SISM_MODAL","OPTION",rOPTION)
+    #genereErreurValeur(jdc,"MECA_STATIQUE","OPTION",rOPTION)
+    genereErreurValeurDsMCF(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","OPTION",rOPTION)
+    #genereErreurValeur(jdc,"THER_NON_LINE","OPTION",rOPTION)        
     
     ########### Message si CALC_ELEM/SENSIBILITE
-    GenereErreurMCF(jdc,"CALC_ELEM","SENSIBILITE")
+    genereErreurMCF(jdc,"CALC_ELEM","SENSIBILITE")
 
     # non fait CALC_NO OPTION=FORC_NODA_NONL
 
-    ########## Traitement MACRO_MISS_3D --> CALC_MISS
+    ########## traitement MACRO_MISS_3D --> CALC_MISS
     renameCommandeSiRegle(jdc,"MACRO_MISS_3D","CALC_MISS",((("OPTION","MODULE","MISS_IMPE",jdc),"MCsousMCFaPourValeur"),(("PARAMETRE","ISSF"),"nexistepasMCsousMCF"),(("PARAMETRE","DIRE_ONDE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_LISTE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_NB"),"nexistepasMCsousMCF"),))
     renameCommandeSiRegle(jdc,"MACRO_MISS_3D","CALC_MISS",((("OPTION","MODULE","MISS_IMPE",jdc),"MCsousMCFaPourValeur"),(("PARAMETRE","ISSF","NON",jdc),"MCsousMCFaPourValeur"),(("PARAMETRE","DIRE_ONDE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_LISTE"),"nexistepasMCsousMCF"),(("PARAMETRE","CONTR_NB"),"nexistepasMCsousMCF"),))
     removeMotCleInFact(jdc,"CALC_MISS","PARAMETRE","FICH_RESU_IMPE",pasDeRegle(),0)
@@ -706,9 +706,9 @@ def traduc(infile,outfile,flog=None):
     removeMotCle(jdc,"CALC_MISS","UNITE_OPTI_MISS",pasDeRegle())
     removeMotCle(jdc,"CALC_MISS","UNITE_MODELE_SOL",pasDeRegle())
     removeMotCle(jdc,"CALC_MISS","OPTION",pasDeRegle(),1)
-    ChangementValeur(jdc,"CALC_MISS","VERSION",{"V1_4":"V6.5"})
-    ChangementValeur(jdc,"CALC_MISS","VERSION",{"V1_5":"V6.6"})
-    ChangementValeur(jdc,"CALC_MISS","VERSION",{"V1_3":"V6.5"})
+    changementValeur(jdc,"CALC_MISS","VERSION",{"V1_4":"V6.5"})
+    changementValeur(jdc,"CALC_MISS","VERSION",{"V1_5":"V6.6"})
+    changementValeur(jdc,"CALC_MISS","VERSION",{"V1_3":"V6.5"})
 
     macr=""
     interf=""
@@ -734,7 +734,7 @@ def traduc(infile,outfile,flog=None):
     log.ferme(hdlr)
 
 def main():
-    parser = optparse.OptionParser(usage=usage)
+    parser = optparse.Optionparser(usage=usage)
 
     parser.add_option('-i','--infile', dest="infile", default='toto.comm',
         help="Le fichier à traduire")

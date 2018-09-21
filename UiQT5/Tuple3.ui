@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>880</width>
-    <height>33</height>
+    <width>490</width>
+    <height>29</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -17,7 +23,16 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>1</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -30,7 +45,7 @@
    <item>
     <widget class="LECustomTuple" name="lineEditVal_1">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -68,7 +83,7 @@ border:0px;
    <item>
     <widget class="LECustomTuple" name="lineEditVal_2">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -81,7 +96,7 @@ border:0px;
      </property>
      <property name="maximumSize">
       <size>
-       <width>805</width>
+       <width>10000</width>
        <height>16777215</height>
       </size>
      </property>
@@ -104,7 +119,7 @@ border:0px;</string>
    <item>
     <widget class="LECustomTuple" name="lineEditVal_3">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -117,7 +132,7 @@ border:0px;</string>
      </property>
      <property name="maximumSize">
       <size>
-       <width>805</width>
+       <width>10000</width>
        <height>16777215</height>
       </size>
      </property>
@@ -142,9 +157,12 @@ border:0px;</string>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>123</width>
+       <width>5</width>
        <height>20</height>
       </size>
      </property>

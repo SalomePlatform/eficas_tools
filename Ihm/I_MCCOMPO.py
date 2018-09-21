@@ -36,14 +36,14 @@ from . import I_OBJECT
 from . import CONNECTOR
 
 class MCCOMPO(I_OBJECT.OBJECT):
-  def getlabeltext(self):
+  def getLabelText(self):
     """ 
        Retourne le label de self 
        utilise pour l'affichage dans l'arbre
     """
     return self.nom
 
-  def get_liste_mc_ordonnee(self,liste,dico):
+  def getListeMcOrdonnee(self,liste,dico):
     """
        Retourne la liste ordonnee (suivant le catalogue) des mots-cles
        d'une entite composee dont le chemin complet est donne sous forme
@@ -51,9 +51,9 @@ class MCCOMPO(I_OBJECT.OBJECT):
        il faut encore rearranger cette liste (certains mots-cles deja
        presents ne doivent plus etre proposes, regles ...)
     """
-    return self.filtre_liste_mc(self.get_liste_mc_ordonnee_brute(liste,dico))
+    return self.filtreListeMc(self.getListeMcOrdonneeBrute(liste,dico))
 
-  def get_liste_mc_ordonnee_brute(self,liste,dico):
+  def getListeMcOrdonneeBrute(self,liste,dico):
     """
        Retourne la liste ordonnee (suivant le catalogue) BRUTE des mots-cles
        d'une entite composee dont le chemin complet est donne sous forme
@@ -72,7 +72,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         if specifique == 1 : return l    
     return objet_cata.ordre_mc
 
-  def filtre_liste_mc(self,liste_brute):
+  def filtreListeMc(self,liste_brute):
     """ 
        Cette methode est appelee par EFICAS afin de presenter a 
        l'utilisateur la liste des enfants possibles de self actualisee 
@@ -82,17 +82,17 @@ class MCCOMPO(I_OBJECT.OBJECT):
        etre repetes
     """
     liste = copy(liste_brute)
-    liste_mc_presents = self.liste_mc_presents()
+    listeMcPresents = self.listeMcPresents()
     # on enleve les mots-cles non permis par les regles
     for regle in self.definition.regles:
-       # la methode purge_liste est a developper pour chaque regle qui
+       # la methode purgeListe est a developper pour chaque regle qui
        # influe sur la liste de choix a proposer a l'utilisateur
        # --> EXCLUS,UN_PARMI,PRESENT_ABSENT
-       liste = regle.purge_liste(liste,liste_mc_presents)
+       liste = regle.purgeListe(liste,listeMcPresents)
     # on enleve les mots-cles dont l'occurrence est deja atteinte
     liste_copy = copy(liste)
     for k in liste_copy:
-      objet = self.get_child(k,restreint = 'oui')
+      objet = self.getChild(k,restreint = 'oui')
       if objet != None :
         # l'objet est deja present : il faut distinguer plusieurs cas
         if isinstance(objet,MCSIMP):
@@ -121,12 +121,12 @@ class MCCOMPO(I_OBJECT.OBJECT):
           liste.remove(k)
         if self.definition.entites[k].label=='BLOC':
           liste.remove(k)
-    # Pour corriger les exces qui pourraient etre commis dans la methode purge_liste
+    # Pour corriger les exces qui pourraient etre commis dans la methode purgeListe
     # des regles, on essaie de compenser comme suit :
     # on ajoute les mots cles facteurs presents dont l'occurence n'est pas atteinte
-    for k in liste_mc_presents:
+    for k in listeMcPresents:
       if k in liste:continue
-      objet = self.get_child(k,restreint = 'oui')
+      objet = self.getChild(k,restreint = 'oui')
       if isinstance(objet,MCFACT):
           # un mot-cle facteur ne peut pas etre repete plus de self.max fois
           if objet.definition.max > 1:
@@ -137,25 +137,25 @@ class MCCOMPO(I_OBJECT.OBJECT):
               liste.append(k)
     return liste
 
-  def liste_mc_presents(self):
+  def listeMcPresents(self):
     """ 
        Retourne la liste des noms des mots-cles fils de self presents construite
-       a partir de self.mc_liste 
+       a partir de self.mcListe 
     """
     l=[]
-    for v in self.mc_liste:
+    for v in self.mcListe:
       k=v.nom
       l.append(k)
     return l
 
-  def get_index_child(self,nom_fils):
+  def getIndexChild(self,nom_fils):
       """
         Retourne l'index dans la liste des fils de self du nouveau fils de nom nom_fils
         Permet de savoir a quelle position il faut ajouter un nouveau mot-cle
       """
       cata_ordonne = self.jdc.cata_ordonne_dico
-      liste_noms_mc_ordonnee = self.get_liste_mc_ordonnee_brute(self.get_genealogie(),cata_ordonne)
-      liste_noms_mc_presents = self.liste_mc_presents()
+      liste_noms_mc_ordonnee = self.getListeMcOrdonneeBrute(self.getGenealogie(),cata_ordonne)
+      liste_noms_mc_presents = self.listeMcPresents()
       index=0
       for nom in liste_noms_mc_ordonnee:
           if nom == nom_fils:break
@@ -163,15 +163,27 @@ class MCCOMPO(I_OBJECT.OBJECT):
           index=index+1
       return index
           
-  def ordonne_liste_mc(self,liste_mc_a_ordonner,liste_noms_mc_ordonnee):
+  def findRangObjetDsArbre(self,objet) :
+  # uniquement pour Pyxb
+  # parcourt les Blocs
+      leRang=0
+      pos=self.mcListe.index(objet)
+      i=0
+      while (i+1) < pos :
+        leRang= leRang + self.mcListe[i].longueurDsArbre()
+        i=i+1
+      return leRang
+ 
+
+  def ordonneListeMc(self,listeMc_a_ordonner,liste_noms_mc_ordonnee):
     """
-        Retourne liste_mc_a_ordonner ordonnee suivant l'ordre 
+        Retourne listeMc_a_ordonner ordonnee suivant l'ordre 
         donne par liste_noms_mc_ordonnee
     """
     liste = []
     # on transforme liste_a_ordonner en un dictionnaire (plus facile a consulter)
     d_mc = {}
-    for mc in liste_mc_a_ordonner:
+    for mc in listeMc_a_ordonner:
       d_mc[mc.nom]=mc
     # on construit la liste des objets ordonnes
     for nom_mc in liste_noms_mc_ordonnee:
@@ -180,35 +192,36 @@ class MCCOMPO(I_OBJECT.OBJECT):
     # on la retourne
     return liste
 
-  def suppentite(self,objet) :
+  def suppEntite(self,objet) :
     """ 
         Supprime le fils 'objet' de self : 
         Retourne 1 si la suppression a pu etre effectuee,
         Retourne 0 dans le cas contraire
     """
-    if not objet in self.mc_liste:
-       # Impossible de supprimer objet. Il n'est pas dans mc_liste
+    if not objet in self.mcListe:
+       # Impossible de supprimer objet. Il n'est pas dans mcListe
        return 0
 
-    self.init_modif()
-    self.mc_liste.remove(objet)
+    self.initModif()
+    objet.deletePyxbObject()
+    self.mcListe.remove(objet)
     CONNECTOR.Emit(self,"supp",objet)
-    objet.delete_mc_global()
-    objet.update_condition_bloc()
+    objet.deleteMcGlobal()
+    objet.updateConditionBloc()
     objet.supprime()
     self.etape.modified()
-    self.fin_modif()
+    self.finModif()
     return 1
 
-  def isoblig(self):
+  def isOblig(self):
       return 0
 
-  def addentite(self,name,pos=None):
+  def addEntite(self,name,pos=None):
       """ 
           Ajoute le mot-cle name a la liste des mots-cles de
           l'objet MCCOMPOSE
       """
-      self.init_modif()
+      self.initModif()
       if type(name)==bytes :
         # on est en mode creation d'un motcle 
         if self.ispermis(name) == 0 : return 0
@@ -219,46 +232,47 @@ class MCCOMPO(I_OBJECT.OBJECT):
         # Appel de la methode qui fait le menage dans les references
         # sur les concepts produits (verification que les concepts existent
         # dans le contexte de la commande courante).
-        objet.verif_existence_sd()
+        objet.verifExistenceSd()
 
       # On verifie que l'ajout d'objet est autorise
       if self.ispermis(objet) == 0:
-        self.jdc.appli.affiche_alerte(tr("Erreur"),
+        self.jdc.appli.afficheAlerte(tr("Erreur"),
                                       tr("L'objet %(v_1)s ne peut  etre un fils de %(v_2)s",\
                                       {'v_1': objet.nom, 'v_2': self.nom}))
-        self.fin_modif()
+        self.finModif()
         return 0
 
       # On cherche s'il existe deja un mot cle de meme nom
-      old_obj = self.get_child(objet.nom,restreint = 'oui')
+      old_obj = self.getChild(objet.nom,restreint = 'oui')
       if not old_obj :
          # on normalize l'objet
          objet=objet.normalize()
          # Le mot cle n'existe pas encore. On l'ajoute a la position
          # demandee (pos)
          if pos == None :
-           self.mc_liste.append(objet)
+           self.mcListe.append(objet)
          else :
-           self.mc_liste.insert(pos,objet)
+           self.mcListe.insert(pos,objet)
          # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
          objet.reparent(self)
+         objet.addPyxbObject(self.findRangObjetDsArbre(objet))
          CONNECTOR.Emit(self,"add",objet)
-         objet.update_mc_global()
-         objet.update_condition_bloc()
-         self.fin_modif()
+         objet.updateMcGlobal()
+         objet.updateConditionBloc()
+         self.finModif()
          return objet
       else:
          # Le mot cle existe deja. Si le mot cle est repetable,
          # on cree une liste d'objets. Dans le cas contraire,
          # on emet un message d'erreur.
-         if not old_obj.isrepetable():
-            self.jdc.appli.affiche_alerte(tr("Erreur"),tr("L'objet %s ne peut pas etre repete", objet.nom))
-            self.fin_modif()
+         if not old_obj.isRepetable():
+            self.jdc.appli.afficheAlerte(tr("Erreur"),tr("L'objet %s ne peut pas etre repete", objet.nom))
+            self.finModif()
             return 0
          else:
             # une liste d'objets de meme type existe deja
-            old_obj.addentite(objet)
-            self.fin_modif()
+            old_obj.addEntite(objet)
+            self.finModif()
             return old_obj
 
   def ispermis(self,fils):
@@ -287,11 +301,11 @@ class MCCOMPO(I_OBJECT.OBJECT):
         if fils.parent.nom != self.nom : return 0
       return 1
 
-  def update_concept(self,sd):
-    for child in self.mc_liste :
-        child.update_concept(sd)
+  def updateConcept(self,sd):
+    for child in self.mcListe :
+        child.updateConcept(sd)
 
-  def delete_concept(self,sd):
+  def deleteConcept(self,sd):
     """ 
         Inputs :
            - sd=concept detruit
@@ -301,10 +315,10 @@ class MCCOMPO(I_OBJECT.OBJECT):
         Seuls les mots cles simples MCSIMP font un traitement autre que 
         de transmettre aux fils
     """
-    for child in self.mc_liste :
-      child.delete_concept(sd)
+    for child in self.mcListe :
+      child.deleteConcept(sd)
 
-  def replace_concept(self,old_sd,sd):
+  def replaceConcept(self,old_sd,sd):
     """
         Inputs :
            - old_sd=concept remplace
@@ -313,10 +327,10 @@ class MCCOMPO(I_OBJECT.OBJECT):
         Mettre a jour les fils de l objet suite au remplacement  du
         concept old_sd
     """
-    for child in self.mc_liste :
-      child.replace_concept(old_sd,sd)
+    for child in self.mcListe :
+      child.replaceConcept(old_sd,sd)
 
-  def get_liste_mc_inconnus(self):
+  def getListeMcInconnus(self):
      """
      Retourne la liste des mots-cles inconnus dans self
      """
@@ -324,56 +338,56 @@ class MCCOMPO(I_OBJECT.OBJECT):
      if self.reste_val != {}:
         for k,v in self.reste_val.items() :
             l_mc.append([self,k,v])
-     for child in self.mc_liste :
-        if child.isvalid() : continue
-        l_child = child.get_liste_mc_inconnus()
+     for child in self.mcListe :
+        if child.isValid() : continue
+        l_child = child.getListeMcInconnus()
         for mc in l_child:
            l = [self]
            l.extend(mc)
            l_mc.append(l)
      return l_mc
 
-  def deep_update_condition_bloc(self):
+  def deepUpdateConditionBloc(self):
      """
         Parcourt l'arborescence des mcobject et realise l'update 
-        des blocs conditionnels par appel de la methode update_condition_bloc
+        des blocs conditionnels par appel de la methode updateConditionBloc
      """
-     self._update_condition_bloc()
-     for mcobj in self.mc_liste:
-        if hasattr(mcobj,"deep_update_condition_bloc"):
-           mcobj.deep_update_condition_bloc()
+     self._updateConditionBloc()
+     for mcobj in self.mcListe:
+        if hasattr(mcobj,"deepUpdateConditionBloc"):
+           mcobj.deepUpdateConditionBloc()
 
-  def update_condition_bloc(self):
+  def updateConditionBloc(self):
      """
         Realise l'update des blocs conditionnels fils de self
         et propage au parent
      """
-     self._update_condition_bloc()
-     if self.parent:self.parent.update_condition_bloc()
+     self._updateConditionBloc()
+     if self.parent:self.parent.updateConditionBloc()
 
-  def _update_condition_bloc(self):
+  def _updateConditionBloc(self):
      """
         Realise l'update des blocs conditionnels fils de self
      """
-     dict = self.cree_dict_condition(self.mc_liste,condition=1)
+     dict = self.creeDictCondition(self.mcListe,condition=1)
      for k,v in self.definition.entites.items():
         if v.label != 'BLOC' :continue
         globs= self.jdc and self.jdc.condition_context or {}
-        bloc=self.get_child(k,restreint = 'oui')
-        presence=v.verif_presence(dict,globs)
+        bloc=self.getChild(k,restreint = 'oui')
+        presence=v.verifPresence(dict,globs)
         if presence and not bloc:
            # le bloc doit etre present
            # mais le bloc n'est pas present et il doit etre cree
            #print "AJOUT BLOC",k
-           pos=self.get_index_child(k)
-           self.addentite(k,pos)
+           pos=self.getIndexChild(k)
+           self.addEntite(k,pos)
         if not presence and bloc:
            # le bloc devrait etre absent
            # le bloc est present : il faut l'enlever
            #print "SUPPRESSION BLOC",k,bloc
-           self.suppentite(bloc)
+           self.suppEntite(bloc)
 
-  def verif_condition_bloc(self):
+  def verifConditionBloc(self):
     """ 
         Evalue les conditions de tous les blocs fils possibles 
         (en fonction du catalogue donc de la definition) de self
@@ -383,49 +397,49 @@ class MCCOMPO(I_OBJECT.OBJECT):
     """
     liste_ajouts = []
     liste_retraits = []
-    dict = self.cree_dict_condition(self.mc_liste,condition=1)
+    dict = self.creeDictCondition(self.mcListe,condition=1)
     for k,v in self.definition.entites.items():
       if v.label=='BLOC' :
         globs= self.jdc and self.jdc.condition_context or {}
-        if v.verif_presence(dict,globs):
+        if v.verifPresence(dict,globs):
           # le bloc doit etre present
-          if not self.get_child(k,restreint = 'oui'):
+          if not self.getChild(k,restreint = 'oui'):
             # le bloc n'est pas present et il doit etre cree
             liste_ajouts.append(k)
         else :
           # le bloc doit etre absent
-          if self.get_child(k,restreint = 'oui'):
+          if self.getChild(k,restreint = 'oui'):
             # le bloc est present : il faut l'enlever
             liste_retraits.append(k)
     return liste_ajouts,liste_retraits
 
-  def verif_existence_sd(self):
+  def verifExistenceSd(self):
      """
         Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
         avant etape, sinon enleve la reference a ces concepts
      """
-     for motcle in self.mc_liste :
-         motcle.verif_existence_sd()
+     for motcle in self.mcListe :
+         motcle.verifExistenceSd()
 
-  def update_mc_global(self):
+  def updateMcGlobal(self):
      """
         Met a jour les mots cles globaux enregistres dans l'etape parente 
         et dans le jdc parent.
         Un mot cle compose ne peut pas etre global. Il se contente de passer
         la requete a ses fils.
      """
-     for motcle in self.mc_liste :
-         motcle.update_mc_global()
+     for motcle in self.mcListe :
+         motcle.updateMcGlobal()
 
-  def delete_mc_global(self):
-     for motcle in self.mc_liste :
-         motcle.delete_mc_global()
+  def deleteMcGlobal(self):
+     for motcle in self.mcListe :
+         motcle.deleteMcGlobal()
      try :
-         motcle.update_mc_global()
+         motcle.updateMcGlobal()
      except :
          pass
 
-  def init_modif_up(self):
-    Validation.V_MCCOMPO.MCCOMPO.init_modif_up(self)
+  def initModifUp(self):
+    Validation.V_MCCOMPO.MCCOMPO.initModifUp(self)
     CONNECTOR.Emit(self,"valid")
 

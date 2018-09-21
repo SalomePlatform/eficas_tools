@@ -50,23 +50,23 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
     """
     """
 
-    def valid_child(self):
+    def validChild(self):
         """ Cette methode teste la validite des mots cles de l'etape """
-        for child in self.mc_liste:
-            if not child.isvalid():
+        for child in self.mcListe:
+            if not child.isValid():
                 return 0
         return 1
 
-    def valid_regles(self, cr):
+    def validRegles(self, cr):
         """ Cette methode teste la validite des regles de l'etape """
-        text_erreurs, test_regles = self.verif_regles()
+        text_erreurs, test_regles = self.verifRegles()
         if not test_regles:
             if cr == 'oui':
                 self.cr.fatal( "Regle(s) non respectee(s) : %s" % text_erreurs)
             return 0
         return 1
 
-    def valid_sdnom(self, cr):
+    def validSdnom(self, cr):
         """ Cette methode teste la validite du nom du concept produit par l'etape """
         valid = 1
         if self.sd.nom != None:
@@ -83,21 +83,21 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                 valid = 0
         return valid
 
-    def get_valid(self):
+    def getValid(self):
         if hasattr(self, 'valid'):
             return self.valid
         else:
             self.valid = None
             return None
 
-    def set_valid(self, valid):
-        old_valid = self.get_valid()
+    def setValid(self, valid):
+        old_valid = self.getValid()
         self.valid = valid
         self.state = 'unchanged'
         if not old_valid or old_valid != self.valid:
-            self.init_modif_up()
+            self.initModifUp()
 
-    def isvalid(self, sd='oui', cr='non'):
+    def isValid(self, sd='oui', cr='non'):
         """
            Methode pour verifier la validite de l'objet ETAPE. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -115,12 +115,12 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
 
         """
         if CONTEXT.debug:
-            print(("ETAPE.isvalid ", self.nom))
+            print(("ETAPE.isValid ", self.nom))
         if self.state == 'unchanged':
             return self.valid
         else:
-            valid = self.valid_child()
-            valid = valid * self.valid_regles(cr)
+            valid = self.validChild()
+            valid = valid * self.validRegles(cr)
 
             if self.reste_val != {}:
                 if cr == 'oui':
@@ -148,16 +148,16 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                     self.cr.fatal(("Concept is not defined"))
                 valid = 0
             else:
-                valid = valid * self.valid_sdnom(cr)
+                valid = valid * self.validSdnom(cr)
 
             if valid:
-                valid = self.update_sdprod(cr)
+                valid = self.updateSdprod(cr)
 
-            self.set_valid(valid)
+            self.setValid(valid)
 
             return self.valid
 
-    def update_sdprod(self, cr='non'):
+    def updateSdprod(self, cr='non'):
         """
              Cette methode met a jour le concept produit en fonction des conditions initiales :
 
@@ -171,7 +171,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
         """
         sd_prod = self.definition.sd_prod
         if type(sd_prod) == types.FunctionType:  # Type de concept retourne calcule
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mcListe)
             try:
                 sd_prod = sd_prod(*(), **d)
             except:
@@ -214,7 +214,7 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                     if CONTEXT.debug:
                         print(("changement de type:", self.sd, sd_prod))
                     if self.sd.__class__ != sd_prod:
-                        self.sd.change_type(sd_prod)
+                        self.sd.changeType(sd_prod)
                 else:
                     # Le sd n existait pas , on ne le cree pas
                     if cr == 'oui':
@@ -237,16 +237,16 @@ class ETAPE(V_MCCOMPO.MCCOMPO):
                           fin='End Command : ' + tr(self.nom))
         self.state = 'modified'
         try:
-            self.isvalid(cr='oui')
+            self.isValid(cr='oui')
         except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()
             self.cr.fatal('Command : %s line : %r file : %r %s' % (tr(self.nom), self.appel[0], self.appel[1], e))
         i = 0
-        for child in self.mc_liste:
+        for child in self.mcListe:
             i += 1
             if i > MAXSIZE:
-                print (MAXSIZE_MSGCHK.format(MAXSIZE, len(self.mc_liste)))
+                print (MAXSIZE_MSGCHK.format(MAXSIZE, len(self.mcListe)))
                 break
             self.cr.add(child.report())
         return self.cr

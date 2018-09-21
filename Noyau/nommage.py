@@ -20,7 +20,7 @@
 
 """
    Ce module sert à nommer les concepts produits par les commandes.
-   Le nom du concept est obtenu en appelant la fonction GetNomConceptResultat
+   Le nom du concept est obtenu en appelant la fonction getNomConceptResultat
    du module avec le nom de la commande en argument.
 
    Cette fonction parcourt le source dans lequel la commande se trouve, parse le
@@ -46,7 +46,7 @@ from functools import partial
 
 # Modules EFICAS
 from . import N_utils
-from .strfunc import get_encoding
+from .strfunc import getEncoding
 import six
 from six.moves import range
 
@@ -56,7 +56,7 @@ regex1 = '=?\s*%s\s*\('
 pattern_comment = re.compile(r"^\s*#.*")
 
 
-def _GetNomConceptResultat(ope, level=2):
+def _getNomConceptResultat(ope, level=2):
     """
        Cette fonction recherche dans la pile des appels, l'appel à la commande
        qui doit etre situé à 2 niveaux au-dessus (cur_frame(2)).
@@ -77,7 +77,7 @@ def _GetNomConceptResultat(ope, level=2):
     lineno = f.f_lineno     # XXX Too bad if -O is used
     # lineno = f_lineno(f)  # Ne marche pas toujours
     co = f.f_code
-    filename = six.text_type(co.co_filename, get_encoding())
+    filename = six.text_type(co.co_filename, getEncoding())
     name = co.co_name
     # pattern pour identifier le debut de la commande
     pattern_oper = re.compile(regex1 % ope)
@@ -166,14 +166,14 @@ class NamingSystem(N_utils.Singleton):
 
     def __init__(self):
         """Initialisation"""
-        self.native = _GetNomConceptResultat
-        self.use_global_naming()
+        self.native = _getNomConceptResultat
+        self.useGlobalNaming()
 
-    def use_naming_function(self, function):
+    def useNamingFunction(self, function):
         """Utilise une fonction particulière de nommage."""
         self.naming_func = function
 
-    def use_global_naming(self):
+    def useGlobalNaming(self):
         """Utilise la fonction native de nommage."""
         self.naming_func = partial(self.native, level=3)
 
@@ -181,4 +181,4 @@ class NamingSystem(N_utils.Singleton):
         """Appel à la fonction de nommage."""
         return self.naming_func(*args)
 
-GetNomConceptResultat = NamingSystem()
+getNomConceptResultat = NamingSystem()

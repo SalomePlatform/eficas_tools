@@ -45,78 +45,81 @@ import analyse_catalogue
 import analyse_catalogue_initial
 import autre_analyse_cata
 import uiinfo
-from .monChoixCata import MonChoixCata
+from InterfaceQT4.monChoixCata import MonChoixCata
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
 from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 
+#-------------------------------
+class ReaderCataCommun(object):
+#-------------------------------
 
-
-class READERCATA(object):
-
-   def __init__(self,QWParent, appliEficas):
-      self.QWParent=QWParent
-      self.appliEficas=self.QWParent.appliEficas
-      self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
-      self.code=self.QWParent.code
-      self.ssCode=self.appliEficas.ssCode
-      self.appliEficas.format_fichier='python'
-      self.mode_nouv_commande=self.appliEficas.CONFIGURATION.mode_nouv_commande
-      self.version_code=self.QWParent.version_code
-      self.version_cata=None
-      self.fic_cata=None
-      self.OpenCata()
-      self.cataitem=None
-      self.cree_dico_inverse()
-      if self.code=="TELEMAC": self.cree_dico_CasToCata()
-      #for k in self.dicoInverse:
-      #   genea= self.dicoInverse[k]
-      #   for t in genea :
-      #       print t[0]
-      #   print "\n"
-
-
-   def OpenCata(self):
-      """ 
-          Ouvre le catalogue standard du code courant, cad le catalogue present
-          dans le repertoire Cata 
+   def askChoixCatalogue(self, cata_choice_list):
+   # ____________________________________________
       """
+      Ouvre une fenetre de selection du catalogue dans le cas où plusieurs
+      ont ete definis dans Accas/editeur.ini
+      """
+      code = getattr(self.appliEficas.maConfiguration, "code", None)
+      if code != None :
+          title=tr("Choix d une version du code ")+str(code)
+      else :
+          title=tr("Choix d une version ")
+
+      widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
+      ret=widgetChoix.exec_()
+
+
+      lab=str(self.VERSION_EFICAS)+" "
+      lab+=tr(" pour ")
+      lab+=str(self.code)
+      lab+=tr(" avec le catalogue ")
+      if ret == QDialog.Accepted:
+          cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
+          self.fic_cata = cata.cata_file_path
+          self.versionCode = cata.identifier
+          self.appliEficas.format_fichier = cata.file_format
+          self.appliEficas.format_fichier_in = cata.file_format_in
+          lab+=self.versionCode
+          self.appliEficas.setWindowTitle(lab)
+          #qApp.mainWidget().setCaption(lab)
+          widgetChoix.close()
+      else:
+          widgetChoix.close()
+          raise EficasException()
+
+   def choisitCata(self):
+   # ____________________
 
       liste_cata_possibles=[]
       self.Commandes_Ordre_Catalogue=[]
 
       all_cata_list = []
-      for catalogue in self.appliEficas.CONFIGURATION.catalogues:
-          if isinstance(catalogue, CatalogDescription):
-              all_cata_list.append(catalogue)
-          elif isinstance(catalogue, tuple):
-              all_cata_list.append(CatalogDescription.create_from_tuple(catalogue))
-          else:
-              print(("Catalog description cannot be interpreted: ", catalogue))
+      for catalogue in self.appliEficas.maConfiguration.catalogues:
+          if isinstance(catalogue, CatalogDescription): all_cata_list.append(catalogue)
+          elif isinstance(catalogue, tuple)           : all_cata_list.append(CatalogDescription.create_from_tuple(catalogue))
+          else: print(("Catalog description cannot be interpreted: ", catalogue))
 
       # This filter is only useful for codes that have subcodes (like MAP).
       # Otherwise, the "code" attribute of the catalog description can (should) be None.
-      if self.ssCode is None:
-          liste_cata_possibles = all_cata_list
+      if self.ssCode is None: liste_cata_possibles = all_cata_list
       else:
           for catalogue in all_cata_list:
-              if catalogue.code == self.code and catalogue.file_format == self.ssCode:
-                  liste_cata_possibles.append(catalogue)
+              if catalogue.code == self.code and catalogue.file_format == self.ssCode: liste_cata_possibles.append(catalogue)
 
-      if len(liste_cata_possibles)==0:          
+      if len(liste_cata_possibles)==0:
           QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
                                tr("Pas de catalogue defini pour le code ") + self.code)
           self.appliEficas.close()
-          if self.appliEficas.salome == 0 :
-             sys.exit(1)
+          if self.appliEficas.salome == 0 : sys.exit(1)
           return
 
 
-      if self.version_code is not None:
+      if self.versionCode is not None:
           # La version a ete fixee
           for cata in liste_cata_possibles:
-             if self.version_code == cata.identifier:
+             if self.versionCode == cata.identifier:
                 self.fic_cata = cata.cata_file_path
                 self.appliEficas.format_fichier = cata.file_format
                 self.appliEficas.format_fichier_in = cata.file_format_in
@@ -124,39 +127,83 @@ class READERCATA(object):
           cata_choice_list = []
           for cata in liste_cata_possibles:
               if cata.selectable:
-                  if cata.default:
-                      cata_choice_list.insert(0, cata)
-                  else :
-                      cata_choice_list.append(cata)
+                  if cata.default : cata_choice_list.insert(0, cata)
+                  else            : cata_choice_list.append(cata)
+
           if len(cata_choice_list) == 0:
               QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
                                    tr("Aucun catalogue trouve"))
               self.appliEficas.close()
-              if self.appliEficas.salome == 0 :
-                 sys.exit(1)
+              if self.appliEficas.salome == 0 : sys.exit(1)
+
           elif len(cata_choice_list) == 1:
               self.fic_cata = cata_choice_list[0].cata_file_path
-              self.version_code = cata_choice_list[0].identifier
+              self.versionCode = cata_choice_list[0].identifier
               self.appliEficas.format_fichier = cata_choice_list[0].file_format
               self.appliEficas.format_fichier_in = cata_choice_list[0].file_format_in
+
           else:
               # plusieurs catalogues sont disponibles : il faut demander a l'utilisateur
               # lequel il veut utiliser ...
-              self.ask_choix_catalogue(cata_choice_list)
+              self.askChoixCatalogue(cata_choice_list)
+              self.demandeCatalogue=True
 
       if self.fic_cata == None :
           if self.appliEficas.salome == 0 :
-             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.version_code)))
+             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.versionCode)))
              sys.exit(1)
           else :
              self.appliEficas.close()
              return
 
-      if self.code == "ASTER" : self.determineMater()
 
+#------------------------------------
+class ReaderCata (ReaderCataCommun):
+#------------------------------------
+
+   def __init__(self,QWParent, appliEficas):
+   # ______________________________________
+
+      self.QWParent=QWParent
+      self.appliEficas=self.QWParent.appliEficas
+      self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
+      self.demandeCatalogue=False
+      self.code=self.appliEficas.code
+      self.ssCode=self.appliEficas.ssCode
+      self.appliEficas.format_fichier='python'
+      self.versionCode=self.appliEficas.versionCode
+      self.fic_cata=None
+      self.openCata()
+      self.traiteIcones()
+      self.cataitem=None
+      self.creeDicoInverse()
+      if self.code=="TELEMAC": self.creeDicoCasToCata()
+
+
+
+   def openCata(self):
+      """
+          Ouvre le catalogue standard du code courant, cad le catalogue present
+          dans le repertoire Cata
+      """
       # import du catalogue
-      self.cata = self.import_cata(self.fic_cata)
-      if not self.cata :          
+      self.choisitCata()
+
+      if self.appliEficas.maConfiguration.withXSD :
+         try :
+           #import raw.Telemac2d as modeleMetier
+           #import raw.cata_genere_fact as modeleMetier
+           import raw.cata_map_genere as modeleMetier
+           #import raw.cata_bloc as modeleMetier
+           print ('import Test ad modeleMetier')
+         except :
+           modeleMetier = None
+      else :
+           modeleMetier = None
+
+      self.cata = self.importCata(self.fic_cata)
+      self.cata.modeleMetier = modeleMetier
+      if not self.cata :
           QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 :
@@ -164,17 +211,26 @@ class READERCATA(object):
       #
       # analyse du catalogue (ordre des mots-cles)
       #
-      # Retrouve_Ordre_Cata_Standard fait une analyse textuelle du catalogue
-      # remplace par Retrouve_Ordre_Cata_Standard_autre qui utilise une numerotation
+      # retrouveOrdreCataStandard fait une analyse textuelle du catalogue
+      # remplace par retrouveOrdreCataStandardAutre qui utilise une numerotation
       # des mots cles a la creation
-      self.Retrouve_Ordre_Cata_Standard_autre()
-      if self.mode_nouv_commande== "initial" : self.Retrouve_Ordre_Cata_Standard()
+      #print (self.cata)
+      #print (dir(self.cata))
+      self.retrouveOrdreCataStandardAutre()
+      if self.appliEficas.maConfiguration.modeNouvCommande == "initial" : self.retrouveOrdreCataStandard()
       if hasattr(self.cata, 'Ordre_Des_Commandes') : self.Ordre_Des_Commandes=self.cata.Ordre_Des_Commandes
       else : self.Ordre_Des_Commandes=None
-      
-      if hasattr(self.cata, 'Classement_Commandes_Ds_Arbre') : 
+
+      if hasattr(self.cata, 'Classement_Commandes_Ds_Arbre') :
              self.Classement_Commandes_Ds_Arbre=self.cata.Classement_Commandes_Ds_Arbre
       else : self.Classement_Commandes_Ds_Arbre=()
+      if hasattr(self.cata,'enum'):
+         try :
+           _temp= __import__(self.cata.enum,globals(), locals(), ['DicoEnumCasFrToEnumCasEn', 'TelemacdicoEn'], 0)
+           self.DicoEnumCasFrToEnumCasEn = _temp.DicoEnumCasFrToEnumCasEn
+           self.TelemacdicoEn = _temp.TelemacdicoEn
+         except : pass
+
       #print self.cata.Ordre_Des_Commandes
 
       #
@@ -185,34 +241,15 @@ class READERCATA(object):
       #
       # traitement des clefs documentaires
       #
-      if self.code == "ASTER" : self.traite_clefs_documentaires()
-      self.cata=(self.cata,)
 
       self.titre=self.VERSION_EFICAS+" "+tr( " avec le catalogue ") + os.path.basename(self.fic_cata)
-      if self.appliEficas.top:
-        self.appliEficas.setWindowTitle(self.titre)
+      if self.appliEficas.ssIhm == False : self.appliEficas.setWindowTitle(self.titre)
       self.appliEficas.titre=self.titre
       self.QWParent.titre=self.titre
 
-   def determineMater(self) :
-      # Determinination du repertoire materiau
-      v_codeSansPoint=self.version_code
-      if v_codeSansPoint == None : return 
-      v_codeSansPoint=re.sub("\.","",v_codeSansPoint)
-      chaine="rep_mat_"+v_codeSansPoint
-      if hasattr(self.appliEficas.CONFIGURATION,chaine):
-          a=getattr(self.appliEficas.CONFIGURATION,chaine)
-      else :
-          try :
-             a=self.appliEficas.CONFIGURATION.dRepMat[self.version_code]
-          except :
-             if self.code == "ASTER" :
-                print ("Probleme avec le repertoire materiau")
-             a='.'
-      self.appliEficas.CONFIGURATION.rep_mat=a
 
-   def import_cata(self,cata):
-      """ 
+   def importCata(self,cata):
+      """
           Realise l'import du catalogue dont le chemin d'acces est donne par cata
       """
       nom_cata = os.path.splitext(os.path.basename(cata))[0]
@@ -220,7 +257,7 @@ class READERCATA(object):
       sys.path[:0] = [rep_cata]
       self.appliEficas.listeAEnlever.append(rep_cata)
 
-      
+
       if nom_cata in list(sys.modules.keys()) :
         del sys.modules[nom_cata]
       for k in sys.modules:
@@ -228,20 +265,12 @@ class READERCATA(object):
           del sys.modules[k]
 
       mesScriptsNomFichier='mesScripts_'+self.code.upper()
-      if self.code == "ASTER" :
-         self.appliEficas.rep_scripts=os.path.join(rep_cata,nom_cata)
-         sys.path[:0] = [self.appliEficas.rep_scripts]
-         try :
-             self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
-         except:
-             pass
-         sys.path=sys.path[1:]
-      else :
-         try :
-            self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
-         except:
-            pass
+      try :
+          self.appliEficas.mesScripts[self.code]=__import__(mesScriptsNomFichier)
+      except:
+          pass
 
+      #if 1 :
       try :
           o=__import__(nom_cata)
           return o
@@ -251,110 +280,63 @@ class READERCATA(object):
 
 
 
-   def Retrouve_Ordre_Cata_Standard_autre(self):
-      """ 
+   def retrouveOrdreCataStandardAutre(self):
+      """
           Construit une structure de donnees dans le catalogue qui permet
           a EFICAS de retrouver l'ordre des mots-cles dans le texte du catalogue.
           Pour chaque entite du catlogue on cree une liste de nom ordre_mc qui
           contient le nom des mots cles dans le bon ordre
-      """ 
-      self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyse_catalogue(self.cata)
+      """
+      self.cata_ordonne_dico, self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
+      #self.appliEficas.liste_simp_reel = ()
+      #self.cata_ordonne_dico = {}
 
-   def Retrouve_Ordre_Cata_Standard(self):
-      """ 
+   def retrouveOrdreCataStandard(self):
+      """
           Retrouve l'ordre des mots-cles dans le catalogue, cad :
           Attention s appuie sur les commentaires
       """
       nom_cata = os.path.splitext(os.path.basename(self.fic_cata))[0]
       rep_cata = os.path.dirname(self.fic_cata)
-      self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyse_catalogue(self.fic_cata)
+      self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyseCatalogue(self.fic_cata)
       #print self.Commandes_Ordre_Catalogue
 
-   def ask_choix_catalogue(self, cata_choice_list):
-      """
-      Ouvre une fenetre de selection du catalogue dans le cas où plusieurs
-      ont ete definis dans Accas/editeur.ini
-      """      
-      code = getattr(self.appliEficas.CONFIGURATION, "code", None)
-      if code != None : 
-          title=tr("Choix d une version du code ")+str(code)
-      else :
-          title=tr("Choix d une version ")
-    
-      widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
-      ret=widgetChoix.exec_()
-      
-      lab=str(self.VERSION_EFICAS)+" "
-      lab+=tr(" pour ")
-      lab+=str(self.code) 
-      lab+=tr(" avec le catalogue ")
-      if ret == QDialog.Accepted:
-          cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
-          self.version_cata = cata.identifier
-          self.fic_cata = cata.cata_file_path
-          self.version_code = self.version_cata
-          self.appliEficas.format_fichier = cata.file_format
-          self.appliEficas.format_fichier_in = cata.file_format_in
-          lab+=self.version_cata
-          self.appliEficas.setWindowTitle(lab)
-          #qApp.mainWidget().setCaption(lab)
-      else:
-          raise EficasException()
-        
-
-   def traite_clefs_documentaires(self):
+   def traiteIcones(self):
+      if self.appliEficas.maConfiguration.ficIcones==None : return
       try:
-        fic_doc='rep_doc_'+str(self.version_code)
-        self.fic_doc=getattr(self.appliEficas.CONFIGURATION,fic_doc )
-        f=open(self.fic_doc)
+        ficIcones=self.appliEficas.maConfiguration.ficIcones
+        fichierIcones = __import__(ficIcones, globals(), locals(), [], -1)
+        self.appliEficas.maConfiguration.dicoIcones=fichierIcones.dicoDesIcones.dicoIcones
+        self.appliEficas.maConfiguration.dicoImages=fichierIcones.dicoDesIcones.dicoImages
       except:
-        print ("Pas de fichier associe contenant des clefs documentaires")
-        return
+        print ("Pas de fichier associe contenant des liens sur les icones ")
+        self.appliEficas.maConfiguration.dicoIcones={}
 
-      dict_clef_docu={}
-      for l in f.readlines():
-          clef=l.split(':')[0]
-          deb=l.find(':')+1
-          docu=l[deb:-1]
-          dict_clef_docu[clef]=docu
-      for oper in self.cata.JdC.commandes:
-           if oper.nom in dict_clef_docu :
-              oper.docu=dict_clef_docu[oper.nom]
 
-   def cree_dico_inverse(self):
+
+   def creeDicoInverse(self):
         self.dicoInverse={}
-        self.dicoMC={} 
-        listeEtapes=self.cata[0].JdC.commandes
-        for e in self.cata[0].JdC.commandes:
-            self.traite_entite(e)
+        self.dicoMC={}
+        listeEtapes=self.cata.JdC.commandes
+        for e in self.cata.JdC.commandes:
+            self.traiteEntite(e)
 
-        #self.dicoFrancaisAnglais={}
-        #self.dicoAnglaisFrancais={}
-        #for k in self.dicoInverse:
-        #    listefr=[]
-        #    for nom, obj in self.dicoInverse[k] :
-        #        listefr.append((tr(nom),obj))
-        #        self.dicoFrancaisAnglais[tr(nom)]=nom
-        #        self.dicoAnglaisFrancais[nom]=tr(nom)
-        #    self.dicoInverseFrancais[tr(k)]=listefr
-        #    #print tr(k),listefr
 
-   
-   def cree_dico_CasToCata(self):
+   def creeDicoCasToCata(self):
+      if hasattr(self.cata,'dicoCasEn'):
+        _temp= __import__(self.cata.dicoCasEn,globals(), locals(), ['DicoCasEnToCata'], 0)
         if self.appliEficas.langue=="ang" :
-           from dicoCasEnToCata import dicoCasEnToCata as dicoCasToCata
+           self.dicoCasToCata=_temp.dicoCasEnToCata
         else :
-           from dicoCasFrToCata import dicoCasFrToCata as dicoCasToCata
-        self.dicoCasToCata=dicoCasToCata
-        
-        
-         
-        
-   def traite_entite(self,e):
+           self.dicoCasToCata=_temp.dicoCasFrToCata
+
+
+
+   def traiteEntite(self,e):
        boolIn=0
        for (nomFils, fils) in list(e.entites.items()) :
           self.dicoMC[nomFils]=fils
-          self.traite_entite(fils)
+          self.traiteEntite(fils)
           boolIn=1
        if boolIn==0 :
           liste=[]
@@ -366,15 +348,22 @@ class READERCATA(object):
           self.dicoInverse[e.nom]=liste
           self.dicoInverse[tr(e.nom)]=liste
 
-   def cree_rubrique(self,e,dico, niveau):
+   def creeRubrique(self,e,dico, niveau):
        from Accas import A_BLOC
        decale=niveau*"   "
        #if niveau != 0 :
-       #    if isinstance(e,A_BLOC.BLOC): print decale, e.condition 
-       #    else :                           print decale, e. nom  
+       #    if isinstance(e,A_BLOC.BLOC): print decale, e.condition
+       #    else :                           print decale, e. nom
        for (nom, fils) in list(e.entites.items()) :
-           if  list(fils.entites.items()) != [] : self.cree_rubrique(fils,dico,niveau+1)
+           if  list(fils.entites.items()) != [] : self.creeRubrique(fils,dico,niveau+1)
            #else : print (niveau+1)*"   ", nom
 
-        
-          
+
+   def dumpToXsdEficas(self):
+       # Pas sur qu on ait jamais besoin de cela
+       pass
+       #from Efi2Xsd import readerEfficas
+       #newSchema=   xml = open('Cata_MED_FAM.xml').read()
+       #SchemaMed = efficas.CreateFromDocument(xml)
+       #SchemaMed.alimenteCata(self.cata)
+

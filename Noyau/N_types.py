@@ -34,74 +34,74 @@ except ImportError:
 # inherit from python scalars but are numpy.float64 or numpy.int32...
 
 
-def is_int(obj):
+def isInt(obj):
     return isinstance(obj, int) or type(obj) is int
 
 
-def is_float(obj):
+def isFloat(obj):
     return isinstance(obj, float)
 
 
-def is_complex(obj):
+def isComplex(obj):
     return isinstance(obj, complex)
 
 from decimal import Decimal
 
 
-def is_float_or_int(obj):
-    return is_float(obj) or is_int(obj) or isinstance(obj, Decimal)
+def isFloat_or_int(obj):
+    return isFloat(obj) or isInt(obj) or isinstance(obj, Decimal)
 
 
-def is_number(obj):
-    return is_float_or_int(obj) or is_complex(obj)
+def isNumber(obj):
+    return isFloat_or_int(obj) or isComplex(obj)
 
 
-def is_str(obj):
+def isStr(obj):
     return isinstance(obj, (str, six.text_type))
 
 
-def is_list(obj):
+def isList(obj):
     return type(obj) is list
 
 
-def is_tuple(obj):
+def isTuple(obj):
     return type(obj) is tuple
 
 
-def is_array(obj):
+def isArray(obj):
     """a numpy array ?"""
     return type(obj) is _np_arr
 
 
-def is_sequence(obj):
+def isSequence(obj):
     """a sequence (allow iteration, not a string) ?"""
-    return is_list(obj) or is_tuple(obj) or is_array(obj)
+    return isList(obj) or isTuple(obj) or isArray(obj)
 
 
-def is_assd(obj):
+def isASSD(obj):
     from .N_ASSD import ASSD
     return isinstance(obj, ASSD)
 
 
-def force_list(obj):
+def forceList(obj):
     """Retourne `obj` si c'est une liste ou un tuple,
     sinon retourne [obj,] (en tant que list).
     """
-    if not is_sequence(obj):
+    if not isSequence(obj):
         obj = [obj, ]
     return list(obj)
 
 
-def force_tuple(obj):
+def forceTuple(obj):
     """Return `obj` as a tuple."""
-    return tuple(force_list(obj))
+    return tuple(forceList(obj))
 
 # backward compatibility
 from warnings import warn
 
 
-def is_enum(obj):
-    """same as is_sequence"""
-    warn("'is_enum' is deprecated, use 'is_sequence'",
+def isEnum(obj):
+    """same as isSequence"""
+    warn("'isEnum' is deprecated, use 'isSequence'",
          DeprecationWarning, stacklevel=2)
-    return is_sequence(obj)
+    return isSequence(obj)

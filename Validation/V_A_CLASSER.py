@@ -56,9 +56,9 @@ class A_CLASSER(object):
         liste.extend(self.args0)
         liste.extend(self.args1)
         self.mcs = liste
-        self.init_couples_permis()
+        self.initCouplesPermis()
 
-    def init_couples_permis(self):
+    def initCouplesPermis(self):
         """ Cree la liste des couples permis parmi les self.args, cad pour chaque element
             de self.args0 cree tous les couples possibles avec un element de self.args1"""
         liste = []

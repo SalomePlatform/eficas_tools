@@ -35,7 +35,7 @@ from  Editeur.Eficas_utils import read_file
 from Extensions.i18n import tr
 
 
-class CONFIG_BASE(object):
+class configBase(object):
 
   #-------------------------------
   def __init__(self,appli,repIni):
@@ -52,6 +52,7 @@ class CONFIG_BASE(object):
   #         par celui de l utilisateur
   # le fichier de catalogue va etre lu dans la directory de l utilisateur s il exite
   # dans le fichier general sinon
+
       self.appli   = appli  
       self.code    = appli.code
       self.salome  = appli.salome
@@ -59,24 +60,30 @@ class CONFIG_BASE(object):
       else           : self.name="editeur.ini"
       self.rep_mat = None
       self.repIni  = repIni
-      if sys.platform[0:5]=="linux" :
-              self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',appli.code)
-      else :
-              self.rep_user   = os.path.join('C:/','.config/Eficas',appli.code)
-
      
+      if self.code == None : self.code=''
+      if sys.platform[0:5]=="linux" :
+              self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+      else :
+              self.rep_user   = os.path.join('C:/','.config/Eficas',self.code)
+
 
       self.setValeursParDefaut()
       
-      self.lecture_fichier_ini_standard()
-      self.lecture_fichier_ini_integrateur()
-      self.lecture_fichier_ini_utilisateur()
+      if self.code != '' :
+         self.lectureFichierIniStandard()
+         self.lectureFichierIniIntegrateur()
+         self.lectureFichierIniUtilisateur()
+
+      if self.boutonDsMenuBar:
+         self.closeAutreCommande = True
+         self.closeFrameRechercheCommande = True
 
       #Particularite des schemas MAP
       if hasattr(self,'make_ssCode'): self.make_ssCode(self.ssCode)
 
-      if self.appli: self.parent=appli.top
-      else: 	     self.parent=None
+      #if self.appli: self.parent=appli.top
+      #else: 	     self.parent=None
 
       if not os.path.isdir(self.savedir) :
         if sys.platform[0:5]=="linux" :
@@ -98,7 +105,7 @@ class CONFIG_BASE(object):
         self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
       else:
         self.savedir = os.path.abspath('C:/')
-      self.mode_nouv_commande='initial'
+      self.modeNouvCommande='initial'
       self.affiche="alpha"
       self.closeAutreCommande = False
       self.closeFrameRechercheCommande = False
@@ -109,13 +116,31 @@ class CONFIG_BASE(object):
       self.nombreDeBoutonParLigne=0
       self.translatorFichier=None
       self.dicoImages= {}
+      self.dicoIcones= {}
+      self.afficheCommandesPliees = True
       self.simpleClic= False
       self.afficheOptionnelVide=False
       self.afficheListesPliees=True
+      self.boutonDsMenuBar=False
+      self.ficIcones=None
+      self.repIcones=None
+      self.differencieSiDefaut=False
+      self.typeDeCata='Python'
+      self.dumpXSD=False
+      self.withXSD=False
+      self.afficheIhm=True
+      self.closeParenthese=False
+      self.enleverActionStructures=False
+      self.enleverParametres=False
+      self.enleverSupprimer=False
+      self.ajoutExecution=False
+      self.utilParExtensions=False
+
+
 
  
   #--------------------------------------
-  def lecture_fichier_ini_standard(self):
+  def lectureFichierIniStandard(self):
   #--------------------------------------
 
       name='prefs_'+self.appli.code
@@ -128,7 +153,7 @@ class CONFIG_BASE(object):
 
 
   #--------------------------------------
-  def lecture_fichier_ini_integrateur(self):
+  def lectureFichierIniIntegrateur(self):
   #--------------------------------------
   # Verifie l'existence du fichier "standard"
   # appelle la lecture de ce fichier
@@ -162,7 +187,7 @@ class CONFIG_BASE(object):
 
 
   #--------------------------------------
-  def lecture_fichier_ini_utilisateur(self):
+  def lectureFichierIniUtilisateur(self):
   #--------------------------------------
   # Surcharge les parametres standards par les parametres utilisateur s'ils existent
       self.fic_ini_utilisateur = os.path.join(self.rep_user,self.name)
@@ -186,7 +211,7 @@ class CONFIG_BASE(object):
              setattr(self,k,d[k])
 
   #--------------------------------------
-  def save_params(self):
+  def saveParams(self):
   #--------------------------------------
   # sauvegarde
   # les nouveaux parametres dans le fichier de configuration utilisateur
@@ -207,4 +232,5 @@ class CONFIG_BASE(object):
       f.write(texte) 
       f.close()
 #
+
 

@@ -62,7 +62,8 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../Editeur/icons/plusnode.png</normaloff>../Editeur/icons/plusnode.png</iconset>
+       <normaloff>../Editeur/icons/plusnode.png</normaloff>
+       <disabledoff>../Editeur/icons/ast-red-ball.png</disabledoff>../Editeur/icons/plusnode.png</iconset>
      </property>
      <property name="iconSize">
       <size>

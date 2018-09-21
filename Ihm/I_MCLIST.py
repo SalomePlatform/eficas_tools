@@ -31,13 +31,13 @@ class MCList:
     """
     return 1
 
-  def get_index(self,objet):
+  def getIndex(self,objet):
     """
         Retourne la position d'objet dans la liste self
     """
     return self.data.index(objet)
 
-  def ajout_possible(self):
+  def ajoutPossible(self):
     """ 
         Methode booleenne qui retourne 1 si on peut encore ajouter une occurrence
         de l'element que contient self, 0 sinon 
@@ -51,7 +51,7 @@ class MCList:
       else:
         return 0
 
-  def isrepetable(self):
+  def isRepetable(self):
     """
        Indique si l'objet est repetable.
        Retourne 1 si le mot-cle facteur self peut etre repete
@@ -63,29 +63,30 @@ class MCList:
     else :
        return 0
 
-  def isoblig(self):
+  def isOblig(self):
      """
      Une MCList n'est jamais obligatoire (meme si le MCFACT qu'elle represente l'est
      """
      return self.data[0].definition.statut=='o'
   
-  def suppentite(self,obj):
+  def suppEntite(self,obj):
       """
         Supprime le mot cle facteur obj de la MCLIST
       """
       if obj not in self:
          return 0
 
-      self.init_modif()
+      self.initModif()
       self.remove(obj)
       CONNECTOR.Emit(self,"supp",obj)
-      self.update_condition_bloc()
+      self.updateConditionBloc()
+      obj.deletePyxbObject()
       obj.supprime()
       self.etape.modified()
-      self.fin_modif()
+      self.finModif()
       return 1
 
-  def addentite(self,obj,pos=None):
+  def addEntite(self,obj,pos=None):
       """
         Ajoute le mot cle facteur obj a la MCLIST a la position pos
         Retourne None si l'ajout est impossible
@@ -94,8 +95,8 @@ class MCList:
          # on est en mode creation d'un motcle
                   raise EficasException(tr("traitement non-prevu"))
 
-      if not self.ajout_possible():
-         self.jdc.appli.affiche_alerte(tr("Erreur"),
+      if not self.ajoutPossible():
+         self.jdc.appli.afficheAlerte(tr("Erreur"),
                                        tr("L'objet %s ne peut pas etre ajoute", obj.nom))
          return None
 
@@ -105,28 +106,28 @@ class MCList:
       if obj.isMCList():
          obj=obj.data[0]
 
-      # Traitement du copier coller seulement 
+      # traitement du copier coller seulement 
       # Les autres cas d'ajout sont traites dans MCFACT
-      self.init_modif()
-      obj.verif_existence_sd()
+      self.initModif()
+      obj.verifExistenceSd()
       obj.reparent(self.parent)
       if pos is None:
          self.append(obj)
       else:
          self.insert(pos,obj)
       CONNECTOR.Emit(self,"add",obj)
-      self.fin_modif()
-      self.update_condition_bloc()
+      self.finModif()
+      self.updateConditionBloc()
       return obj
 
-  def liste_mc_presents(self):
+  def listeMcPresents(self):
     return []
 
-  def update_concept(self,sd):
+  def updateConcept(self,sd):
     for child in self.data :
-        child.update_concept(sd)
+        child.updateConcept(sd)
 
-  def delete_concept(self,sd):
+  def deleteConcept(self,sd):
     """ 
         Inputs :
            - sd=concept detruit
@@ -136,9 +137,9 @@ class MCList:
         que de transmettre aux fils
     """
     for child in self.data :
-      child.delete_concept(sd)
+      child.deleteConcept(sd)
 
-  def replace_concept(self,old_sd,sd):
+  def replaceConcept(self,old_sd,sd):
     """
         Inputs :
            - old_sd=concept remplace
@@ -147,26 +148,26 @@ class MCList:
         du concept old_sd
     """
     for child in self.data :
-      child.replace_concept(old_sd,sd)
+      child.replaceConcept(old_sd,sd)
 
-  def get_docu(self):
-    return self.data[0].definition.get_docu()
+  def getDocu(self):
+    return self.data[0].definition.getDocu()
 
-  def get_liste_mc_inconnus(self):
+  def getListeMcInconnus(self):
      """
      Retourne la liste des mots-cles inconnus dans self
      """
      l_mc = []
      for mcfact in self.data :
-        if mcfact.isvalid() : continue
-        l_child = mcfact.get_liste_mc_inconnus()
+        if mcfact.isValid() : continue
+        l_child = mcfact.getListeMcInconnus()
         for mc in l_child:
            l = [self]
            l.extend(mc)
            l_mc.append(l)
      return l_mc
 
-  def verif_condition_regles(self,liste_presents):
+  def verifConditionRegles(self,liste_presents):
     """
         Retourne la liste des mots-cles a rajouter pour satisfaire les regles
         en fonction de la liste des mots-cles presents
@@ -174,23 +175,23 @@ class MCList:
     # Sans objet pour une liste de mots cles facteurs
     return []
 
-  def deep_update_condition_bloc(self):
+  def deepUpdateConditionBloc(self):
      """
         Parcourt l'arborescence des mcobject et realise l'update
-        des blocs conditionnels par appel de la methode update_condition_bloc
+        des blocs conditionnels par appel de la methode updateConditionBloc
      """
-     #print "deep_update_condition_bloc",self
+     #print "deepUpdateConditionBloc",self
      for mcfact in self.data :
-         mcfact.deep_update_condition_bloc()
+         mcfact.deepUpdateConditionBloc()
 
-  def update_condition_bloc(self):
+  def updateConditionBloc(self):
      """
         Propage la mise a jour des conditions au parent.
         Une liste ne fait pas de traitement sur les conditions
      """
-     if self.parent: self.parent.update_condition_bloc()
+     if self.parent: self.parent.updateConditionBloc()
 
-  def verif_condition_bloc(self):
+  def verifConditionBloc(self):
     """ 
         Evalue les conditions de tous les blocs fils possibles 
         (en fonction du catalogue donc de la definition) de self et 
@@ -201,43 +202,43 @@ class MCList:
     # Sans objet pour une liste de mots cles facteurs (a voir !!!)
     return [],[]
 
-  def init_modif(self):
+  def initModif(self):
     """
        Met l'etat de l'objet a modified et propage au parent
        qui vaut None s'il n'existe pas
     """
     self.state = 'modified'
     if self.parent:
-      self.parent.init_modif()
+      self.parent.initModif()
 
-  def fin_modif(self):
+  def finModif(self):
     """
       Methode appelee apres qu'une modification a ete faite afin de declencher
       d'eventuels traitements post-modification
     """
-    #print "fin_modif",self
+    #print "finModif",self
     CONNECTOR.Emit(self,"valid")
     if self.parent:
-      self.parent.fin_modif()
+      self.parent.finModif()
 
-  def get_genealogie_precise(self):
+  def getGenealogiePrecise(self):
      if self.parent: 
-        return self.parent.get_genealogie_precise()
+        return self.parent.getGenealogiePrecise()
      else:
         return []
 
-  def get_genealogie(self):
+  def getGenealogie(self):
      """
          Retourne la liste des noms des ascendants.
          Un objet MCList n'est pas enregistre dans la genealogie.
          XXX Meme si le MCFACT fils ne l'est pas lui non plus ????
      """
      if self.parent: 
-        return self.parent.get_genealogie()
+        return self.parent.getGenealogie()
      else:
         return []
 
-  def get_liste_mc_ordonnee_brute(self,liste,dico):
+  def getListeMcOrdonneeBrute(self,liste,dico):
      """
          Retourne la liste ordonnee (suivant le catalogue) BRUTE des mots-cles
          d'une entite composee dont le chemin complet est donne sous forme
@@ -248,21 +249,21 @@ class MCList:
         dico=objet_cata.entites
      return objet_cata.ordre_mc
 
-  def verif_existence_sd(self):
+  def verifExistenceSd(self):
      """
         Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
         avant etape, sinon enleve la reference a ces concepts
      """
      for motcle in self.data :
-         motcle.verif_existence_sd()
+         motcle.verifExistenceSd()
 
-  def get_fr(self):
+  def getFr(self):
      """
          Retourne la chaine d'aide contenue dans le catalogue
          en tenant compte de la langue
      """
      try :
-        return self.data[0].get_fr()
+        return self.data[0].getFr()
      except:
         return ''
 
@@ -272,7 +273,7 @@ class MCList:
      """
      return self
 
-  def update_mc_global(self):
+  def updateMcGlobal(self):
      """
         Met a jour les mots cles globaux enregistres dans l'etape parente
         et dans le jdc parent.
@@ -280,11 +281,11 @@ class MCList:
         la requete a ses fils.
      """
      for motcle in self.data :
-         motcle.update_mc_global()
+         motcle.updateMcGlobal()
 
-  def delete_mc_global(self):
+  def deleteMcGlobal(self):
      for motcle in self.data :
-         motcle.delete_mc_global()
+         motcle.deleteMcGlobal()
 
   #def __del__(self):
   #   print "__del__",self

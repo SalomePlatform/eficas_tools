@@ -26,16 +26,16 @@ from Extensions.eficas_exception import EficasException
 class FONCTION(ASSD):
   def __init__(self,etape=None,sd=None,reg='oui'):
     if reg=='oui':
-      self.jdc.register_fonction(self)
+      self.jdc.registerFonction(self)
 
-  def get_formule(self):
+  def getFormule(self):
     """
     Retourne une formule decrivant self sous la forme d'un tuple :
     (nom,type_retourne,arguments,corps)
     """
-    if hasattr(self.etape,'get_formule'):
+    if hasattr(self.etape,'getFormule'):
       # on est dans le cas d'une formule Aster
-      return self.etape.get_formule()
+      return self.etape.getFormule()
     else:
       # on est dans le cas d'une fonction
       return (self.nom,'REEL','(REEL:x)','''bidon''')
@@ -50,9 +50,9 @@ class formule(FONCTION) :
    def __call__(self,*val):
       if len(val) != len(self.nompar):
          raise TypeError(" %s() takes exactly %d argument (%d given)" % (self.nom,len(self.nompar),len(val)))
-      return param2.Unop2(self.nom,self.real_call,val)
+      return param2.Unop2(self.nom,self.realCall,val)
 
-   def real_call(self,*val):
+   def realCall(self,*val):
       if hasattr(self.parent,'contexte_fichier_init'):
                         context=self.parent.contexte_fichier_init
       else            : context={}

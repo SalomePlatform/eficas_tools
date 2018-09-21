@@ -37,31 +37,39 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.dicoMCWidgetOptionnel={}
      self.parentQt=parentQt
 
-  def afficheOptionnel(self,liste,MC):
+  def afficheOptionnel(self,liste,liste_rouge,MC):
      #print ('afficheOptionnel MonWidgetOptionnel', self,liste,MC)
-     #import traceback
-     #traceback.print_stack()
      self.vireLesAutres(MC)
+   
      if MC.node.item.nom in self.dicoMCWidgetOptionnel :
+        #print (MC.node.item.nom)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
         self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
         self.dicoMCWidgetOptionnel[MC.node.item.nom].deleteLater()
-     groupe = MonGroupeOptionnel(liste,self,MC)
+        del self.dicoMCWidgetOptionnel[MC.node.item.nom]
+     if liste==[] : return
+     groupe = MonGroupeOptionnel(liste,liste_rouge,self,MC)
      self.groupesOptionnelsLayout.insertWidget(0,groupe)
      self.dicoMCWidgetOptionnel[MC.node.item.nom]=groupe
      return groupe
 
   def vireLesAutres(self,MC):
       #print( "je passe dans vireLesAutres")
-      genea =MC.obj.get_genealogie()
+      genea =MC.obj.getGenealogie()
       #print (genea)
       for k in list(self.dicoMCWidgetOptionnel.keys()):
+          #print (k)
           #if k not in genea :  print ( k)
           if k not in genea :  
              self.dicoMCWidgetOptionnel[k].close()
              del self.dicoMCWidgetOptionnel[k]
       #print( "fin vireLesAutres")
       
+  def vireTous(self):
+      for k in list(self.dicoMCWidgetOptionnel.keys()):
+          self.dicoMCWidgetOptionnel[k].close()
+          del self.dicoMCWidgetOptionnel[k]
+
   def afficheOptionnelVide(self):
       self.GeneaLabel.setText("")
       for k in list(self.dicoMCWidgetOptionnel.keys()):
@@ -69,10 +77,10 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
             del self.dicoMCWidgetOptionnel[k]
 
   def titre(self,MC):
-     if self.parentCommande.node.editor.code in ['Adao','ADAO'] and self.parentCommande.node.editor.closeFrameRechercheCommande==True :
+     if self.parentCommande.node.editor.code in ['Adao','ADAO'] and self.parentCommande.node.editor.maConfiguration.closeFrameRechercheCommande==True :
         self.frameLabelCommande.close()
         return
-     labeltext,fonte,couleur = self.parentCommande.node.item.GetLabelText()
+     labeltext,fonte,couleur = self.parentCommande.node.item.getLabelText()
      l=tr(labeltext)
      li=[]
      while len(l) > 25:

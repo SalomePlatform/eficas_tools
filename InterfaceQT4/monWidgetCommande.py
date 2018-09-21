@@ -54,18 +54,25 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
       editor.inhibeSplitter=0
 
-      self.frameAffichage.setMinimumHeight(20)
-      if node.item.get_fr() != "" : self.labelDoc.setText(node.item.get_fr())
-      else : 
-        self.labelDoc.close()
-        self.frameAffichage.resize(self.frameAffichage.width(),50)
+      resize=0
+      if node.item.getFr() != "" : 
+         self.labelDoc.setText(node.item.getFr())
+         resize=1
+      else : self.labelDoc.close()
       
-      #if (etape.get_type_produit()==None): self.LENom.close()
-      #test,mess = self.node.item.nomme_sd('ee')
       if not(hasattr(etape.definition,'sd_prod')) or (etape.definition.sd_prod==None): self.LENom.close()
       elif (hasattr(etape.definition,'sd_prod') and type(etape.definition.sd_prod)== types.FunctionType):self.LENom.close()
-      elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: self.LENom.setText(etape.sdnom)
-      else : self.LENom.setText("")
+      elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: 
+           self.LENom.setText(etape.sdnom)
+           resize=resize*1
+      else : 
+           self.LENom.setText("")
+           resize=resize*1
+      if resize :
+         nouvelleSize=self.frameAffichage.height()+60
+         self.frameAffichage.setMinimumHeight(nouvelleSize)
+         self.frameAffichage.resize(self.frameAffichage.width(),nouvelleSize)
+      
 
 
       maPolice= QFont("Times", 10,)
@@ -73,7 +80,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       self.labelNomCommande.setText(tr(self.obj.nom))
 
 
-      if self.editor.closeAutreCommande==True  : self.closeAutreCommande()
+      if self.editor.maConfiguration.closeAutreCommande == True  : self.closeAutreCommande()
       else :
         try :
            self.bCatalogue.clicked.connect(self.afficheCatalogue)
@@ -81,14 +88,17 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
            self.bApres.clicked.connect(self.afficheApres)
         except :
            pass
-        self.LENom.returnPressed.connect(self.nomChange)
+       
+      if hasattr(self,'LENom'): self.LENom.returnPressed.connect(self.nomChange)
    
-      if self.editor.code in ['Adao','ADAO'] and self.editor.closeFrameRechercheCommande==True  : 
+      if self.editor.code in ['Adao','ADAO'] and self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
                       self.frameAffichage.close()
+      if self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
+         self.closeAutreCommande()
 
       if self.editor.code in ['CARMELCND',] : self.closeAutreCommande()
       self.racine=self.node.tree.racine
-      if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
+      if self.node.item.getIconName() == "ast-red-square" : self.LENom.setDisabled(True)
 
       self.setAcceptDrops(True)
       self.etablitOrdre()
@@ -107,7 +117,13 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
         self.editor.splitter.addWidget(self.monOptionnel)
         self.editor.ajoutOptionnel()
         self.editor.inhibeSplitter=0
+        self.monOptionnel=self.editor.widgetOptionnel
       self.afficheOptionnel()
+      spacerItem = QSpacerItem(21, 500, QSizePolicy.Expanding, QSizePolicy.Expanding)
+      #spacerItem = QSpacerItem(21, 20, QSizePolicy.Preferred, QSizePolicy.Preferred)
+      #self.commandesLayout.addItem(spacerItem)
+      self.verticalLayoutCommande.addItem(spacerItem)
+
       #self.editor.restoreSplitterSizes()
 
       #print "fin init de widget Commande"
@@ -204,24 +220,24 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       nom = str(self.LENom.text())
       nom = nom.strip()
       if nom == '' : return                  # si pas de nom, on ressort sans rien faire
-      test,mess = self.node.item.nomme_sd(nom)
-      self.editor.affiche_commentaire(mess)
+      test,mess = self.node.item.nommeSd(nom)
+      self.editor.afficheCommentaire(mess)
 
       #Notation scientifique
       if test :
         from .politiquesValidation import Validation
         validation=Validation(self.node,self.editor)
-        validation.AjoutDsDictReelEtape()
+        validation.ajoutDsDictReelEtape()
 
   def afficheOptionnel(self):
       # N a pas de parentQt. doit donc etre redefini
-      liste=self.ajouteMCOptionnelDesBlocs()
+      liste,liste_rouge=self.ajouteMCOptionnelDesBlocs()
       #print "dans afficheOptionnel", self.monOptionnel
       # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
       #if self.monOptionnel == None : return
       self.monOptionnel.parentCommande=self
       self.monOptionnel.titre(self.obj.nom)
-      self.monGroupe=self.monOptionnel.afficheOptionnel(liste,self)
+      self.monGroupe=self.monOptionnel.afficheOptionnel(liste,liste_rouge,self)
       
 
   def focusInEvent(self,event):
@@ -293,14 +309,13 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   def setValide(self):
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
-      if self.node.item.object.isvalid() :
-         icon=QIcon(self.repIcon+"/ast-green-ball.png")
-      else :
-         icon=QIcon(self.repIcon+"/ast-red-ball.png")
-      if self.node.item.GetIconName() == "ast-yellow-square" :
-         icon=QIcon(self.repIcon+"/ast-yel-ball.png")
+      if self.node.item.object.isValid() : icon=QIcon(self.repIcon+"/ast-green-ball.png")
+      else : icon=QIcon(self.repIcon+"/ast-red-ball.png")
+      nomIcone = self.node.item.getIconName()
+      if nomIcone == "ast-yellow-square" : icon=QIcon(self.repIcon+"/ast-yel-ball.png")
+      if nomIcone == "ast-red-square" : self.LENom.setDisabled(True)
+
       self.LENom.setDisabled(False)
-      if self.node.item.GetIconName() == "ast-red-square" : self.LENom.setDisabled(True)
       self.RBValide.setIcon(icon)
 
 

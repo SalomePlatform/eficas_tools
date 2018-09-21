@@ -62,27 +62,27 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
     itemNode=Node
 
     def init(self):      
-      self.setfunction = self.set_valeur
+      self.setFunction = self.setValeur
 
 # ---------------------------------------------------------------------------
 #                   API du PARAMETRE pour l'arbre 
 # ---------------------------------------------------------------------------
 
-    def GetIconName(self):
+    def getIconName(self):
       """
       Retourne le nom de l'icone associee au noeud qui porte self,
       dependant de la validite de l'objet
       NB : un PARAMETRE est toujours valide ...
       """
-      if self.isactif():
-          if self.isvalid():
+      if self.isActif():
+          if self.isValid():
               return "ast-green-square"
           else:
               return "ast-red-square"
       else:
           return "ast-white-square"
 
-    def GetLabelText(self):
+    def getLabelText(self):
         """ Retourne 3 valeurs :
         - le texte a afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
@@ -90,7 +90,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
         """
         return tr('PARAMETRE'),None,None 
 
-    def GetText(self):
+    def getText(self):
       """
       Retourne le texte a afficher apres le nom de la commande (ici apres 'parametre')
       Ce texte est tronque a 25 caracteres
@@ -107,7 +107,7 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
       else :
           return texte[0:24]+'...'
 
-    def GetSubList(self):
+    def getSubList(self):
       """
       Retourne la liste des fils de self
       """
@@ -118,33 +118,33 @@ class PARAMTreeItem(Objecttreeitem.ObjectTreeItem):
 #       du parametre = API graphique du PARAMETRE pour Panel et EFICAS
 # ---------------------------------------------------------------------------
 
-    def get_valeur(self):
+    def getValeur(self):
       """
       Retourne la valeur de l'objet PARAMETRE cad son texte
       """
       if self.object.valeur is None: return ''
       else: return self.object.valeur 
 
-    def get_nom(self):
+    def getNom(self):
       """
       Retourne le nom du parametre
       """
       return self.object.nom
 
-    def set_valeur(self,new_valeur):
+    def setValeur(self,new_valeur):
       """
       Affecte valeur a l'objet PARAMETRE
       """
-      self.object.set_valeur(new_valeur)
+      self.object.setValeur(new_valeur)
 
-    def set_nom(self,new_nom):
+    def setNom(self,new_nom):
       """
       Renomme le parametre
       """
-      self.object.set_nom(new_nom)
-      #self.object.set_attribut('nom',new_nom)
+      self.object.setNom(new_nom)
+      #self.object.setAttribut('nom',new_nom)
 
-    def get_fr(self):
+    def getFr(self):
       """
       Retourne le fr associe au parametre, cad la bulle d'aide pour EFICAS
       """

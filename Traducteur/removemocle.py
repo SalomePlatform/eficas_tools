@@ -20,7 +20,7 @@
 import logging
 from Traducteur import regles
 from Traducteur.parseur import FactNode
-from Traducteur.dictErreurs import EcritErreur
+from Traducteur.dictErreurs import ecritErreur
 from Traducteur.load import jdcSet
 
 debug=0
@@ -42,7 +42,7 @@ def removeMotCle(jdc,command,mocle,ensemble=regles.SansRegle,erreur = 0):
         for mc in c.childNodes:
             if mc.name != mocle:continue
             if ensemble.verif(c) == 0 : continue
-            if erreur : EcritErreur((command,mocle),c.lineno)
+            if erreur : ecritErreur((command,mocle),c.lineno)
             boolChange=1
             removeMC(jdc,c,mc)
 
@@ -80,7 +80,7 @@ def removeCommande(jdc,command,ensemble=regles.SansRegle,erreur=0):
         if c.name != command:continue
         if ensemble.verif(c) == 0 : continue
         boolChange=1
-        if erreur : EcritErreur((command,),c.lineno)
+        if erreur : ecritErreur((command,),c.lineno)
         jdc.supLignes(c.lineno,c.endline)
         logging.warning("Suppression de %s ligne %s",c.name,c.lineno)
     if boolChange : jdc.reset(jdc.getSource())
@@ -137,7 +137,7 @@ def removeMotCleInFact(jdc,command,fact,mocle,ensemble=regles.SansRegle,erreur=0
                 for n in ll.childNodes:
                     if n.name != mocle:continue
                     if ensemble.verif(c) == 0 : continue
-                    if erreur : EcritErreur((command,fact,mocle),c.lineno)
+                    if erreur : ecritErreur((command,fact,mocle),c.lineno)
                     boolChange=1
                     removeMC(jdc,c,n)
 
@@ -178,7 +178,7 @@ def removeMotCleInFactCourantSiRegle(jdc,command,fact,mocle,liste_regles,erreur=
                 if ensemble.verif(ll) == 0 : continue
                 for n in ll.childNodes:
                     if n.name != mocle:continue
-                    if erreur : EcritErreur((command,fact,mocle),c.lineno)
+                    if erreur : ecritErreur((command,fact,mocle),c.lineno)
                     boolChange=1
                     removeMC(jdc,c,n)
 

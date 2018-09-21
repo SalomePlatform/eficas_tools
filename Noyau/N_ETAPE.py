@@ -66,29 +66,41 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
          - reuse : indique le concept d'entree reutilise. Il se trouvera donc en sortie
                    si les conditions d'execution de l'operateur l'autorise
          - valeur : arguments d'entree de type mot-cle=valeur. Initialise avec l'argument args.
+         - objPyxbDeConstruction
         """
+        # faut il le faire ds MC_Build ?
+        # traitement de Pyxb si Pyxb
+        self.dicoPyxbDeConstruction = args.get('dicoPyxbDeConstruction', None)
+        if self.dicoPyxbDeConstruction : 
+            del args['dicoPyxbDeConstruction']
+            self.objPyxbDeConstruction=self.dicoPyxbDeConstruction['objEnPyxb']
+        else : 
+            self.objPyxbDeConstruction=None
         self.definition = oper
         self.reuse = reuse
         self.valeur = args
         self.nettoiargs()
-        self.parent = CONTEXT.get_current_step()
+        self.parent = CONTEXT.getCurrentStep()
         self.etape = self
         self.nom = oper.nom
         self.idracine = oper.label
-        self.appel = N_utils.callee_where(niveau)
+        self.appel = N_utils.calleeWhere(niveau)
         self.mc_globaux = {}
         self.sd = None
         self.actif = 1
-        self.make_register()
+        self.makeRegister()
         self.icmd = None
+        print ('uuuuuuuuuuuuuuu fin init de ETAPE', self,oper)
 
-    def make_register(self):
+    def makeRegister(self):
         """
         Initialise les attributs jdc, id, niveau et realise les
         enregistrements necessaires
+        surcharge dans Ihm
         """
+        print ('makeRegister de  ETAPE')
         if self.parent:
-            self.jdc = self.parent.get_jdc_root()
+            self.jdc = self.parent.getJdcRoot()
             self.id = self.parent.register(self)
             self.niveau = None
         else:
@@ -105,14 +117,14 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
             if self.valeur[k] == None:
                 del self.valeur[k]
 
-    def McBuild(self):
+    def MCBuild(self):
         """
            Demande la construction des sous-objets et les stocke dans l'attribut
-           mc_liste.
+           mcListe.
         """
-        self.mc_liste = self.build_mc()
+        self.mcListe = self.buildMc()
 
-    def Build_sd(self, nom):
+    def buildSd(self, nom):
         """
            Construit le concept produit de l'operateur. Deux cas
            peuvent se presenter :
@@ -127,18 +139,18 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         self.sdnom = nom
         try:
             if self.parent:
-                sd = self.parent.create_sdprod(self, nom)
+                sd = self.parent.createSdprod(self, nom)
                 if type(self.definition.op_init) == types.FunctionType:
                     self.definition.op_init(*(
                         self, self.parent.g_context))
             else:
-                sd = self.get_sd_prod()
+                sd = self.getSdProd()
                 # On n'utilise pas self.definition.op_init car self.parent
                 # n'existe pas
                 if sd != None and self.reuse == None:
                     # On ne nomme le concept que dans le cas de non reutilisation
                     # d un concept
-                    sd.set_name(nom)
+                    sd.setName(nom)
         except AsException as e:
             raise AsException("Etape ", self.nom, 'ligne : ', self.appel[0],
                               'fichier : ', self.appel[1], e)
@@ -162,7 +174,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         """
         return
 
-    def get_sd_prod(self):
+    def getSdProd(self):
         """
             Retourne le concept resultat de l'etape
             Deux cas :
@@ -171,12 +183,12 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
                        on construit le sd a partir de cette classe
                        et on le retourne
                      - cas 2 : il s'agit d'une fonction
-                       on l'evalue avec les mots-cles de l'etape (mc_liste)
+                       on l'evalue avec les mots-cles de l'etape (mcListe)
                        on construit le sd a partir de la classe obtenue
                        et on le retourne
         """
         if type(self.definition.sd_prod) == types.FunctionType:
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mcListe)
             try:
                 sd_prod = self.definition.sd_prod(*(), **d)
             except EOFError:
@@ -207,13 +219,13 @@ Causes possibles :
    Developpeur : La fonction "sd_prod" retourne un type invalide.""")
         return self.sd
 
-    def get_type_produit(self):
+    def getType_produit(self):
         try:
-            return self.get_type_produit_brut()
+            return self.getType_produit_brut()
         except:
             return None
 
-    def get_type_produit_brut(self):
+    def getType_produit_brut(self):
         """
             Retourne le type du concept resultat de l'etape
             Deux cas :
@@ -221,17 +233,17 @@ Causes possibles :
                 il s'agit d'une sous classe de ASSD
                 on retourne le nom de la classe
               - cas 2 : il s'agit d'une fonction
-                on l'evalue avec les mots-cles de l'etape (mc_liste)
+                on l'evalue avec les mots-cles de l'etape (mcListe)
                 et on retourne son resultat
         """
         if type(self.definition.sd_prod) == types.FunctionType:
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mcListe)
             sd_prod = self.definition.sd_prod(*(), **d)
         else:
             sd_prod = self.definition.sd_prod
         return sd_prod
 
-    def get_etape(self):
+    def getEtape(self):
         """
            Retourne l'etape a laquelle appartient self
            Un objet de la categorie etape doit retourner self pour indiquer que
@@ -256,7 +268,7 @@ Causes possibles :
     def __del__(self):
         pass
 
-    def get_created_sd(self):
+    def getCreated_sd(self):
         """Retourne la liste des sd reellement produites par l'etape.
         Si reuse est present, `self.sd` a ete creee avant, donc n'est pas dans
         cette liste."""
@@ -264,37 +276,37 @@ Causes possibles :
             return [self.sd, ]
         return []
 
-    def isactif(self):
+    def isActif(self):
         """
            Indique si l'etape est active (1) ou inactive (0)
         """
         return self.actif
 
-    def set_current_step(self):
+    def setCurrentStep(self):
         """
             Methode utilisee pour que l etape self se declare etape
             courante. Utilise par les macros
         """
-        cs = CONTEXT.get_current_step()
+        cs = CONTEXT.getCurrentStep()
         if self.parent != cs:
             raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre le parent de", self.nom, self)
         else:
-            CONTEXT.unset_current_step()
-            CONTEXT.set_current_step(self)
+            CONTEXT.unsetCurrentStep()
+            CONTEXT.setCurrentStep(self)
 
-    def reset_current_step(self):
+    def resetCurrentStep(self):
         """
               Methode utilisee par l'etape self qui remet son etape parent comme
               etape courante
         """
-        cs = CONTEXT.get_current_step()
+        cs = CONTEXT.getCurrentStep()
         if self != cs:
             raise AsException("L'etape courante", cs.nom, cs,
                               "devrait etre", self.nom, self)
         else:
-            CONTEXT.unset_current_step()
-            CONTEXT.set_current_step(self.parent)
+            CONTEXT.unsetCurrentStep()
+            CONTEXT.setCurrentStep(self.parent)
 
     def issubstep(self, etape):
         """
@@ -306,13 +318,13 @@ Causes possibles :
         """
         return 0
 
-    def get_file(self, unite=None, fic_origine='', fname=None):
+    def getFile(self, unite=None, fic_origine='', fname=None):
         """
             Retourne le nom du fichier correspondant a un numero d'unite
             logique (entier) ainsi que le source contenu dans le fichier
         """
         if self.jdc:
-            return self.jdc.get_file(unite=unite, fic_origine=fic_origine, fname=fname)
+            return self.jdc.getFile(unite=unite, fic_origine=fic_origine, fname=fname)
         else:
             if unite != None:
                 if os.path.exists("fort." + str(unite)):
@@ -336,7 +348,7 @@ Causes possibles :
         """
         visitor.visitETAPE(self)
 
-    def update_context(self, d):
+    def updateContext(self, d):
         """
             Cette methode doit updater le contexte fournit par
             l'appelant en argument (d) en fonction de sa definition
@@ -356,20 +368,20 @@ Causes possibles :
         etape.reuse = None
         etape.sdnom = None
         etape.etape = etape
-        etape.mc_liste = []
-        for objet in self.mc_liste:
+        etape.mcListe = []
+        for objet in self.mcListe:
             new_obj = objet.copy()
             new_obj.reparent(etape)
-            etape.mc_liste.append(new_obj)
+            etape.mcListe.append(new_obj)
         return etape
 
-    def copy_reuse(self, old_etape):
+    def copyReuse(self, old_etape):
         """ Methode qui copie le reuse d'une autre etape.
         """
         if hasattr(old_etape, "reuse"):
             self.reuse = old_etape.reuse
 
-    def copy_sdnom(self, old_etape):
+    def copySdnom(self, old_etape):
         """ Methode qui copie le sdnom d'une autre etape.
         """
         if hasattr(old_etape, "sdnom"):
@@ -380,30 +392,30 @@ Causes possibles :
             Cette methode sert a reinitialiser la parente de l'objet
         """
         self.parent = parent
-        self.jdc = parent.get_jdc_root()
+        self.jdc = parent.getJdcRoot()
         self.etape = self
-        for mocle in self.mc_liste:
+        for mocle in self.mcListe:
             mocle.reparent(self)
         if self.sd and self.reuse == None:
             self.sd.jdc = self.jdc
 
-    def get_cmd(self, nomcmd):
+    def getCmd(self, nomcmd):
         """
             Methode pour recuperer la definition d'une commande
             donnee par son nom dans les catalogues declares
             au niveau du jdc
             Appele par un ops d'une macro en Python
         """
-        return self.jdc.get_cmd(nomcmd)
+        return self.jdc.getCmd(nomcmd)
 
-    def copy_intern(self, etape):
+    def copyIntern(self, etape):
         """
             Methode permettant lors du processus de recopie de copier
             les elements internes d'une etape dans une autre
         """
         return
 
-    def full_copy(self, parent=None):
+    def fullCopy(self, parent=None):
         """
            Methode permettant d'effectuer une copie complète
            d'une etape (y compris concept produit, elements internes)
@@ -411,8 +423,8 @@ Causes possibles :
            aura cet objet comme parent.
         """
         new_etape = self.copy()
-        new_etape.copy_reuse(self)
-        new_etape.copy_sdnom(self)
+        new_etape.copyReuse(self)
+        new_etape.copySdnom(self)
         if parent:
             new_etape.reparent(parent)
         if self.sd:
@@ -421,34 +433,34 @@ Causes possibles :
             if self.reuse == None:
                 new_etape.parent.NommerSdprod(new_sd, self.sd.nom)
             else:
-                new_sd.set_name(self.sd.nom)
-        new_etape.copy_intern(self)
+                new_sd.setName(self.sd.nom)
+        new_etape.copyIntern(self)
         return new_etape
 
-    def reset_jdc(self, new_jdc):
+    def resetJdc(self, new_jdc):
         """
            Reinitialise le nommage du concept de l'etape lors d'un changement de jdc
         """
         if self.sd and self.reuse == None:
             self.parent.NommerSdprod(self.sd, self.sd.nom)
 
-    def is_include(self):
+    def isInclude(self):
         """Permet savoir si on a affaire a la commande INCLUDE
         car le comportement de ces macros est particulier.
         """
         return self.nom.startswith('INCLUDE')
 
-    def sd_accessible(self):
+    def sdAccessible(self):
         """Dit si on peut acceder aux "valeurs" (jeveux) de l'ASSD produite par l'etape.
         """
         if CONTEXT.debug:
-            print(('`- ETAPE sd_accessible :', self.nom))
-        return self.parent.sd_accessible()
+            print(('`- ETAPE sdAccessible :', self.nom))
+        return self.parent.sdAccessible()
 
-    def get_concept(self, nomsd):
+    def getConcept(self, nomsd):
         """
             Methode pour recuperer un concept a partir de son nom
         """
         # pourrait etre appelee par une commande fortran faisant appel a des fonctions python
         # on passe la main au parent
-        return self.parent.get_concept(nomsd)
+        return self.parent.getConcept(nomsd)

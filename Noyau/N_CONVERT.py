@@ -26,10 +26,10 @@ try:
    from builtins import object
 except : pass
 
-from .N_types import is_int, is_float, is_sequence
+from .N_types import isInt, isFloat, isSequence
 
 
-def has_int_value(real):
+def hasIntValue(real):
     """Est-ce que 'real' a une valeur entière ?
     """
     return abs(int(real) - real) < 1.e-12
@@ -47,7 +47,7 @@ class Conversion(object):
     def convert(self, obj):
         """Filtre liste
         """
-        in_as_seq = is_sequence(obj)
+        in_as_seq = isSequence(obj)
         if not in_as_seq:
             obj = (obj,)
 
@@ -84,7 +84,7 @@ class IntConversion(TypeConversion):
         TypeConversion.__init__(self, 'I')
 
     def function(self, o):
-        if is_float(o) and has_int_value(o):
+        if isFloat(o) and hasIntValue(o):
             o = int(o)
         return o
 
@@ -98,7 +98,7 @@ class FloatConversion(TypeConversion):
         TypeConversion.__init__(self, 'R')
 
     def function(self, o):
-        if is_float(o):
+        if isFloat(o):
             o = float(o)
         return o
 

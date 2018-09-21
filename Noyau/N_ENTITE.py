@@ -79,17 +79,18 @@ class ENTITE(object):
             v.pere = self
             v.nom = k
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Cette methode sert à valider les attributs de l'objet de définition
         """
-        raise NotImplementedError("La méthode verif_cata de la classe %s doit être implémentée"
+        raise NotImplementedError("La méthode verifCata de la classe %s doit être implémentée"
                                   % self.__class__.__name__)
 
     def __call__(self):
         """
             Cette methode doit retourner un objet dérivé de la classe OBJECT
         """
+     
         raise NotImplementedError("La méthode __call__ de la classe %s doit être implémentée"
                                   % self.__class__.__name__)
 
@@ -99,7 +100,7 @@ class ENTITE(object):
            rapport de validation de la définition portée par cet objet
         """
         self.cr = self.CR()
-        self.verif_cata()
+        self.verifCata()
         for k, v in list(self.entites.items()):
             try:
                 cr = v.report()
@@ -112,7 +113,7 @@ class ENTITE(object):
                 print(("père =", self))
         return self.cr
 
-    def verif_cata_regles(self):
+    def verifCataRegles(self):
         """
            Cette méthode vérifie pour tous les objets dérivés de ENTITE que
            les objets REGLES associés ne portent que sur des sous-entités
@@ -128,7 +129,7 @@ class ENTITE(object):
                 self.cr.fatal(
                     _(u"Argument(s) non permis : %r pour la règle : %s"), l, txt)
 
-    def check_definition(self, parent):
+    def checkDefinition(self, parent):
         """Verifie la definition d'un objet composite (commande, fact, bloc)."""
         args = self.entites.copy()
         mcs = set()
@@ -139,7 +140,7 @@ class ENTITE(object):
                 # if val.max != 1 and val.type == 'TXM':
                     # print "#CMD", parent, nom
             elif val.label == 'FACT':
-                val.check_definition(parent)
+                val.checkDefinition(parent)
                 # CALC_SPEC !
                 # assert self.label != 'FACT', \
                    #'Commande %s : Mot-clef facteur present sous un mot-clef facteur : interdit !' \
@@ -151,67 +152,67 @@ class ENTITE(object):
         # niveau
         for nom, val in list(args.items()):
             if val.label == 'BLOC':
-                mcbloc = val.check_definition(parent)
+                mcbloc = val.checkDefinition(parent)
                 # XXX
                 # print "#BLOC", parent, re.sub('\s+', ' ', val.condition)
                 assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \
                     % (parent, tuple(mcs.intersection(mcbloc)))
         return mcs
 
-    def check_op(self, valmin=-9999, valmax=9999):
+    def checkOp(self, valmin=-9999, valmax=9999):
         """Vérifie l'attribut op."""
         if self.op is not None and \
            (type(self.op) is not int or self.op < valmin or self.op > valmax):
             self.cr.fatal(_(u"L'attribut 'op' doit être un entier "
                             u"compris entre %d et %d : %r"), valmin, valmax, self.op)
 
-    def check_proc(self):
+    def checkProc(self):
         """Vérifie l'attribut proc."""
         if self.proc is not None and not isinstance(self.proc, N_OPS.OPS):
             self.cr.fatal(
                 _(u"L'attribut op doit être une instance d'OPS : %r"), self.proc)
 
-    def check_regles(self):
+    def checkRegles(self):
         """Vérifie l'attribut regles."""
         if type(self.regles) is not tuple:
             self.cr.fatal(_(u"L'attribut 'regles' doit être un tuple : %r"),
                           self.regles)
 
-    def check_fr(self):
+    def checkFr(self):
         """Vérifie l'attribut fr."""
         if type(self.fr) not in stringTypes:
             self.cr.fatal(
                 _(u"L'attribut 'fr' doit être une chaine de caractères : %r"),
                 self.fr)
 
-    def check_docu(self):
+    def checkDocu(self):
         """Vérifie l'attribut docu."""
         if type(self.docu) not in stringTypes:
             self.cr.fatal(
                 _(u"L'attribut 'docu' doit être une chaine de caractères : %r"),
                 self.docu)
 
-    def check_nom(self):
+    def checkNom(self):
         """Vérifie l'attribut proc."""
         if type(self.nom) is not str:
             self.cr.fatal(
                 _(u"L'attribut 'nom' doit être une chaine de caractères : %r"),
                 self.nom)
 
-    def check_reentrant(self):
+    def checkReentrant(self):
         """Vérifie l'attribut reentrant."""
         if self.reentrant not in ('o', 'n', 'f'):
             self.cr.fatal(
                 _(u"L'attribut 'reentrant' doit valoir 'o','n' ou 'f' : %r"),
                 self.reentrant)
 
-    def check_statut(self, into=('o', 'f', 'c', 'd')):
+    def checkStatut(self, into=('o', 'f', 'c', 'd')):
         """Vérifie l'attribut statut."""
         if self.statut not in into:
             self.cr.fatal(_(u"L'attribut 'statut' doit être parmi %s : %r"),
                           into, self.statut)
 
-    def check_condition(self):
+    def checkCondition(self):
         """Vérifie l'attribut condition."""
         if self.condition != None:
             if type(self.condition) is not str:
@@ -221,7 +222,7 @@ class ENTITE(object):
         else:
             self.cr.fatal(_(u"La condition ne doit pas valoir None !"))
 
-    def check_min_max(self):
+    def checkMinMax(self):
         """Vérifie les attributs min/max."""
         if type(self.min) != int:
             if self.min != '**'and self.min != float('-inf'):
@@ -236,27 +237,42 @@ class ENTITE(object):
                 _(u"Nombres d'occurrence min et max invalides : %r %r"),
                 self.min, self.max)
 
-    def check_validators(self):
+    def checkValidators(self):
         """Vérifie les validateurs supplémentaires"""
-        if self.validators and not self.validators.verif_cata():
+        if self.validators and not self.validators.verifCata():
             self.cr.fatal(_(u"Un des validateurs est incorrect. Raison : %s"),
                           self.validators.cata_info)
 
-    def check_homo(self):
+    def checkHomo(self):
         """Vérifie l'attribut homo."""
         if self.homo != 0 and self.homo != 1:
             self.cr.fatal(
                 _(u"L'attribut 'homo' doit valoir 0 ou 1 : %r"), self.homo)
 
-    def check_into(self):
+    def checkInto(self):
         """Vérifie l'attribut into."""
         if self.into != None:
             if (type(self.into) not in (list, tuple)) and (type(self.into) != types.FunctionType) :
                 self.cr.fatal(
                     _(u"L'attribut 'into' doit être un tuple : %r"), self.into)
 
-    def check_position(self):
+    def checkPosition(self):
         """Vérifie l'attribut position."""
         if self.position not in ('local', 'global', 'global_jdc'):
             self.cr.fatal(_(u"L'attribut 'position' doit valoir 'local', 'global' "
                             u"ou 'global_jdc' : %r"), self.position)
+
+    def dumpXSD(self):
+        args = self.entites.copy()
+        mcs = set()
+        for nom, val in list(args.items()):
+            if val.label == 'SIMP':
+                mcs.add(nom)
+                # XXX
+                # if val.max != 1 and val.type == 'TXM':
+                    # print "#CMD", parent, nom
+            elif val.label == 'FACT':
+                liste=val.dumpXSD()
+                mcs.update(liste)
+        print (self.nom, mcs) 
+        return mcs

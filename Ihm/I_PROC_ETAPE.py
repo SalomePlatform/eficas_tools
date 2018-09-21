@@ -21,7 +21,7 @@ from __future__ import absolute_import
 from . import I_ETAPE
 
 
-# import rajoutes suite a l'ajout de Build_sd --> a resorber
+# import rajoutes suite a l'ajout de buildSd --> a resorber
 import sys
 import traceback,types
 import Noyau
@@ -30,10 +30,10 @@ from Noyau.N_Exception import AsException
 from Extensions.eficas_exception import EficasException
 
 class PROC_ETAPE(I_ETAPE.ETAPE):
-   def get_sdname(self):
+   def getSdname(self):
       return ""
 
-   def get_sdprods(self,nom_sd):
+   def getSdprods(self,nom_sd):
       """ 
          Fonction : retourne le concept produit par l etape de nom nom_sd
          s il existe sinon None
@@ -41,14 +41,14 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
       """
       return None
 
-   def supprime_sdprods(self):
+   def supprimeSdProds(self):
       """
          Fonction: Lors d'une destruction d'etape, detruit tous les concepts produits
          Une procedure n'en a aucun
       """
       return
 
-   def delete_concept(self,sd):
+   def deleteConcept(self,sd):
       """
           Fonction : Mettre a jour les mots cles de l etape 
           suite a la disparition du concept sd
@@ -58,10 +58,10 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
           Inputs :
              - sd=concept detruit
       """
-      for child in self.mc_liste :
-        child.delete_concept(sd)
+      for child in self.mcListe :
+        child.deleteConcept(sd)
 
-   def replace_concept(self,old_sd,sd):
+   def replaceConcept(self,old_sd,sd):
       """
           Fonction : Mettre a jour les mots cles de l etape
           suite au remplacement du concept old_sd
@@ -70,17 +70,17 @@ class PROC_ETAPE(I_ETAPE.ETAPE):
              - old_sd=concept remplace
              - sd=nouveau concept
       """
-      for child in self.mc_liste :
-        child.replace_concept(old_sd,sd)
+      for child in self.mcListe :
+        child.replaceConcept(old_sd,sd)
 
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
-   def Build_sd(self):
+   def buildSd(self):
       """
            Methode de Noyau surchargee pour poursuivre malgre tout
            si une erreur se produit pendant la creation du concept produit
       """
       try:
-         sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.Build_sd(self)
+         sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.buildSd(self)
       except AsException  :
          # Une erreur s'est produite lors de la construction du concept
          # Comme on est dans EFICAS, on essaie de poursuivre quand meme

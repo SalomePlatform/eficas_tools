@@ -72,7 +72,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
 
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
-      if obj.isvalid() : 
+      if obj.isValid() : 
            try :
              # constitution du bloc VERSION du fichier PHYS (existe toujours)
              self.generBLOC_VERSION(obj)
@@ -598,7 +598,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
             on sauvegarde aussi les noms des groupes de maillage
         """
         try:
-            nomGroupe = obj.get_sdname() # nom du groupe de maillage, i.e. nom du concept
+            nomGroupe = obj.getSdname() # nom du groupe de maillage, i.e. nom du concept
             print "liste des noms sans prefixes %s" %(nomGroupe)
 
             # test: un et un seul nom de materiau ou source doit etre associe a ce groupe de maillage, via les cles MATERIAL et SOURCE, respectivement.
@@ -632,7 +632,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
                 texte=""
                 texte+="%s"%(obj.valeur['Domaine'])
                 print"le texte=%s" %(texte)
-                self.dictDomaine[obj.get_sdname()]=texte  
+                self.dictDomaine[obj.getSdname()]=texte  
                 print "liste des domaines =%s" %(self.dictGroupes[nomGroupe]['DOMAINE'])
             if 'Potentiel_Flottant' in obj.valeur.keys():
                 self.dictGroupes[nomGroupe]['Potentiel_Flottant'] = True
@@ -652,7 +652,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
             on sauvegarde aussi les noms des macros groupes
         """
         try:
-            nomMacroGroupe = obj.get_sdname() # nom du macro groupe
+            nomMacroGroupe = obj.getSdname() # nom du macro groupe
             print "liste des noms sans prefixes %s" %(nomMacroGroupe)
             self.dictMacroGroupes[nomMacroGroupe] = obj.valeur # sauvegarde des propriétés du macro-groupe
 
@@ -741,7 +741,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         if self.debug: 
             print "generation material obj.valeur = %s" % obj.valeur
         try :
-            nomMaterial = obj.get_sdname() 
+            nomMaterial = obj.getSdname() 
             self.dictMaterial[nomMaterial]=obj.valeur
             print"self.dictMaterial=%s" %(self.dictMaterial)
         except ValueError, err:
@@ -754,7 +754,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
             print "generation source obj valeur = %s" % obj.valeur
         texte=""
         try :
-            nomSource = obj.get_sdname() 
+            nomSource = obj.getSdname() 
             self.dictSource[nomSource]=obj.valeur # dictionnaire
             self.dictSource[nomSource]['milieux'] = [] # liste ordonnée des groupes associés à cette source
             print"mon dico des sources=%s" %(self.dictSource)
@@ -768,14 +768,14 @@ class CARMEL3DTV0Generator(PythonGenerator):
       # constitution du bloc VERSION du fichier PHYS
       # creation d une entite  VERSION ; elle sera du type PROC car decrit ainsi
       # dans le du catalogue
-      version=obj.addentite('VERSION',pos=None)
+      version=obj.addEntite('VERSION',pos=None)
       self.generPROC_ETAPE(obj.etapes[0])
       self.texteCarmel3D+="["+obj.etapes[0].nom+"\n"
       for cle in obj.etapes[0].valeur :
           self.texteCarmel3D+="   "+cle+" "+str(obj.etapes[0].valeur[cle])+"\n"
       self.texteCarmel3D+="]\n"
       # destruction de l entite creee 
-      obj.suppentite(version)
+      obj.suppEntite(version)
       #print 'ERREUR : test erreur boite graphique BLOC_VERSION'
       #raise ValueError, 'test erreur boite graphique BLOC_VERSION'
 
@@ -815,7 +815,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
             print "generation du mouvement obj.valeur = %s" % obj.valeur
         
         try:
-            nom = obj.get_sdname()
+            nom = obj.getSdname()
             self.nombreMouvements = self.nombreMouvements+1
             self.dictMouvement[nom] = {'ordre': self.nombreMouvements, 'valeurs': obj.valeur}
             self.dictMouvement['ordre'].append(nom)
@@ -830,7 +830,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         if self.debug: 
             print "generation strand obj valeur = %s" % obj.valeur
         try :
-            nomStrand = obj.get_sdname() 
+            nomStrand = obj.getSdname() 
             self.dictStrand[nomStrand]=obj.valeur
             print"mon dico des stranded inductor geometry=%s" %(self.dictStrand)
 

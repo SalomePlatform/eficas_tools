@@ -21,7 +21,7 @@
 """
 
 from __future__ import absolute_import
-from .convert_python import PythonParser
+from .convert_python import Pythonparser
 
 def entryPoint():
    """
@@ -32,7 +32,7 @@ def entryPoint():
         # Le nom du plugin
           'name' : 'MAP',
         # La factory pour creer une instance du plugin
-          'factory' : PythonParser,
+          'factory' : Pythonparser,
           }
 
 

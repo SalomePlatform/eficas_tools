@@ -44,7 +44,7 @@ from Noyau.N_Exception import AsException
 class MCCOMPO(object):
 
     """
-        L'attribut mc_liste a ete cree par une classe derivee de la
+        L'attribut mcListe a ete cree par une classe derivee de la
         classe MCCOMPO du Noyau
     """
 
@@ -55,7 +55,7 @@ class MCCOMPO(object):
         # defini dans les classes derivees
         self.txt_nat = ''
 
-    def init_modif_up(self):
+    def initModifUp(self):
         """
            Propage l'etat modifie au parent s'il existe et n'est pas l'objet
            lui-meme
@@ -71,22 +71,22 @@ class MCCOMPO(object):
         self.cr.debut = self.txt_nat + self.nom
         self.cr.fin = "END " + self.txt_nat + self.nom
         i = 0
-        for child in self.mc_liste:
+        for child in self.mcListe:
             i += 1
             if i > MAXSIZE:
-                print(MAXSIZE_MSGCHK.format(MAXSIZE, len(self.mc_liste)))
+                print(MAXSIZE_MSGCHK.format(MAXSIZE, len(self.mcListe)))
                 break
             self.cr.add(child.report())
         self.state = 'modified'
         try:
-            self.isvalid(cr='oui')
+            self.isValid(cr='oui')
         except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()
             self.cr.fatal(' '.join((self.txt_nat, self.nom, str(e))))
         return self.cr
 
-    def verif_regles(self):
+    def verifRegles(self):
         """
            A partir du dictionnaire des mots-cles presents, verifie si les regles
            de self sont valides ou non.
@@ -98,7 +98,7 @@ class MCCOMPO(object):
              - testglob = booleen 1 si toutes les regles OK, 0 sinon
         """
         # On verifie les regles avec les defauts affectes
-        dictionnaire = self.dict_mc_presents(restreint='non')
+        dictionnaire = self.dictMcPresents(restreint='non')
         texte = ['']
         testglob = 1
         for r in self.definition.regles:
@@ -109,9 +109,9 @@ class MCCOMPO(object):
         texte = os.linesep.join(texte)
         return texte, testglob
 
-    def dict_mc_presents(self, restreint='non'):
+    def dictMcPresents(self, restreint='non'):
         """
-            Retourne le dictionnaire {mocle : objet} construit a partir de self.mc_liste
+            Retourne le dictionnaire {mocle : objet} construit a partir de self.mcListe
             Si restreint == 'non' : on ajoute tous les mots-cles simples du catalogue qui ont
             une valeur par defaut
             Si restreint == 'oui' : on ne prend que les mots-cles effectivement entres par
@@ -120,7 +120,7 @@ class MCCOMPO(object):
         dico = {}
         # on ajoute les couples {nom mot-cle:objet mot-cle} effectivement
         # presents
-        for v in self.mc_liste:
+        for v in self.mcListe:
             if v == None:
                 continue
             k = v.nom

@@ -34,7 +34,7 @@ qui a lui meme un include (22,ii).
 Le deuxieme bb est un jeu de commandes simple.
 
 Le troisieme est decrit dans le fichier ff de type .ini
-qui est parse par le module ConfigParser.
+qui est parse par le module Configparser.
 Chaque section du fichier decrit un jeu de commandes.
 Un include est specifie par: numero logique=nom du fichier
 Une poursuite est specifiee par: poursuite=reference a un jeu de commande 
@@ -94,7 +94,7 @@ d_env={}
 # sont stockees hierarchiquement
 #
 
-def check_comm(option, opt_str, value, parser):
+def checkComm(option, opt_str, value, parser):
     if not hasattr(parser.values,"studies"):
        parser.values.studies=[]
        parser.values.comm=[]
@@ -105,7 +105,7 @@ def check_comm(option, opt_str, value, parser):
     parser.values.current=d_study
     parser.values.studies.append(d_study)
 
-def check_poursuite(option, opt_str, value, parser):
+def checkPoursuite(option, opt_str, value, parser):
     if parser.values.comm is None:
        raise OptionValueError(tr("un fichier de commandes doit etre defini avant une poursuite %s", value))
     if not os.path.isfile(value):
@@ -116,7 +116,7 @@ def check_poursuite(option, opt_str, value, parser):
     comm["pours"]=d_study
     parser.values.current=d_study
 
-def check_include(option, opt_str, value, parser):
+def checkInclude(option, opt_str, value, parser):
     try:
        args=[int(parser.rargs[0]),parser.rargs[1]]
     except:
@@ -134,7 +134,7 @@ def check_include(option, opt_str, value, parser):
     comm[args[0]]=args[1]
 
 
-def check_jdc(config,jdc,parser,fich):
+def checkJdc(config,jdc,parser,fich):
     """
         Fonction : analyse une section de fichier .ini pour en extraire
         les informations sur les fichiers poursuite et includes
@@ -142,7 +142,7 @@ def check_jdc(config,jdc,parser,fich):
 
         parser : objet analyseur de la ligne de commande
         fich : nom du fichier .ini en cours d'analyse
-        config : objet de la classe ConfigParser permettant de parser le fichier fich
+        config : objet de la classe Configparser permettant de parser le fichier fich
         jdc : nom de la section du fichier fich a analyser
     """
     d_study={}
@@ -161,7 +161,7 @@ def check_jdc(config,jdc,parser,fich):
                                       de commandes %(v_2)s n'existe pas", \
                                       {'v_1': fich, 'v_2': comm}))
 
-          pours=check_jdc(config,p,parser,fich)
+          pours=checkJdc(config,p,parser,fich)
           pours["comm"]=comm
           d_study["pours"]=pours
           continue
@@ -181,7 +181,7 @@ def check_jdc(config,jdc,parser,fich):
 
     return d_study
 
-def check_fich(option, opt_str, fich, parser):
+def checkFich(option, opt_str, fich, parser):
     """
         Fonction : parse le fichier fich (format .ini)
         
@@ -198,7 +198,7 @@ def check_fich(option, opt_str, fich, parser):
     if not hasattr(parser.values,"studies"):
        parser.values.studies=[]
        parser.values.comm=[]
-    config = six.moves.configparser.ConfigParser()
+    config = six.moves.configparser.configparser()
     config.read([fich])
     if not config.has_option(u"jdc","jdc"):
        raise OptionValueError(tr(" jdc %s manque option jdc dans section jdc", str(fich)))
@@ -213,11 +213,11 @@ def check_fich(option, opt_str, fich, parser):
                                 %(v_2)s n'existe pas", {'v_1': fich, 'v_2': comm}))
     parser.values.comm.append(comm)
 
-    d_study=check_jdc(config,jdc,parser,fich)
+    d_study=checkJdc(config,jdc,parser,fich)
     d_study["comm"]=comm
     parser.values.studies.append(d_study)
 
-def print_pours(d_pours,dec=''):
+def printPours(d_pours,dec=''):
     # Les fichiers includes d'abord
     for k,v in list(d_pours.items()):
        if k in (u"pours","comm"):continue
@@ -226,37 +226,41 @@ def print_pours(d_pours,dec=''):
     if "pours" in d_pours:
        # Description de la poursuite
        print((tr("%(v_1)s fichier poursuite: %(v_2)s", {'v_1': dec, 'v_2': d_pours["pours"]["comm"]})))
-       print_pours(d_pours["pours"],dec=dec+"++")
+       printPours(d_pours["pours"],dec=dec+"++")
 
-def print_d_env():
+def printDEnv():
     if d_env.studies is None:return
     for study in d_env.studies:
        print((tr("nom etude : %s", study["comm"])))
-       print_pours(study,dec="++")
+       printPours(study,dec="++")
 
-def create_parser():
+def createparser():
     # creation du parser des options de la ligne de commande
     #import prefs
     parser=optparse.OptionParser(usage=tr("utilisation : %prog [options]"), version="%prog 1.13")
 
     parser.add_option(u"-j","--jdc",dest="comm",type='string',
-                    action="callback",callback=check_comm,
+                    action="callback",callback=checkComm,
                     help=tr("nom du fichier de commandes"))
 
     parser.add_option(u"-p","--poursuite", type="string",dest="pours",
-                  action="callback", callback=check_poursuite,
+                  action="callback", callback=checkPoursuite,
                   help=tr("nom du fichier poursuite"))
 
     parser.add_option(u"-i","--include", 
-                  action="callback", callback=check_include,
+                  action="callback", callback=checkInclude,
                   nargs=2, help=tr("numero d'unite suivi du nom du fichier include"))
 
     parser.add_option(u"-f","--fich", type="string",dest="fich",
-                  action="callback", callback=check_fich,
+                  action="callback", callback=checkFich,
                   help=tr("fichier decrivant une etude"))
 
     parser.add_option(u"-c","--cata", action="store", type="string",dest="cata",
                   help=tr("version de catalogue a utiliser"))
+
+    parser.add_option(u"-v","--version_cata", action="store", type="string",dest="version_cata",
+                  help=tr("version de catalogue a utiliser"))
+
 
     parser.add_option(u"-k","--kode", action="store", type="string",dest="code",
                   help=tr("nom du code a utiliser"))
@@ -274,7 +278,7 @@ def create_parser():
     return parser
 
 def parse(args):
-    parser=create_parser()
+    parser=createparser()
     (options,args)=parser.parse_args(args[1:])
     if not hasattr(options,"studies"):
        options.studies=[]
@@ -303,10 +307,10 @@ def parse(args):
 
     global d_env
     d_env=options
-    #print_d_env()
+    #printDEnv()
     return options
 
-def get_unit(d_study,appli):
+def getUnit(d_study,appli):
     """
        Fonction : construit et retourne un dictionnaire contenant les informations
        sur les fichiers poursuite et includes sous la forme adaptee
@@ -317,22 +321,22 @@ def get_unit(d_study,appli):
                     ...] 
 
        d_study : dictionnaire de l'etude
-       appli : objet application EFICAS (permet d'acceder aux services comme get_source)
+       appli : objet application EFICAS (permet d'acceder aux services comme getSource)
     """
-    return get_dunit(d_study,appli)
+    return getDunit(d_study,appli)
 
-def get_dunit(d_unit,appli):
+def getDunit(d_unit,appli):
     d={}
     if 'pours' in d_unit:
        # on a une poursuite
        comm=d_unit["pours"]["comm"]
-       g=get_dunit(d_unit["pours"],appli)
-       text=appli.get_source(comm)
+       g=getDunit(d_unit["pours"],appli)
+       text=appli.getSource(comm)
        d[None]=comm,text,g
 
     for k,v in list(d_unit.items()):
        if k in (u"pours","comm"): continue
-       text=appli.get_source(v)
+       text=appli.getSource(v)
        d[k]=v,text,d
 
     return d

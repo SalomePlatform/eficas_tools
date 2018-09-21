@@ -41,14 +41,16 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
   discretes
   """
   def __init__(self,  parentAppli=None):
-      QDialog.__init__(self,parentAppli)
+      QDialog.__init__(self,parent=parentAppli,flags=Qt.Window)
       self.setModal(True)
       self.setupUi(self)
       self.parentAppli=parentAppli
       self.verifieInstall()
       self.code=None
-      self.pB_OK.clicked.connect(self.choisitCode)
-      self.pB_cancel.clicked.connect(self.sortie)
+      self.buttonBox.accepted.disconnect(self.accept)
+      self.buttonBox.accepted.connect(self.choisitCode)
+     # self.pB_OK.clicked.connect(self.choisitCode)
+      #self.pB_cancel.clicked.connect(self.sortie)
 
   def sortie(self):
       QDialog.reject(self)
@@ -56,7 +58,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
   def verifieInstall(self):
       self.groupCodes=QButtonGroup(self.groupBox)
       vars=list(os.environ.items())
-      listeCode=('Aster','Adao','Carmel3D','CarmelCND','CF','MAP','MT','PSEN','PSEN_N1','Telemac','ZCracks',)
+      listeCode=('Adao','Carmel3D','CarmelCND','CF','MAP','MT','PSEN','PSEN_N1','Telemac','ZCracks',)
       for code in listeCode:
           dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
           try :

@@ -35,19 +35,19 @@ class Validation(object)  :
          self.node=node
          self.parent=parent
 
-  def TesteUneValeur(self,valeurentree):
+  def testeUneValeur(self,valeurentree):
          commentaire = None
-         valeur,validite=self.node.item.eval_valeur(valeurentree)
+         valeur,validite=self.node.item.evalValeur(valeurentree)
          if not validite :
                   commentaire = "impossible d'evaluer : %s " %repr(valeurentree)
                   return valeur,validite,commentaire
-         if self.node.item.wait_TXM() and not( type(valeur) == str) : valeur=str(valeur) 
+         if self.node.item.waitTxm() and not( type(valeur) == str) : valeur=str(valeur) 
 
-         testtype,commentaire = self.node.item.object.verif_type(valeur)
+         testtype,commentaire = self.node.item.object.verifType(valeur)
          if not testtype :
                   return valeur,0,commentaire
 
-         valide=self.node.item.valide_item(valeur)
+         valide=self.node.item.valideItem(valeur)
          if type(valide) == tuple:
                  validite,commentaire=valide
          else :
@@ -56,20 +56,21 @@ class Validation(object)  :
 
          if not validite and commentaire is None:
                   commentaire = "impossible d'evaluer : %s " %repr(valeurentree)
+         #print ('ds testeUneValeur', valeur, validite, commentaire)
          return valeur, validite, commentaire
 
 # ----------------------------------------------------------------------------------------
 #   Methodes utilisees pour la manipulation des items en notation scientifique
 #   a mettre au point
 # ----------------------------------------------------------------------------------------
-  def SetValeurTexte(self,texteValeur) :
+  def setValeurTexte(self,texteValeur) :
          try :
                   if "R" in self.node.item.object.definition.type:
                      if texteValeur[0] != "'":
                         clef=eval(texteValeur)
                         if str(clef) != str(texteValeur) :
-                           self.node.item.object.init_modif()
-                           clefobj=self.node.item.object.GetNomConcept()
+                           self.node.item.object.initModif()
+                           clefobj=self.node.item.object.getNomConcept()
                            if not clefobj in self.parent.appliEficas.dict_reels:
                               self.parent.appliEficas.dict_reels[clefobj] = {}
                            self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
@@ -78,26 +79,26 @@ class Validation(object)  :
                               if not self.node.item.object.etape in self.parent.appliEficas.dict_reels :
                                  self.parent.appliEficas.dict_reels[self.node.item.object.etape] = {}
                               self.parent.appliEficas.dict_reels[self.node.item.object.etape][clef]=texteValeur
-                           self.node.item.object.fin_modif()
+                           self.node.item.object.finModif()
          except:
             pass
 
-  def GetValeurTexte(self,valeur) :
+  def getValeurTexte(self,valeur) :
          valeurTexte=valeur
          if valeur == None : return valeur
          from decimal import Decimal
          if  isinstance(valeur,Decimal) :
-             if self.node.wait_TXM() and not self.is_param(valeur) : return "'"+str(valeur)+"'"
+             if self.node.waitTxm() and not self.isParam(valeur) : return "'"+str(valeur)+"'"
              else : return(valeur)
          if "R" in self.node.item.object.definition.type:
-                  clefobj=self.node.item.object.GetNomConcept()
+                  clefobj=self.node.item.object.getNomConcept()
                   if clefobj in self.parent.appliEficas.dict_reels:
                      if valeur in self.parent.appliEficas.dict_reels[clefobj] :
                         valeurTexte=self.parent.appliEficas.dict_reels[clefobj][valeur]
                   else :
                      if str(valeur).find('.') == -1 and str(valeur).find('e') == -1 and str(valeur).find('E'):
                      # aucun '.' n'a ete trouve dans valeur --> on en rajoute un a la fin
-                        if (self.is_param(valeur)):
+                        if (self.isParam(valeur)):
                            return valeur
                         else:
                           try :
@@ -106,13 +107,13 @@ class Validation(object)  :
                             pass
          return valeurTexte
 
-  def is_param(self,valeur) :
+  def isParam(self,valeur) :
       for param in self.node.item.jdc.params:
           if ((repr(param) == repr(valeur)) or (str(param)==str(valeur))):
              return 1
       return 0
 
-  def AjoutDsDictReel(self,texteValeur):
+  def ajoutDsDictReel(self,texteValeur):
          # le try except est necessaire pour saisir les parametres
          # on enleve l erreur de saisie 00 pour 0
          if str(texteValeur)== '00' : return
@@ -121,7 +122,7 @@ class Validation(object)  :
                 if str(texteValeur)[0] != "'":
                    clef=eval(texteValeur)
                    if str(clef) != str(texteValeur) :
-                      clefobj=self.node.item.object.GetNomConcept()
+                      clefobj=self.node.item.object.getNomConcept()
                       if not clefobj in self.parent.appliEficas :
                           self.parent.appliEficas.dict_reels[clefobj] = {}
                       self.parent.appliEficas.dict_reels[clefobj][clef]=texteValeur
@@ -133,7 +134,7 @@ class Validation(object)  :
          except:
           pass
 
-  def AjoutDsDictReelEtape(self):
+  def ajoutDsDictReelEtape(self):
       try:
          if self.node.item.object in self.parent.appliEficas.dict_reels:
             self.parent.appliEficas.dict_reels[self.node.item.sdnom]=self.parent.appliEficas.dict_reels[self.node.item.object]
@@ -151,24 +152,24 @@ class PolitiqueUnique(Validation) :
   def __init__(self,node,parent):
         Validation.__init__(self,node,parent)
 
-  def RecordValeur(self,valeurentree):
-         if self.parent.modified == 'n' : self.parent.init_modif()
-         ancienne_val = self.node.item.get_valeur()
-         valeur,validite,commentaire =self.TesteUneValeur(valeurentree)
+  def recordValeur(self,valeurentree):
+         if self.parent.modified == 'n' : self.parent.initModif()
+         ancienneVal = self.node.item.getValeur()
+         valeur,validite,commentaire =self.testeUneValeur(valeurentree)
          if validite and ('R' in self.node.item.object.definition.type) and not(isinstance(valeur,PARAMETRE)) :
             s=valeurentree
             if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.'
-            valeur,validite,commentaire =self.TesteUneValeur(s)
+            valeur,validite,commentaire =self.testeUneValeur(s)
          if validite :
-            validite=self.node.item.set_valeur(valeur)
-            if self.node.item.isvalid():
+            validite=self.node.item.setValeur(valeur)
+            if self.node.item.isValid():
                   commentaire = tr("Valeur du mot-cle enregistree")
                   #commentaire = "Valeur du mot-cle enregistree"
-                  self.SetValeurTexte(str(valeurentree))
+                  self.setValeurTexte(str(valeurentree))
             else:
-                  cr = self.node.item.get_cr()
-                  commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.get_mess_fatal()
-                  self.node.item.set_valeur(ancienne_val)
+                  cr = self.node.item.getCr()
+                  commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.getMessFatal()
+                  self.node.item.setValeur(ancienneVal)
          return validite, commentaire 
 
  
@@ -186,7 +187,7 @@ class PolitiquePlusieurs(Validation):
          #print self.parent
 
 
-  def AjoutValeurs(self,listevaleur,index,listecourante):
+  def ajoutValeurs(self,listevaleur,index,listecourante):
          listeRetour=[]
          commentaire="Nouvelle valeur acceptee"
          commentaire2=""
@@ -196,7 +197,7 @@ class PolitiquePlusieurs(Validation):
          if not( type(listevaleur)  in (list,tuple)) :
             listevaleur=tuple(listevaleur)
          # on verifie que la cardinalite max n a pas ete atteinte
-         min,max = self.node.item.GetMinMax()
+         min,max = self.node.item.getMinMax()
          if len(listecourante) + len(listevaleur) > max :
             commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
             return False,commentaire,commentaire2,listeRetour
@@ -204,11 +205,11 @@ class PolitiquePlusieurs(Validation):
          for valeur in listevaleur :
              # On teste le type de la valeur
              valeurScientifique=valeur
-             valide=self.node.item.valide_item(valeur)
+             valide=self.node.item.valideItem(valeur)
              if not valide :
                 try :
-                   valeur,valide=self.node.item.eval_valeur(valeur)
-                   valide,commentaire2 = self.node.item.object.verif_type(valeur)
+                   valeur,valide=self.node.item.evalValeur(valeur)
+                   valide,commentaire2 = self.node.item.object.verifType(valeur)
                 except :
                    #return testtype,commentaire,"",listeRetour
                    pass
@@ -217,15 +218,15 @@ class PolitiquePlusieurs(Validation):
                    commentaire="Valeur "+str(valeur)+ " incorrecte : ajout a la liste refuse: On attend une chaine de caracteres < 8"
                 else :
                    commentaire="Valeur "+str(valeur)+ " incorrecte : ajout a la liste refuse"
-                if commentaire2== "" :commentaire2=self.node.item.info_erreur_item()
+                if commentaire2== "" :commentaire2=self.node.item.infoErreurItem()
                 return valide,commentaire,commentaire2,listeRetour
 
              # On valide la liste obtenue
-             encorevalide=self.node.item.valide_liste_partielle(valeur,listecourante)
+             encorevalide=self.node.item.valideListePartielle(valeur,listecourante)
              if not encorevalide :
-                commentaire2=self.node.item.info_erreur_liste()
+                commentaire2=self.node.item.infoErreurListe()
                 # On traite le cas ou la liste n est pas valide pour un pb de cardinalite
-                min,max = self.node.item.GetMinMax()
+                min,max = self.node.item.getMinMax()
                 if len(listecourante) + 1 >= max :
                    commentaire="La liste atteint le nombre maximum d'elements : "+ str(max) +" ,ajout refuse"
                    return valide,commentaire,commentaire2,listeRetour
@@ -233,14 +234,14 @@ class PolitiquePlusieurs(Validation):
                    commentaire=""
                    return valide,commentaire,commentaire2,listeRetour
              # On ajoute la valeur testee a la liste courante et a la liste acceptee
-             self.AjoutDsDictReel(valeurScientifique)
+             self.ajoutDsDictReel(valeurScientifique)
              listecourante.insert(index,valeur)
              index=index+1
              listeRetour.append(valeur)
 
          return valide,commentaire,commentaire2,listeRetour
 
-  def AjoutTuple(self,valeurTuple,listecourante):
+  def ajoutTuple(self,valeurTuple,listecourante):
          listeRetour=[]
          commentaire="Nouvelle valeur acceptee"
          commentaire2=""
@@ -248,22 +249,46 @@ class PolitiquePlusieurs(Validation):
          if valeurTuple==None: return
          if valeurTuple==['']: return
          # On teste le type de la valeur
-         valide=self.node.item.valide_item(valeurTuple)
+         valide=self.node.item.valideItem(valeurTuple)
          if not valide :
             try :
-                valeur,valide=self.node.item.eval_valeur(valeurTuple)
-                valide = self.node.item.valide_item(valeur)
+                valeur,valide=self.node.item.evalValeur(valeurTuple)
+                valide = self.node.item.valideItem(valeur)
             except :
                 pass
          if not valide:
             commentaire="Valeur "+str(valeurTuple)+ " incorrecte : ajout a la liste refuse"
-            commentaire2=self.node.item.info_erreur_item()
+            commentaire2=self.node.item.infoErreurItem()
             return valide,commentaire,commentaire2,listeRetour
 
          # On valide la liste obtenue
-         encorevalide=self.node.item.valide_liste_partielle(valeurTuple,listecourante)
+         encorevalide=self.node.item.valideListePartielle(valeurTuple,listecourante)
          if not encorevalide :
-            commentaire2=self.node.item.info_erreur_liste()
+            commentaire2=self.node.item.infoErreurListe()
             return valide,commentaire,commentaire2,listeRetour
          listeRetour.append(valeurTuple)
          return valide,commentaire,commentaire2,listeRetour
+
+  def ajoutNTuple(self,liste):
+         listeRetour=[]
+         commentaire="Nouvelles valeurs acceptee"
+         commentaire2=""
+         print (self.node.item.valideListePartielle)
+         valide=self.node.item.valideListePartielle(None,liste)
+         if not valide :
+            commentaire2=self.node.item.infoErreurListe()
+         return valide,commentaire,commentaire2,listeRetour
+
+  def recordValeur(self,liste,dejaValide=True):
+         ancienneVal = self.node.item.getValeur()
+         validite=self.node.item.setValeur(liste)
+         if validite : self.node.item.initModif()
+         if self.node.item.isValid():
+            commentaire = tr("Valeur du mot-cle enregistree")
+         else:
+            cr = self.node.item.getCr()
+            commentaire =  tr("Valeur du mot-cle non autorisee ")+cr.getMessFatal()
+            self.node.item.setValeur(ancienneVal)
+         return validite, commentaire 
+
+      

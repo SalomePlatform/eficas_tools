@@ -42,7 +42,7 @@ class OBJECT(object):
 
     """
 
-    def get_etape(self):
+    def getEtape(self):
         """
            Retourne l'étape à laquelle appartient self
            Un objet de la catégorie etape doit retourner self pour indiquer que
@@ -51,7 +51,7 @@ class OBJECT(object):
         """
         if self.parent == None:
             return None
-        return self.parent.get_etape()
+        return self.parent.getEtape()
 
     def supprime(self):
         """
@@ -64,7 +64,7 @@ class OBJECT(object):
         self.jdc = None
         self.niveau = None
 
-    def get_val(self):
+    def getVal(self):
         """
             Retourne la valeur de l'objet. Cette méthode fournit
             une valeur par defaut. Elle doit etre dérivée pour chaque
@@ -72,19 +72,14 @@ class OBJECT(object):
         """
         return self
 
-    def isBLOC(self):
-        """
-            Indique si l'objet est un BLOC
-        """
-        return 0
 
-    def get_jdc_root(self):
+    def getJdcRoot(self):
         """
             Cette méthode doit retourner l'objet racine c'est à dire celui qui
             n'a pas de parent
         """
         if self.parent:
-            return self.parent.get_jdc_root()
+            return self.parent.getJdcRoot()
         else:
             return self
 
@@ -105,6 +100,16 @@ class OBJECT(object):
         self.parent = parent
         self.jdc = parent.jdc
 
+    def isBLOC(self):
+        """
+            Indique si l'objet est un BLOC
+            surcharge dans MCBLOC
+        """
+        return 0
+
+    def longueurDsArbre(self):
+      return 1
+
 
 class ErrorObj(OBJECT):
 
@@ -116,7 +121,7 @@ class ErrorObj(OBJECT):
         self.definition = definition
         self.valeur = valeur
         self.parent = parent
-        self.mc_liste = []
+        self.mcListe = []
         if parent:
             self.jdc = self.parent.jdc
             # self.niveau = self.parent.niveau
@@ -127,7 +132,7 @@ class ErrorObj(OBJECT):
             # self.niveau = None
             # self.etape = None
 
-    def isvalid(self, cr='non'):
+    def isValid(self, cr='non'):
         return 0
 
     def report(self):
@@ -138,3 +143,5 @@ class ErrorObj(OBJECT):
         self.cr.fatal(_(u"Type non autorisé pour le mot-clé %s : '%s'"),
                       self.nom, self.valeur)
         return self.cr
+
+

@@ -58,34 +58,43 @@ class TELEMACGenerator(PythonGenerator):
    """
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appli=None,statut="Entier"):
+   def gener(self,obj,format='brut',config=None,appli=None,statut="Leger"):
 
-      self.statut=statut
-      self.langue=appli.langue
-      self.DicoEnumCasEnInverse={}
-      from enum_Telemac2d_auto       import TelemacdicoEn
-      for motClef in TelemacdicoEn:
+      self.statut        = statut
+      self.langue        = appli.langue
+      try : self.TelemacdicoEn = appli.readercata.TelemacdicoEn
+      except : 
+        print ('Attention : pas de TelemacdicoEn declare') 
+        self.TelemacdicoEn = {}
+      self.DicoEnumCasEnInverse = {}
+      #from enum_Telemac2d_auto       import self.TelemacdicoEn
+      for motClef in self.TelemacdicoEn:
           d={}
-          for valTelemac in TelemacdicoEn[motClef]:
-             valEficas= TelemacdicoEn[motClef][valTelemac]
-             d[valEficas]=valTelemac
+          for valTelemac in self.TelemacdicoEn[motClef]:
+             valEficas   = self.TelemacdicoEn[motClef][valTelemac]
+             d[valEficas] =valTelemac
           self.DicoEnumCasEnInverse[motClef]=d
       if self.langue == 'fr' : 
-         from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
-         for motClef in DicoEnumCasFrToEnumCasEn:
+         #from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
+         self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+         for motClef in self.DicoEnumCasFrToEnumCasEn:
               d={}
-              for valTelemac in DicoEnumCasFrToEnumCasEn[motClef]:
-                 valEficas= DicoEnumCasFrToEnumCasEn[motClef][valTelemac]
-                 d[valEficas]=valTelemac
+              for valTelemac in self.DicoEnumCasFrToEnumCasEn[motClef]:
+                 valEficas    = self.DicoEnumCasFrToEnumCasEn[motClef][valTelemac]
+                 d[valEficas] = valTelemac
               self.DicoEnumCasEnInverse[motClef]=d
       self.initDico()
-      #print (self.DicoEnumCasEnInverse.keys())
       # Pour Simplifier les verifs d ecriture
       if hasattr(appli,'listeTelemac') : self.listeTelemac=appli.listeTelemac
       else : self.listeTelemac = ()
 
       self.dicoCataToCas={}
-      self.dicoCasToCata=appli.readercata.dicoCasToCata
+      try :
+        self.dicoCasToCata=appli.readercata.dicoCasToCata
+      except :
+        print ('Attention pas de dicoCasToCata declare')
+        self.dicoCasToCata={}
+        self.dicoCataToCas={} 
       for motClef in self.dicoCasToCata:
            self.dicoCataToCas[self.dicoCasToCata[motClef]]=motClef
 
@@ -127,8 +136,8 @@ class TELEMACGenerator(PythonGenerator):
 
    def writeDefault(self,fn) :
        self.texteDico+='&ETA\n'
-       if self.statut == 'Leger' : extension = ".Lcas"
-       else                      : extension = ".cas"
+       if self.statut == 'Leger' : extension = ".cas"
+       else                      : extension = "_complet.cas"
        fileDico = fn[:fn.rfind(".")] + extension
        f = open( str(fileDico), 'w')
        f.write( self.texteDico )
@@ -138,8 +147,8 @@ class TELEMACGenerator(PythonGenerator):
 # ecriture de Leger
 #----------------------------------------------------------------------------------------
 
-   def writeLeger(self,fn,jdc,config,appli) :
-       jdc_formate=self.gener(jdc,config=config,appli=appli,statut="Leger")
+   def writeComplet(self,fn,jdc,config,appli) :
+       jdc_formate=self.gener(jdc,config=config,appli=appli,statut="Entier")
        self.writeDefault(fn)
 
 
@@ -171,6 +180,7 @@ class TELEMACGenerator(PythonGenerator):
           if hasattr(obj.definition,'defaut') and (obj.definition.defaut == obj.valeur) and (obj.nom not in self.listeTelemac) : return s
           if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == tuple or type(obj.valeur) == list) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
 
+        
 
         #nomMajuscule=obj.nom.upper()
         #nom=nomMajuscule.replace('_',' ')
@@ -228,6 +238,12 @@ class TELEMACGenerator(PythonGenerator):
         #if obj.nom in ('PRESCRIBED_FLOWRATES','PRESCRIBED_VELOCITIES','PRESCRIBED_ELEVATIONS') :
         #   return s
 
+        # cas des Tuples
+        if obj.waitTuple()  and s3 != '' and s3  != 'None':
+           s3=s
+           if s3[-1] == ',': s3=s3[:-1] 
+
+
         if obj.nom not in self.dicoCataToCas :
            if obj.nom == 'Consigne' : return ""
            return s
@@ -253,77 +269,27 @@ class TELEMACGenerator(PythonGenerator):
       return s
 
 
-#  def LIQUID_BOUNDARIES(self,obj):
-#     print ('jkljklj')
-#     if 'BOUNDARY_TYPE' in  obj.liste_mc_presents() :
-#         objForme=obj.get_child('BOUNDARY_TYPE')
-#         valForme=objForme.valeur
-#         if valForme == None : return
-
-
-#         if valForme == 'Prescribed Unknown':
-#            nomBloc='b_'+valForme.split(" ")[1]
-#            if nomBloc in  obj.liste_mc_presents() :
-#               objBloc=obj.get_child(nomBloc)
-#               valeurPE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0]).valeur
-#               valeurFE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[1]).valeur
-#               valeurVE = objValeur=objBloc.get_child(objBloc.liste_mc_presents()[2]).valeur
-#               if valeurPE== None : valeurPE="0."
-#               if valeurFE== None : valeurPE="0."
-#               if valeurVE== None : valeurPE="0."
-#            self.PE=True
-#            self.textPE += str(valeurPE) +"; "
-#            self.FE=True
-#            self.textFE += str(valeurFE) +"; "
-#            self.VE=True
-#            self.textVE += str(valeurVE) +"; "
-#         else:
-#            nomBloc='b_'+valForme.split(" ")[1]
-#            if nomBloc in  obj.liste_mc_presents() :
-#               objBloc=obj.get_child(nomBloc)
-#               objValeur=objBloc.get_child(objBloc.liste_mc_presents()[0])
-#               valeur=objValeur.valeur
-#               if valeur== None : valeur="0."
-#            if valForme == 'Prescribed Elevations' :
-#                self.PE=True
-#                self.textPE += str(valeur) +"; "
-#            else : self.textPE += "0.; "
-#            if valForme == 'Prescribed Flowrates' :
-#                self.FE=True
-#                self.textFE += str(valeur) +"; "
-#            else : self.textFE += "0.; "
-#            if valForme == 'Prescribed Velocity'  :
-#                self.VE=True
-#                self.textVE += str(valeur) +"; "
-#            else : self.textVE += "0.; "
-
-#  def BOUNDARY_CONDITIONS(self,obj):
-#      # sans '; '
-#      if self.FE :  self.texteDico += self.textFE[0:-2]+'\n'
-#      if self.PE :  self.texteDico += self.textPE[0:-2]+'\n'
-#      if self.VE :  self.texteDico += self.textVE[0:-2]+'\n'
-
    def TRACERS(self,obj):
        if self.nbTracers != 0 :  self.texteDico += 'NUMBER_OF_TRACERS : '+str(self.nbTracers) + '\n'
 
 
    def NAME_OF_TRACER(self,obj):
        print((dir(obj) ))
-       print((obj.get_genealogie_precise()))
+       print((obj.getGenealogiePrecise()))
 
    def Validation(self,obj):
        self.texteDico += "VALIDATION : True \n"
 
    def Date_De_L_Origine_Des_Temps (self,obj):
-       an=obj.get_child('Year').valeur
-       mois=obj.get_child('Month').valeur
-       jour=obj.get_child('Day').valeur
+       an=obj.getChild('Year').valeur
+       mois=obj.getChild('Month').valeur
+       jour=obj.getChild('Day').valeur
        self.texteDico += "ORIGINAL DATE OF TIME  :"+ str(an)+ " ,"+str(mois)+ "," +str(jour)+ "\n"
 
    def Original_Hour_Of_Time (self,obj):
-       hh=obj.get_child('Hour').valeur
-       mm=obj.get_child('Minute').valeur
-       ss=obj.get_child('Second').valeur
+       hh=obj.getChild('Hour').valeur
+       mm=obj.getChild('Minute').valeur
+       ss=obj.getChild('Second').valeur
        self.texteDico += "ORIGINAL HOUR OF TIME :"+str(hh)+" ,"+str(mm)+ ","+str(ss)+"\n"
 
    def Type_Of_Advection(self,obj):
@@ -351,9 +317,9 @@ class TELEMACGenerator(PythonGenerator):
        self.texteDico += "UPWIND COEFFICIENTS = "+ str(listeUpwind) + "\n"
 
    def chercheChildren(self,obj):
-       for c in obj.liste_mc_presents():
-           objc=obj.get_child(c)
-           if hasattr(objc,'liste_mc_presents') and objc.liste_mc_presents() != [] : self.chercheChildren(objc)
+       for c in obj.listeMcPresents():
+           objc=obj.getChild(c)
+           if hasattr(objc,'listeMcPresents') and objc.listeMcPresents() != [] : self.chercheChildren(objc)
            else : self.listeMCAdvection.append(objc)
 
 
@@ -369,7 +335,7 @@ class TELEMACGenerator(PythonGenerator):
          lval=valeur.split(";")
          ligne="   "
          for v in lval :
-           if len(ligne) < 70 : ligne += str(v)+'; '
+           if len(ligne+ str(v)+'; ') < 70 : ligne += str(v)+'; '
            else :
               text+= ligne+"\n"
               ligne="   "+str(v)+'; '

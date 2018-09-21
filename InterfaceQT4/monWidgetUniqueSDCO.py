@@ -44,7 +44,7 @@ class MonWidgetUniqueSDCO (Ui_WidgetUniqueSDCO,Feuille,SaisieSDCO):
         self.maCommande.listeAffichageWidget.append(self.LESDCO)
         self.AAficher=self.LESDCO
 
-        valeur = self.node.item.get_valeur()
+        valeur = self.node.item.getValeur()
         if valeur  != "" and valeur != None : self.LESDCO.setText(valeur.nom)
         self.connect(self.LESDCO,SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
 

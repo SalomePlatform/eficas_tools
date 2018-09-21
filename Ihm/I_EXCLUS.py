@@ -24,9 +24,9 @@ from __future__ import absolute_import
 from . import I_REGLE
 
 class EXCLUS(I_REGLE.REGLE):
-  def purge_liste(self,liste_a_purger,liste_mc_presents):
+  def purgeListe(self,liste_a_purger,listeMcPresents):
      regle_active=0
-     for mc_present in liste_mc_presents:
+     for mc_present in listeMcPresents:
         if mc_present in self.mcs:
            regle_active=1
            break
@@ -34,7 +34,7 @@ class EXCLUS(I_REGLE.REGLE):
 
      for mc in self.mcs:
         # Il ne faut pas purger un mot cle present. Sa cardinalite est verifiee par ailleurs
-        if mc in liste_a_purger and mc not in liste_mc_presents:
+        if mc in liste_a_purger and mc not in listeMcPresents:
            liste_a_purger.remove(mc)
      return liste_a_purger
 

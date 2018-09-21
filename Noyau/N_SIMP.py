@@ -25,8 +25,8 @@
 from __future__ import absolute_import
 import types
 
-from . import N_ENTITE
-from . import N_MCSIMP
+from Noyau import N_ENTITE
+from Noyau import N_MCSIMP
 
 
 class SIMP(N_ENTITE.ENTITE):
@@ -49,7 +49,7 @@ class SIMP(N_ENTITE.ENTITE):
     def __init__(self, typ,ang="", fr="", statut='f', into=None, intoSug = None,siValide = None, defaut=None,
                  min=1, max=1, homo=1, position='local',
                  val_min=float('-inf'), val_max=float('inf'), docu="", validators=None,
-                 sug=None):
+                 sug=None,fenetreIhm=None):
         """
             Un mot-clé simple est caractérisé par les attributs suivants :
             - type : cet attribut est obligatoire et indique le type de valeur attendue
@@ -60,14 +60,19 @@ class SIMP(N_ENTITE.ENTITE):
             - defaut : valeur par défaut
             - min : nombre minimal de valeurs
             - max : nombre maximal de valeurs
-            - homo : ?
+            - homo : un certatin nb de choses qui il faut redispacher ailleurs (information, constant)
             - ang : doc
             - position : si global, le mot-clé peut-être lu n'importe où dans la commande
             - val_min : valeur minimale autorisée
             - val_max : valeur maximale autorisée
-            - docu : ?
-            - sug : ?
+            - docu : clef sur de la documentation utilisateur
+            - sug : valeur suggere
+            - fenetreIhm=None 
         """
+        #print (self)
+        #import traceback
+        #traceback.print_stack()
+        #print (self)
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs
         if type(typ) == tuple:
@@ -93,23 +98,61 @@ class SIMP(N_ENTITE.ENTITE):
         if self.val_max == '**' : self.val_max = float('inf')
         if self.min     == '**' : self.min     = float('-inf')
         if self.val_min == '**' : self.val_min = float('-inf')
+        self.fenetreIhm=fenetreIhm
+        #self.creeT_SIMP()
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Cette methode sert à valider les attributs de l'objet de définition
             de la classe SIMP
         """
-        self.check_min_max()
-        self.check_fr()
-        self.check_statut()
-        self.check_homo()
-        self.check_into()
-        self.check_position()
-        self.check_validators()
+        self.checkMinMax()
+        self.checkFr()
+        self.checkStatut()
+        self.checkHomo()
+        self.checkInto()
+        self.checkPosition()
+        self.checkValidators()
 
-    def __call__(self, val, nom, parent=None):
+    def __call__(self, val, nom, parent=None, objPyxbDeConstruction = None):
         """
             Construit un objet mot cle simple (MCSIMP) a partir de sa definition (self)
             de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
         """
-        return self.class_instance(nom=nom, definition=self, val=val, parent=parent)
+        return self.class_instance(nom=nom, definition=self, val=val, parent=parent, objPyxbDeConstruction=objPyxbDeConstruction)
+
+#    def creeT_SIMP(self):
+#        from Efi2Xsd.readerEfficas import monSIMP
+#        from Efi2Xsd.mapDesTypes import dictSIMPEficasXML
+#        self.objXML=monSIMP()
+#        for nomEficasArg in dictSIMPEficasXML :
+#           argu=getattr(self,nomEficasArg)
+#           nomXMLarg=dictSIMPEficasXML[nomEficasArg]
+#           if not isinstance(nomXMLarg, (list, tuple)) :
+#              print(nomXMLarg, argu)
+              #if nomEficasArg  in listeParamDeTypeTypeAttendu:
+              #   typeAttendu = self.typ
+#                 
+#              setattr(self.objXML, nomXMLarg, argu)
+           
+
+
+# for nomXMLArg in dir(self) :
+#          if nomXMLArg in self.dictATraiter :
+#              nomEficasArg=self.dictATraiter[nomXMLArg]
+#              argu=getattr(self,nomXMLArg)
+#              if argu==None : continue
+#
+#              if type(nomEficasArg) == types.DictionaryType:
+#                 for nomXML in list(nomEficasArg.keys()):
+#                      arguDecoupe=getattr(argu,nomXML)
+#                      nomEficasDecoupe=nomEficasArg[nomXML]
+#                      if arguDecoupe == None : continue
+#                      self.dictArgsEficas[nomEficasDecoupe]=arguDecoupe
+#              else :
+#                self.dictArgsEficas[nomEficasArg] = argu
+#
+# 
+#        
+#       
+#

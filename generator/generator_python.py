@@ -105,7 +105,7 @@ class PythonGenerator(object):
       if obj == None : 
          print ('appel a gener avec None')
          return
-      self.appli=obj.get_jdc_root().appli
+      self.appli=obj.getJdcRoot().appli
       #self.appli=obj.appli
       liste= self.generator(obj)
       #format='standard'
@@ -118,17 +118,17 @@ class PythonGenerator(object):
          #import cProfile, pstats, StringIO
          #pr = cProfile.Profile()
          #pr.enable()
-         self.text=jdc_formate.formate_jdc()
+         self.text=jdc_formate.formateJdc()
          #pr.disable()
          #s = StringIO.StringIO()
          #sortby = 'cumulative'
          #ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
          #ps.print_stats()
-         #print (s.getvalue())
+         #print (s.getValue())
 
       elif format == 'Ligne':
          jdc_formate = FormatageLigne(liste,mode='.py')
-         self.text=jdc_formate.formate_jdc()
+         self.text=jdc_formate.formateJdc()
       else:
          raise EficasException(tr("Format non implemente ") +format)
       return self.text
@@ -212,7 +212,7 @@ class PythonGenerator(object):
       """
       l=[]
       l.append('(')
-      for v in obj.mc_liste:
+      for v in obj.mcListe:
         text = re.sub(".*=","",self.generator(v))
         l.append(text)
       l.append('),')
@@ -315,7 +315,7 @@ class PythonGenerator(object):
       if obj.reuse != None :
         str = 'reuse ='+ self.generator(obj.reuse) + ','
         l.append(str)
-      for v in obj.mc_liste:
+      for v in obj.mcListe:
         if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
@@ -339,10 +339,10 @@ class PythonGenerator(object):
             Methode particuliere pour les objets de type FORMULE
         """
         l=[]
-        nom = obj.get_nom()
+        nom = obj.getNom()
         if nom == '' : nom = 'sansnom'
         l.append(nom + ' = FORMULE(')
-        for v in obj.mc_liste:
+        for v in obj.mcListe:
             text=self.generator(v)
             l.append(v.nom+'='+text)
         l.append(');')
@@ -368,7 +368,7 @@ class PythonGenerator(object):
          # XXX faut il la virgule ou pas ????
          str = "reuse =" + self.generator(obj.reuse) + ','
          l.append(str)
-      for v in obj.mc_liste:
+      for v in obj.mcListe:
         if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
@@ -396,7 +396,7 @@ class PythonGenerator(object):
       l=[]
       label=obj.definition.nom+'('
       l.append(label)
-      for v in obj.mc_liste:
+      for v in obj.mcListe:
         if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
@@ -422,7 +422,7 @@ class PythonGenerator(object):
           Convertit un objet derive d'ASSD en une chaine de caracteres a la
           syntaxe python
       """
-      return obj.get_name()
+      return obj.getName()
 
    def generMCFACT(self,obj):
       """
@@ -431,7 +431,7 @@ class PythonGenerator(object):
       """
       l=[]
       l.append('_F(')
-      for v in obj.mc_liste:
+      for v in obj.mcListe:
          if not isinstance(v,Accas.MCSIMP) and not isinstance (v,Accas.MCBLOC) :
            # on est en presence d'une entite composee : on recupere une liste
            liste=self.generator(v)
@@ -472,7 +472,7 @@ class PythonGenerator(object):
           syntaxe python
       """
       l=[]
-      for v in obj.mc_liste:
+      for v in obj.mcListe:
         if isinstance(v,Accas.MCBLOC) :
           liste=self.generator(v)
           for mocle in liste :
@@ -503,7 +503,7 @@ class PythonGenerator(object):
       return l
 
 
-   def format_item(self,valeur,etape,obj,vientDeListe=0):
+   def formatItem(self,valeur,etape,obj,vientDeListe=0):
       if (type(valeur) == float or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
          # Pour un flottant on utilise str ou repr si on vient d une liste
          # ou la notation scientifique
@@ -511,7 +511,7 @@ class PythonGenerator(object):
          s = str(valeur)
          if vientDeListe and repr(valeur) != str(valeur) : s=repr(valeur)
          if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.0'
-         clefobj=etape.get_sdname()
+         clefobj=etape.getSdname()
          if self.appli.appliEficas and clefobj in self.appli.appliEficas.dict_reels:
            if valeur in self.appli.appliEficas.dict_reels[clefobj]:
              s=self.appli.appliEficas.dict_reels[clefobj][valeur]
@@ -565,16 +565,16 @@ class PythonGenerator(object):
          if waitTuple :
             #s = str(obj.valeur) +','
             #obj.valeurFormatee=obj.valeur
-            s = obj.GetText() +','
-            obj.valeurFormatee=obj.GetText()
+            s = obj.getText() +','
+            obj.valeurFormatee=obj.getText()
          else :
             obj.valeurFormatee=[]
             for val in obj.valeur :
-               s =s +self.format_item(val,obj.etape,obj,1) + ','
-               if obj.wait_TXM() :
+               s =s +self.formatItem(val,obj.etape,obj,1) + ','
+               if obj.waitTxm() :
                   obj.valeurFormatee.append(val)
                else :
-                 obj.valeurFormatee.append(self.format_item(val,obj.etape,obj))
+                 obj.valeurFormatee.append(self.formatItem(val,obj.etape,obj))
             if len(obj.valeur) >= 1:
                s = '(' + s + '),'
             if obj.valeur==[] or obj.valeur==() : s="(),"
@@ -582,7 +582,7 @@ class PythonGenerator(object):
             s=self.formatColonnes(obj.nbrColonnes(),obj.valeur,obj)
       else :
          obj.valeurFormatee=obj.valeur
-         s=self.format_item(obj.valeur,obj.etape,obj) + ','
+         s=self.formatItem(obj.valeur,obj.etape,obj) + ','
       return s
 
 
@@ -595,14 +595,14 @@ class PythonGenerator(object):
           try :
           #if 1 :
             for l in range(nbrColonnes) :
-                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                texteVariable=self.formatItem(listeValeurs[indice],obj.etape,obj)
                 textformat=textformat+texteVariable+" ,"
                 indice=indice+1
             textformat=textformat+"\n"
           except :
           #else :
             while ( indice < len(listeValeurs) ) :
-                texteVariable=self.format_item(listeValeurs[indice],obj.etape,obj)
+                texteVariable=self.formatItem(listeValeurs[indice],obj.etape,obj)
                 textformat=textformat+texteVariable+", "
                 indice=indice+1
             textformat=textformat+"\n"

@@ -22,7 +22,7 @@ import six
 _no=0
 
 import Accas
-def number_entite(entite):
+def numberEntite(entite):
    """
       Fonction qui attribue un numero unique a tous les objets du catalogue
       Ce numero permet de conserver l'ordre des objets
@@ -33,25 +33,25 @@ def number_entite(entite):
 
 class ENTITE:
   def __init__(self):
-     number_entite(self)
+     numberEntite(self)
     
-  def get_docu(self):
+  def getDocu(self):
     if hasattr(self,'docu') :
       if self.docu != "" : return self.docu
       else:
         if hasattr(self,'pere'):
-          return self.pere.get_docu()
+          return self.pere.getDocu()
         else:
           return None
     else:
       return None
 
-  def get_sug(self):
+  def getSug(self):
     if hasattr(self,'sug') :
       if self.sug != "" : return self.sug
     return None
 
-  def check_definition(self, parent):
+  def checkDefinition(self, parent):
       """Verifie la definition d'un objet composite (commande, fact, bloc)."""
       args = self.entites.copy()
       mcs = set()
@@ -62,7 +62,7 @@ class ENTITE:
             #if val.max != 1 and val.type == 'TXM':
                 #print "#CMD", parent, nom
          elif val.label == 'FACT':
-            val.check_definition(parent)
+            val.checkDefinition(parent)
             #PNPNPN surcharge
             # CALC_SPEC !
             #assert self.label != 'FACT', \
@@ -74,7 +74,7 @@ class ENTITE:
       # seuls les blocs peuvent entrer en conflit avec les mcs du plus haut niveau
       for nom, val in args.items():
          if val.label == 'BLOC':
-            mcbloc = val.check_definition(parent)
+            mcbloc = val.checkDefinition(parent)
             #XXX
             #print "#BLOC", parent, re.sub('\s+', ' ', val.condition)
             #assert mcs.isdisjoint(mcbloc), "Commande %s : Mot(s)-clef(s) vu(s) plusieurs fois : %s" \
@@ -98,17 +98,17 @@ class ENTITE:
              regle.enregistreXML(moi,catalogueXml)
          catalogueXml.reglesUtilisees.append(self.regles)
 
-      if ((self.get_docu() !="" and self.get_docu() !=None) or  \
+      if ((self.getDocu() !="" and self.getDocu() !=None) or  \
           (self.fr != "" and self.fr != None) or \
           (self.ang != "" and self.ang != None) ):
                 dico={}
-                if self.get_docu() !=None : dico["docu"]=self.get_docu()
+                if self.getDocu() !=None : dico["docu"]=self.getDocu()
                 if self.fr != None        : dico["fr"]=six.text_type(self.fr,"iso-8859-1")
                 if self.ang != None       : dico["ang"]=self.ang
                 doc=ET.SubElement(moi,'doc')
                 doc.attrib=dico
 
-      if ((self.get_sug() !=None) or  \
+      if ((self.getSug() !=None) or  \
           (hasattr(self,'defaut') and (self.defaut != None) and (self.defaut != 'None'))) :
                 # il faut ajouter des sug dans le catalogue
                 # les attributs sont  toujours du texte 
@@ -116,9 +116,9 @@ class ENTITE:
                 if (self.defaut != None) and (self.defaut != 'None') :
                     if isinstance(self.defaut,str ) : dico["defaut"]=six.text_type(self.defaut,"iso-8859-1")
                     else :dico["defaut"]=str(self.defaut)
-                if self.get_sug() !=None:
-                    if isinstance(self.get_sug(),str ) : dico["sug"]=six.text_type(self.get_sug(),"iso-8859-1")
-                    else :dico["sug"]=str(self.get_sug())
+                if self.getSug() !=None:
+                    if isinstance(self.getSug(),str ) : dico["sug"]=six.text_type(self.getSug(),"iso-8859-1")
+                    else :dico["sug"]=str(self.getSug())
                 
                 doc=ET.SubElement(moi,'ValeurDef')
                 doc.attrib=dico

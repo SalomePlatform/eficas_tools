@@ -28,12 +28,12 @@ import types,os
 
 from copy import copy,deepcopy
 import traceback
-from . import typeNode
+from InterfaceQT4 import typeNode
 
 # Modules Eficas
-from Editeur import Objecttreeitem
-from . import browser
-from Noyau.N_CR   import justify_text
+from Editeur      import Objecttreeitem
+from InterfaceQT4 import browser
+from Noyau.N_CR   import justifyText
 from Accas        import SalomeEntry
     
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):    
@@ -49,7 +49,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
         # label informatif 
         if monObjet.isInformation():
-          from .monWidgetInfo import MonWidgetInfo
+          from InterfaceQT4.monWidgetInfo import MonWidgetInfo
           widget=MonWidgetInfo(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           self.widget=widget
           return widget
@@ -59,14 +59,14 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
       # Attention il faut gerer les blocs et les facteurs 
       # a gerer comme dans composimp
       # Gestion des matrices
-        if self.item.wait_matrice ():
-          from .monWidgetMatrice import MonWidgetMatrice
+        if self.item.waitMatrice ():
+          from InterfaceQT4.monWidgetMatrice import MonWidgetMatrice
           widget=MonWidgetMatrice(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           self.widget=widget
           return widget
 
-        #print "____________________________", monNom, self.item.wait_co() 
-        #print "____________________________", monNom, self.item.wait_assd() 
+        #print "____________________________", monNom, self.item.waitCo() 
+        #print "____________________________", monNom, self.item.waitAssd() 
         # Gestion d'une seule valeur (eventuellement un tuple ou un complexe)
         if maDefinition.into != [] and maDefinition.into != None:
             if type(maDefinition.into) ==types.FunctionType : monInto=maDefinition.into() 
@@ -76,147 +76,164 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         if maDefinition.max == 1 :
 
         # A verifier
-          if maDefinition.into != [] and maDefinition.into != None:
-            if len(monInto) < 4 :
-              from .monWidgetRadioButton import MonWidgetRadioButton
+          if maDefinition.intoSug != [] and maDefinition.intoSug != None:
+            from InterfaceQT4.monWidgetCBIntoSug import MonWidgetCBIntoSug
+            widget=MonWidgetCBIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+          elif  maDefinition.into != [] and maDefinition.into != None:
+            if maDefinition.fenetreIhm=='menuDeroulant' :
+              from InterfaceQT4.monWidgetCB import MonWidgetCB
+              widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            elif len(monInto) < 4 :
+              from InterfaceQT4.monWidgetRadioButton import MonWidgetRadioButton
               widget=MonWidgetRadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             elif len(monInto) < 7 :
-              from .monWidget4a6RadioButton import MonWidget4a6RadioButton
+              from InterfaceQT4.monWidget4a6RadioButton import MonWidget4a6RadioButton
               widget=MonWidget4a6RadioButton(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-              from .monWidgetCB import MonWidgetCB
+              from InterfaceQT4.monWidgetCB import MonWidgetCB
               widget=MonWidgetCB(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
-          elif self.item.wait_bool() :
-            from .monWidgetSimpBool import MonWidgetSimpBool
+          elif self.item.waitBool() :
+            from InterfaceQT4.monWidgetSimpBool import MonWidgetSimpBool
             widget=MonWidgetSimpBool(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-          elif self.item.wait_fichier():
-            from .monWidgetSimpFichier import MonWidgetSimpFichier
+          elif self.item.waitFichier():
+            from InterfaceQT4.monWidgetSimpFichier import MonWidgetSimpFichier
             widget=MonWidgetSimpFichier(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
           # PNPNPN - a faire
-          elif self.item.wait_date():
-            from .monWidgetDate import MonWidgetDate
+          elif self.item.waitDate():
+            from InterfaceQT4.monWidgetDate import MonWidgetDate
             widget=MonWidgetDate(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-          elif self.item.wait_heure():
-            from .monWidgetHeure import MonWidgetHeure
+          elif self.item.waitHeure():
+            from InterfaceQT4.monWidgetHeure import MonWidgetHeure
             widget=MonWidgetHeure(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
-          elif self.item.wait_tuple() :
-            if self.item.object.definition.type[0].ntuple == 2:
-               from .monWidgetSimpTuple2 import MonWidgetSimpTuple2
-               widget=MonWidgetSimpTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif self.item.object.definition.type[0].ntuple == 3 :
-               from .monWidgetSimpTuple3 import MonWidgetSimpTuple3
-               widget=MonWidgetSimpTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            else :
-               print ("Pas de Tuple de longueur > 3")
-               print ("Prevenir la maintenance ")
+          elif self.item.waitTuple() :
+            num=self.item.object.definition.type[0].ntuple
+            nomDeLaClasse = 'MonWidgetSimpTuple'+str(num)
+            nomDuFichier  = 'InterfaceQT4.monWidgetSimpTupleN'
+            try :
+            #if 1 :
+               _temp = __import__(nomDuFichier, globals(), locals(), [nomDeLaClasse], 0)
+               #print (_temp)
+               MonWidgetSimpTuple =  getattr(_temp,nomDeLaClasse)
+            except :
+               print ("Pas de Tuple de longueur : ", num)
+            #   print ("Prevenir la maintenance ")
+            widget=MonWidgetSimpTuple(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
-          elif self.item.wait_complex():
-            from .monWidgetSimpComplexe import MonWidgetSimpComplexe
+          elif self.item.waitComplex():
+            from InterfaceQT4.monWidgetSimpComplexe import MonWidgetSimpComplexe
             widget=MonWidgetSimpComplexe(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
-          elif self.item.wait_co():
-            if len(self.item.get_sd_avant_du_bon_type()) == 0 :
-               from .monWidgetUniqueSDCO import MonWidgetUniqueSDCO
+          elif self.item.waitCo():
+            if len(self.item.getSdAvantDuBonType()) == 0 :
+               from InterfaceQT4.monWidgetUniqueSDCO import MonWidgetUniqueSDCO
                widget=MonWidgetUniqueSDCO(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :      
-               from .monWidgetSDCOInto import MonWidgetSDCOInto
+               from InterfaceQT4.monWidgetSDCOInto import MonWidgetSDCOInto
                widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-          elif self.item.wait_assd():
-            if len(self.item.get_sd_avant_du_bon_type()) == 0 :
-               from .monWidgetVide import MonWidgetVide
+          elif self.item.waitAssd():
+            if len(self.item.getSdAvantDuBonType()) == 0 :
+               from InterfaceQT4.monWidgetVide import MonWidgetVide
                widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif len(self.item.get_sd_avant_du_bon_type()) < 4 :
-              from .monWidgetRadioButton import MonWidgetRadioButtonSD
+            elif len(self.item.getSdAvantDuBonType()) < 4 :
+              from InterfaceQT4.monWidgetRadioButton import MonWidgetRadioButtonSD
               widget=MonWidgetRadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif len(self.item.get_sd_avant_du_bon_type()) < 7 :
-              from .monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
+            elif len(self.item.getSdAvantDuBonType()) < 7 :
+              from InterfaceQT4.monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
               widget=MonWidget4a6RadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-              from .monWidgetCB import MonWidgetCBSD
+              from InterfaceQT4.monWidgetCB import MonWidgetCBSD
               widget=MonWidgetCBSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           
-          elif  self.item.wait_Salome() and self.editor.salome:
-            from .monWidgetSimpSalome import MonWidgetSimpSalome
+          elif  self.item.waitSalome() and self.editor.salome:
+            from InterfaceQT4.monWidgetSimpSalome import MonWidgetSimpSalome
             widget=MonWidgetSimpSalome(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
-          elif self.item.wait_TXM():
-            from .monWidgetSimpTxt import MonWidgetSimpTxt
+          elif self.item.waitTxm():
+            from InterfaceQT4.monWidgetSimpTxt import MonWidgetSimpTxt
             widget=MonWidgetSimpTxt(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            from .monWidgetSimpBase import MonWidgetSimpBase
+            from InterfaceQT4.monWidgetSimpBase import MonWidgetSimpBase
             widget=MonWidgetSimpBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
         # Gestion des listes
         else :
           if maDefinition.intoSug != [] and maDefinition.intoSug != None:
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                 from .monWidgetIntoSug import MonWidgetIntoSug
+                 from InterfaceQT4.monWidgetIntoSug import MonWidgetIntoSug
                  widget=MonWidgetIntoSug(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           #if maDefinition.into != [] and maDefinition.into != None:
           # Attention pas fini --> on attend une liste de ASSD avec ordre
-          elif self.item.wait_assd() and self.item.is_list_SansOrdreNiDoublon():
-               #if self.item.is_list_Chargement():
-                #from monWidgetPlusieursTuple2AvecChargement import MonWidgetPlusieursTuple2AvecChargement
-                #widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-                # pass
-               #else :
-               listeAAfficher = self.item.get_sd_avant_du_bon_type()
+          elif self.item.waitAssd() and self.item.isListSansOrdreNiDoublon():
+               listeAAfficher = self.item.getSdAvantDuBonType()
                if len(listeAAfficher) == 0:
-                 from .monWidgetVide import MonWidgetVide
+                 from InterfaceQT4.monWidgetVide import MonWidgetVide
                  widget = MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                 from .monWidgetPlusieursInto import MonWidgetPlusieursInto
+                 from InterfaceQT4.monWidgetPlusieursInto import MonWidgetPlusieursInto
                  widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-          elif self.item.wait_assd() :
-               listeAAfficher = self.item.get_sd_avant_du_bon_type()
-               if len(listeAAfficher) == 0:
-                 from .monWidgetVide import MonWidgetVide
+          elif self.item.waitAssd() :
+               listeAAfficher = self.item.getSdAvantDuBonType()
+               mctype=maDefinition.type[0]
+               enable_salome_selection = self.editor.salome and \
+                      (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or ('SalomeEntry' in repr(mctype)) or \
+                      (hasattr(mctype, "enable_salome_selection") and mctype.enable_salome_selection))
+               if enable_salome_selection:
+                  from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
+                  widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+               elif len(listeAAfficher) == 0:
+                 from InterfaceQT4.monWidgetVide import MonWidgetVide
                  widget = MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                elif self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                 from .monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
+                 from InterfaceQT4.monWidgetPlusieursASSDIntoOrdonne import MonWidgetPlusieursASSDIntoOrdonne
                  widget=MonWidgetPlusieursASSDIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlieASSD
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlieASSD
                   widget=MonWidgetPlusieursPlieASSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-          elif self.item.wait_tuple() :
-            if self.item.object.definition.type[0].ntuple == 2:
-               from .monWidgetPlusieursTuple2 import MonWidgetPlusieursTuple2
-               widget=MonWidgetPlusieursTuple2(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif self.item.object.definition.type[0].ntuple == 3 :
-               from .monWidgetPlusieursTuple3 import MonWidgetPlusieursTuple3
-               widget=MonWidgetPlusieursTuple3(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            else :
-               print ("Pas de Tuple de longueur > 3")
-               print ("Prevenir la maintenance ")
-          elif self.item.has_into():
-            if self.item.is_list_SansOrdreNiDoublon():
+          elif self.item.waitTuple() :
+            if self.item.object.definition.fenetreIhm == 'Tableau' :
+               from InterfaceQT4.monWidgetTableau import MonWidgetTableau
+               widget=MonWidgetTableau(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            else  :
+               num=self.item.object.definition.type[0].ntuple
+               nomDeLaClasse = 'MonWidgetPlusieursTuple'+str(num)
+               nomDuFichier  = 'InterfaceQT4.monWidgetPlusieursTupleN'
+               #try:
+               if 1 :
+                  _temp = __import__(nomDuFichier, globals(), locals(), [nomDeLaClasse], 0)
+                  MonWidgetPlusieursTuple =  getattr(_temp,nomDeLaClasse)
+               #except :
+               #   print ("Pas de Tuple de longueur : ", num)
+               #   print ("Prevenir la maintenance ")
+               widget=MonWidgetPlusieursTuple(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+
+          elif self.item.hasInto():
+            if self.item.isListSansOrdreNiDoublon():
                
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                  from .monWidgetPlusieursInto import MonWidgetPlusieursInto
+                  from InterfaceQT4.monWidgetPlusieursInto import MonWidgetPlusieursInto
                   widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
                if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees) : 
-                  from .monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
+                  from InterfaceQT4.monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne
                   widget=MonWidgetPlusieursIntoOrdonne(self,maDefinition,monNom,monObjet,parentQt,maCommande)
                else :
-                  from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+                  from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            #print 8
             if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
-               from .monWidgetPlusieursBase import MonWidgetPlusieursBase
+               from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
                widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
-               from .monWidgetPlusieursPlie import MonWidgetPlusieursPlie
+               from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
 
         self.widget=widget
@@ -236,17 +253,15 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   # ou au mot-clef simple
   #
   #-----------------------------------------------
-  # is_list
-  # get_into                a priori inutile --> commentee
-  # has_into
-  # wait_into                a priori inutile --> commentee
-  # GetMinMax
-  # GetMultiplicite
-  # GetIntervalle
-  # GetListeValeurs
-  # get_liste_possible
+  # isList
+  # hasInto
+  # getMinMax
+  # getMultiplicite
+  # getIntervalle
+  # getListeValeurs
+  # getListePossible
 
-  def is_list(self):
+  def isList(self):
       """
           Cette methode indique si le mot cle simple attend une liste (valeur de retour 1)
           ou s'il n'en attend pas (valeur de retour 0)
@@ -255,31 +270,28 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           Dans le cas sans validateur, l'information est donnee par l'attribut max
           de la definition du mot cle.
           Dans le cas avec validateur, il faut combiner l'information precedente avec
-          celle issue de l'appel de la methode is_list sur le validateur.On utilisera
+          celle issue de l'appel de la methode isList sur le validateur.On utilisera
           l'operateur ET pour effectuer cette combinaison (AndVal).
       """
       is_a_list=0
-      min,max = self.GetMinMax()
+      min,max = self.getMinMax()
       assert (min <= max)
       if max > 1 :
                 is_a_list=1
       # Dans le cas avec validateurs, pour que le mot cle soit considere
       # comme acceptant une liste, il faut que max soit superieur a 1
-      # ET que la methode is_list du validateur retourne 1. Dans les autres cas
+      # ET que la methode isList du validateur retourne 1. Dans les autres cas
       # on retournera 0 (n'attend pas de liste)
       if self.definition.validators :
-         is_a_list= self.definition.validators.is_list() * is_a_list
+         is_a_list= self.definition.validators.isList() * is_a_list
       return is_a_list 
 
-  def is_list_SansOrdreNiDoublon(self):
+  def isListSansOrdreNiDoublon(self):
       if self.definition.homo=="SansOrdreNiDoublon" : return 1
       return 0 
 
-  def is_list_Chargement(self):
-      if  self.definition.docu != "" :  return 1
-      return 0 
 
-  def has_into(self):
+  def hasInto(self):
       """
           Cette methode indique si le mot cle simple propose un choix (valeur de retour 1)
           ou s'il n'en propose pas (valeur de retour 0)
@@ -289,45 +301,45 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           de la definition du mot cle.
           Dans le cas avec validateurs, pour que le mot cle soit considere
           comme proposant un choix, il faut que into soit present OU
-          que la methode has_into du validateur retourne 1. Dans les autres cas
+          que la methode hasInto du validateur retourne 1. Dans les autres cas
           on retournera 0 (ne propose pas de choix)
       """
       has_an_into=0
       if self.definition.into:
                has_an_into=1
       elif self.definition.validators :
-         has_an_into= self.definition.validators.has_into()
+         has_an_into= self.definition.validators.hasInto()
       return has_an_into
 
-  def has_intoSug(self):
+  def hasIntoSug(self):
       if self.definition.intoSug: return 1
       return 0
 
 
-  def GetMinMax(self):
+  def getMinMax(self):
       """ Retourne les valeurs min et max de la definition de object """
-      return self.object.get_min_max()
+      return self.object.getMinMax()
 
-  def GetMultiplicite(self):
+  def getMultiplicite(self):
       """ A preciser.
           Retourne la multiplicite des valeurs affectees a l'objet
           represente par l'item. Pour le moment retourne invariablement 1.
       """
       return 1
 
-  def GetIntervalle(self):
+  def getIntervalle(self):
       """ 
            Retourne le domaine de valeur attendu par l'objet represente 
            par l'item.
       """
       return self.object.getintervalle()
 
-  def GetListeValeurs(self) :
+  def getListeValeurs(self) :
       """ Retourne la liste des valeurs de object """
-      valeurs=self.object.get_liste_valeurs()
+      valeurs=self.object.getListeValeurs()
       try :
         if "R" in self.object.definition.type:
-           clef=self.object.GetNomConcept()
+           clef=self.object.getNomConcept()
            if clef in self.appli.dict_reels:
               if type(valeurs) == tuple:
                  valeurs_reelles=[]
@@ -344,7 +356,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
         pass
       return valeurs
     
-  def get_liste_possible(self,listeActuelle=[]):
+  def getListePossible(self,listeActuelle=[]):
       if hasattr(self.definition.validators,'into'):
          valeurspossibles = self.definition.validators.into 
       else:
@@ -359,20 +371,20 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       else :
          valeurspossibles=(valeurspossibles,)
       for item in valeurspossibles:
-          encorevalide=self.valide_item(item)
+          encorevalide=self.valideItem(item)
           if encorevalide :
              listevalideitem.append(item)
 
-      #on ne garde que les choix possibles qui passent le test de valide_liste_partielle
+      #on ne garde que les choix possibles qui passent le test de valideListePartielle
       listevalideliste=[]
       for item in listevalideitem:
-          encorevalide=self.valide_liste_partielle(item,listeActuelle)
+          encorevalide=self.valideListePartielle(item,listeActuelle)
           if encorevalide :
               listevalideliste.append(item)
       #print listevalideliste
       return listevalideliste
 
-  def get_liste_possible_avecSug(self,listeActuelle=[]):
+  def getListePossibleAvecSug(self,listeActuelle=[]):
       if hasattr(self.definition,'intoSug'):
          valeurspossibles = self.definition.intoSug 
       else:
@@ -388,24 +400,24 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       else :
          valeurspossibles=(valeurspossibles,)
       for item in valeurspossibles:
-          encorevalide=self.valide_item(item)
+          encorevalide=self.valideItem(item)
           if encorevalide :
              listevalideitem.append(item)
 
-      #on ne garde que les choix possibles qui passent le test de valide_liste_partielle
+      #on ne garde que les choix possibles qui passent le test de valideListePartielle
       listevalideliste=[]
       for item in listevalideitem:
-          encorevalide=self.valide_liste_partielle(item,listeActuelle)
+          encorevalide=self.valideListePartielle(item,listeActuelle)
           if encorevalide :
               listevalideliste.append(item)
       return listevalideliste
 
-  def get_liste_param_possible(self):
+  def getListeParamPossible(self):
       liste_param=[]
-      l1,l2=self.jdc.get_parametres_fonctions_avant_etape(self.get_etape())
+      l1,l2=self.jdc.getParametresFonctionsAvantEtape(self.getEtape())
       for param in self.object.jdc.params:
           if param.nom not in l1 : continue
-          encorevalide=self.valide_item(param.valeur)
+          encorevalide=self.valideItem(param.valeur)
           if encorevalide:
              type_param=param.valeur.__class__.__name__
              for typ in self.definition.type:
@@ -424,36 +436,33 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   # Methodes liees a la validite des valeurs saisies
   #
   #---------------------------------------------------
-  # valide_item
-  # valide_liste_partielle
-  # valide_liste_complete
-  # info_erreur_item
-  # info_erreur_liste
-  # IsInIntervalle
-  # isvalid
+  # valideItem
+  # valideListePartielle
+  # valideListeComplete
+  # infoErreurItem
+  # infoErreurListe
+  # isInIntervalle
+  # isValid
 
-  def valide_item(self,item):
+  def valideItem(self,item):
       """
         La validation est realisee directement par l'objet
       """
-      return self.object.valide_item(item)
+      return self.object.valideItem(item)
      
-  def valide_liste_partielle(self,item,listecourante):
+  def valideListePartielle(self,item,listecourante):
       #On protege la liste en entree en la copiant
-      valeur=listecourante[:]
-      valeur.append(item)
-      return self.object.valid_valeur_partielle(valeur)
+      valeur=list(listecourante)
+      if item : valeur.append(item)
+      return self.object.validValeurPartielle(valeur)
 
-  def valide_liste_complete (self,valeur):
-      return self.object.valid_valeur(valeur)
+  def valideListeComplete (self,valeur):
+      return self.object.validValeur(valeur)
 
-  def valide_val (self,valeur):
-      return self.object.valid_val(valeur)
-
-  def info_erreur_item(self) :
+  def infoErreurItem(self) :
       commentaire=""
       if self.definition.validators :
-         commentaire=self.definition.validators.info_erreur_item()
+         commentaire=self.definition.validators.infoErreurItem()
       return commentaire
       
   def aide(self) :
@@ -462,21 +471,21 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          commentaire=self.definition.validators.aide()
       return commentaire
 
-  def info_erreur_liste(self) :
+  def infoErreurListe(self) :
       commentaire=""
       if self.definition.validators :
-         commentaire=self.definition.validators.info_erreur_liste()
+         commentaire=self.definition.validators.infoErreurListe()
       return commentaire
 
-  def IsInIntervalle(self,valeur):
+  def isInIntervalle(self,valeur):
       """ 
           Retourne 1 si la valeur est dans l'intervalle permis par
           l'objet represente par l'item.
       """
-      return self.valide_item(valeur)
+      return self.valideItem(valeur)
 
-  def isvalid(self):
-    valide=self.object.isvalid()
+  def isValid(self):
+    valide=self.object.isValid()
     return valide
 
   #--------------------------------------------------
@@ -484,86 +493,89 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   # Autres ...
   #
   #---------------------------------------------------
-  # GetIconName
-  # GetText
-  # set_valeur_co
-  # get_sd_avant_du_bon_type
-  # delete_valeur_co
+  # getIconName
+  # getText
+  # setValeurCo
+  # getSdAvantDuBonType
 
 
-  def GetIconName(self):
-    if self.isvalid():
+  def getIconName(self):
+    if self.appli.maConfiguration.differencieSiDefaut and self.isValid():
+      if self.object.definition.defaut != None :
+         if self.object.valeur == self.object.definition.defaut : return "ast-green-dark-ball"
+         if self.object.definition.max > 1 and list(self.object.valeur) == list(self.object.definition.defaut) : return "ast-green-dark-ball"
       return "ast-green-ball"
-    elif self.object.isoblig():
+    elif self.isValid():
+      return "ast-green-ball"
+    elif self.object.isOblig():
       return "ast-red-ball"
     else:
       return "ast-yel-ball"
 
-  def GetText(self):
+  def getText(self):
     """
     Classe SIMPTreeItem
     Retourne le texte a afficher dans l'arbre representant la valeur de l'objet
     pointe par self 
     """
-    text= self.object.GetText()
+    text= self.object.getText()
     if text == None : text=""
     return text
     
 
-  def set_valeur_co(self,nom_co):
+  def setValeurCo(self,nom_co):
       """
       Affecte au MCS pointé par self l'objet de type CO et de nom nom_co
       """
-      ret = self.object.set_valeur_co(nom_co)
-      #print "set_valeur_co",ret
+      ret = self.object.setValeurCo(nom_co)
+      #print "setValeurCo",ret
       return ret
       
-  def get_sd_avant_du_bon_type(self):
+  def getSdAvantDuBonType(self):
       """
       Retourne la liste des noms des SD présentes avant l'étape qui contient
       le MCS pointé par self et du type requis par ce MCS
       """
-      a=self.object.etape.parent.get_sd_avant_du_bon_type(self.object.etape,self.object.definition.type)
+      a=self.object.etape.parent.getSdAvantDuBonType(self.object.etape,self.object.definition.type)
       return a
 
-  def get_sd_avant_du_bon_type_pour_type_de_base(self):
-      a=self.object.jdc.get_sd_avant_du_bon_type_pour_type_de_base(self.object.etape,"LASSD")
+  def getSdAvantDuBonTypePourTypeDeBase(self):
+      a=self.object.jdc.getSdAvantDuBonTypePourTypeDe_Base(self.object.etape,"LASSD")
       return a
 
 
 
-
-  def delete_valeur_co(self,valeur=None):
+  def deleteValeurCo(self,valeur=None):
       """
            Supprime la valeur du mot cle (de type CO)
            il faut propager la destruction aux autres etapes
       """
       if not valeur : valeur=self.object.valeur
-      # XXX faut il vraiment appeler del_sdprod ???
-      #self.object.etape.parent.del_sdprod(valeur)
-      self.object.etape.parent.delete_concept(valeur)
+      # XXX faut il vraiment appeler delSdprod ???
+      #self.object.etape.parent.delSdprod(valeur)
+      self.object.etape.parent.deleteConcept(valeur)
 
   #-----------------------------------------------
   #
   # Methodes liees au type de l objet attendu
   #
   #-----------------------------------------------
-  # wait_co 
-  # wait_geom
-  # wait_complex
-  # wait_reel
-  # wait_assd
-  # GetType
+  # waitCo 
+  # waitGeom
+  # waitComplex
+  # waitReel
+  # waitAssd
+  # getType
 
-  def wait_co(self):
+  def waitCo(self):
       """
       Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un objet de type ASSD qui n'existe pas encore (type CO()),
       0 sinon
       """
-      return self.object.wait_co()
+      return self.object.waitCo()
 
-  def wait_fichier(self):
+  def waitFichier(self):
       maDefinition=self.object.definition
       try : 
         if ('Repertoire' in maDefinition.type[0]) or ('Fichier' in maDefinition.type[0]) :
@@ -571,18 +583,18 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       except :
            return 0
 
-  def wait_geom(self):
+  def waitGeom(self):
       """
       Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un objet GEOM, 0 sinon
       """
-      return self.object.wait_geom()
+      return self.object.waitGeom()
 
-  def wait_TXM(self):
-     return self.object.wait_TXM()
+  def waitTxm(self):
+     return self.object.waitTxm()
 
     
-  def wait_complex(self):
+  def waitComplex(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un complexe, 0 sinon """
       if 'C' in self.object.definition.type:
@@ -590,7 +602,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       else:
           return 0
 
-  def wait_reel(self):
+  def waitReel(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un réel, 0 sinon """
       if 'R' in self.object.definition.type:
@@ -598,7 +610,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       else:
           return 0
 
-  def wait_date(self):
+  def waitTuple(self) :
+      return  self.object.waitTuple()
+
+  def waitDate(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un réel, 0 sinon """
       if 'DateHHMMAAAA' in self.object.definition.type:
@@ -606,7 +621,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       else:
           return 0
         
-  def wait_heure(self):
+  def waitHeure(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un réel, 0 sinon """
       if 'HeureHHMMSS' in self.object.definition.type:
@@ -616,7 +631,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
         
         
         
-  def wait_tuple(self):
+  def waitTuple(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un Tuple, 0 sinon """
       for ss_type in self.object.definition.type:
@@ -624,7 +639,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
              return 1
       return 0
 
-  def wait_matrice(self):
+  def waitMatrice(self):
       """ Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un Tuple, 0 sinon """
       for ss_type in self.object.definition.type:
@@ -632,21 +647,21 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
              return 1
       return 0
 
-  def wait_assd(self):
+  def waitAssd(self):
       """Méthode booléenne qui retourne 1 si l'objet pointé par self
       attend un objet de type ASSD ou dérivé, 0 sinon """
-      return self.object.wait_assd()
+      return self.object.waitAssd()
     
-  def wait_assd_or_type_base(self) :
+  def waitAssdOrTypeBase(self) :
       boo=0
       if len(self.object.definition.type) > 1 :
-         if self.wait_reel() :
+         if self.waitReel() :
             boo = 1
          if 'I' in self.object.definition.type :
             boo = 1
       return boo
 
-  def wait_Salome(self):
+  def waitSalome(self):
       monType = self.object.definition.type[0]
       if 'grma' in repr(monType) : return True
       if 'grno' in repr(monType) : return True
@@ -656,100 +671,79 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          pass
       return False
    
-  def GetType(self):
+  def getType(self):
       """ 
           Retourne le type de valeur attendu par l'objet représenté par l'item.
       """
-      return self.object.get_type()
+      return self.object.getType()
 
   #-----------------------------------------------------
   #
   # Methodes liees  a l evaluation de la valeur saisie
   #
   #-----------------------------------------------------
-  # eval_valeur
-  # eval_valeur_item
-  # is_CO
-  # traite_reel
+  # evalValeur
+  # evalValeurItem
+  # isCO
+  # traiteReel
 
-  def eval_valeur(self,valeur):
+  def evalValeur(self,valeur):
       """ Lance l'interpretation de 'valeur' (chaine de caracteres) comme valeur de self :
              - retourne l'objet associe si on a pu interpreter (entier, reel, ASSD,...)
              - retourne 'valeur' (chaine de caracteres) sinon
       """
-      newvaleur=self.eval_val(valeur)
+      newvaleur=self.evalVal(valeur)
       return newvaleur,1
 
-  def eval_valeur_BAK(self,valeur):
-      """ Lance l'interpretation de 'valeur' (chaine de caractéres) comme valeur
-      de l'objet pointé par self :
-        - retourne l'objet associé si on a pu interpréter (entier, réel, ASSD,...)
-        - retourne 'valeur' (chaine de caractéres) sinon
-        - retourne None en cas d invalidite
-        - retourne invalide si 1 des objets du tuple l est
-      """
-      validite=1
-      if type(valeur) in (list,tuple) :
-         valeurretour=[]
-         for item in valeur :
-             newvaleur,validiteitem=self.eval_valeur_item(item)
-             valeurretour.append(newvaleur)
-             if validiteitem == 0:
-                validite=0
-      else :
-         valeurretour,validite= self.eval_valeur_item(valeur)
-      if validite == 0 :
-         valeurretour = None
-      return valeurretour,validite
 
-  def eval_valeur_item(self,valeur):
+  def evalValeurItem(self,valeur):
       """ Lance l'interprétation de 'valeur' qui doit ne pas etre un tuple 
           - va retourner la valeur de retour et la validite
             selon le type de l objet attendu
           - traite les reels et les parametres 
       """ 
-      #print "eval_valeur_item",valeur
+      #print "evalValeurItem",valeur
       if valeur==None or valeur == "" :
          return None,0
       validite=1
-      if self.wait_reel():
-             valeurinter = self.traite_reel(valeur)
+      if self.waitReel():
+             valeurinter = self.traiteReel(valeur)
              if valeurinter != None :
-                valeurretour,validite= self.object.eval_valeur(valeurinter)
+                valeurretour,validite= self.object.evalValeur(valeurinter)
              else:
-                valeurretour,validite= self.object.eval_valeur(valeur)
-      elif self.wait_geom():
+                valeurretour,validite= self.object.evalValeur(valeur)
+      elif self.waitGeom():
              valeurretour,validite = valeur,1
       else :
-             valeurretour,validite= self.object.eval_valeur(valeur)
-      #print "eval_valeur_item",valeurretour,validite
+             valeurretour,validite= self.object.evalValeur(valeur)
+      #print "evalValeurItem",valeurretour,validite
 
       if validite == 0:
-         if type(valeur) == bytes and self.object.wait_TXM():
+         if type(valeur) == bytes and self.object.waitTxm():
             essai_valeur="'" + valeur + "'"
-            valeurretour,validite= self.object.eval_valeur(essai_valeur)
+            valeurretour,validite= self.object.evalValeur(essai_valeur)
 
       if hasattr(valeurretour,'__class__'):
          #if valeurretour.__class__.__name__ in ('PARAMETRE','PARAMETRE_EVAL'):
          if valeurretour.__class__.__name__ in ('PARAMETRE',):
             validite=1
 
-      #if self.wait_co():
+      #if self.waitCo():
          # CCAR : il ne faut pas essayer de creer un concept
-         # il faut simplement en chercher un existant ce qui a du etre fait par self.object.eval_valeur(valeur)
+         # il faut simplement en chercher un existant ce qui a du etre fait par self.object.evalValeur(valeur)
          #try:
             #valeurretour=Accas.CO(valeur)
          #except:
             #valeurretour=None
             #validite=0
       # on est dans le cas ou on a évalué et ou on n'aurait pas du
-      if self.object.wait_TXM() :
+      if self.object.waitTxm() :
           if type(valeurretour) != bytes:
              valeurretour=str(valeur)
              validite=1
       return valeurretour,validite
       
-  def is_CO(self,valeur=None):
+  def isCO(self,valeur=None):
       """
          Indique si valeur est un concept produit de la macro
          Cette méthode n'a de sens que pour un MCSIMP d'une MACRO
@@ -760,27 +754,27 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       # ou si son nom de classe est CO.
       # Il faut faire les 2 tests car une macro non valide peut etre
       # dans un etat pas tres catholique avec des CO pas encore types
-      # et donc pas dans sdprods (resultat d'une exception dans type_sdprod)
+      # et donc pas dans sdprods (resultat d'une exception dans typeSDProd)
       if not valeur:valeur=self.object.valeur
       if valeur in self.object.etape.sdprods:return 1
       if type(valeur) is not types.InstanceType:return 0
       if valeur.__class__.__name__ == 'CO':return 1
       return 0
 
-  def is_param(self,valeur) :
+  def isParam(self,valeur) :
       for param in self.jdc.params:
           if (repr(param) == valeur):
              return 1
       return 0
 
-  def traite_reel(self,valeur):
+  def traiteReel(self,valeur):
       """
       Cette fonction a pour but de rajouter le '.' en fin de chaine pour un réel
       ou de détecter si on fait référence a un concept produit par DEFI_VALEUR
       ou un EVAL ...
       """
       valeur = valeur.strip()
-      liste_reels = self.get_sd_avant_du_bon_type()
+      liste_reels = self.getSdAvantDuBonType()
       if valeur in liste_reels:
           return valeur
       if len(valeur) >= 3 :
@@ -789,7 +783,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
               return valeur
       if valeur.find('.') == -1 :
           # aucun '.' n'a été trouvé dans valeur --> on en rajoute un a la fin
-          if (self.is_param(valeur)):
+          if (self.isParam(valeur)):
               return valeur
           else:
               if valeur.find('e') != -1:

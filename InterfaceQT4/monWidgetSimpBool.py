@@ -43,17 +43,17 @@ class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
         self.AAfficher=self.RBTrue
 
   def setValeurs(self):
-       valeur=self.node.item.get_valeur()
+       valeur=self.node.item.getValeur()
        if valeur == None  : return
        if valeur == True  : self.RBTrue.setChecked(True)
        if valeur == False : self.RBFalse.setChecked(True)
 
 
   def boutonTrueClic(self):
-      SaisieValeur.LEValeurPressed(self,True)
+      SaisieValeur.LEvaleurPressed(self,True)
       self.reaffiche()
 
   def boutonFalseClic(self):
-      SaisieValeur.LEValeurPressed(self,False)
+      SaisieValeur.LEvaleurPressed(self,False)
       self.reaffiche()
 

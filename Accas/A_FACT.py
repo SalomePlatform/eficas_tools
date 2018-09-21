@@ -20,10 +20,12 @@
 from __future__ import absolute_import
 from Noyau import N_FACT
 from Ihm import I_ENTITE
-from . import A_MCFACT
-from . import A_MCLIST
+from Accas import A_MCFACT
+from Accas import A_MCLIST
+from Efi2Xsd.AccasXsd  import X_FACT
 
-class FACT(N_FACT.FACT,I_ENTITE.ENTITE):
+
+class FACT(N_FACT.FACT,X_FACT,I_ENTITE.ENTITE):
    class_instance=A_MCFACT.MCFACT
    list_instance=A_MCLIST.MCList
    def __init__(self,*tup,**args):

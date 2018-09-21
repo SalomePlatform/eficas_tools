@@ -36,7 +36,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
         typeNode.PopUpMenuRacine.createPopUpMenu(self)
 
     def addParameters(self,apres):
-        param=self.append_child("PARAMETRE",pos=0)
+        param=self.appendChild("PARAMETRE",pos=0)
         return param
        
 
@@ -44,24 +44,24 @@ class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
   itemNode=Node
   
-  def IsExpandable(self):
+  def isExpandable(self):
     return 1
 
-  def GetText(self):
+  def getText(self):
       return  "    "
 
-  def GetLabelText(self):
+  def getLabelText(self):
       # None --> fonte et couleur par defaut
       return tr(self.object.nom),None,None
 
-  def get_jdc(self):
+  def getJdc(self):
     """
     Retourne l'objet pointe par self
     """
     return self.object
   
-  def GetIconName(self):
-    if self.object.isvalid():
+  def getIconName(self):
+    if self.object.isValid():
       return "ast-green-square"
     else:
       return "ast-red-square"
@@ -72,17 +72,17 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
   #    else:
   #        return range(len(self.object.etapes))
 
-  def additem(self,name,pos):
-      cmd = self._object.addentite(name,pos)
+  def addItem(self,name,pos):
+      cmd = self._object.addEntite(name,pos)
       return cmd
 
-  def suppitem(self,item) :
+  def suppItem(self,item) :
     # item             = item de l'ETAPE a supprimer du JDC
     # item.getObject() = ETAPE ou COMMENTAIRE
     # self.object      = JDC
 
     itemobject=item.getObject()
-    if self.object.suppentite(itemobject):
+    if self.object.suppEntite(itemobject):
        if itemobject.nature == "COMMENTAIRE" :
           message = tr("Commentaire supprime")
        else :
@@ -92,7 +92,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
        message=tr("Pb interne : impossible de supprimer cet objet")
        return 0,message
 
-  def GetSubList(self):
+  def getSubList(self):
     """
        Retourne la liste des items fils de l'item jdc.
        Cette liste est conservee et mise a jour a chaque appel
@@ -115,19 +115,19 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     for obj in liste:
        if sublist[pos] is None:
           # nouvel objet : on cree un nouvel item
-          item = self.make_objecttreeitem(self.appli, obj.nom + " : ", obj)
+          item = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj)
           sublist[pos]=item
        pos=pos+1
 
     self.sublist=sublist
     return self.sublist
 
-  def get_l_noms_etapes(self):
+  def getLNomsEtapes(self):
       """ Retourne la liste des noms des etapes de self.object"""
-      return self.object.get_l_noms_etapes()
+      return self.object.getLNomsEtapes()
 
-  def get_liste_cmd(self):
-      listeCmd = self.object.niveau.definition.get_liste_cmd()
+  def getListeCmd(self):
+      listeCmd = self.object.niveau.definition.getListeCmd()
       return listeCmd
 
 import Accas

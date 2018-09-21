@@ -24,7 +24,7 @@ from . import I_MCCOMPO
 import Noyau
 
 class MCFACT(I_MCCOMPO.MCCOMPO):
-  def isrepetable(self):
+  def isRepetable(self):
      """ 
          Indique si l'objet est repetable.
          Retourne 1 si le mot-cle facteur self peut etre repete
@@ -36,44 +36,51 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
      else :
        return 0
 
-  def isoblig(self):
+  def isOblig(self):
     if self.definition.statut != 'o' : return 0
-    objet = self.parent.get_child(self.nom)
+    objet = self.parent.getChild(self.nom)
     if len(objet) > 1 : return 0
     else : return 1
 
-  def getlabeltext(self):
+  def getMinMax(self):
+     """
+     Retourne les valeurs min et max admissibles pour la valeur de self
+     """
+     return self.definition.min,self.definition.max
+
+
+  def getLabelText(self):
     """
        Retourne le label de self suivant qu'il s'agit d'un MCFACT
        isole ou d'un MCFACT appartenant a une MCList :
        utilisee pour l'affichage dans l'arbre
     """
-    objet = self.parent.get_child(self.nom)
+    objet = self.parent.getChild(self.nom)
     # objet peut-etre self ou une MCList qui contient self ...
     if objet is None or objet is self:
      return tr("Erreur - mclist inexistante : %s", self.nom)
 
     try:
       if len(objet) > 1 :
-        index = objet.get_index(self)+1 # + 1 a cause de la numerotation qui commence a 0
+        index = objet.getIndex(self)+1 # + 1 a cause de la numerotation qui commence a 0
         return self.nom +'_'+repr(index)+':'
       else:
         return self.nom
     except:
       return tr("Erreur - mot cle facteur de nom : %s", self.nom)
 
-  def get_genealogie_precise(self):
-    nom=self.getlabeltext() 
+  def getGenealogiePrecise(self):
+    nom=self.getLabelText() 
     if nom[-1]==':' : nom=nom[0:-1]
     if self.parent:
-       l=self.parent.get_genealogie_precise()
+       l=self.parent.getGenealogiePrecise()
        l.append(nom.strip())
        return l
     else:
        return [nom.strip()]
 
 
-  def init_modif(self):
+  def initModif(self):
     """
        Met l'etat de l'objet a modified et propage au parent
        qui vaut None s'il n'existe pas
@@ -81,20 +88,20 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     self.state = 'modified'
     parent= hasattr(self,"alt_parent") and self.alt_parent or self.parent
     if parent:
-       parent.init_modif()
+       parent.initModif()
 
-  def fin_modif(self):
+  def finModif(self):
     """
       Methode appelee apres qu'une modification a ete faite afin de declencher
       d'eventuels traitements post-modification
     """
-    #print "fin_modif",self
+    #print "finModif",self
     # pour les objets autres que les commandes, aucun traitement specifique
     # on remonte l'info de fin de modif au parent
     CONNECTOR.Emit(self,"valid")
     parent= hasattr(self,"alt_parent") and self.alt_parent or self.parent
     if parent:
-       parent.fin_modif()
+       parent.finModif()
 
   def normalize(self):
     """ Retourne le MCFACT normalise. Pour un MCFACT isole, l'objet normalise

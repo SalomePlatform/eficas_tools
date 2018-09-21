@@ -32,7 +32,7 @@ import traceback
 from . import N_ENTITE
 from . import N_MCBLOC
 from .N_Exception import AsException
-from .N_types import force_list
+from .N_types import forceList
 
 
 class BLOC(N_ENTITE.ENTITE):
@@ -70,6 +70,7 @@ class BLOC(N_ENTITE.ENTITE):
         self.fr = fr
         self.ang = ang
         self.docu = docu
+        self.fenetreIhm=None
         if type(regles) == tuple:
             self.regles = regles
         else:
@@ -79,26 +80,26 @@ class BLOC(N_ENTITE.ENTITE):
         self.entites = args
         self.affecter_parente()
 
-    def __call__(self, val, nom, parent=None):
+    def __call__(self, val, nom, parent=None, dicoPyxbDeConstruction=None):
         """
             Construit un objet MCBLOC a partir de sa definition (self)
             de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
         """
-        return self.class_instance(nom=nom, definition=self, val=val, parent=parent)
+        return self.class_instance(nom=nom, definition=self, val=val, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
 
-    def verif_cata(self):
+    def verifCata(self):
         """
            Cette méthode vérifie si les attributs de définition sont valides.
            Les éventuels messages d'erreur sont écrits dans l'objet compte-rendu (self.cr).
         """
-        self.check_fr()
-        self.check_docu()
-        self.check_regles()
-        self.check_statut(into=('f', 'o'))
-        self.check_condition()
-        self.verif_cata_regles()
+        self.checkFr()
+        self.checkDocu()
+        self.checkRegles()
+        self.checkStatut(into=('f', 'o'))
+        self.checkCondition()
+        self.verifCataRegles()
 
-    def verif_presence(self, dict, globs):
+    def verifPresence(self, dict, globs):
         """
            Cette méthode vérifie si le dictionnaire passé en argument (dict)
            est susceptible de contenir un bloc de mots-clés conforme à la
@@ -112,7 +113,7 @@ class BLOC(N_ENTITE.ENTITE):
            les valeurs des mots-clés
         """
         # On recopie le dictionnaire pour protéger l'original
-        dico = bloc_utils()
+        dico = blocUtils()
         dico.update(dict)
         if self.condition != None:
             try:
@@ -142,17 +143,22 @@ class BLOC(N_ENTITE.ENTITE):
                     '\n', "Erreur dans la condition : ", self.condition, ''.join(l))
         else:
             return 0
+    
+    def longueurDsArbre(self):
+      longueur=0
+      for mc in self.mcListe : 
+         longueur = longueur + longueurDsArbre(mc)
+      return longueur
 
-
-def bloc_utils():
+def blocUtils():
     """Définit un ensemble de fonctions utilisables pour écrire les
     conditions de BLOC."""
     def au_moins_un(mcsimp, valeurs):
         """Valide si la (ou une) valeur de 'mcsimp' est au moins une fois dans
         la ou les 'valeurs'. Similaire à la règle AU_MOINS_UN, 'mcsimp' peut
         contenir plusieurs valeurs."""
-        test = set(force_list(mcsimp))
-        valeurs = set(force_list(valeurs))
+        test = set(forceList(mcsimp))
+        valeurs = set(forceList(valeurs))
         return not test.isdisjoint(valeurs)
 
     def aucun(mcsimp, valeurs):

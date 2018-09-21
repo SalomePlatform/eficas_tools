@@ -70,7 +70,7 @@ if __name__ == "__main__" :
         import readercata
         monreadercata  = readercata.READERCATA( parent, parent )
         Eficas.readercata=monreadercata
-        monCata=monreadercata.cata[0]
+        monCata=monreadercata.cata
 
         monConstruitInto=ChercheInto(monCata,code)
 

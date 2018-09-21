@@ -64,18 +64,18 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     # completude
     self.definition=self
     # parent ne peut etre qu'un objet de type JDC
-    self.jdc = self.parent = CONTEXT.get_current_step()
+    self.jdc = self.parent = CONTEXT.getCurrentStep()
     self.niveau=self.parent.niveau
     self.actif=1
     self.state='undetermined'
     self.register()
     self.dict_valeur=[]
-    #self.valeur = self.interprete_valeur(valeur)
+    #self.valeur = self.interpreteValeur(valeur)
     #self.val=valeur
     self.valeur = valeur
     self.val=repr(valeur)
 
-  def interprete_valeur(self,val):
+  def interpreteValeur(self,val):
     """
     Essaie d'interpreter val (chaine de caracteres)comme :
     - un entier
@@ -102,7 +102,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     if type(val) == bytes:
        # on tente l'evaluation dans un contexte fourni par le parent s'il existe
        if self.parent:
-          valeur=self.parent.eval_in_context(val,self)
+          valeur=self.parent.evalInContext(val,self)
        else:
           try :
               valeur = eval(val)
@@ -137,7 +137,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     # on retourne val comme une string car on n'a pas su l'interpreter
     return val
 
-  def get_valeurs(self):
+  def getValeurs(self):
     valeurretour=[]
     if self.dict_valeur != []:
        for val in self.dict_valeur:
@@ -146,35 +146,35 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
         valeurretour.append(self.valeur)
     return valeurretour
 
-  def set_valeur(self,new_valeur):
+  def setValeur(self,new_valeur):
     """
     Remplace la valeur de self par new_valeur interpretee
     """
-    self.valeur = self.interprete_valeur(new_valeur)
+    self.valeur = self.interpreteValeur(new_valeur)
     self.val=repr(self.valeur)
-    self.parent.update_concept_after_etape(self,self)
-    self.init_modif()
+    self.parent.updateConceptAfterEtape(self,self)
+    self.initModif()
 
-  def set_nom(self,new_nom):
+  def setNom(self,new_nom):
     """
     Change le nom du parametre
     """
-    self.init_modif()
+    self.initModif()
     self.nom=new_nom
-    self.fin_modif()
+    self.finModif()
 
-  def init_modif(self):
+  def initModif(self):
     """
     Methode qui declare l'objet courant comme modifie et propage
     cet etat modifie a ses ascendants
     """
     self.state = 'modified'
     if self.parent:
-      self.parent.init_modif()
+      self.parent.initModif()
 
-  def get_jdc_root(self):
+  def getJdcRoot(self):
     if self.parent:
-      return self.parent.get_jdc_root()
+      return self.parent.getJdcRoot()
     else:
       return self
 
@@ -182,10 +182,10 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     Enregistre le parametre dans la liste des etapes de son parent (JDC)
     """
-    self.parent.register_parametre(self)
+    self.parent.registerParametre(self)
     self.parent.register(self)
 
-  def isvalid(self,cr='non'):
+  def isValid(self,cr='non'):
     """
     Retourne 1 si self est valide, 0 sinon
     Un parametre est considere comme valide si :
@@ -203,19 +203,19 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
             return 0
     return 1
 
-  def isoblig(self):
+  def isOblig(self):
     """
     Indique si self est obligatoire ou non : retourne toujours 0
     """
     return 0
 
-  def isrepetable(self):
+  def isRepetable(self):
     """
     Indique si self est repetable ou non : retourne toujours 1
     """
     return 1
 
-  def liste_mc_presents(self):
+  def listeMcPresents(self):
     return []
 
   def supprime(self):
@@ -235,7 +235,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     self.actif = 1
     try:
-        self.jdc.append_param(self)
+        self.jdc.appendParam(self)
     except:
         pass
     CONNECTOR.Emit(self,"add",None)
@@ -247,34 +247,34 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     Il faut supprimer le parametre du contexte global du JDC
     """
     self.actif = 0
-    self.jdc.del_param(self)
-    self.jdc.delete_concept_after_etape(self,self)
+    self.jdc.delParam(self)
+    self.jdc.deleteConceptAfterEtape(self,self)
     CONNECTOR.Emit(self,"supp",None)
     CONNECTOR.Emit(self,"valid")
 
-  def isactif(self):
+  def isActif(self):
     """
     Booleenne qui retourne 1 si self est actif, 0 sinon
     """
     return self.actif
 
-  def set_attribut(self,nom_attr,new_valeur):
+  def setAttribut(self,nom_attr,new_valeur):
     """
     Remplace la valeur de self.nom_attr par new_valeur)
     """
     if hasattr(self,nom_attr):
       setattr(self,nom_attr,new_valeur)
-      self.init_modif()
+      self.initModif()
 
-  def supprime_sdprods(self):
+  def supprimeSdProds(self):
     """
     Il faut supprimer le parametre qui a ete entre dans la liste des
     parametres du JDC
     """
-    self.jdc.delete_param(self)
-    self.parent.delete_concept(self)
+    self.jdc.deleteParam(self)
+    self.parent.deleteConcept(self)
 
-  def update_context(self,d):
+  def updateContext(self,d):
     """
     Update le dictionnaire d avec le parametre que produit self
     """
@@ -308,7 +308,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     return self.nom
 
-  def get_sdprods(self,nom_sd):
+  def getSdprods(self,nom_sd):
      """
          Retourne les concepts produits par la commande
      """
@@ -317,7 +317,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   def report(self):
     """ Genere l'objet rapport (classe CR) """
     self.cr=CR()
-    self.isvalid(cr='oui')
+    self.isValid(cr='oui')
     return self.cr
 
   def ident(self):
@@ -327,13 +327,13 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     return self.nom
 
-  def delete_concept(self,sd):
+  def deleteConcept(self,sd):
     pass
 
-  def replace_concept(self,old_sd,sd):
+  def replaceConcept(self,old_sd,sd):
     pass
 
-  def verif_condition_bloc(self):
+  def verifConditionBloc(self):
     """
         Evalue les conditions de tous les blocs fils possibles
         (en fonction du catalogue donc de la definition) de self et
@@ -343,24 +343,24 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
     return [],[]
 
-  def verif_condition_regles(self,liste_presents):
+  def verifConditionRegles(self,liste_presents):
     """
         Retourne la liste des mots-cles a rajouter pour satisfaire les regles
         en fonction de la liste des mots-cles presents
     """
     return []
 
-  def verif_existence_sd(self):
+  def verifExistenceSd(self):
      pass
 
-  def control_sdprods(self,d):
+  def controlSdprods(self,d):
       """sans objet """
       pass
 
   def close(self):
       pass
 
-  def reset_context(self):
+  def resetContext(self):
       pass
 
   def eval(self):
@@ -380,7 +380,7 @@ class COMBI_PARAMETRE(object) :
   def __repr__(self):
       return self.chainevaleur
 
-  def isvalid(self):
+  def isValid(self):
       if self.valeur and self.chainevaleur:
          return 1
 
@@ -394,14 +394,14 @@ class ITEM_PARAMETRE(object) :
     return self.param_pere.nom+'['+str(self.item)+']'
 
 
-  def isvalid(self):
-      isvalid = 1
+  def isValid(self):
+      isValid = 1
       if self.item < 0:
-         isvalid =  0
+         isValid =  0
       try:
          longueur= len(self.param_pere.dict_valeur) - 1
       except:
          longueur=0
       if self.item > longueur :
-         isvalid= 0
-      return isvalid
+         isValid= 0
+      return isValid

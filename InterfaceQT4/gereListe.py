@@ -33,7 +33,7 @@ import traceback
 import six
 from six.moves import range
 from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog
-from PyQt5.QtCore    import QEvent, Qt
+from PyQt5.QtCore    import QEvent, Qt, QTimer
 from PyQt5.QtGui     import QIcon, QPalette
 
 from Extensions.i18n import tr
@@ -53,42 +53,57 @@ class LECustom(QLineEdit):
         self.num=i
         self.dansUnTuple=False
         self.numDsLaListe=-1
+        self.parentTuple=None
+        self.valeur=None
 
  def focusInEvent(self,event):
-     #print "dans focusInEvent de LECustom"
+     #print ("dans focusInEvent de LECustom")
+     self.parentQt.aEuLeFocus=True
+     self.aEuLeFocus=True
      self.parentQt.LineEditEnCours=self
-     self.parentQt.NumLineEditEnCours=self.num
+     self.parentQt.numLineEditEnCours=self.num
      self.parentQt.textSelected=self.text()
      self.setStyleSheet("border: 2px solid gray")
      QLineEdit.focusInEvent(self,event)
 
  def focusOutEvent(self,event):
+     #print (self.aEuLeFocus)
      self.setStyleSheet("border: 0px")
      if self.dansUnTuple    : self.setStyleSheet("background:rgb(235,235,235); border: 0px;")
      elif self.num % 2 == 1 : self.setStyleSheet("background:rgb(210,210,210)")
      else                   : self.setStyleSheet("background:rgb(235,235,235)")
+     if self.aEuLeFocus:
+       self.aEuLeFocus=False
+       self.litValeur()
+       if self.dansUnTuple : self.parentTuple.getValeur()
+     QLineEdit.focusOutEvent(self,event)
        
     
-     
-     from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
+ def litValeur(self):
+     #print ("dans litValeur de LECustom")
+     self.aEuLeFocus=False
+     val=str(self.text())
+     if str(val)=="" or val==None :
+        self.valeur=None
+        return
      try :
-       #if isinstance (self.parentQt, MonWidgetPlusieursBase) and not self.parentQt.inFocusOutEvent : 
-       #  self.parentQt.inFocusOutEvent=True
-       #  self.parentQt.changeValeur(changeDePlace=True,oblige=False)
-       #  self.parentQt.inFocusOutEvent=False
-
-       #if isinstance(self,LECustomTuple)  and  not self.tupleCustomParent.inFocusOutEvent:
-       #  self.tupleCustomParent.inFocusOutEvent=True
-       #  self.tupleCustomParent.valueChange()
-       #  self.tupleCustomParent.inFocusOutEvent=False
-       QLineEdit.focusOutEvent(self,event)
-     except : pass
-
+       valeur=eval(val,{})
+     except :
+       try :
+          d=self.parentQt.parentQt.objSimp.jdc.getContexteAvant(self.parentQt.objSimp. etape)
+          valeur=eval(val,d)
+       except :
+          valeur=val
+     self.valeur=valeur
+     #print ('self.valeur', self.valeur)
+     
+     
  def clean(self):
      self.setText("")
 
  def getValeur(self):
-     return self.text()
+     #return self.text()
+     return self.valeur
 
  def setValeur(self,valeur):
      self.setText(valeur)
@@ -127,18 +142,6 @@ class GereListe(object):
    def __init__(self):
        self.connecterSignaux()
 
-   def connecterSignauxQT4(self):
-       if hasattr(self,'RBHaut'):
-          self.connect(self.RBHaut,SIGNAL("clicked()"),self.hautPushed)
-          self.connect(self.RBBas,SIGNAL("clicked()"),self.basPushed)
-          self.connect(self.RBMoins,SIGNAL("clicked()"),self.moinsPushed)
-          self.connect(self.RBPlus,SIGNAL("clicked()"),self.plusPushed)
-          self.connect(self.RBVoisListe,SIGNAL("clicked()"),self.voisListePushed)
-       if hasattr(self,'PBAlpha'):
-          self.connect(self.PBAlpha,SIGNAL("clicked()"),self.alphaPushed)
-          self.connect(self.PBCata,SIGNAL("clicked()"),self.cataPushed)
-          self.connect(self.PBFind,SIGNAL("clicked()"),self.findPushed)
-          self.connect(self.LEFiltre,SIGNAL("returnPressed()"),self.LEFiltreReturnPressed)
 
    def connecterSignaux(self):
        if hasattr(self,'RBHaut'):
@@ -152,6 +155,8 @@ class GereListe(object):
           self.PBAlpha.clicked.connect(self.alphaPushed)
           self.PBFind.clicked.connect(self.findPushed)
           self.LEFiltre.returnPressed.connect(self.LEFiltreReturnPressed)
+       if hasattr(self, 'PBValideFeuille'):
+          self.PBValideFeuille.clicked.connect(self.changeValeur)
 
    def filtreListe(self):
        l=[]
@@ -181,17 +186,17 @@ class GereListe(object):
        self.prepareListeResultat()
 
    def hautPushed(self):
-       if self.NumLineEditEnCours == 1 : return
-       else : numEchange=self.NumLineEditEnCours-1
-       self.echange(self.NumLineEditEnCours,numEchange)
+       if self.numLineEditEnCours == 1 : return
+       else : numEchange=self.numLineEditEnCours-1
+       self.echange(self.numLineEditEnCours,numEchange)
        self.LineEditEnCours.setFocus(True)
        self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)
 
 
    def basPushed(self):
-       if self.NumLineEditEnCours == self.indexDernierLabel : return
-       else : numEchange=self.NumLineEditEnCours+1
-       self.echange(self.NumLineEditEnCours,numEchange)
+       if self.numLineEditEnCours == self.indexDernierLabel : return
+       else : numEchange=self.numLineEditEnCours+1
+       self.echange(self.numLineEditEnCours,numEchange)
        self.LineEditEnCours.setFocus(True)
        self.scrollArea.ensureWidgetVisible(self.LineEditEnCours)
 
@@ -208,20 +213,20 @@ class GereListe(object):
        courant.setText(courant2.text())
        courant2.setText(valeurAGarder)
        self.changeValeur(changeDePlace=False)
-       self.NumLineEditEnCours=num2
+       self.numLineEditEnCours=num2
        self.LineEditEnCours=courant2
        self.LineEditEnCours.setFocus(True)
 
    def moinsPushed(self):
        # on supprime le dernier
-       if self.NumLineEditEnCours == 0 : return
+       if self.numLineEditEnCours == 0 : return
        if self.indexDernierLabel == 0 : return
-       if self.NumLineEditEnCours==self.indexDernierLabel : 
+       if self.numLineEditEnCours==self.indexDernierLabel : 
           nomLineEdit=self.nomLine+str(self.indexDernierLabel)
           courant=getattr(self,nomLineEdit)
           courant.clean()
        else :
-         for i in range (self.NumLineEditEnCours, self.indexDernierLabel):
+         for i in range (self.numLineEditEnCours, self.indexDernierLabel):
              aRemonter=i+1
              nomLineEdit=self.nomLine+str(aRemonter)
              courant=getattr(self,nomLineEdit)
@@ -239,26 +244,31 @@ class GereListe(object):
    def plusPushed(self):
        if self.indexDernierLabel == self.monSimpDef.max:
           if len(self.listeValeursCourantes) < self.monSimpDef.max : self.chercheLigneVide()
-          else : self.editor.affiche_infos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint',Qt.red)
+          else : self.editor.afficheInfos('nb max de valeurs : '+str(self.monSimpDef.max)+' atteint',Qt.red)
           return
        self.ajoutLineEdit()
        self.descendLesLignes()
+       self.chercheLigneVide()
+       QTimer.singleShot(1, self.rendVisibleLigne)
 
    def chercheLigneVide(self):
        for i in range(self.indexDernierLabel) :
           nomLineEdit=self.nomLine+str(i+1)
           courant=getattr(self,nomLineEdit)
           valeur=courant.getValeur()
-          if valeur=="" : courant.setFocus(7);return
+          if valeur=="" : 
+             courant.setFocus(True)
+             self.estVisible=courant
+             return
 
 
    def descendLesLignes(self):
-       if self.NumLineEditEnCours==self.indexDernierLabel : return
-       nomLineEdit=self.nomLine+str(self.NumLineEditEnCours+1)
+       if self.numLineEditEnCours==self.indexDernierLabel : return
+       nomLineEdit=self.nomLine+str(self.numLineEditEnCours+1)
        courant=getattr(self,nomLineEdit)
        valeurADescendre=courant.getValeur()
        courant.clean()
-       for i in range (self.NumLineEditEnCours+1, self.indexDernierLabel):
+       for i in range (self.numLineEditEnCours+1, self.indexDernierLabel):
              aDescendre=i+1
              nomLineEdit=self.nomLine+str(aDescendre)
              courant=getattr(self,nomLineEdit)
@@ -270,7 +280,7 @@ class GereListe(object):
 
    def voisListePushed(self):
        texteValeurs=""
-       for v in self.node.item.GetListeValeurs():
+       for v in self.node.item.getListeValeurs():
           texteValeurs+=str(v)+", "
        entete="Valeurs pour "+self.nom
        f=ViewText(self,self.editor,entete,texteValeurs[0:-2])
@@ -278,7 +288,7 @@ class GereListe(object):
 
 
    def selectInFile(self):
-       init=str( self.editor.CONFIGURATION.savedir)
+       init=str( self.editor.maConfiguration.savedir)
        fn = QFileDialog.getOpenFileName(self.node.appliEficas,
                                          tr("Fichier de donnees"),
                                          init,
@@ -287,7 +297,7 @@ class GereListe(object):
        if fn == None : return
        if fn == "" : return
        ulfile = os.path.abspath(six.text_type(fn))
-       self.editor.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+       self.editor.maConfiguration.savedir=os.path.split(ulfile)[0]
 
        from .monSelectVal import MonSelectVal
        MonSelectVal(file=fn,parent=self).show()

@@ -239,7 +239,7 @@ class AplatGenerator(object):
          en une chaine de caracteres a la syntaxe aplat 
       """
       text=''
-      for v in obj.mc_liste:
+      for v in obj.mcListe:
          text=text + self.generator(v)
       if text=='':
          return self.init+'\n'
@@ -283,7 +283,7 @@ class AplatGenerator(object):
           Convertit un objet derive d'ASSD en une chaine de caracteres a la
           syntaxe aplat 
       """
-      return obj.get_name()
+      return obj.getName()
 
    def generMCList(self,obj):
       """
@@ -331,7 +331,7 @@ class AplatGenerator(object):
       text = ''
       old_init=self.init
       self.init = self.init + self.sep + obj.nom
-      for mocle in obj.mc_liste :
+      for mocle in obj.mcListe :
         text = text + self.generator(mocle)
       self.init=old_init
       return text

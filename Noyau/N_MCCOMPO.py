@@ -36,22 +36,27 @@ class MCCOMPO(N_OBJECT.OBJECT):
 
     """
 
-    def build_mc(self):
+    def buildMc(self):
         """
             Construit la liste des sous-entites du MCCOMPO
             à partir du dictionnaire des arguments (valeur)
         """
+        
+        #import traceback
+        #traceback.print_stack()
+        #print(("MCCOMPO.buildMc _____________________________________", self.nom))
+        #print (self.dicoPyxbDeConstruction)
         if CONTEXT.debug:
-            print(("MCCOMPO.build_mc ", self.nom))
+            print(("MCCOMPO.buildMc ", self.nom))
         # Dans la phase de reconstruction args peut contenir des mots-clés
         # qui ne sont pas dans le dictionnaire des entites de definition (self.definition.entites)
         # de l'objet courant (self)
         # mais qui sont malgré tout des descendants de l'objet courant
         # (petits-fils, ...)
         args = self.valeur
-        if args == None:
-            args = {}
-        mc_liste = []
+        if args == None: args = {}
+        mcListe = []
+        
 
         # On recopie le dictionnaire des arguments pour protéger l'original des
         # delete (del args[k])
@@ -63,6 +68,9 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # 2- les entités non présentes dans les arguments, présentes dans la définition avec un défaut
         # Phase 1.1 : on traite d'abord les SIMP pour enregistrer les mots cles
         # globaux
+        # PN ligne suivante uniquement pour commodite
+        # a detruire quand cela fonctionne recursivement
+        if not hasattr(self, 'dicoPyxbDeConstruction') : self.dicoPyxbDeConstruction = {}
         for k, v in list(self.definition.entites.items()):
             if v.label != 'SIMP':
                 continue
@@ -72,8 +80,13 @@ class MCCOMPO(N_OBJECT.OBJECT):
                 # si une valeur existe dans args ou est obligatoire (generique si toutes les
                 # entites ont l attribut statut )
                 #
-                objet = v(val=args.get(k, None), nom=k, parent=self)
-                mc_liste.append(objet)
+                if self.dicoPyxbDeConstruction and  k in self.dicoPyxbDeConstruction : 
+                   objPyxbDeConstruction=self.dicoPyxbDeConstruction[k]
+                   del self.dicoPyxbDeConstruction[k]
+                else :
+                   objPyxbDeConstruction=None
+                objet = v(val=args.get(k, None), nom=k, parent=self,objPyxbDeConstruction=objPyxbDeConstruction)
+                mcListe.append(objet)
                 # Si l'objet a une position globale on l'ajoute aux listes
                 # correspondantes
                 if hasattr(objet.definition, 'position'):
@@ -95,14 +108,19 @@ class MCCOMPO(N_OBJECT.OBJECT):
                 # si une valeur existe dans args ou est obligatoire (generique si toutes les
                 # entites ont l attribut statut )
                 #
-                objet = v(val=args.get(k, None), nom=k, parent=self)
-                mc_liste.append(objet)
+                if self.dicoPyxbDeConstruction and  k in self.dicoPyxbDeConstruction : 
+                   dicoPyxbDeConstruction=self.dicoPyxbDeConstruction[k]
+                   del self.dicoPyxbDeConstruction[k]
+                else :
+                   dicoPyxbDeConstruction=None
+                objet = v(val=args.get(k, None), nom=k, parent=self,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
+                mcListe.append(objet)
             if k in args:
                 del args[k]
 
         # Phase 2:
         # On construit les objets (en général, blocs) conditionnés par les mots-clés précédemment créés.
-        # A ce stade, mc_liste ne contient que les fils de l'objet courant
+        # A ce stade, mcListe ne contient que les fils de l'objet courant
         # args ne contient plus que des mots-clés qui n'ont pas été attribués car ils sont
         #      à attribuer à des blocs du niveau inférieur ou bien sont des mots-clés erronés
         for k, v in list(self.definition.entites.items()):
@@ -114,42 +132,48 @@ class MCCOMPO(N_OBJECT.OBJECT):
             #PNPN on recalcule dico_valeurs dans le for
             # pour les globaux imbriques (exple Telemac Advection)
             # avant le calcul etait avant le for
-            dico_valeurs = self.cree_dict_condition(mc_liste, condition=1)
+            dico_valeurs = self.creeDictCondition(mcListe, condition=1)
             globs = self.jdc and self.jdc.condition_context or {}
-            if v.verif_presence(dico_valeurs, globs):
+            if v.verifPresence(dico_valeurs, globs):
                     # Si le bloc existe :
                     #        1- on le construit
-                    #        2- on l'ajoute à mc_liste
+                    #        2- on l'ajoute à mcListe
                     #        3- on récupère les arguments restant
-                    # 4- on reconstruit le dictionnaire équivalent à mc_liste
-                bloc = v(nom=k, val=args, parent=self)
-                mc_liste.append(bloc)
+                    # 4- on reconstruit le dictionnaire équivalent à mcListe
+                bloc = v(nom=k, val=args, parent=self,dicoPyxbDeConstruction=self.dicoPyxbDeConstruction)
+                mcListe.append(bloc)
                 args = bloc.reste_val
                 # On ne recalcule pas le contexte car on ne tient pas compte des blocs
                 # pour évaluer les conditions de présence des blocs
-                # dico_valeurs = self.cree_dict_valeurs(mc_liste)
+                # dico_valeurs = self.creeDictValeurs(mcListe)
 
         # On conserve les arguments superflus dans l'attribut reste_val
         self.reste_val = args
         # On ordonne la liste ainsi créée suivant l'ordre du catalogue
         # (utile seulement pour IHM graphique)
-        mc_liste = self.ordonne_liste(mc_liste)
+        mcListe = self.ordonneListe(mcListe)
         # on retourne la liste ainsi construite
-        return mc_liste
+        if self.jdc  : self.cata=self.jdc.cata
+        else : self.cata = None
+        self.buildObjPyxb(mcListe)
+        #else : print ('pas de construction pour ', self.nom, self.objPyxbDeConstruction)
+        #print ('buildObjPyxb : ' , self.nom)
+        #print(("MCCOMPO.buildMc fin_____________________________________", self.nom))
+        return mcListe
 
-    def ordonne_liste(self, mc_liste):
+    def ordonneListe(self, mcListe):
         """
            Ordonne la liste suivant l'ordre du catalogue.
            Seulement pour IHM graphique
         """
         if self.jdc and self.jdc.cata_ordonne_dico != None:
-            liste_noms_mc_ordonnee = self.get_liste_mc_ordonnee_brute(
-                self.get_genealogie(), self.jdc.cata_ordonne_dico)
-            return self.ordonne_liste_mc(mc_liste, liste_noms_mc_ordonnee)
+            liste_noms_mc_ordonnee = self.getListeMcOrdonneeBrute(
+                self.getGenealogie(), self.jdc.cata_ordonne_dico)
+            return self.ordonneListeMc(mcListe, liste_noms_mc_ordonnee)
         else:
-            return mc_liste
+            return mcListe
 
-    def cree_dict_valeurs(self, liste=[], condition=0):
+    def creeDictValeurs(self, liste=[], condition=0):
         """
           Cette méthode crée un contexte (sous la forme d'un dictionnaire)
           à partir des valeurs des mots clés contenus dans l'argument liste.
@@ -171,7 +195,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
              - ajouter tous les mots-clés globaux (attribut position = 'global'
                et 'global_jdc')
 
-          L'argument liste est, en général, une mc_liste en cours de
+          L'argument liste est, en général, une mcListe en cours de
           construction, contenant les mots-clés locaux et les blocs déjà créés.
 
         """
@@ -179,16 +203,16 @@ class MCCOMPO(N_OBJECT.OBJECT):
         for v in liste:
             if v.isBLOC():
                 # Si v est un BLOC, on inclut ses items dans le dictionnaire
-                # représentatif du contexte. Les blocs sont retournés par get_valeur
+                # représentatif du contexte. Les blocs sont retournés par getValeur
                 # sous la forme d'un dictionnaire : les mots-clés fils de blocs sont
                 # donc remontés au niveau du contexte.
                 if not condition:
-                    dadd = v.get_valeur()
+                    dadd = v.getValeur()
                     assert intersection_vide(dico, dadd)
                     dico.update(dadd)
             else:
                 assert not v.nom in dico, "deja vu : %s" % v.nom
-                dico[v.nom] = v.get_valeur()
+                dico[v.nom] = v.getValeur()
 
         # On rajoute tous les autres mots-clés locaux possibles avec la valeur
         # par défaut ou None
@@ -216,26 +240,26 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # valeur par défaut ou la valeur None
 
         # On rajoute les mots-clés globaux sans écraser les clés existantes
-        dico_mc = self.recherche_mc_globaux()
+        dico_mc = self.rechercheMcGlobaux()
         dico_mc.update(dico)
         dico = dico_mc
 
         return dico
 
-    def cree_dict_toutes_valeurs(self):
-        """Semblable à `cree_dict_valeurs(liste=self.mc_liste)` en supprimant les
+    def creeDictToutesValeurs(self):
+        """Semblable à `creeDictValeurs(liste=self.mcListe)` en supprimant les
         valeurs None."""
-        dico = self.cree_dict_valeurs(self.mc_liste, condition=0)
+        dico = self.creeDictValeurs(self.mcListe, condition=0)
         dico = dict([(k, v) for k, v in list(dico.items()) if v is not None])
         return dico
 
-    def cree_dict_condition(self, liste=[], condition=0):
+    def creeDictCondition(self, liste=[], condition=0):
         """
             Methode pour construire un contexte qui servira dans l'évaluation
             des conditions de présence de blocs. Si une commande a un concept
             produit réutilisé, on ajoute la clé 'reuse'
         """
-        dico = self.cree_dict_valeurs(liste, condition=1)
+        dico = self.creeDictValeurs(liste, condition=1)
         # On ajoute la cle "reuse" pour les MCCOMPO qui ont un attribut reuse. A destination
         # uniquement des commandes. Ne devrait pas etre dans cette classe mais
         # dans une classe dérivée
@@ -243,31 +267,31 @@ class MCCOMPO(N_OBJECT.OBJECT):
             dico['reuse'] = self.reuse
         return dico
 
-    def recherche_mc_globaux(self):
+    def rechercheMcGlobaux(self):
         """
             Retourne la liste des mots-clés globaux de l'étape à laquelle appartient self
             et des mots-clés globaux du jdc
         """
-        etape = self.get_etape()
+        etape = self.getEtape()
         if etape:
-            dict_mc_globaux_fac = self.recherche_mc_globaux_facultatifs()
+            dict_mc_globaux_fac = self.rechercheMcGlobauxFacultatifs()
             for k, v in list(etape.mc_globaux.items()):
-                dict_mc_globaux_fac[k] = v.get_valeur()
+                dict_mc_globaux_fac[k] = v.getValeur()
             if self.jdc:
                 for k, v in list(self.jdc.mc_globaux.items()):
-                    dict_mc_globaux_fac[k] = v.get_valeur()
+                    dict_mc_globaux_fac[k] = v.getValeur()
             return dict_mc_globaux_fac
         else:
             return {}
 
-    def recherche_mc_globaux_facultatifs(self):
+    def rechercheMcGlobauxFacultatifs(self):
         """
             Cette méthode interroge la définition de self et retourne la liste des mots-clés fils
             directs de self de type 'global'.
             position='global' n'est donc possible (et n'a de sens) qu'au plus haut niveau.
         """
         dico = {}
-        etape = self.get_etape()
+        etape = self.getEtape()
         if not etape:
             return {}
         for k, v in list(etape.definition.entites.items()):
@@ -278,7 +302,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
             if v.statut == 'o':
                 continue
             obj = v(val=None, nom=k, parent=etape)
-            dico[k] = obj.get_valeur()
+            dico[k] = obj.getValeur()
         return dico
 
     def supprime(self):
@@ -287,26 +311,26 @@ class MCCOMPO(N_OBJECT.OBJECT):
            etre correctement détruit par le garbage collector
         """
         N_OBJECT.OBJECT.supprime(self)
-        for child in self.mc_liste:
+        for child in self.mcListe:
             child.supprime()
 
     def __getitem__(self, key):
         """
            Cette méthode retourne la valeur d'un sous mot-clé (key)
         """
-        return self.get_mocle(key)
+        return self.getMocle(key)
 
-    def get_mocle(self, key):
+    def getMocle(self, key):
         """
             Retourne la valeur du sous mot-clé key
             Ce sous mot-clé peut exister, avoir une valeur par defaut ou etre
             dans un BLOC fils de self
         """
         # on cherche dans les mots cles presents, le mot cle de nom key
-        # s'il est là on retourne sa valeur (méthode get_val)
-        for child in self.mc_liste:
+        # s'il est là on retourne sa valeur (méthode getVal)
+        for child in self.mcListe:
             if child.nom == key:
-                return child.get_valeur()
+                return child.getValeur()
         #  Si on n a pas trouve de mot cle present on retourne le defaut
         #  eventuel pour les mots cles accessibles dans la definition
         #  a ce niveau
@@ -329,11 +353,11 @@ class MCCOMPO(N_OBJECT.OBJECT):
         #  Si on a toujours rien trouve, on cherche dans les blocs presents
         #  On suppose que tous les blocs possibles ont ete crees meme ceux
         #  induits par un mot cle simple absent avec defaut (???)
-        for mc in self.mc_liste:
+        for mc in self.mcListe:
             if not mc.isBLOC():
                 continue
             try:
-                return mc.get_mocle(key)
+                return mc.getMocle(key)
             except:
                 # On n a rien trouve dans ce bloc, on passe au suivant
                 pass
@@ -341,14 +365,14 @@ class MCCOMPO(N_OBJECT.OBJECT):
         #  On leve une exception
         raise IndexError("Le mot cle %s n existe pas dans %s" % (key, self))
 
-    def get_child(self, name, restreint='non'):
+    def getChild(self, name, restreint='non'):
         """
             Retourne le fils de self de nom name ou None s'il n'existe pas
-            Si restreint vaut oui : ne regarde que dans la mc_liste
+            Si restreint vaut oui : ne regarde que dans la mcListe
             Si restreint vaut non : regarde aussi dans les entites possibles
             avec defaut (Ce dernier cas n'est utilisé que dans le catalogue)
         """
-        for v in self.mc_liste:
+        for v in self.mcListe:
             if v.nom == name:
                 return v
         if restreint == 'non':
@@ -365,7 +389,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
         """
            Ajoute le mot-clé mc à la liste des mots-clés globaux de l'étape
         """
-        etape = self.get_etape()
+        etape = self.getEtape()
         if etape:
             nom = mc.nom
             etape.mc_globaux[nom] = mc
@@ -389,11 +413,11 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # est acceptee
         objet.valeur = copy(self.valeur)
         objet.val = copy(self.val)
-        objet.mc_liste = []
-        for obj in self.mc_liste:
+        objet.mcListe = []
+        for obj in self.mcListe:
             new_obj = obj.copy()
             new_obj.reparent(objet)
-            objet.mc_liste.append(new_obj)
+            objet.mcListe.append(new_obj)
         return objet
 
     def reparent(self, parent):
@@ -401,22 +425,22 @@ class MCCOMPO(N_OBJECT.OBJECT):
             Cette methode sert a reinitialiser la parente de l'objet
         """
         self.parent = parent
-        self.jdc = parent.get_jdc_root()
+        self.jdc = parent.getJdcRoot()
         self.etape = parent.etape
-        for mocle in self.mc_liste:
+        for mocle in self.mcListe:
             mocle.reparent(self)
 
-    def get_sd_utilisees(self):
+    def getSd_utilisees(self):
         """
           Retourne la liste des concepts qui sont utilisés à l'intérieur de self
           ( comme valorisation d'un MCS)
         """
         l = []
-        for child in self.mc_liste:
-            l.extend(child.get_sd_utilisees())
+        for child in self.mcListe:
+            l.extend(child.getSd_utilisees())
         return l
 
-    def get_sd_mcs_utilisees(self):
+    def getSd_mcs_utilisees(self):
         """
             Retourne la ou les SD utilisée par self sous forme d'un dictionnaire :
               - Si aucune sd n'est utilisée, le dictionnaire est vide.
@@ -429,14 +453,14 @@ class MCCOMPO(N_OBJECT.OBJECT):
                     'MODELE': [<Cata.cata.modele instance at 0x941550c>] }
         """
         dico = {}
-        for child in self.mc_liste:
-            daux = child.get_sd_mcs_utilisees()
+        for child in self.mcListe:
+            daux = child.getSd_mcs_utilisees()
             for cle in daux:
                 dico[cle] = dico.get(cle, [])
                 dico[cle].extend(daux[cle])
         return dico
 
-    def get_mcs_with_co(self, co):
+    def getMcsWithCo(self, co):
         """
            Cette methode retourne l'objet MCSIMP fils de self
            qui a le concept co comme valeur.
@@ -444,17 +468,17 @@ class MCCOMPO(N_OBJECT.OBJECT):
            instances de la classe CO
         """
         l = []
-        for child in self.mc_liste:
-            l.extend(child.get_mcs_with_co(co))
+        for child in self.mcListe:
+            l.extend(child.getMcsWithCo(co))
         return l
 
-    def get_all_co(self):
+    def getAllCo(self):
         """
            Cette methode retourne tous les concepts instances de CO
         """
         l = []
-        for child in self.mc_liste:
-            l.extend(child.get_all_co())
+        for child in self.mcListe:
+            l.extend(child.getAllCo())
         return l
 
 

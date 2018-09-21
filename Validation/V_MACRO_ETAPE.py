@@ -47,7 +47,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
     """
     """
 
-    def isvalid(self, sd='oui', cr='non'):
+    def isValid(self, sd='oui', cr='non'):
         """
            Methode pour verifier la validite de l'objet ETAPE. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -65,29 +65,29 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
 
         """
         if CONTEXT.debug:
-            print(("ETAPE.isvalid ", self.nom))
+            print(("ETAPE.isValid ", self.nom))
         if self.state == 'unchanged':
             return self.valid
         else:
             valid = 1
             # On marque les concepts CO pour verification ulterieure de leur
             # bonne utilisation
-            l = self.get_all_co()
-            # On verifie que les concepts CO sont bien passes par type_sdprod
+            l = self.getAllCo()
+            # On verifie que les concepts CO sont bien passes par typeSDProd
             for c in l:
                 # if c.etape is self.parent:
-                if c.is_typco() != 2:
+                if c.isTypCO() != 2:
                     # le concept est propriete de l'etape parent
-                    # Il n'a pas ete transforme par type_sdprod
+                    # Il n'a pas ete transforme par typeSDProd
                     # Cette situation est interdite
                     # Pb: La macro-commande a passe le concept a une commande
                     # (macro ?) mal definie
                     if cr == 'oui':
-                        self.cr.fatal("Macro-commande mal definie : le concept n'a pas ete type par un appel a type_sdprod pour %s"  % c.nom)
+                        self.cr.fatal("Macro-commande mal definie : le concept n'a pas ete type par un appel a typeSDProd pour %s"  % c.nom)
                     valid = 0
 
-            valid = valid * self.valid_child()
-            valid = valid * self.valid_regles(cr)
+            valid = valid * self.validChild()
+            valid = valid * self.validRegles(cr)
 
             if self.reste_val != {}:
                 if cr == 'oui':
@@ -101,7 +101,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
                 return valid
 
             if self.sd != None:
-                valid = valid * self.valid_sdnom(cr)
+                valid = valid * self.validSdnom(cr)
 
             if self.definition.reentrant == 'n' and self.reuse:
                 # Il ne peut y avoir de concept reutilise avec une MACRO  non
@@ -111,19 +111,19 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
                 valid = 0
 
             if valid:
-                valid = self.update_sdprod(cr)
+                valid = self.updateSdprod(cr)
 
             # Si la macro comprend des etapes internes, on teste leur validite
             for e in self.etapes:
-                if not e.isvalid():
+                if not e.isValid():
                     valid = 0
                     break
 
-            self.set_valid(valid)
+            self.setValid(valid)
 
             return self.valid
 
-    def update_sdprod(self, cr='non'):
+    def updateSdprod(self, cr='non'):
         """
              Cette methode met a jour le concept produit en fonction des conditions initiales :
 
@@ -140,11 +140,11 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
         self.typret = None
         if type(sd_prod) == types.FunctionType:
             # Type de concept retourne calcule
-            d = self.cree_dict_valeurs(self.mc_liste)
+            d = self.creeDictValeurs(self.mcListe)
             try:
                 # la sd_prod d'une macro a l'objet lui meme en premier argument
                 # contrairement a une ETAPE ou PROC_ETAPE
-                # Comme sd_prod peut invoquer la methode type_sdprod qui ajoute
+                # Comme sd_prod peut invoquer la methode typeSDProd qui ajoute
                 # les concepts produits dans self.sdprods, il faut le mettre a
                 # zero
                 self.sdprods = []
@@ -190,7 +190,7 @@ class MACRO_ETAPE(V_ETAPE.ETAPE):
                     if CONTEXT.debug:
                         print(("changement de type:", self.sd, sd_prod))
                     if self.sd.__class__ != sd_prod:
-                        self.sd.change_type(sd_prod)
+                        self.sd.changeType(sd_prod)
                     self.typret = sd_prod
                 else:
                     # Le sd n existait pas , on ne le cree pas

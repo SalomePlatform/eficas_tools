@@ -20,9 +20,10 @@
 from __future__ import absolute_import
 from Noyau import N_SIMP
 from Ihm import I_ENTITE
-from . import A_MCSIMP
+from Accas import A_MCSIMP
+from Efi2Xsd.AccasXsd import X_SIMP
 
-class SIMP(N_SIMP.SIMP,I_ENTITE.ENTITE):
+class SIMP(N_SIMP.SIMP,X_SIMP,I_ENTITE.ENTITE):
    class_instance=A_MCSIMP.MCSIMP
    def __init__(self,*tup,**args):
       #print tup

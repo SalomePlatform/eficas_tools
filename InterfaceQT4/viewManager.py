@@ -31,7 +31,7 @@ from  PyQt5.QtWidgets  import QFileDialog, QMessageBox
 from  PyQt5.QtCore     import QFileInfo
 
 DictExtensions= {"MAP" : ".map"}
-class MyTabview(object):
+class MyViewManager(object):
 
    def __init__(self,appliEficas):
        self.appliEficas=appliEficas
@@ -52,8 +52,8 @@ class MyTabview(object):
        index=self.myQtab.currentIndex()
        if index in self.dict_editors:
            editor=self.dict_editors[index]
-           self.appliEficas.CONFIGURATION=editor.CONFIGURATION
-           self.appliEficas.code=editor.CONFIGURATION.code
+           self.appliEficas.maConfiguration=editor.maConfiguration
+           self.appliEficas.code=editor.maConfiguration.code
            self.appliEficas.setWindowTitle(editor.titre)
            self.appliEficas.construitMenu()
 
@@ -73,12 +73,12 @@ class MyTabview(object):
 
             fichier = QFileDialog.getOpenFileName(self.appliEficas,
                         tr('Ouvrir Fichier'),
-                        self.appliEficas.CONFIGURATION.savedir,
+                        self.appliEficas.maConfiguration.savedir,
                          extensions)
             fichier=fichier[0]
        fichier = os.path.abspath(six.text_type(fichier))
        ulfile = os.path.abspath(six.text_type(fichier))
-       self.appliEficas.CONFIGURATION.savedir=os.path.split(ulfile)[0]
+       self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
        if maPage: result = maPage
@@ -176,6 +176,13 @@ class MyTabview(object):
        editor=self.dict_editors[index]
        editor.handleSupprimer()
 
+   def handleAjoutEtape(self,nomEtape):
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       editor.handleAjoutEtape(nomEtape)
+
+
    def newEditor(self,include=0):
        if self.appliEficas.demande==True : 
            self.appliEficas.definitCode(None,None)
@@ -211,7 +218,7 @@ class MyTabview(object):
        if index < 0 : return
        self.dict_editors[index].viewJdcRegles()
 
-   def handlegestionParam(self):
+   def handleGestionParam(self):
        index=self.myQtab.currentIndex()
        if index < 0 : 
           QMessageBox.warning( self.appliEficas,tr(u"Creation Parametre indisponible"),tr(u"les parametres sont lies a un jeu de donnees"))
@@ -244,11 +251,11 @@ class MyTabview(object):
            self.myQtab.setTabText(index,fileName)
        return ok
 
-   def saveLegerCurrentEditor(self):
+   def saveCompleteCurrentEditor(self):
        index=self.myQtab.currentIndex()
        if index < 0 : return
        editor=self.dict_editors[index]
-       ok, newName = editor.saveFileLeger()
+       ok, newName = editor.saveCompleteFile()
        return ok
 
    def sauveLigneCurrentEditor(self):
@@ -298,7 +305,7 @@ class MyTabview(object):
        indexEditor=0
        for indexEditor in self.dict_editors :
            editor=self.dict_editors[indexEditor]
-           if self.samepath(fichier, editor.getFileName()):
+           if self.samePath(fichier, editor.getFileName()):
               msgBox = QMessageBox()
               msgBox.setWindowTitle(tr("Fichier"))
               msgBox.setText(tr("Le fichier <b>%s</b> est deja ouvert", str(fichier)))
@@ -309,8 +316,7 @@ class MyTabview(object):
               double=editor
        else :
             from .editor import JDCEditor
-            editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,vm = self,include=include)
-
+            editor = JDCEditor(self.appliEficas,fichier, jdc, self.myQtab,units=units,include=include)
             if double != None : 
                self.doubles[editor]=double
             if editor.jdc: # le fichier est bien un jdc
@@ -333,7 +339,7 @@ class MyTabview(object):
 #PNPNPNPN --> a affiner
         if fichier is None:
             self.untitledCount += 1
-            self.myQtab.addTab(win, tr("Fichier non encore nomme ", self.untitledCount))
+            self.myQtab.addTab(win, tr("Fichier non encore nomme  " + self.appliEficas.readercata.versionCode, self.untitledCount))
             #self.myQtab.addTab(win, str(self.appliEficas.code))
         else:
             liste=fichier.split('/')
@@ -353,7 +359,7 @@ class MyTabview(object):
         except :
             return ""
 
-   def samepath(self,f1, f2):
+   def samePath(self,f1, f2):
     """
     compare two paths.
     """
@@ -404,3 +410,23 @@ class MyTabview(object):
        if index < 0 : return
        editor=self.dict_editors[index]
        editor.handleAjoutGroup(listeGroup)
+  
+   def handleFonctionUtilisateur(self,laFonctionUtilisateur, lesArguments):
+       # Peut-etre a blinder un peu plus sur le nb d argument
+       index=self.myQtab.currentIndex()
+       if index < 0 : return
+       editor=self.dict_editors[index]
+       if editor.getEtapeCourante() == None :
+          QMessageBox.information( self.appliEficas,
+                      tr("Selectionner une etape"),
+                      tr("Le texte ne peut pas etre insere dans un fichier vide,\nCreer un materiau vide ou une zone vide et inserer le catalogue apres"))
+          return
+
+       listeParam = [] 
+       for p in lesArguments:
+          print (p)
+          if hasattr(editor,p): listeParam.append(getattr(editor,p))
+          if p=="editor"      : listeParam.append(editor)
+          if p=="etapeCourante" : listeParam.append(editor.getEtapeCourante())
+       apply(laFonctionUtilisateur,listeParam)
+

@@ -302,7 +302,7 @@ class Appli(Ui_Eficas,QMainWindow):
             self.viewmanager.handleOpen(fichier=study["comm"],units=d)
 
 
-    def  get_source(self,file):
+    def  getSource(self,file):
     # appele par Editeur/session.py
         import convert
         p=convert.plugins['python']()

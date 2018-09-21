@@ -57,7 +57,7 @@ class MCList(object):
     CR = N_CR.CR
     txt_nat = "Mot cle Facteur Multiple :"
 
-    def isvalid(self, cr='non'):
+    def isValid(self, cr='non'):
         """
            Methode pour verifier la validite du MCList. Cette methode
            peut etre appelee selon plusieurs modes en fonction de la valeur
@@ -91,7 +91,7 @@ class MCList(object):
         num = 0
         for i in self.data:
             num = num + 1
-            if not i.isvalid():
+            if not i.isValid():
                 valid = 0
                 if cr == 'oui' and len(self) > 1:
                     self.cr.fatal( "L'occurrence numero %d du mot-cle facteur : %s n'est pas valide" % (num, self.nom))
@@ -120,7 +120,7 @@ class MCList(object):
                             fin="Fin Mot-cle facteur : " + tr(self.nom))
 
         try:
-            self.isvalid(cr='oui')
+            self.isValid(cr='oui')
         except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()

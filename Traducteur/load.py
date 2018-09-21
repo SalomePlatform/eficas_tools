@@ -42,7 +42,7 @@ class JDCTrad:
     def init(self,src,atraiter):
     #---------------------------
     # construction de self.lines
-        self.root=parseur.Parser(src,atraiter)
+        self.root=parseur.parser(src,atraiter)
         self.lines=src.splitlines(1)
 
     def parseKeywords(self):

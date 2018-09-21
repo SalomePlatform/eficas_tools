@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>764</width>
-    <height>86</height>
+    <width>1122</width>
+    <height>163</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -212,26 +212,47 @@ border: 1px solid gray;
           <x>0</x>
           <y>0</y>
           <width>300</width>
-          <height>57</height>
+          <height>101</height>
          </rect>
         </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QLabel" name="monCommentaireLabel">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
-            <string>TextLabel</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;les types des tuples&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -278,9 +299,6 @@ border: 1px solid gray;
        <property name="lineWidth">
         <number>1</number>
        </property>
-       <property name="sizeAdjustPolicy">
-        <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
-       </property>
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
@@ -292,8 +310,8 @@ border: 1px solid gray;
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>398</width>
-          <height>48</height>
+          <width>705</width>
+          <height>122</height>
          </rect>
         </property>
         <property name="sizePolicy">

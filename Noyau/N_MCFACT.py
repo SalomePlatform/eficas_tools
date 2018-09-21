@@ -34,7 +34,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
     """
     nature = "MCFACT"
 
-    def __init__(self, val, definition, nom, parent):
+    def __init__(self, val, definition, nom, parent,dicoPyxbDeConstruction):
         """
            Attributs :
             - val : valeur du mot clé simple
@@ -42,6 +42,16 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
             - nom
             - parent
         """
+        #print ('MCFACT', self, val, definition, nom, parent, objPyxbDeConstruction)
+        import traceback
+        #traceback.print_stack()
+        #if nom == 'experience' : print ('MCFACT', self, parent, dicoPyxbDeConstruction); exit()
+        self.dicoPyxbDeConstruction=dicoPyxbDeConstruction
+        if self.dicoPyxbDeConstruction :
+           self.objPyxbDeConstruction=self.dicoPyxbDeConstruction['objEnPyxb']
+           del self.dicoPyxbDeConstruction['objEnPyxb']
+        else :
+           self.objPyxbDeConstruction=None
         self.definition = definition
         self.nom = nom
         self.val = val
@@ -56,7 +66,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
             self.jdc = None
             self.niveau = None
             self.etape = None
-        self.mc_liste = self.build_mc()
+        self.mcListe = self.buildMc()
 
     def GETVAL(self, val):
         """
@@ -68,7 +78,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         else:
             return val
 
-    def get_valeur(self):
+    def getValeur(self):
         """
             Retourne la "valeur" d'un mot-clé facteur qui est l'objet lui-meme.
             Cette valeur est utilisée lors de la création d'un contexte
@@ -76,10 +86,10 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         """
         return self
 
-    def get_val(self):
+    def getVal(self):
         """
             Une autre méthode qui retourne une "autre" valeur du mot clé facteur.
-            Elle est utilisée par la méthode get_mocle
+            Elle est utilisée par la méthode getMocle
         """
         return [self]
 
@@ -90,7 +100,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         """
         if key == 0:
             return self
-        return self.get_mocle(key)
+        return self.getMocle(key)
 
     def accept(self, visitor):
         """

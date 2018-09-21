@@ -35,8 +35,8 @@ import sys
 
 # Modules EFICAS
 from .N_Exception import AsException
-from .N_types import is_int, is_float, is_complex, is_str, is_sequence, is_assd
-from .strfunc import get_encoding
+from .N_types import isInt, isFloat, isComplex, isStr, isSequence, isASSD
+from .strfunc import getEncoding
 import six
 
 SEP = '_'
@@ -46,7 +46,7 @@ try :
 except :
   print ('pb avec la version de python pour cur_frame = sys._getframe')
 
-def callee_where(niveau=4):
+def calleeWhere(niveau=4):
     """
        recupere la position de l appel
     """
@@ -57,8 +57,8 @@ def callee_where(niveau=4):
         # Python 2.7 compile function does not accept unicode filename, so we encode it
         # with the current locale encoding in order to have a correct traceback.
         # Here, we convert it back to unicode.
-        filename = six.text_type(frame.f_code.co_filename, get_encoding())
-        return frame.f_lineno, filename, frame.f_code.co_firstlineno, frame.f_locals
+        filename = six.text_type(frame.f_code.co_filename, getEncoding())
+        return frame.fLineNo, filename, frame.f_code.co_firstlineno, frame.f_locals
     except:
         return 0, "inconnu", 0, {}
 
@@ -68,15 +68,15 @@ def AsType(a):
        Retourne le type d'un concept (a) à partir
        des caractéristiques de l'objet Python
     """
-    if is_sequence(a):
+    if isSequence(a):
         return AsType(a[0])
-    if is_assd(a):
+    if isASSD(a):
         return type(a)
-    if is_float(a):
+    if isFloat(a):
         return "R"
-    if is_int(a):
+    if isInt(a):
         return "I"
-    if is_str(a):
+    if isStr(a):
         return "TXM"
     if a == None:
         return None
@@ -158,7 +158,7 @@ def repr_float(valeur):
     return s
 
 
-def import_object(uri):
+def importObject(uri):
     """Load and return a python object (class, function...).
     Its `uri` looks like "mainpkg.subpkg.module.object", this means
     that "mainpkg.subpkg.module" is imported and "object" is
@@ -215,8 +215,8 @@ class Enum(object):
 
     def exists(self, value):
         """Tell if value is in the enumeration"""
-        return self.get_id(value) is not None
+        return self.getId(value) is not None
 
-    def get_id(self, value):
+    def getId(self, value):
         """Return the key associated to the given value"""
         return self._dict_keys.get(value, None)

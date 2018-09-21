@@ -73,21 +73,21 @@ class MCSIMP(object):
         self.cardProto = CardProtocol(
             "card", min=self.definition.min, max=self.definition.max)
 
-    def get_valid(self):
+    def getValid(self):
         if hasattr(self, 'valid'):
             return self.valid
         else:
             self.valid = None
             return None
 
-    def set_valid(self, valid):
-        old_valid = self.get_valid()
+    def setValid(self, valid):
+        old_valid = self.getValid()
         self.valid = valid
         self.state = 'unchanged'
         if not old_valid or old_valid != self.valid:
-            self.init_modif_up()
+            self.initModifUp()
 
-    def isvalid(self, cr='non'):
+    def isValid(self, cr='non'):
         """
            Cette methode retourne un indicateur de validite de l'objet de type MCSIMP
 
@@ -104,7 +104,7 @@ class MCSIMP(object):
             valid = 1
             v = self.valeur
             #  verification presence
-            if self.isoblig() and (v == None or v == "" ):
+            if self.isOblig() and (v == None or v == "" ):
                 if cr == 'oui':
                     self.cr.fatal( "Mandatory keyword : %s has no value" % tr(self.nom))
                 valid = 0
@@ -114,10 +114,9 @@ class MCSIMP(object):
             # Pour tenir compte des Tuples
             if hasattr(self.definition.type[0],'ntuple') :
                try :
-                  if not (type(lval[0]) is tuple) : lval=(lval,)
+                  if (not (type(lval[0]) is tuple)) and (not (type(lval[0]) is list)) : lval=(lval,)
                except :
                   pass
-
             if lval is None:
                 valid = 0
                 if cr == 'oui':
@@ -176,15 +175,15 @@ class MCSIMP(object):
                     except ValError as e:
                         valid = 0
 
-            self.set_valid(valid)
+            self.setValid(valid)
             return self.valid
 
-    def isoblig(self):
+    def isOblig(self):
         """ indique si le mot-cle est obligatoire
         """
         return self.definition.statut == 'o'
 
-    def init_modif_up(self):
+    def initModifUp(self):
         """
            Propage l'etat modifie au parent s'il existe et n'est l'objet
            lui-meme
@@ -199,7 +198,7 @@ class MCSIMP(object):
         self.cr.fin = "End Simple Keyword: " + tr(self.nom)
         self.state = 'modified'
         try:
-            self.isvalid(cr='oui')
+            self.isValid(cr='oui')
         except AsException as e:
             if CONTEXT.debug:
                 traceback.print_exc()

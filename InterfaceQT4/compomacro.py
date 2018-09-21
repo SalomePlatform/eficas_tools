@@ -27,9 +27,9 @@ import traceback
 # Modules Eficas
 from Editeur import Objecttreeitem
 from Extensions.i18n import tr
-from . import compooper
-from . import browser
-from . import typeNode
+from InterfaceQT4 import compooper
+from InterfaceQT4 import browser
+from InterfaceQT4 import typeNode
 from PyQt5.QtWidgets import QAction
 from PyQt5.QtCore import Qt
 
@@ -44,12 +44,12 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
 
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
-      if ("AFFE_CARA_ELEM" in self.item.get_genealogie()) and self.editor.salome:
+      if ("AFFE_CARA_ELEM" in self.item.getGenealogie()) and self.editor.salome:
            self.ViewElt = QAction(tr('View3D'),self.tree)
            self.ViewElt.triggered.connect(self.view3D)
            self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
            self.menu.addAction(self.ViewElt)
-           if self.item.isvalid() :
+           if self.item.isValid() :
               self.ViewElt.setEnabled(1)
            else:
               self.ViewElt.setEnabled(0)
@@ -73,10 +73,10 @@ class MACROTreeItem(compooper.EtapeTreeItem):
 
 class INCLUDETreeItemBase(MACROTreeItem):
 
-    def __init__(self,appli, labeltext, object, setfunction):    
-       MACROTreeItem.__init__(self,appli, labeltext, object, setfunction)
+    def __init__(self,appli, labeltext, object, setFunction):    
+       MACROTreeItem.__init__(self,appli, labeltext, object, setFunction)
 
-    def iscopiable(self):
+    def isCopiable(self):
        return 0
 
 
@@ -98,7 +98,7 @@ class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):
     
         if not hasattr(self.item.object,"jdc_aux") or self.item.object.jdc_aux is None:
                #L'include n'est pas initialise
-               self.item.object.build_include(None,"")
+               self.item.object.buildInclude(None,"")
     
         # On cree un nouvel onglet dans le bureau
         self.editor.vm.displayJDC( self.item.object.jdc_aux , self.item.object.jdc_aux.nom )
@@ -130,7 +130,7 @@ class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):
         if not hasattr(self.item.object,"jdc_aux") or self.item.object.jdc_aux is None:
             text="""DEBUT()
                     FIN()"""
-            self.object.build_poursuite(None,text)
+            self.object.buildPoursuite(None,text)
     
         # On cree un nouvel onglet dans le bureau
         self.editor.vm.displayJDC( self.item.object.jdc_aux , self.item.object.jdc_aux.nom)
@@ -174,18 +174,18 @@ class INCLUDE_MATERIAUTreeItem(INCLUDETreeItemBase):
 # ------------------------------------
     
 
-def treeitem(appli, labeltext, object, setfunction=None):
+def treeitem(appli, labeltext, object, setFunction=None):
    """ Factory qui retourne l'item adapte au type de macro : 
        INCLUDE, POURSUITE, MACRO
    """
    if object.nom == "INCLUDE_MATERIAU":
-      return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setfunction)
+      return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setFunction)
    elif object.nom == "INCLUDE" or object.nom== "DICTDATA":
-      return INCLUDETreeItem(appli, labeltext, object, setfunction)
+      return INCLUDETreeItem(appli, labeltext, object, setFunction)
    elif object.nom == "POURSUITE":
-      return POURSUITETreeItem(appli, labeltext, object, setfunction)
+      return POURSUITETreeItem(appli, labeltext, object, setFunction)
    else:
-      return MACROTreeItem(appli, labeltext, object, setfunction)
+      return MACROTreeItem(appli, labeltext, object, setFunction)
 
 import Accas
 objet=Accas.MACRO_ETAPE

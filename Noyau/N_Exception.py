@@ -24,7 +24,7 @@
 
 # Modules EFICAS
 from __future__ import absolute_import
-from .strfunc import get_encoding, to_unicode
+from .strfunc import getEncoding, toUnicode
 import six
 
 
@@ -33,17 +33,17 @@ class AsException(Exception):
     def __unicode__(self):
         args = []
         for x in self.args:
-            ustr = to_unicode(x)
+            ustr = toUnicode(x)
             if type(ustr) is not six.text_type:
                 ustr = six.text_type( repr(x) )
             args.append(ustr)
         return " ".join(args)
 
     def __str__(self):
-        return six.text_type(self).encode(get_encoding())
+        return six.text_type(self).encode(getEncoding())
 
 
 class InterruptParsingError(Exception):
 
     """Exception used to interrupt the parsing of the command file
-    without raising an error (see N_JDC.exec_compile for usage)"""
+    without raising an error (see N_JDC.execCompile for usage)"""

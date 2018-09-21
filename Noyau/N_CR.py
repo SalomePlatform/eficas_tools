@@ -101,7 +101,7 @@ class CR(object):
         self.crfatal = []
         self.subcr = []
 
-    def beautifie_messages(self):
+    def beautifieMessages(self):
         """
           Beautifie les messages stockés dans crok,crfatal,crexception et crwarn
         """
@@ -111,15 +111,15 @@ class CR(object):
         self.crok_belle = l
         l = []
         for mess in self.crwarn:
-            l.append(encadre_message(mess, '*'))
+            l.append(encadreMessage(mess, '*'))
         self.crwarn_belle = l
         l = []
         for mess in self.crfatal:
-            l.append(encadre_message(mess, '!'))
+            l.append(encadreMessage(mess, '!'))
         self.crfatal_belle = l
         l = []
         for mess in self.crexception:
-            l.append(encadre_message(mess, '!'))
+            l.append(encadreMessage(mess, '!'))
         self.crexception_belle = l
 
     def indent(self, s):
@@ -135,7 +135,7 @@ class CR(object):
           Retourne une chaine de caractères décorée et représentative de self
         """
         s = ''
-        self.beautifie_messages()
+        self.beautifieMessages()
         s = s + ''.join(self.crok_belle)
         s = s + ''.join(self.crwarn_belle)
         s = s + ''.join(self.crfatal_belle)
@@ -181,7 +181,7 @@ class CR(object):
                 (decalage - 1) * self.dec + self.fin + '\n'
         return s
 
-    def get_mess_fatal(self):
+    def getMessFatal(self):
         """
             Retourne une chaine de caractères contenant les messages de
             la liste crfatal (du dernier au premier)
@@ -193,7 +193,7 @@ class CR(object):
         self.crfatal.reverse()
         return s
 
-    def get_mess_exception(self):
+    def getMessException(self):
         """
             Retourne une chaine de caractères contenant les messages
             de la liste crexception (du dernier au premier)
@@ -228,7 +228,7 @@ def split(ligne, cesure):
             return ligne[:coupure + 1] + '\n' + split(ligne[coupure + 1:], cesure)
 
 
-def justify_text(texte='', cesure=50):
+def justifyText(texte='', cesure=50):
     if not isinstance (texte,str) :  texte = ''.join(texte)
     texte = texte.strip()
     liste_lignes = texte.split('\n')
@@ -237,12 +237,12 @@ def justify_text(texte='', cesure=50):
     return texte_justifie
 
 
-def encadre_message(texte, motif):
+def encadreMessage(texte, motif):
     """
        Retourne la chaine de caractères texte entourée d'un cadre formés
        d'éléments 'motif'
     """
-    texte = justify_text(texte, cesure=80)
+    texte = justifyText(texte, cesure=80)
     if texte.strip() == "" : return ''
     lignes = texte.split( '\n')
     longueur = 0

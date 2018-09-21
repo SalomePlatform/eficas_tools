@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>739</width>
-    <height>63</height>
+    <width>809</width>
+    <height>56</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -25,7 +25,7 @@
   <property name="maximumSize">
    <size>
     <width>1493</width>
-    <height>85</height>
+    <height>95</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -137,7 +137,7 @@
    <item>
     <widget class="MonLabelClic" name="label">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>

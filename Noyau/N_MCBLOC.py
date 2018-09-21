@@ -39,7 +39,7 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
 
     nature = "MCBLOC"
 
-    def __init__(self, val, definition, nom, parent):
+    def __init__(self, val, definition, nom, parent,dicoPyxbDeConstruction=None):
         """
            Attributs :
 
@@ -53,14 +53,17 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
             - parent : le créateur du bloc. Ce peut etre un mot-clé facteur ou un autre objet composite de type
                        OBJECT. Si parent vaut None, le bloc ne possède pas de contexte englobant.
 
-            - mc_liste : liste des sous-objets du bloc construite par appel à la méthode build_mc
+            - mcListe : liste des sous-objets du bloc construite par appel à la méthode buildMc
 
         """
+        #print ('MCBLOC' ,  val, definition, nom, parent)
         self.definition = definition
         self.nom = nom
         self.val = val
         self.parent = parent
         self.valeur = val
+        self.objPyxbDeConstruction=None
+        self.dicoPyxbDeConstruction=dicoPyxbDeConstruction
         if parent:
             self.jdc = self.parent.jdc
             self.niveau = self.parent.niveau
@@ -70,29 +73,29 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
             self.jdc = None
             self.niveau = None
             self.etape = None
-        self.mc_liste = self.build_mc()
+        self.mcListe = self.buildMc()
 
-    def get_valeur(self):
+    def getValeur(self):
         """
            Retourne la "valeur" de l'objet bloc. Il s'agit d'un dictionnaire dont
-           les clés seront les noms des objets de self.mc_liste et les valeurs
-           les valeurs des objets de self.mc_liste obtenues par application de
-           la méthode get_valeur.
+           les clés seront les noms des objets de self.mcListe et les valeurs
+           les valeurs des objets de self.mcListe obtenues par application de
+           la méthode getValeur.
 
            Dans le cas particulier d'un objet bloc les éléments du dictionnaire
-           obtenu par appel de la méthode get_valeur sont intégrés au niveau
+           obtenu par appel de la méthode getValeur sont intégrés au niveau
            supérieur.
 
         """
         dico = {}
-        for mocle in self.mc_liste:
+        for mocle in self.mcListe:
             if mocle.isBLOC():
                 # Si mocle est un BLOC, on inclut ses items dans le dictionnaire
                 # représentatif de la valeur de self. Les mots-clés fils de blocs sont
                 # donc remontés au niveau supérieur.
-                dico.update(mocle.get_valeur())
+                dico.update(mocle.getValeur())
             else:
-                dico[mocle.nom] = mocle.get_valeur()
+                dico[mocle.nom] = mocle.getValeur()
 
         # On rajoute tous les autres mots-clés locaux possibles avec la valeur
         # par défaut ou None

@@ -71,6 +71,8 @@ class PROC(N_ENTITE.ENTITE):
                       rangés par niveau. Ils apparaissent alors exclusivement dans leur niveau de rangement.
                       Si niveau vaut None, l'opérateur est rangé au niveau global.
 
+     - fenetreIhm : specification de la fenetre
+
      - entites : dictionnaire dans lequel sont stockés les sous entités de l'opérateur. Il s'agit
                        des entités de définition pour les mots-clés : FACT, BLOC, SIMP. Cet attribut
                        est initialisé avec args, c'est à dire les arguments d'appel restants.
@@ -80,38 +82,39 @@ class PROC(N_ENTITE.ENTITE):
     class_instance = N_PROC_ETAPE.PROC_ETAPE
     label = 'PROC'
 
-    def __init__(self, nom, op=None, reentrant='n', repetable='o', fr="",ang="",
+    def __init__(self, nom, op=None, reentrant='n', repetable='o', fr="",ang="", fenetreIhm=None,
                  docu="", regles=(), op_init=None, niveau = None, UIinfo=None, **args):
         """
            Méthode d'initialisation de l'objet PROC. Les arguments sont utilisés pour initialiser
            les attributs de meme nom
         """
-        self.nom = nom
-        self.op = op
-        self.reentrant = reentrant
-        self.repetable = repetable
-        self.fr = fr
+        self.nom        = nom
+        self.op         = op
+        self.reentrant  = reentrant
+        self.repetable  = repetable
+        self.fenetreIhm = fenetreIhm
+        self.fr         = fr
         #self.ang=""
-        self.ang=ang
-        self.docu = docu
+        self.ang        = ang
+        self.docu       = docu
         if type(regles) == tuple:
             self.regles = regles
         else:
             self.regles = (regles,)
         # Attribut op_init : Fonction a appeler a la construction de l
         # operateur sauf si == None
-        self.op_init = op_init
-        self.entites = args
-        current_cata = CONTEXT.get_current_cata()
+        self.op_init    = op_init
+        self.entites    = args
+        current_cata    = CONTEXT.getCurrentCata()
         if niveau == None:
             self.niveau = None
             current_cata.enregistre(self)
         else:
-            self.niveau = current_cata.get_niveau(niveau)
+            self.niveau = current_cata.getNiveau(niveau)
             self.niveau.enregistre(self)
         self.UIinfo = UIinfo
         self.affecter_parente()
-        self.check_definition(self.nom)
+        self.checkDefinition(self.nom)
 
     def __call__(self, **args):
         """
@@ -119,8 +122,8 @@ class PROC(N_ENTITE.ENTITE):
             puis demande la construction de ses sous-objets et du concept produit.
         """
         etape = self.class_instance(oper=self, args=args)
-        etape.McBuild()
-        return etape.Build_sd()
+        etape.MCBuild()
+        return etape.buildSd()
 
     def make_objet(self, mc_list='oui'):
         """
@@ -131,20 +134,20 @@ class PROC(N_ENTITE.ENTITE):
         """
         etape = self.class_instance(oper=self, args={})
         if mc_list == 'oui':
-            etape.McBuild()
+            etape.MCBuild()
         return etape
 
-    def verif_cata(self):
+    def verifCata(self):
         """
             Méthode de vérification des attributs de définition
         """
-        self.check_regles()
-        self.check_fr()
-        self.check_reentrant()
-        self.check_docu()
-        self.check_nom()
-        self.check_op(valmin=0)
-        self.verif_cata_regles()
+        self.checkRegles()
+        self.checkFr()
+        self.checkReentrant()
+        self.checkDocu()
+        self.checkNom()
+        self.checkOp(valmin=0)
+        self.verifCataRegles()
 
     def supprime(self):
         """

@@ -24,14 +24,15 @@ try :
    from builtins import str
    from builtins import range
 except : pass
+
 import re
 import types,sys,os
 import traceback
 from . import typeNode
-#import pdb
 
 import six
 from six.moves import range
+
 from PyQt5.QtWidgets import QTreeWidget , QTreeWidgetItem, QApplication, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore  import Qt
@@ -39,7 +40,10 @@ from Extensions.i18n import tr
 from .gereRegles import GereRegles
 from .monChoixCommande import MonChoixCommande
 
+#------------------------------------------
 class JDCTree( QTreeWidget,GereRegles ):
+#------------------------------------------
+
     def __init__( self, jdc_item, QWParent):        
         #if hasattr(QWParent,'widgetTree') : 
         self.editor	   = QWParent
@@ -63,7 +67,7 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.childrenComplete=[]
         self.racine=self.item.itemNode(self,self.item)
  
-        self.itemCourrant=None
+        self.itemCourant=None
 
         self.itemClicked.connect(self.handleOnItem)
         self.itemCollapsed.connect(self.handleCollapsedItem)
@@ -74,10 +78,10 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.inhibeExpand=True
         self.expandItem(self.racine)
         self.inhibeExpand=False
-        #print "self.editor.afficheCommandesPliees", self.editor.afficheCommandesPliees
+        #print ("self.editor.maConfiguration.afficheCommandesPliees", self.editor.maConfiguration.afficheCommandesPliees)
         if self.racine.children !=[] :  
            #self.editor.initSplitterSizes(3)
-           if self.editor.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
+           if self.editor.maConfiguration.afficheCommandesPliees : self.racine.children[0].plieToutEtReaffiche()
            else : self.racine.children[0].deplieToutEtReaffiche()
            self.racine.children[0].fenetre.donnePremier()
         else : 
@@ -103,11 +107,12 @@ class JDCTree( QTreeWidget,GereRegles ):
         """
         #print "handleContextMenu"
         if item == None : return
+        self.itemCourant=item
         if item.existeMenu == 0 : return
         if item.menu == None:
            item.createPopUpMenu()
         if item.menu != None:
-           if item.item.get_nom() == "DISTRIBUTION" and item.item.isvalid() :
+           if item.item.getNom() == "DISTRIBUTION" and item.item.isValid() :
               item.Graphe.setEnabled(1)
            item.menu.exec_(coord)            
             
@@ -115,6 +120,7 @@ class JDCTree( QTreeWidget,GereRegles ):
     def handleCollapsedItem(self,item):
         #print "dans CollapsedItem", self.inhibeExpand  
         if self.inhibeExpand == True : return
+        self.itemCourant=item
         # On traite le cas de l item non selectionne
         itemParent=item
         while not (hasattr (itemParent,'getPanel')) : 
@@ -129,10 +135,11 @@ class JDCTree( QTreeWidget,GereRegles ):
         item.select()
 
     def handleExpandedItem(self,item):
-        #print "handleExpandedItem pour ", item.item.nom, self.inhibeExpand
+        #print ("handleExpandedItem pour ", item.item.nom, self.inhibeExpand)
         #import traceback
         #traceback.print_stack()
         if self.inhibeExpand == True : return
+        self.itemCourant=item
         self.inhibeExpand = True 
         itemParent=item
         while not (hasattr (itemParent,'getPanel')) : 
@@ -147,25 +154,26 @@ class JDCTree( QTreeWidget,GereRegles ):
 
 
     def handleOnItem(self,item,int):
-        #print "je passe dans handleOnItem pour ",self, item.item.nom, item, item.item
+        #print ("je passe dans handleOnItem pour ",self, item.item.nom, item, item.item, item.item.getLabelText())
         
         from InterfaceQT4 import composimp
         self.inhibeExpand = True 
-        self.itemCourrant=item
+        self.itemCourant=item
         itemParent=item
 
         while not (hasattr (itemParent,'getPanel')) : 
            if itemParent.plie==True : itemParent.setDeplie()
+           itemAvant=itemParent
            itemParent=itemParent.treeParent 
 
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
-              
             estUneFeuille=(isinstance(item,composimp.Node))
              # il faut afficher le parent
-            #print "estUneFeuille", estUneFeuille
-            #print "afficheCommandesPliees", self.editor.afficheCommandesPliees
+            if estUneFeuille and itemParent.fenetreIhm=='deplie1Niveau' : 
+               itemAvant.afficheCeNiveau()
+               return
             if estUneFeuille                        : itemParent.affichePanneau()
-            elif self.editor.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
+            elif self.editor.maConfiguration.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
             else                                    : itemParent.affichePanneau()
 
 
@@ -177,8 +185,14 @@ class JDCTree( QTreeWidget,GereRegles ):
              #print 'il faut afficher le 1er'
 
         try :
-           fr = item.item.get_fr()
-           if self.editor: self.editor.affiche_commentaire(six.text_type(fr))
+           fr = item.item.getFr()
+           chaineDecoupee= fr.split('\n')
+           if len(chaineDecoupee) > 3 :
+              txt='\n'.join(chaineDecoupee[0:2])+'...\nfull help : double clicked on validity chip of '+ str(item.item.nom)+ ' in central widget'
+           else : txt=fr
+
+           if self.editor: 
+              self.editor.afficheCommentaire(six.text_type(txt))
         except:
             pass
         item.select()
@@ -195,10 +209,14 @@ class JDCTree( QTreeWidget,GereRegles ):
 COMMENT     = "COMMENTAIRE"
 PARAMETERS  = "PARAMETRE"
  
+#------------------------------------------
 class JDCNode(QTreeWidgetItem,GereRegles):
+#------------------------------------------
     def __init__( self, treeParent, item, itemExpand=False, ancien=False ):
-        #print "creation d'un noeud : ", item, " ",item.nom,"", treeParent, self
+        #print ("creation d'un noeud : ", item, " ",item.nom,"", treeParent, self)
         #self.a=0
+
+
         self.item        = item
         self.vraiParent  = treeParent
         self.treeParent  = treeParent
@@ -213,13 +231,17 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         from InterfaceQT4 import compoparam
         from InterfaceQT4 import composimp
         if   (isinstance(self.item,compocomm.COMMTreeItem)) : name=tr("Commentaire")
-        elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=tr(str(item.GetLabelText()[0]))
-        #else:   name  = tr(str(tr(item.GetLabelText()[0]))+" :")
-        else:   name  = tr(item.GetLabelText()[0])
+        elif (isinstance(self.item,compoparam.PARAMTreeItem)) : name=tr(str(item.getLabelText()[0]))
+        #else:   name  = tr(str(tr(item.getLabelText()[0]))+" :")
+        else:   name  = tr(item.getLabelText()[0])
         if item.nom != tr(item.nom) : name = str(tr(item.nom)+" :")
-        value = tr(str( item.GetText() ) )
+        value = tr(str( item.getText() ) )
+       
+        # si specialisation de la fenetre
+        if self.item.object.definition == None : self.fenetreIhm = None
+           # Cas des listes de mots_clefs 
+        else : self.fenetreIhm = self.item.object.definition.fenetreIhm
  
-
         if self.editor.enteteQTree=='complet':mesColonnes=(name,value)
         else : mesColonnes=(name,)
 
@@ -254,15 +276,17 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         else :
            QTreeWidgetItem.__init__(self,self.treeParent,mesColonnes)
 
-        self.setToolTip(0,self.item.get_fr())
-        self.setToolTip(1,self.item.get_fr())
+        self.setToolTip(0,self.item.getFr())
+        self.setToolTip(1,self.item.getFr())
         repIcon=self.appliEficas.repIcon
 
-        monIcone = QIcon(repIcon+"/" +self.item.GetIconName() + ".png")
+        couleur=self.item.getIconName()
+        monIcone = QIcon(repIcon+"/" + couleur + ".png")
+
         self.setIcon(0,monIcone)
 
         self.children = []
-        self.build_children()
+        self.buildChildren()
         self.menu=None
         self.existeMenu=1
 
@@ -280,10 +304,11 @@ class JDCNode(QTreeWidgetItem,GereRegles):
           pass
 
 
-    def build_children(self,posInsertion=10000):
+    def buildChildren(self,posInsertion=10000):
         """ Construit la liste des enfants de self """
         """ Se charge de remettre les noeuds Expanded dans le meme etat """
-        #print "*********** build_children ",self,self.item, self.item.nom
+        #print ("*********** buildChildren ",self,self.item, self.item.nom)
+        #print (poum)
         
         self.listeItemExpanded=[]
         self.listeItemPlie=[]
@@ -300,7 +325,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         
         self.children = []
         self.childrenComplete = []
-        sublist = self.item._GetSubList()
+        sublist = self.item._getSubList()
         ind=0
         
         for item in sublist :
@@ -311,32 +336,69 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             nouvelItem=item.itemNode(self,item,itemExpand,ancien)
             self.children.append(nouvelItem)
 
-        #print "fin *********** build_children ",self,self.item, self.item.nom, self.children
+        #print ("fin *********** buildChildren ",self,self.item, self.item.nom, self.children)
 
         
     def chercheNoeudCorrespondant(self,objSimp):
-        sublist = self.item._GetSubList()
+        sublist = self.item._getSubList()
         for node in self.childrenComplete:
             if node.item.object==objSimp : return node
         return None
 
 
+    def afficheCeNiveau(self):
+        #print ('afficheCeNiveau pour ', self.item.nom, self.item.getLabelText())
+        for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
+            widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
+            self.editor.widgetCentraleLayout.removeItem(widget)
+        if self.editor.fenetreCentraleAffichee != None :
+            self.editor.widgetCentraleLayout.removeWidget(self.editor.fenetreCentraleAffichee)
+            self.editor.fenetreCentraleAffichee.setParent(None)
+            self.editor.fenetreCentraleAffichee.close()
+            self.editor.fenetreCentraleAffichee.deleteLater()
+
+        from monWidgetNiveauFact import MonWidgetNiveauFact, MonWidgetNiveauFactTableau
+        maDefinition=self.item.get_definition()
+        monObjet=self.item.object
+        if maDefinition.fenetreIhm=='Tableau' : self.maFenetreCadre=MonWidgetNiveauFactTableau(self,self.editor,maDefinition,monObjet)
+        else : self.maFenetreCadre=MonWidgetNiveauFact(self,self.editor,maDefinition,monObjet)
+        
+        self.fenetre=self.maFenetreCadre
+        self.editor.widgetCentraleLayout.addWidget(self.maFenetreCadre)
+        self.editor.fenetreCentraleAffichee=self.maFenetreCadre
+        self.select()
+        #print ('fin afficheCeNiveau pour ', self.item.nom)
+        
+   
+    def getPanelModifie(self):
+       
+        if self.fenetreIhm == None : return None
+        if self.fenetreIhm=='deplie1Niveau':
+           from InterfaceQT4.monWidgetCommandeDeplie1Niveau import MonWidgetCommandeDeplie1Niveau
+           return MonWidgetCommandeDeplie1Niveau (self,self.editor ,self.item.object)
+        return None
+        
+
     def affichePanneau(self) :
-        #if self.editor.code == 'ASTER' and not(self.item.isactif()) : 
+        #if self.editor.code == 'ASTER' and not(self.item.isActif()) : 
         # posera des pb si un code decide d appeler FIN un mot clef
         # on resoudera a ce moment la
-        # pour l instant pas de poussiere sous le tapis
-        if  not(self.item.isactif()) : 
+        # pour l pas de poussiere sous le tapis
+        #print ('_________________ds affichePanneau pour', self.item.nom)
+        if  not(self.item.isActif()) : 
             from .monWidgetInactif import MonWidgetInactif
             self.fenetre = MonWidgetInactif(self,self.editor)
         else:
            itemParent=self
            while not (hasattr (itemParent,'getPanel')) : itemParent=itemParent.treeParent 
            if itemParent!=self : 
+              #print ('j appelle affichePanneau pour ', itemParent.item.nom , 'par', self.item.nom)
               itemParent.affichePanneau()
+              #print ('fin _________________ds affichePanneau pour', self.item.nom)
               return
-           self.fenetre=self.getPanel()
-           #self.editor.restoreSplitterSizes()
+           self.fenetre=self.getPanelModifie()
+           if self.fenetre == None : self.fenetre=self.getPanel()
+           self.editor.restoreSplitterSizes()
          
         for indiceWidget in range(self.editor.widgetCentraleLayout.count()):
             widget=self.editor.widgetCentraleLayout.itemAt(indiceWidget)
@@ -359,7 +421,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.tree.inhibeExpand=True
         self.tree.expandItem(self)
         self.tree.inhibeExpand=False
-        #print( 'fin affichePanneau pour', self.item.nom)
+        #print( '_________________fin affichePanneau pour', self.item.nom)
           
 
     def createPopUpMenu(self):
@@ -374,10 +436,10 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         # (commentariser) un commentaire.
         try :
             pos=self.treeParent.children.index(self)
-            commande_comment = self.item.get_objet_commentarise()
+            commande_comment = self.item.getObjetCommentarise()
             # On signale a l editeur du panel (le JDCDisplay) une modification
-            self.editor.init_modif()
-            self.treeParent.build_children()
+            self.editor.initModif()
+            self.treeParent.buildChildren()
             self.treeParent.children[pos].select()
             self.treeParent.children[pos].affichePanneau()
         except Exception as e:
@@ -390,9 +452,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """
         try :
             pos=self.treeParent.children.index(self)
-            commande,nom = self.item.uncomment()
-            self.editor.init_modif()
-            self.treeParent.build_children()
+            commande,nom = self.item.unComment()
+            self.editor.initModif()
+            self.treeParent.buildChildren()
             self.treeParent.children[pos].select()
             self.treeParent.children[pos].affichePanneau()
         except Exception as e:
@@ -402,7 +464,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """
         Ajoute un commentaire a l'interieur du JDC :
         """
-        self.editor.init_modif()
+        self.editor.initModif()
         if after:
             pos = 'after'
         else:
@@ -413,7 +475,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """
         Ajoute un parametre a l'interieur du JDC :
         """
-        self.editor.init_modif()
+        self.editor.initModif()
         if after: pos = 'after'
         else: pos = 'before'
         child=self.appendBrother( PARAMETERS, pos )
@@ -440,7 +502,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         par defaut on l'ajoute immediatement apres 
         Methode externe
         """
-        self.editor.init_modif()
+        self.editor.initModif()
 
         from InterfaceQT4 import compojdc
         if (isinstance(self.treeParent, compojdc.Node)) and not self.verifiePosition(name,pos)  : return 0
@@ -449,7 +511,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
           index = self.vraiParent.children.index(self)
           if   pos == 'before': index = index
           elif pos == 'after': index = index +1
-          return self.vraiParent.append_child(name,pos=index,plier=plier)
+          return self.vraiParent.appendChild(name,pos=index,plier=plier)
         else :
           index = self.treeParent.children.index(self)
           if   pos == 'before': index = index
@@ -457,13 +519,13 @@ class JDCNode(QTreeWidgetItem,GereRegles):
           else:
               print(six.text_type(pos), tr("  n'est pas un index valide pour appendBrother"))
               return 0
-          return self.treeParent.append_child(name,pos=index,plier=plier)
+          return self.treeParent.appendChild(name,pos=index,plier=plier)
 
     def verifiePosition(self,name,pos,aLaRacine=False):
-        if name not in self.editor.Classement_Commandes_Ds_Arbre : return True
-        indexName=self.editor.Classement_Commandes_Ds_Arbre.index(name)
+        if name not in self.editor.readercata.Classement_Commandes_Ds_Arbre : return True
+        indexName=self.editor.readercata.Classement_Commandes_Ds_Arbre.index(name)
 
-        etapes=self.item.get_jdc().etapes
+        etapes=self.item.getJdc().etapes
         if etapes == [] : return True
 
         if aLaRacine == False :indexOu=etapes.index(self.item.object)
@@ -472,35 +534,35 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if pos=="after" : indexOu = indexOu+1
         for e in etapes[:indexOu] :
             nom=e.nom
-            if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
-            indexEtape=self.editor.Classement_Commandes_Ds_Arbre.index(nom)
+            if nom not in self.editor.readercata.Classement_Commandes_Ds_Arbre : continue
+            indexEtape=self.editor.readercata.Classement_Commandes_Ds_Arbre.index(nom)
             if indexEtape > indexName :
                comment=tr('le mot clef ')+name+tr(' doit etre insere avant ')+nom
                QMessageBox.information( None,tr('insertion impossible'),comment, )
                return False
         for e in etapes[indexOu:] :
             nom=e.nom
-            if nom not in self.editor.Classement_Commandes_Ds_Arbre : continue
-            indexEtape=self.editor.Classement_Commandes_Ds_Arbre.index(nom)
+            if nom not in self.editor.readercata.Classement_Commandes_Ds_Arbre : continue
+            indexEtape=self.editor.readercata.Classement_Commandes_Ds_Arbre.index(nom)
             if indexEtape < indexName :
                comment=tr('le mot clef ')+name+tr(' doit etre insere apres ')+nom
                QMessageBox.information( None,tr('insertion impossible'),comment, )
                return False
         return True
 
-    def append_child(self,name,pos=None,plier=False):
+    def appendChild(self,name,pos=None,plier=False):
         """
            Methode pour ajouter un objet fils a l'objet associe au noeud self.
            On peut l'ajouter en debut de liste (pos='first'), en fin (pos='last')
            ou en position intermediaire.
            Si pos vaut None, on le place a la position du catalogue.
         """
-        #print ("************** append_child ",self.item.GetLabelText(), plier)
+        #print ("************** appendChild ",self.item.getLabelText(), pos, plier)
         #import traceback
         #traceback.print_stack()
 
          
-        self.editor.init_modif()
+        self.editor.initModif()
         if pos == 'first':
             index = 0
         elif pos == 'last':
@@ -510,11 +572,11 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             index = pos
         elif type(pos) == types.InstanceType:
             # pos est un item. Il faut inserer name apres pos
-            index = self.item.get_index(pos) +1
+            index = self.item.getIndex(pos) +1
         elif type(name) == types.InstanceType:
-            index = self.item.get_index_child(name.nom)
+            index = self.item.getIndexChild(name.nom)
         else:
-            index = self.item.get_index_child(name)
+            index = self.item.getIndexChild(name)
 
         # si on essaye d inserer a la racine
         if (isinstance(self.treeParent,JDCTree) and index==0) :
@@ -522,7 +584,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
            if not verifiePosition : return 0
 
         self.tree.inhibeExpand=True
-        obj=self.item.additem(name,index) # emet le signal 'add'
+        obj=self.item.addItem(name,index) # emet le signal 'add'
         if obj is None:obj=0
         if obj == 0:return 0
         try :
@@ -533,14 +595,14 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         except :
            child=self.children[index]
         try : 
-           if len(obj) > 1 : self.build_children()
+           if len(obj) > 1 : self.buildChildren()
         except : pass
         self.tree.inhibeExpand=False
         #print (" fin append child")
         return child
 
     def deplace(self):
-        self.editor.init_modif()
+        self.editor.initModif()
         index = self.treeParent.children.index(self) - 1 
         if index < 0 : index =0
         ret=self.treeParent.item.deplaceEntite(self.item.getObject())
@@ -549,22 +611,22 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """ 
             Methode externe pour la destruction de l'objet associe au noeud
         """
-        self.editor.init_modif()
+        self.editor.initModif()
         index = self.vraiParent.children.index(self) - 1 
         if index < 0 : index =0
         recalcule=0
         if self.item.nom == "VARIABLE" :
            recalcule=1
            jdc=self.item.jdc
-        ret,commentaire=self.vraiParent.item.suppitem(self.item)
+        ret,commentaire=self.vraiParent.item.suppItem(self.item)
         if ret==0 :
-          self.editor.affiche_infos(commentaire,Qt.red)
+          self.editor.afficheInfos(commentaire,Qt.red)
         else :
-          self.editor.affiche_infos(commentaire)
-        self.treeParent.build_children()
+          self.editor.afficheInfos(commentaire)
+        self.treeParent.buildChildren()
         if self.treeParent.childrenComplete : toselect=self.treeParent.childrenComplete[index]
         else: toselect=self.treeParent
-        if recalcule : jdc.recalcule_etat_correlation()
+        if recalcule : jdc.recalculeEtatCorrelation()
         if ret==0 :
             if self.treeParent.childrenComplete :
                 notdeleted=self.treeParent.childrenComplete[index+1]
@@ -585,7 +647,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             Methode externe pour la destruction d une liste de noeud
         """
         from InterfaceQT4 import compojdc 
-        self.editor.init_modif()
+        self.editor.initModif()
         index=9999
         recalcule=0
         jdc=self.treeParent
@@ -606,10 +668,10 @@ class JDCNode(QTreeWidgetItem,GereRegles):
                  parentPosition=parentPosition.treeParent
 
         for noeud in liste:
-            noeud.treeParent.item.suppitem(noeud.item)
+            noeud.treeParent.item.suppItem(noeud.item)
 
-        jdc.build_children()
-        if recalcule : jdc.recalcule_etat_correlation()
+        jdc.buildChildren()
+        if recalcule : jdc.recalculeEtatCorrelation()
         try    : toselect=parentPosition.children[index]
         except : toselect=jdc
         toselect.select()
@@ -618,7 +680,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 #    #------------------------------------------------------------------
     def onValid(self):        
 
-        #print "onValid pour ", self.item.nom
+        #print ("onValid pour ", self.item.nom)
         if self.JESUISOFF==1 : return
         if hasattr(self,'fenetre') and self.fenetre: 
            try :
@@ -627,113 +689,115 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             # print "onValid pour ", self.item.nom, self,'pb'
             pass
 
-        if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isvalid():
-           self.item.jdc.recalcule_etat_correlation()
+        if (self.item.nom == "VARIABLE" or self.item.nom == "DISTRIBUTION") and self.item.isValid():
+           self.item.jdc.recalculeEtatCorrelation()
         if hasattr(self.item,'forceRecalcul'):
            self.forceRecalculChildren(self.item.forceRecalcul)
-        self.editor.init_modif()
+        self.editor.initModif()
         
-        self.update_node_valid()
-        self.update_node_label()
-        self.update_node_texte()
+        self.updateNodeValid()
+        self.updateNodeLabel()
+        self.updateNodeTexte()
 
     def onAdd(self,object):
         if self.JESUISOFF==1 : return
-        #print "onAdd pour ", self.item.nom, object.nom
-        self.editor.init_modif()
-        self.update_nodes()
+        #print ("onAdd pour ", self.item.nom, object)
+        self.editor.initModif()
+        self.updateNodes()
         # PN -- non necessaire si item=jdc
         if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
  
     def onSupp(self,object):
         if self.JESUISOFF==1 : return
-        #print "onSup pour ", self.item.nom, object.nom
-        self.editor.init_modif()
-        self.update_nodes()
+        #print "onSup pour ", self.item.nom, object
+        self.editor.initModif()
+        self.updateNodes()
         # PN -- non necessaire si item=jdc
         if hasattr(self.item,'jdc'): self.item.jdc.aReafficher=True
          
 
 
-    def update_node_valid(self):
+    def updateNodeValid(self):
         """Cette methode remet a jour la validite du noeud (icone)
-           Elle appelle isvalid
+           Elle appelle isValid
         """
         repIcon=self.appliEficas.repIcon
-        monIcone = QIcon(repIcon+"/" +self.item.GetIconName() + ".png")
+        couleur=self.item.getIconName()
+        monIcone = QIcon(repIcon+"/" + couleur + ".png")
         self.setIcon(0,monIcone)
 
 
-    def update_node_label(self):
+
+    def updateNodeLabel(self):
         """ Met a jour le label du noeud """
-        #print "NODE update_node_label", self.item.GetLabelText()
-        labeltext,fonte,couleur = self.item.GetLabelText()
+        #print "NODE updateNodeLabel", self.item.getLabelText()
+        labeltext,fonte,couleur = self.item.getLabelText()
         # PNPN a reflechir
         self.setText(0, labeltext)        
     
-    def update_node_label_in_black(self):
+    def updateNodeLabelInBlack(self):
         if hasattr(self.appliEficas,'noeudColore'): 
             self.appliEficas.noeudColore.setForeground(0,Qt.black)
-            self.appliEficas.noeudColore.update_node_label
+            self.appliEficas.noeudColore.updateNodeLabel
     
-    def update_node_label_in_blue(self):
+    def updateNodeLabelInBlue(self):
         if hasattr(self.appliEficas,'noeudColore'): self.appliEficas.noeudColore.setForeground(0,Qt.black)
         self.setForeground(0,Qt.blue)
-        labeltext,fonte,couleur = self.item.GetLabelText()
+        labeltext,fonte,couleur = self.item.getLabelText()
         self.setText(0, labeltext)        
         self.appliEficas.noeudColore=self
 
-    def update_plusieurs_node_label_in_blue(self,liste):
+    def updatePlusieursNodeLabelInBlue(self,liste):
         if hasattr(self.appliEficas,'listeNoeudsColores'):
            for noeud in self.appliEficas.listeNoeudsColores:
                noeud.setTextColor( 0,Qt.black)
-               noeud.update_node_label()
+               noeud.updateNodeLabel()
         self.appliEficas.listeNoeudsColores=[]
         for noeud in liste :
             noeud.setTextColor( 0,Qt.blue )
-            labeltext,fonte,couleur = noeud.item.GetLabelText()
+            labeltext,fonte,couleur = noeud.item.getLabelText()
             noeud.setText(0, labeltext)        
             self.appliEficas.listeNoeudsColores.append(noeud)
 
-    def update_node_texte_in_black(self):
+    def updateNodeTexteInBlack(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
         self.setTextColor( 1,Qt.black )
-        value = self.item.GetText()
+        value = self.item.getText()
         self.setText(1, value)
 
-    def update_node_texte(self):
+    def updateNodeTexte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
-        value = self.item.GetText()
+        value = self.item.getText()
         self.setText(1, value)
         
 
-    def update_node_texte_in_blue(self):
+    def updateNodeTexteInBlue(self):
         self.setTextColor( 1,Qt.blue )
-        value = self.item.GetText()
+        value = self.item.getText()
         self.setText(1, value)
 
-    def update_nodes(self):
-        #print 'NODE update_nodes', self.item.GetLabelText()
-        self.build_children()
+    def updateNodes(self):
+        #print 'NODE updateNodes', self.item.getLabelText()
+        self.buildChildren()
 
-    def update_valid(self) :
+    def updateValid(self) :
         """Cette methode a pour but de mettre a jour la validite du noeud
            et de propager la demande de mise a jour a son parent
         """
-        #print "NODE update_valid", self.item.GetLabelText()
-        self.update_node_valid()
+        #print "NODE updateValid", self.item.getLabelText()
+        self.updateNodeValid()
         try :
-          self.treeParent.update_valid()
+          self.treeParent.updateValid()
         except:
           pass
             
-    def update_texte(self):
+    def updateTexte(self):
         """ Met a jour les noms des SD et valeurs des mots-cles """
-        #print "NODE update_texte", self.item.GetLabelText()
-        self.update_node_texte()
+        #print "NODE updateTexte", self.item.getLabelText()
+        self.updateNodeVexte()
         if self.isExpanded() :
             for child in self.children:
-                if child.isHidden() == false : child.update_texte()
+                if child.isHidden() == false : child.updateTexte()
 
 
     def forceRecalculChildren(self,niveau):
@@ -753,10 +817,10 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             Declenche la copie de l'objet item avec pour cible
             l'objet passe en argument : node_selected
         """
-        objet_a_copier = self.item.get_copie_objet()
+        objet_a_copier = self.item.getCopieObjet()
         child=node_selected.doPasteCommande(objet_a_copier,pos)
         if self.editor.fenetreCentraleAffichee : self.editor.fenetreCentraleAffichee.node.affichePanneau()
-        self.update_node_label_in_black()
+        self.updateNodeLabelInBlack()
         return child
 
     def doPasteCommande(self,objet_a_copier,pos='after'):
@@ -776,12 +840,11 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         """
            Realise la copie de l'objet passe en argument (objet_a_copier)
         """
-        objet = objet_a_copier.item.get_copie_objet()
-        child = self.append_child(objet,pos='first')
+        objet = objet_a_copier.item.getCopieObjet()
+        child = self.appendChild(objet,pos='first')
         return child
 
     def plieToutEtReafficheSaufItem(self, itemADeplier):
-        #print "je suis dans plieToutEtReaffiche", self.item.get_nom()
         self.inhibeExpand=True
         from InterfaceQT4 import compojdc
         if (isinstance(self, compojdc.Node)) :
@@ -800,6 +863,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.inhibeExpand=False
 
     def plieToutEtReaffiche(self):
+        #print ('plieToutEtReaffiche', self.item.getNom())
         from InterfaceQT4 import compojdc
         if (isinstance(self, compojdc.Node)) : self.affichePanneau(); return 
         self.inhibeExpand=True
@@ -810,6 +874,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
             if (isinstance(item,compobloc.Node)) : continue
             item.setPlie()
         self.affichePanneau()
+        #print ("fin plieToutEtReaffiche", self.item.getNom())
 
     def deplieToutEtReaffiche(self):
         self.editor.deplier = True
@@ -819,7 +884,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
 
     def setPlie(self):
         #print "je mets inhibeExpand a true dans setPlie"
-        #print "je suis dans plieTout", self.item.get_nom()
+        #print ("je suis dans plieTout", self.item.getNom())
         from . import compojdc
         if self.fenetre == self.editor.fenetreCentraleAffichee  and isinstance(self.treeParent,compojdc.Node): 
            return
@@ -836,15 +901,17 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         #       item.appartientAUnNoeudPlie=False
 
     def setPlieChildren(self):
-        #print ("dans setPlieChildren pour", self.item.nom)
         self.plie=True
+        from InterfaceQT4 import composimp
+        if isinstance(self,composimp.Node) : return
         for c in self.children :
             c.setPlieChildren()
-            #print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.GetLabelText()[0]
+            #print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.getLabelText()[0]
             c.appartientAUnNoeudPlie=True
             c.plie=True
             #print "dans setPlieChildren plie", c.item.nom
-            c.setExpanded(False)
+            #  01/2018 PNPN : boucle sur MT __ La ligne suivante ne me semble pas necessaire
+            #if not (isinstance(c,composimp.Node)) :c.setExpanded(False)
 
         # Pour les blocs et les motcles list
         # on affiche un niveau de plus
@@ -856,17 +923,9 @@ class JDCNode(QTreeWidgetItem,GereRegles):
                niveauPere=niveauPere.treeParent
             for c in self.children :
                 c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
-                #print "dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.GetLabelText()[0], "mis a la valeur ", niveauPere.appartientAUnNoeudPlie
+                #print ("dans setPlieChildren appartientAUnNoeudPlie=True ", c, c.item.getLabelText()[0], "mis a la valeur ", niveauPere.appartientAUnNoeudPlie)
                 c.setExpanded(False)
 
-        # on affiche un niveau de plus
-        #if isinstance(self,compomclist.Node)  : 
-        #if isinstance(self,compobloc.Node)  : 
-        #    niveauPere=self.treeParent
-        #    while (isinstance(niveauPere,compobloc.Node)):
-        #       niveauPere=niveauPere.treeParent
-        #    for c in self.children :
-        #        c.appartientAUnNoeudPlie=niveauPere.appartientAUnNoeudPlie
 
     def setDeplie(self):
         #print "dans setPlieChildren pour", self.item.nom
@@ -879,7 +938,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         #print "je mets inhibeExpand a false dans setDePlie"
 
     def setDeplieChildren(self):
-        #print "dans setDeplieChildren appartientAUnNoeudPlie=False ", self.item.GetLabelText()
+        #print "dans setDeplieChildren appartientAUnNoeudPlie=False ", self.item.getLabelText()
         for c in self.children :
             c.setDeplieChildren()
             #print "dans setDeplieChildren ", c.item.nom

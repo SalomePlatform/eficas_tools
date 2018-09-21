@@ -45,7 +45,7 @@ class UIINFO:
       if type(self.groupes) != tuple:
          self.groupes=(self.groupes,)
 
-def traite_commande(commande,niveau):
+def traiteCommande(commande,niveau):
     """
         Cette fonction cree l'attribut UI de l'objet commande
         a partir des informations contenues dans UIinfo
@@ -63,12 +63,12 @@ def traite_commande(commande,niveau):
         if not grp in niveau.dict_groupes: niveau.dict_groupes[grp]=[]
         niveau.dict_groupes[grp].append(commande.nom)
 
-def traite_niveau(niveau):
+def traiteNiveau(niveau):
    if niveau.l_niveaux == ():
        # Il n'y a pas de sous niveaux. niveau.entites ne contient que des commandes
        niveau.dict_groupes={}
        for oper in niveau.entites:
-           traite_commande(oper,niveau)
+           traiteCommande(oper,niveau)
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
        niveau.liste_groupes=list(niveau.dict_groupes.keys())
@@ -79,7 +79,7 @@ def traite_niveau(niveau):
        #print niveau.dict_groupes
    else:
        for niv in niveau.l_niveaux:
-           traite_niveau(niv)
+           traiteNiveau(niv)
 
 def traite_UIinfo(cata):
    """
@@ -95,7 +95,7 @@ def traite_UIinfo(cata):
        # dans les attributs liste_groupes et dict_groupes
        cata.JdC.dict_groupes={}
        for commande in cata.JdC.commandes:
-           traite_commande(commande,cata.JdC)
+           traiteCommande(commande,cata.JdC)
        # A la fin les cles du dictionnaire dict_groupes donnent la liste des groupes
        # sans doublon
        cata.JdC.liste_groupes=list(cata.JdC.dict_groupes.keys())
@@ -107,7 +107,7 @@ def traite_UIinfo(cata):
    else:
        # Le catalogue de commandes contient des definitions de niveau
        for niv in cata.JdC.l_niveaux:
-          traite_niveau(niv)
+          traiteNiveau(niv)
 
 
 

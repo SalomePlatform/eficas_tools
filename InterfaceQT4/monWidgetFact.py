@@ -26,7 +26,7 @@ from PyQt5.QtWidgets import QWidget
 
 from .groupe import Groupe
 from desWidgetFact import Ui_WidgetFact
-#from desWidgetFactHorizon import Ui_WidgetFactHorizon
+from desWidgetFactTableau import Ui_WidgetFactTableau
 from Extensions.i18n import tr
 # Import des panels
 
@@ -36,21 +36,23 @@ class MonWidgetFactCommun(Groupe):
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
       #print "fact : ",node.item.nom
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
-      labeltext,fonte,couleur = self.node.item.GetLabelText()
+      labeltext,fonte,couleur = self.node.item.getLabelText()
       self.GroupBox.setText(tr(labeltext))
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
       self.parentQt.commandesLayout.insertWidget(insertIn,self)
-      #else :  self.parentQt.commandesLayout.insertWidget(0,self)
       self.doitAfficherOptionnel=False
+      min,max=obj.getMinMax()
+      if max < 2 and  hasattr(self, 'RBPlus') : self.RBPlus.close() 
+      if max > 1 and  hasattr(self, 'RBPlus') : self.RBPlus.clicked.connect(self.ajouteMCParPB)
 
   def enterEvent(self,event):
-      #print "enterEvent ", self.node.item.GetLabelText()[0]
+      #print "enterEvent ", self.node.item.getLabelText()[0]
       self.doitAfficherOptionnel=True
       QWidget.enterEvent(self,event)
       QTimer.singleShot(500, self.delayAffiche)
 
   def leaveEvent(self,event):
-      #print "leaveEvent", self.node.item.GetLabelText()[0]
+      #print "leaveEvent", self.node.item.getLabelText()[0]
       self.doitAfficherOptionnel=False
       QWidget.leaveEvent(self,event)
 
@@ -58,10 +60,22 @@ class MonWidgetFactCommun(Groupe):
       #print "delayAffiche, self.doitAfficherOptionnel = ", self.doitAfficherOptionnel
       if self.doitAfficherOptionnel and self.editor.code != "CARMELCND" :self.afficheOptionnel()
 
+  def ajouteMCParPB(self):
+      texteListeNom="+"+self.obj.nom
+      parentOuAjouter=self.parentQt
+      from .monWidgetBloc import MonWidgetBloc
+      while (parentOuAjouter and isinstance(parentOuAjouter, MonWidgetBloc)) :
+         parentOuAjouter=parentOuAjouter.parentQt
+      parentOuAjouter.ajoutMC(texteListeNom)
+
+
 class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=True):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
       MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
 
-#class MonWidgetFactHorizontal(Ui_WidgetFactHorizon,MonWidgetFactCommun):
-#  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
-#      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
+#class MonWidgetFactTableau(Ui_WidgetFactTableau,MonWidgetFactCommun):
+class MonWidgetFactTableau(Ui_WidgetFact,MonWidgetFactCommun):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
+      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
+      #print ('je passe dans FactTableau')
+      MonWidgetFactTableau.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)

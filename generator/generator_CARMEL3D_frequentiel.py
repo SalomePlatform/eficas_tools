@@ -93,7 +93,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
 
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
-      if obj.isvalid() : 
+      if obj.isValid() : 
            try :
              # constitution du bloc VERSION du fichier PHYS (existe toujours)
              self.generBLOC_VERSION(obj)
@@ -325,7 +325,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
         self.dicoCourant=self.dicoMCFACTCourant
         s=PythonGenerator.generMCFACT(self,obj)
         # sauvegarde, dans self.dicoEtapeCourant, de la valeur du FACT courant, pour utilisation ultérieure dans generETAPE et generPROC_ETAPE
-        # Traitement des FACT CUTLINE et CUTPLANE multiples (max='**' dans le catalogue)
+        # traitement des FACT CUTLINE et CUTPLANE multiples (max='**' dans le catalogue)
         # Ce traitement spécial est nécessaire pour le moment car le générateur bogue sinon au niveau des matériaux (non-linéaires ?)
         if obj.nom in ('FIELDDUMP','CUTLINE', 'CUTPLANE', 'FIELDMAP', 'VISU3D' ): 
             # Remplissage se self.dicoEtapeCourant pour le nom du FACT courant
@@ -430,10 +430,10 @@ class CARMEL3DFV0Generator(PythonGenerator):
         """
         try:
             if usePrefix:
-                nomGroupe = self.nomReelGroupe(obj.get_sdname()) # nom du groupe de maillage, i.e. nom du concept, avec prefixes enleves
+                nomGroupe = self.nomReelGroupe(obj.getSdname()) # nom du groupe de maillage, i.e. nom du concept, avec prefixes enleves
                 print "liste des noms sans prefixes %s" %(nomGroupe)
             else:
-                nomGroupe = obj.get_sdname() # nom du groupe de maillage, i.e. nom du concept
+                nomGroupe = obj.getSdname() # nom du groupe de maillage, i.e. nom du concept
                 print "liste des noms sans prefixes %s" %(nomGroupe)
 
             # test: un et un seul nom de materiau ou source doit etre associe a ce groupe de maillage, via les cles MATERIAL et SOURCE, respectivement.
@@ -465,7 +465,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
                 texte=""
                 texte+="%s"%(obj.valeur['Domaine'])
                 print"le texte=%s" %(texte)
-                self.dictDomaine[obj.get_sdname()]=texte  
+                self.dictDomaine[obj.getSdname()]=texte  
                 print "liste des domaines =%s" %(self.dictGroupes[nomGroupe]['DOMAINE'])
                     
 #            else:
@@ -483,10 +483,10 @@ class CARMEL3DFV0Generator(PythonGenerator):
         try:
             #nomGroupe={'SOURCE':[], 'MATERIAL':[], 'LISTE':[], 'STRAND':[], }   
             if usePrefix:
-                nomGroupe = self.nomReelGroupe(obj.get_sdname()) # nom du groupe de maillage, i.e. nom du concept, avec prefixes enleves
+                nomGroupe = self.nomReelGroupe(obj.getSdname()) # nom du groupe de maillage, i.e. nom du concept, avec prefixes enleves
                 print "liste des noms sans prefixes %s" %(nomGroupe)
             else:
-                nomGroupe = obj.get_sdname() # nom du macro groupe
+                nomGroupe = obj.getSdname() # nom du macro groupe
                 print "liste des noms sans prefixes %s" %(nomGroupe)
             self.dictGroupes[nomGroupe] = {}   
                 
@@ -524,7 +524,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
                         texte=""
                         texte+="%s"%(obj.valeur['Domaine'])
                         print"le texte=%s" %(texte)
-                        self.dictDomaine[obj.get_sdname()]=texte                  
+                        self.dictDomaine[obj.getSdname()]=texte                  
                     else: # Erreur si Domaine et macro-groupe pas complètement inducteur
                         raise ValueError, nomGroupe + tr(" : ce MACRO_GROUPE ne doit pas contenir de Domaine car il contient, dans LISTE_MESHGROUP, des groupes qui ne sont pas que des morceaux d'inducteurs bobines ou topologiques.")
                 else: # Domaine manquant
@@ -613,8 +613,8 @@ class CARMEL3DFV0Generator(PythonGenerator):
            print "_____________cond_____________"
        # verification des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
        if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
-            print "ERREUR! Le matériau conducteur (CONDUCTOR) de nom %s doit contenir les propriétés PERMEABILITY et CONDUCTIVITY." % obj.get_sdname()
-            raise ValueError,  obj.get_sdname() + tr(" : ce materiau conducteur (CONDUCTOR) doit contenir les proprietes PERMEABILITY et CONDUCTIVITY.")
+            print "ERREUR! Le matériau conducteur (CONDUCTOR) de nom %s doit contenir les propriétés PERMEABILITY et CONDUCTIVITY." % obj.getSdname()
+            raise ValueError,  obj.getSdname() + tr(" : ce materiau conducteur (CONDUCTOR) doit contenir les proprietes PERMEABILITY et CONDUCTIVITY.")
        else:
           # parcours des proprietes du sous bloc CONDUCTOR (PERMEABILITY, CONDUCTIVITY)
           for keyN1 in ('PERMEABILITY','CONDUCTIVITY') :
@@ -647,7 +647,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
              texte+="         ]"+"\n"
        if self.debug: 
            print "texte = %s", texte
-       self.dictMaterConductor[obj.get_sdname()]={'texte':  texte,  'valeur': obj.valeur} # sauvegarde du texte pour ce bloc, ainsi que de toutes les valeurs pour analyse ultérieure
+       self.dictMaterConductor[obj.getSdname()]={'texte':  texte,  'valeur': obj.valeur} # sauvegarde du texte pour ce bloc, ainsi que de toutes les valeurs pour analyse ultérieure
 
    def generMATERIAL_DIELECTRIC(self,obj):
         """preparation du sous bloc DIELECTRIC"""
@@ -690,7 +690,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
          texte+="         ]"+"\n"
         if self.debug: 
            print "texte = %s" % texte
-        self.dictMaterDielectric[obj.get_sdname()]={'texte':  texte,  'valeur': obj.valeur} # sauvegarde du texte pour ce bloc, ainsi que de toutes les valeurs pour analyse ultérieure
+        self.dictMaterDielectric[obj.getSdname()]={'texte':  texte,  'valeur': obj.valeur} # sauvegarde du texte pour ce bloc, ainsi que de toutes les valeurs pour analyse ultérieure
 
    def generMATERIAL_ZSURFACIC(self,obj):
        """preparation du sous bloc ZSURFACIC"""
@@ -699,8 +699,8 @@ class CARMEL3DFV0Generator(PythonGenerator):
            print "______________zsurf_____________"
        # verification des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
        if 'PERMEABILITY' not in obj.valeur or 'CONDUCTIVITY' not in obj.valeur:
-            print "ERREUR! Le matériau impedance de surface (ZSURFACIC) de nom %s doit contenir les propriétés PERMEABILITY et CONDUCTIVITY." % obj.get_sdname()
-            raise ValueError, obj.get_sdname() + tr(" : ce materiau impedance de surface (ZSURFACIC) doit contenir les proprietes PERMEABILITY et CONDUCTIVITY.")
+            print "ERREUR! Le matériau impedance de surface (ZSURFACIC) de nom %s doit contenir les propriétés PERMEABILITY et CONDUCTIVITY." % obj.getSdname()
+            raise ValueError, obj.getSdname() + tr(" : ce materiau impedance de surface (ZSURFACIC) doit contenir les proprietes PERMEABILITY et CONDUCTIVITY.")
        else:
           # parcours des proprietes du sous bloc ZSURFACIC (PERMEABILITY, CONDUCTIVITY)
           for keyN1 in obj.valeur :
@@ -723,7 +723,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
              texte+="         ]"+"\n"
        if self.debug: 
            print "texte = %s", texte
-       self.dictMaterZsurfacic[obj.get_sdname()]=texte # sauvegarde du texte pour ce bloc
+       self.dictMaterZsurfacic[obj.getSdname()]=texte # sauvegarde du texte pour ce bloc
 
    def generMATERIAL_EMISO(self,obj):
        """preparation du sous bloc EM_ISOTROPIC_FILES.
@@ -738,11 +738,11 @@ class CARMEL3DFV0Generator(PythonGenerator):
        #from os.path import basename
        #texte ="        CONDUCTIVITY MED "+basename(str(obj.valeur["CONDUCTIVITY_File"]))+"\n"
        #texte+="        PERMEABILITY MED "+basename(str(obj.valeur["PERMEABILITY_File"]))+"\n"
-       #      print "obj get sdname= ", obj.get_sdname()
-       #   if obj.get_sdname() in self.dictMaterEmIso.keys() :
-       #    self.dictMaterEmIso[obj.get_sdname()].append(texte) 
+       #      print "obj get sdname= ", obj.getSdname()
+       #   if obj.getSdname() in self.dictMaterEmIso.keys() :
+       #    self.dictMaterEmIso[obj.getSdname()].append(texte) 
        # else :
-       self.dictMaterEmIso[obj.get_sdname()]=texte
+       self.dictMaterEmIso[obj.getSdname()]=texte
   
    def generMATERIAL_EMANISO(self,obj):
         """preparation du sous bloc EM_ANISOTROPIC_FILES.
@@ -753,21 +753,21 @@ class CARMEL3DFV0Generator(PythonGenerator):
             texte ="        CONDUCTIVITY MATER "+str(obj.valeur["CONDUCTIVITY_File"])+"\n"
         if "PERMEABILITY_File" in obj.valeur:
             texte+="        PERMEABILITY MATER "+str(obj.valeur["PERMEABILITY_File"])+"\n"
-       #  print "obj get sdname= ", obj.get_sdname()
-       #  if obj.get_sdname() in self.dictMaterEmAnIso.keys() :
-       #    self.dictMaterEmAnIso[obj.get_sdname()].append(texte) 
+       #  print "obj get sdname= ", obj.getSdname()
+       #  if obj.getSdname() in self.dictMaterEmAnIso.keys() :
+       #    self.dictMaterEmAnIso[obj.getSdname()].append(texte) 
        #  else :
-        self.dictMaterEmAnIso[obj.get_sdname()]=texte
+        self.dictMaterEmAnIso[obj.getSdname()]=texte
    
    def generMATERIAL_NILMAT(self,obj):
        """preparation du sous bloc NILMAT"""
        texte=""
-       self.dictMaterNilmat[obj.get_sdname()]=texte
+       self.dictMaterNilmat[obj.getSdname()]=texte
    
    def generMATERIAL_ZINSULATOR(self,obj):
        """"preparation du sous bloc ZINSULATOR"""
        texte=""
-       self.dictMaterZinsulator[obj.get_sdname()]=texte
+       self.dictMaterZinsulator[obj.getSdname()]=texte
 
 #-------------------------------------------------------------------
 
@@ -810,7 +810,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
                if self.problem == HARMONIC:
                   texte+="        CURJ POLAR %(ampli)s %(phase)s\n" \
                          % {'ampli': str(wdict['AMPLITUDE']), 'phase': str(wdict['PHASE'])}
-            self.dictSourceStInd[obj.get_sdname()]=texte
+            self.dictSourceStInd[obj.getSdname()]=texte
             if self.debug: 
                 print texte
         except ValueError, err:
@@ -820,7 +820,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
         """preparation du sous bloc HPORT"""
         texte=""
         sdict = obj.valeur['HPORT'] # dictionnaire contenant les parametres de la source, outre la forme de la source
-        nomPort = obj.get_sdname()
+        nomPort = obj.getSdname()
         self.dictPort[nomPort] = {} 
         self.dictPort[nomPort]['HPORT']=str(sdict['TYPE'])
         try :
@@ -837,7 +837,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
                if self.problem == HARMONIC:
                   texte+="        AMP POLAR %(ampli)s %(phase)s\n" \
                          % {'ampli': str(wdict['AMPLITUDE']), 'phase': str(wdict['PHASE'])}
-            self.dictSourceHport[obj.get_sdname()]=texte
+            self.dictSourceHport[obj.getSdname()]=texte
             if self.debug: 
                 print texte
         except ValueError, err:
@@ -849,7 +849,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
         """preparation du sous bloc EPORT"""
         texte=""
         sdict = obj.valeur['EPORT'] # dictionnaire contenant les parametres de la source, outre la forme de la source
-        nomPort = obj.get_sdname()
+        nomPort = obj.getSdname()
         self.dictPort[nomPort] = {} 
         self.dictPort[nomPort]['EPORT']=str(sdict['TYPE'])
         print "sdict=%s" %(sdict)
@@ -867,7 +867,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
                if self.problem == HARMONIC:
                   texte+="        AMP POLAR %(ampli)s %(phase)s\n" \
                          % {'ampli': str(wdict['AMPLITUDE']), 'phase': str(wdict['PHASE'])}
-            self.dictSourceEport[obj.get_sdname()]=texte
+            self.dictSourceEport[obj.getSdname()]=texte
             if self.debug: 
                 print texte
         except ValueError, err:
@@ -1035,14 +1035,14 @@ class CARMEL3DFV0Generator(PythonGenerator):
       # constitution du bloc VERSION du fichier PHYS
       # creation d une entite  VERSION ; elle sera du type PROC car decrit ainsi
       # dans le du catalogue
-      version=obj.addentite('VERSION',pos=None)
+      version=obj.addEntite('VERSION',pos=None)
       self.generPROC_ETAPE(obj.etapes[0])
       self.texteCarmel3D+="["+obj.etapes[0].nom+"\n"
       for cle in obj.etapes[0].valeur :
           self.texteCarmel3D+="   "+cle+" "+str(obj.etapes[0].valeur[cle])+"\n"
       self.texteCarmel3D+="]\n"
       # destruction de l entite creee 
-      obj.suppentite(version)
+      obj.suppEntite(version)
       #print 'ERREUR : test erreur boite graphique BLOC_VERSION'
       #raise ValueError, 'test erreur boite graphique BLOC_VERSION'
 
@@ -1303,7 +1303,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
             texte+="\n1"
             texte+="\n%s" % ' '.join(map(str, self.direction))
             texte+="\n%g" % (self.section)
-            self.dictStrand[obj.get_sdname()]=texte  
+            self.dictStrand[obj.getSdname()]=texte  
         if self.debug: 
             print texte 
 
@@ -1314,7 +1314,7 @@ class CARMEL3DFV0Generator(PythonGenerator):
             texte+="\n%s" % ' '.join(map(str,self.direction))
             texte+="\n%s" % ' '.join(map(str, self.centre))
             texte+="\n%g" % (self.section)
-            self.dictStrand[obj.get_sdname()]=texte  
+            self.dictStrand[obj.getSdname()]=texte  
             if self.debug: 
                 print texte
 
