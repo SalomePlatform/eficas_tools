@@ -18,6 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+# -*- coding: utf-8 -*-
 
 import os
 
@@ -122,25 +123,26 @@ class GUIcontext:
 ################################################
 
 # study-to-context map
-__study2context__ = {}
+#__study2context__ = {}
 # current context
-__current_context__ = None
+#__current_context__ = None
+
 
 
 # ##
 # set and return current GUI context
 # study ID is passed as parameter
 # ##
-def _setContext(studyID):
-    global eficasRoot
-    if eficasRoot is None:
-        return
-    global __study2context__, __current_context__
-    if studyID not in __study2context__:
-        __study2context__[studyID] = GUIcontext()
-        pass
-    __current_context__ = __study2context__[studyID]
-    return __current_context__
+#def _setContext(studyID):
+#    global eficasRoot
+#    if eficasRoot is None:
+#        return
+#    global __study2context__, __current_context__
+#    if studyID not in __study2context__:
+#        __study2context__[studyID] = GUIcontext()
+#        pass
+#    __current_context__ = __study2context__[studyID]
+#    return __current_context__
 
 
 # -----------------------------------------------------------------------------
@@ -155,11 +157,11 @@ def OnGUIEvent(commandID):
 
 # -----------------------------------------------------------------------------
 
-def setSettings():
-    """
-    Cette méthode permet les initialisations.
-    """
-    _setContext(sgPyQt.getStudyId())
+#def setSettings():
+#    """
+#    Cette méthode permet les initialisations.
+#    """
+    #_setContext(sgPyQt.getStudyId())
 
 
 def activate():
@@ -169,13 +171,14 @@ def activate():
 
     Portage V3.
     """
-    setSettings()
+#    setSettings()
+    GUIcontext()
 
 
 # -----------------------------------------------------------------------------
 
-def activeStudyChanged(ID):
-    _setContext(ID)
+#def activeStudyChanged(ID):
+#    _setContext(ID)
 
 
 # -----------------------------------------------------------------------------

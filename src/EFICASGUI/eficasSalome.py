@@ -489,7 +489,7 @@ class MyEficas(qtEficas.Appli):
             from salome.smesh import smeshBuilder
             smesh = smeshBuilder.New(theStudy)
             smesh.CreateMeshesFromMED(fileName)
-            salome.sg.updateObjBrowser(1)
+            salome.sg.updateObjBrowser()
             return 1, ""
         except:
             return (0, "Pb a l import")
@@ -598,7 +598,7 @@ class MyEficas(qtEficas.Appli):
                                                      # icon    = "ICON_COMM_FILE",
                                                      comment=str(jdcPath))
 
-            salome.sg.updateObjBrowser(1)
+            salome.sg.updateObjBrowser()
 
             if commEntry:
                 ok, msgError = True, ''
@@ -687,7 +687,7 @@ class MyEficas(qtEficas.Appli):
             structElemManager = StructuralElementManager()
             elem = structElemManager.createElement(liste_commandes)
             elem.display()
-            salome.sg.updateObjBrowser(True)
+            salome.sg.updateObjBrowser()
         except InvalidParameterError as err:
             trStr = self.tr("Invalid parameter for group %(group)s: %(expr)s must be "
                             "greater than %(minval)g (actual value is %(value)g)")
