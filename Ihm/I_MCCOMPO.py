@@ -203,7 +203,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
        return 0
 
     self.initModif()
-    objet.deletePyxbObject()
+    #objet.deletePyxbObject()
     self.mcListe.remove(objet)
     CONNECTOR.Emit(self,"supp",objet)
     objet.deleteMcGlobal()
@@ -255,7 +255,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
            self.mcListe.insert(pos,objet)
          # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
          objet.reparent(self)
-         objet.addPyxbObject(self.findRangObjetDsArbre(objet))
+         #objet.addPyxbObject(self.findRangObjetDsArbre(objet))
          CONNECTOR.Emit(self,"add",objet)
          objet.updateMcGlobal()
          objet.updateConditionBloc()

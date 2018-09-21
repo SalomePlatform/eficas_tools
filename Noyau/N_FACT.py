@@ -134,7 +134,8 @@ class FACT(N_ENTITE.ENTITE):
             for v in val:
                 if type(v) == dict or isinstance(v, _F):
                     objet = self.class_instance(
-                        nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction[indice])
+                        nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=None)
+                        #nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction[indice])
                     indice=indice+1
                     l.append(objet)
                 elif isinstance(v, self.class_instance):
@@ -153,7 +154,7 @@ class FACT(N_ENTITE.ENTITE):
         else:
             l.append(N_OBJECT.ErrorObj(self, val, parent, nom))
         l.cata=l.jdc.cata
-        l.buildObjPyxb(l)
+        #l.buildObjPyxb(l)
         return l
 
     def verifCata(self):

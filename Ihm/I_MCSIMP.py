@@ -327,7 +327,7 @@ class MCSIMP(I_OBJECT.OBJECT):
         self.initModif()
         self.valeur = new_valeur
         self.val = new_valeur
-        self.setValeurObjPyxb(new_valeur)
+        #self.setValeurObjPyxb(new_valeur)
         self.updateConditionBloc()
         self.etape.modified()
         self.finModif()

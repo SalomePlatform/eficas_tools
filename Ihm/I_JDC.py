@@ -434,7 +434,7 @@ class JDC(I_OBJECT.OBJECT):
         #if actif == 0 and etape.nom in ['DEBUT','POURSUITE']:actif=1
         #if actif == 1:
            etape.active()
-           self.enregistreEtapePyxb(etape)
+           #self.enregistreEtapePyxb(etape)
         #else:
         #   etape.inactive()
         #if etape.nom == 'FIN':actif=-1
@@ -478,7 +478,7 @@ class JDC(I_OBJECT.OBJECT):
       self.initModif()
       index_etape=self.etapes.index(etape)
 
-      etape.deletePyxbObject()
+      #etape.deletePyxbObject()
       self.etapes.remove(etape)
 
       if etape.niveau is not self:

@@ -73,7 +73,7 @@ class MCSIMP(N_OBJECT.OBJECT):
             else : self.cata = None
             self.niveau = self.parent.niveau
             self.etape = self.parent.etape
-            self.buildObjPyxb()
+            #self.buildObjPyxb()
         else:
             # Le mot cle simple a été créé sans parent
             # est-ce possible ?

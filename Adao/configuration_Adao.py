@@ -37,12 +37,12 @@ from InterfaceQT4 import configuration
 
 # Classe de base permettant de lire, afficher
 # et sauvegarder les fichiers utilisateurs
-class CONFIG(configuration.CONFIG_BASE):
+class CONFIG(configuration.configBase):
 
   def __init__(self,appli,repIni):
 
     self.labels_eficas=['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
-    configuration.CONFIG_BASE.__init__(self,appli,repIni)
+    configuration.configBase.__init__(self,appli,repIni)
 
     self.rep_user = os.environ["HOME"]
     self.appli   = appli
@@ -60,9 +60,5 @@ class CONFIG(configuration.CONFIG_BASE):
     #self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"),)
 
 def make_config(appli,rep):
-
     return CONFIG(appli,rep)
 
-def make_config_style(appli,rep):
-
-    return None

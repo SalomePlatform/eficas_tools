@@ -80,7 +80,7 @@ class MCList:
       self.remove(obj)
       CONNECTOR.Emit(self,"supp",obj)
       self.updateConditionBloc()
-      obj.deletePyxbObject()
+      #obj.deletePyxbObject()
       obj.supprime()
       self.etape.modified()
       self.finModif()

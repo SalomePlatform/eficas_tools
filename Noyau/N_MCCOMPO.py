@@ -155,7 +155,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # on retourne la liste ainsi construite
         if self.jdc  : self.cata=self.jdc.cata
         else : self.cata = None
-        self.buildObjPyxb(mcListe)
+        #self.buildObjPyxb(mcListe)
         #else : print ('pas de construction pour ', self.nom, self.objPyxbDeConstruction)
         #print ('buildObjPyxb : ' , self.nom)
         #print(("MCCOMPO.buildMc fin_____________________________________", self.nom))
