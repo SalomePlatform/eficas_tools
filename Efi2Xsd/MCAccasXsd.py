@@ -7,9 +7,12 @@ import types
 
 sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
 
-import pyxb
-import pyxb.binding
-import pyxb.binding.basis
+try :
+  import pyxb
+  import pyxb.binding
+  import pyxb.binding.basis
+except : 
+  pass
 #import pyxb.utils.utility
 #import pyxb.utils.domutils
 
@@ -17,8 +20,8 @@ class X_OBJECT:
 # -------------
 
   def deletePyxbObject(self):
+      if not self.cata or  not self.cata.modeleMetier : return
       print ('----------- deletePyxbObject', self.nom)  
-      return
       indice = 0
       trouve = False
       for i in self.perePyxb.objPyxb.orderedContent(): 
@@ -68,8 +71,8 @@ class X_MCSIMP(X_OBJECT):
 
 
    def setValeurObjPyxb(self,newVal):
-       print ('dans setValeurObjPyxb MCSIMP')
        if not self.cata or  not self.cata.modeleMetier : return
+       print ('dans setValeurObjPyxb MCSIMP')
        #  print (self.nom , ' a pour pere', self.perePyxb, self.perePyxb.nom, self.perePyxb.objPyxb)
        if newVal != None : nvlObj=self.maClasseModeleMetier(newVal)
        else              : nvlObj=self.maClasseModeleMetier()
@@ -219,6 +222,7 @@ class X_MCCOMPO(X_OBJECT) :
       #print ('_______________________________________')
 
    def deletePyxbObject(self):
+      if not self.cata or  not self.cata.modeleMetier : return
       print ('******************************************')
       print ('je passe ds deletePyxbObject pour ', self, self.nom)
       print (self.perePyxb)
@@ -226,6 +230,7 @@ class X_MCCOMPO(X_OBJECT) :
       print ('******************************************')
 
    def exploreBLOC(self,objAccas):
+      if not self.cata or  not self.cata.modeleMetier : return
       laListeSsLesBlocs=[]
       for fils in objAccas.mcListe:
         if fils.nature == 'MCBLOC' :
@@ -274,38 +279,6 @@ class X_MCLIST (X_MCCOMPO):
       #print ('__________________________________________________________________')
       pass
 
-   # detruire la methode suivante
-   #def build2ObjPyxb(self,mc_list):
-   #   print ('_______________________________________')
-   #   print ('X_MCLIST buildObjPyxb traite ds X_MCLIST', self.nom, self)
-   #   if not self.cata.modeleMetier : return
-   #   self.monNomClasseModeleMetier='T_'+self.nom
-   #   self.maClasseModeleMetier=getattr(self.cata.modeleMetier,self.monNomClasseModeleMetier)
-   #   listArg=[]
-      # MCList est une liste
-   #   for nbDeSequence in self :
-   #      for objAccas in nbDeSequence.mcListe :
-             #print (type (objAccas))
-             #print (objAccas.nom, objAccas.objPyxb, type(objAccas.objPyxb))
-	     #print ( type (objAccas.objPyxb) == list )
-	     #if type (objAccas.objPyxb) == list :
-                #print ('ds le if')
-   #             for fils in objAccas.objPyxb : 
-   #                listArg.append(fils.objPyxb)
-   #                fils.perePyxb=self
-                   #print (fils.nom ,' a pour pere Pyxb', self, self.nom)
-   #          else :
-   #              listArg.append(objAccas.objPyxb)
-   #              objAccas.perePyxb=self
-                 #print (objAccas.nom ,' a pour pere Pyxb', self, self.nom)
-             #listArg.append(objAccas.objPyxb)
-             #objAccas.perePyxb=self
-             #print ( objAccas.nom, ' a pour perepyxb ' , objAccas.perePyxb.nom) 
-      
-   #   print ('X_MCLIST', self.nom, self, listArg)
-   #   self.objPyxb=self.maClasseModeleMetier(*listArg)
-   #   print ('fin buildObjPyxb traite ds X_MCLIST', self.nom, self, self.objPyxb)
-   #   print ('_______________________________________')
 
 class X_MCFACT (X_MCCOMPO):
 # -------------------------
@@ -330,14 +303,14 @@ class X_JDC (X_MCCOMPO):
 
    def enregistreEtapePyxb(self,etape):
      # OK seulement si sequence (choice ? ...)
-      if not self.cata.modeleMetier : return
+      if not self.cata or  not self.cata.modeleMetier : return
       print ('enregistreEtapePyxb' , etape)
       self.objPyxb.append(etape.objPyxb)
       etape.perePyxb = self
       #self.toXml()
 
    def toXml(self):
-      if not self.cata.modeleMetier : return
+      if not self.cata or  not self.cata.modeleMetier : return
       print ('***************',self.objPyxb,'***************',)
       print ('***************',self.objPyxb.orderedContent(),'***************',)
       print(self.objPyxb.toDOM().toprettyxml())
@@ -347,6 +320,7 @@ class X_JDC (X_MCCOMPO):
 
    def analyseFromXML(self):
       print ("je suis ds analyseFromXML -- > appel ds analyse de I_JDC.py")
+      if not self.cata or  not self.cata.modeleMetier : return
       if self.procedure == "" : return
       self.objPyxb=self.cata.modeleMetier.CreateFromDocument(self.procedure)
       for objEtape in self.objPyxb.content():
@@ -378,6 +352,7 @@ class X_JDC (X_MCCOMPO):
     # la transformation de l objAAnalyser en type lu par eficas ne fonctionne pas pour tout
     # faudrait - il travailler sur les types des objets ?
     # c est a revoir -> fonction cast a prevoir ds les 2 sens
+    if not self.cata or  not self.cata.modeleMetier : return
     if objAAnalyser is None: return
     #print ('debut pour ',objAAnalyser)
     dictArgs = {}
@@ -427,28 +402,6 @@ class X_JDC (X_MCCOMPO):
     return dictArgs
 
    
-#   def analyseContent(self,objAAnalyser):
-#       objAAnalyser.dictArgs={}
-#       for objContenu in objAAnalyser.content():
-#          #print ('j analyse ', objContenu)
-#          objContenu.monNomClasseModeleMetier=str(objContenu.__class__).split('.')[-1]
-#          objContenu.monNomClasseAccas=objContenu.monNomClasseModeleMetier[2:-2]
-#          #maClasseAccas=classeAccasPere.entites[objContenu.monNomClasseAccas]
-#          if objContenu._IsSimpleTypeContent():
-#             print (objContenu.monNomClasseAccas,objContenu.pythonLiteral())
-#             print (objContenu.monNomClasseAccas,objContenu.xsdLiteral())
-#             #chaine=objContenu.pythonLiteral().split('(')[1].split(')')[0]
-#             print (dir(objContenu))
-#             objAAnalyser.dictArgs[objContenu.monNomClasseAccas]=None
-#             #objAAnalyser.dictArgs[objContenu.monNomClasseAccas]=objContenu.pythonLiteral()
-#          else :
-#             self.analyseContent(objContenu)
-#             objAAnalyser.dictArgs[objContenu.monNomClasseAccas]=objContenu.dictArgs
-       #print ( '________________')
-       #print (objAAnalyser.monNomClasseAccas)
-       #for i in objAAnalyser.dictArgs : print (i, objAAnalyser.dictArgs[i])
-       #print ( '________________')
-        
   
 
 if __name__ == "__main__":
