@@ -10,18 +10,18 @@ sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
 
 # ds l init du SIMP il manque siValide et fenetreIhm
 
-from mapDesTypes import dictSIMPEficasXML, dictSIMPXMLEficas
-from mapDesTypes import dictFACTEficasXML, dictFACTXMLEficas
-from mapDesTypes import dictPROCEficasXML, dictPROCXMLEficas
-from mapDesTypes import dictOPEREficasXML, dictOPERXMLEficas
-from mapDesTypes import dictBLOCEficasXML, dictBLOCXMLEficas
-from mapDesTypes import dictPourCast, dictNomsDesTypes
-from mapDesTypes import listeParamDeTypeTypeAttendu, listeParamDeTypeStr, dictPourCast
-from mapDesTypes import listeParamTjsSequence, listeParamSelonType
-from mapDesTypes import Tuple
+from .mapDesTypes import dictSIMPEficasXML, dictSIMPXMLEficas
+from .mapDesTypes import dictFACTEficasXML, dictFACTXMLEficas
+from .mapDesTypes import dictPROCEficasXML, dictPROCXMLEficas
+from .mapDesTypes import dictOPEREficasXML, dictOPERXMLEficas
+from .mapDesTypes import dictBLOCEficasXML, dictBLOCXMLEficas
+from .mapDesTypes import dictPourCast, dictNomsDesTypes
+from .mapDesTypes import listeParamDeTypeTypeAttendu, listeParamDeTypeStr, dictPourCast
+from .mapDesTypes import listeParamTjsSequence, listeParamSelonType
+from .mapDesTypes import Tuple
 
 
-from balises import *
+from .balises import *
 
 # -----------------
 class X_definition:

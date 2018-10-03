@@ -18,9 +18,9 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce module contient la classe Formatage qui permet le formatage d'une 
-    liste de chaines de caractères dans une syntaxe représentative d'un
-    jeu de commandes en un texte présentable
+    Ce module contient la classe Formatage qui permet le formatage d'une
+    liste de chaines de caractÃ¨res dans une syntaxe reprÃ©sentative d'un
+    jeu de commandes en un texte prÃ©sentable
 """
 from __future__ import absolute_import
 from __future__ import print_function
@@ -33,8 +33,8 @@ filePattern="'[^\(\)]([^\(\)]*\([^\(\)]*\))*[^\(\)]*'"
 filePattern2='"[^\(\)]([^\(\)]*\([^\(\)]*\))*[^\(\)]*"'
 
 class Formatage (object):
-  """ 
-     Cette classe contient toutes les méthodes nécessaires au formatage
+  """
+     Cette classe contient toutes les mÃ©thodes nÃ©cessaires au formatage
      de la chaine de caracteres issue d'un generator en un fichier
      'lisible' ie avec indentations
 
@@ -50,12 +50,12 @@ class Formatage (object):
 
      La representation d'un mot cle simple est une chaine de caracteres (info=2, par exemple).
 
-     La representation d'un mot cle facteur est semblable à celle de l'étape : premier element
+     La representation d'un mot cle facteur est semblable Ã  celle de l'Ã©tape : premier element
      caracteristique du mot cle facteur suivi d'elements representatifs des mots cles simples.
      Elle se termine avec un element de fin : ")" ou "),".
   """
   def __init__(self,l_jdc,code=None,mode=None,sep='=',l_max=72):
-    # l_jdc représente le jeu de commandes brut sous forme de liste
+    # l_jdc reprÃ©sente le jeu de commandes brut sous forme de liste
     self.l_jdc = l_jdc
     self.jdc_fini =''
     self.count = 0
@@ -63,7 +63,7 @@ class Formatage (object):
     self.l_max=l_max
     if mode == '.py':
        self.sep = '='
-       self.l_max = 132 
+       self.l_max = 132
     elif code == 'ASTER':
        self.sep = ':'
        self.l_max = 72
@@ -89,7 +89,7 @@ class Formatage (object):
 
       m=comment.match(self.texte_etape)
       # si ce n est pas la premiere ligne
-      if self.jdc_fini != ""  : 
+      if self.jdc_fini != ""  :
         # si il n y avait pas de commentaire avant on met un saut de ligne
         if commentaireavant == 0 :
            self.jdc_fini = self.jdc_fini + '\n' + self.texte_etape
@@ -97,26 +97,26 @@ class Formatage (object):
            self.jdc_fini = self.jdc_fini + self.texte_etape
       # si c est la premiere ligne
       else :
-        # on ne met pas de saut de ligne avant la premiere ligne 
+        # on ne met pas de saut de ligne avant la premiere ligne
         # si c est un commentaire on enleve le saut de ligne precedent
         if m : self.texte_etape=self.texte_etape[1:]
         self.jdc_fini = self.texte_etape
-      if m : 
-        commentaireavant=1 
+      if m :
+        commentaireavant=1
       else :
-        commentaireavant=0 
+        commentaireavant=0
 
     return self.jdc_fini
-  
-  
+
+
 
   def formateEtape(self,liste):
     """
         Enrichissement de la chaine de caracteres representant l'etape (attribut
         texte_etape de l'objet Formatage).
         Les elements a ajouter sont dans l'argument liste de la methode.
-        L'objet "liste" à traiter a été produit par le module generator. En particulier
-        les parenthèses et les virgules ont été produites par ce module
+        L'objet "liste" Ã  traiter a Ã©tÃ© produit par le module generator. En particulier
+        les parenthÃ¨ses et les virgules ont Ã©tÃ© produites par ce module
     """
     l_patterns_fin_etape = ( ');' , ');\n' )
     l_patterns_fin_mcf   = ( ')'  , '),'   )
@@ -125,8 +125,8 @@ class Formatage (object):
     for element in liste :
       if type(element)==list:
 
-        # il s'agit d'un mot-clé facteur
-        # on écrit son nom (element[0])
+        # il s'agit d'un mot-clÃ© facteur
+        # on Ã©crit son nom (element[0])
         longueur = self.longueur(self.texte_etape)
         try:
           increment = len(('\n'+self.indent_courant*' ')*ind + element[0])
@@ -138,7 +138,7 @@ class Formatage (object):
         length = len(self.indent)
         self.indent.insert(length,self.indent[length-1]+len(element[0]))
         self.indent_courant = self.indent[length]
-        # on écrit ses fils
+        # on Ã©crit ses fils
         self.formateEtape(element[1:])
       #elif type(element) == types.StringType:
       #elif type(element) == bytes:
@@ -146,7 +146,7 @@ class Formatage (object):
       # on remplace par else dans if
       else :
 
-        # il s'agit d'un mot-clé simple ou de ')' ou ');' ou '),' ou ');\n'
+        # il s'agit d'un mot-clÃ© simple ou de ')' ou ');' ou '),' ou ');\n'
 
         if element in l_patterns_fin_mcf :
               self.traiteMcfact(s_mcfact=element,ind=ind)
@@ -159,11 +159,11 @@ class Formatage (object):
 
   def traiteEtape(self,s_etape,ind) :
       """
-          Traite une partie du jdc formaté : s_etape, une chaîne de caractères
-          contenant une étape
-          L'attribut self.texte_etape est modifié (complété) par le traitement
-          L'attribut self.indent est modifié par le traitement
-          L'attribut self.indent_courant est modifié par le traitement
+          Traite une partie du jdc formatÃ© : s_etape, une chaÃ®ne de caractÃ¨res
+          contenant une Ã©tape
+          L'attribut self.texte_etape est modifiÃ© (complÃ©tÃ©) par le traitement
+          L'attribut self.indent est modifiÃ© par le traitement
+          L'attribut self.indent_courant est modifiÃ© par le traitement
       """
       length = len(self.indent)
       if length > 1:
@@ -176,11 +176,11 @@ class Formatage (object):
 
   def traiteMcfact(self,s_mcfact,ind) :
       """
-          Traite une partie du jdc formaté : s_mcfact, une chaîne de caractères
+          Traite une partie du jdc formatÃ© : s_mcfact, une chaÃ®ne de caractÃ¨res
           contenant un mot-clef facteur.
-          L'attribut self.texte_etape est modifié (complété) par le traitement
-          L'attribut self.indent est modifié par le traitement
-          L'attribut self.indent_courant est modifié par le traitement
+          L'attribut self.texte_etape est modifiÃ© (complÃ©tÃ©) par le traitement
+          L'attribut self.indent est modifiÃ© par le traitement
+          L'attribut self.indent_courant est modifiÃ© par le traitement
       """
       self.texte_etape = self.texte_etape + s_mcfact.strip()
       length = len(self.indent)
@@ -195,9 +195,9 @@ class Formatage (object):
 
   def traiteMcsimp(self,s_mcsimp,ind) :
       """
-          Traite une partie du jdc formaté : s_mcsimp, une chaîne de caractères
+          Traite une partie du jdc formatÃ© : s_mcsimp, une chaÃ®ne de caractÃ¨res
           contenant un mot-clef simple.
-          L'attribut self.texte_etape est modifié (complété) par le traitement
+          L'attribut self.texte_etape est modifiÃ© (complÃ©tÃ©) par le traitement
       """
       #
       # Ajout PN pour defi_fonction
@@ -213,14 +213,14 @@ class Formatage (object):
                  else :
                     txt=txt+('\n'+self.indent_courant*' '+numident*' ')*ind+l
               s_mcsimp = txt
-      else : 
+      else :
           bool_fonction=0
       longueur = self.longueur(self.texte_etape)
       increment = len((u'\n'+self.indent_courant*' ')*ind + s_mcsimp.strip())
       if (bool_fonction == 1 ) :
           self.texte_etape = self.texte_etape+'\n'+self.indent_courant*' ' +s_mcsimp
       elif ( ((1-ind)*longueur+increment) <= self.l_max ) :
-          self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind +s_mcsimp.strip() 
+          self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind +s_mcsimp.strip()
       else :
           # il faut couper ...
           #nom,valeur = string.split(s_mcsimp,self.sep,1)
@@ -232,19 +232,19 @@ class Formatage (object):
 
 
   def longueur(self,texte):
-    """ 
+    """
        texte est une string qui peut contenir des retours chariots
-       Cette méthode retourne la longueur de la dernière ligne de texte 
+       Cette mÃ©thode retourne la longueur de la derniÃ¨re ligne de texte
     """
     #liste = texte.split('\n')
     #return len(liste[-1])
-    if texte [-1] == '\n' : return 0 
+    if texte [-1] == '\n' : return 0
     return len(texte[texte.rfind('\n'):-1])
-    
+
 
   def creerChaine(self,nom,valeur,increment,ind):
     """
-        La methode creerChaine reconstitue un objet Eficas à partir de
+        La methode creerChaine reconstitue un objet Eficas Ã  partir de
              - son nom,
              - sa valeur.
     """
@@ -256,7 +256,7 @@ class Formatage (object):
       longueur = len(increment + label)
 
       if ('(' not in valeur) or (valeur[0:3]=='"""') :
-        # il s'agit d'une vraie chaîne de caractères
+        # il s'agit d'une vraie chaÃ®ne de caractÃ¨res
         val = len(valeur)
         texte = (self.l_max-2-val)*' '+valeur
         s=s+'\n'+texte
@@ -303,7 +303,7 @@ class Formatage (object):
 class FormatageLigne(Formatage) :
   def __init__(self,l_jdc,code=None,mode=None,sep='=',l_max="**"):
       Formatage.__init__(self,l_jdc,code=None,mode=None,sep='=',l_max="**")
-      
+
   def formateJdc(self):
       texte1=Formatage.formateJdc(self)
       newText=""
@@ -313,14 +313,14 @@ class FormatageLigne(Formatage) :
       pattern_commentaire   = re.compile(r"^\s*#.*")
       pattern_vide=re.compile(r"\s*^$")
       for l in lignes :
-          if pattern_commentaire.match(l) or pattern_vide.match(l): 
+          if pattern_commentaire.match(l) or pattern_vide.match(l):
              newText+=l+"\n"
              continue
-          if not pattern_debut_blanc.match(l) : texte=l 
+          if not pattern_debut_blanc.match(l) : texte=l
           else : texte+=re.sub(r'^ \s*',' ',l)
           if texte[-1]==";" :
              newText+=texte+"\n"
              texte=""
       return newText
 
-          
+

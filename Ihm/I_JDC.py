@@ -39,6 +39,11 @@ from Extensions import commentaire ,parametre ,parametre_eval
 from . import CONNECTOR
 import Validation
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
 class LASSD:
    pass
 
