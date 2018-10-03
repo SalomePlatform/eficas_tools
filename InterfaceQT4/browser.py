@@ -570,10 +570,12 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         elif type(pos) == int :
             # position fixee
             index = pos
-        elif type(pos) == types.InstanceType:
+        elif type(pos) == object:
+        #elif type(pos) == types.InstanceType:
             # pos est un item. Il faut inserer name apres pos
             index = self.item.getIndex(pos) +1
-        elif type(name) == types.InstanceType:
+        #elif type(name) == types.InstanceType:
+        elif type(name) == object:
             index = self.item.getIndexChild(name.nom)
         else:
             index = self.item.getIndexChild(name)

@@ -76,7 +76,8 @@ class JDC(I_OBJECT.OBJECT):
       
       l=[]
       for k,v in d.items():
-        if type(v) != types.InstanceType and not isinstance(v,object): continue
+        #if type(v) != types.InstanceType and not isinstance(v,object): continue
+        if  not isinstance(v,object): continue
         # On considere que seul assd indique un type quelconque pas CO
         elif self.assd in types_permis :
            if v.etape.sdnom != "sansnom" : l.append(k)

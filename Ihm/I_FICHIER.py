@@ -30,7 +30,7 @@ class Fichier:
    def __convert__(self,valeur):
     # Attention ne verifie pas grand chose
     # cela vaut-il la peine de refaire ce que Qt fait tres bien 
-    if type(valeur) != bytes :
+    if type(valeur) != bytes  and type(valeur) != str:
       return None
     return valeur
 

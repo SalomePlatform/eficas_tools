@@ -212,7 +212,7 @@ class AplatGenerator(object):
          Cette methode convertit un PARAMETRE
          en une chaine de caracteres a la syntaxe aplat 
       """
-      if type(obj.valeur) == bytes:
+      if type(obj.valeur) == bytes or  type(obj.valeur) == str:
         # PN pour corriger le bug a='3+4' au lieu de a= 3+4
         #return obj.nom + " = '" + obj.valeur + "';\n"
         return obj.nom + " = " + obj.valeur + ";\n"
@@ -310,12 +310,14 @@ class AplatGenerator(object):
          # On est en presence d'une liste de valeur
          rep = '('
          for val in obj.valeur:
-           if type(val) == types.InstanceType :
+           #if type(val) == types.InstanceType :
+           if isinstance(val,object):
              rep = rep + self.generator(val) +','
            else:
              rep = rep + repr(val)+','
          rep = rep + ')'
-      elif type(obj.valeur) == types.InstanceType :
+      #elif type(obj.valeur) == types.InstanceType :
+      elif type(obj.valeur) == object :
          # On est en presence d'une valeur unique de type instance
          rep = self.generator(obj.valeur)
       else :

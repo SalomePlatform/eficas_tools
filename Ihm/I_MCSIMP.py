@@ -118,11 +118,11 @@ class MCSIMP(I_OBJECT.OBJECT):
            if isinstance(val,tuple):
               texteVal='('
               for i in val :
-                  if isinstance(i, bytes) : texteVal = texteVal +"'"+str(i)+"'," 
+                  if isinstance(i, bytes) or isinstance(i,str) : texteVal = texteVal +"'"+str(i)+"'," 
                   else : texteVal = texteVal + str(i)+','
               texteVal=texteVal[:-1]+')'
            else : 
-              if isinstance(val,bytes): texteVal="'"+str(val)+"'"
+              if isinstance(val,bytes) or isinstance(val, str): texteVal="'"+str(val)+"'"
               else :texteVal=str(val)
            txt = txt + sep+ texteVal 
 

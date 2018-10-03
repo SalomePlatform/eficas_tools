@@ -222,13 +222,12 @@ class MCCOMPO(I_OBJECT.OBJECT):
           l'objet MCCOMPOSE
       """
       self.initModif()
-      if type(name)==bytes :
+      if type(name)==bytes or type(name) == str :
         # on est en mode creation d'un motcle 
         if self.ispermis(name) == 0 : return 0
         objet=self.definition.entites[name](val=None,nom=name,parent=self)
       else :
         # dans ce cas on est en mode copie d'un motcle
-        objet = name
         # Appel de la methode qui fait le menage dans les references
         # sur les concepts produits (verification que les concepts existent
         # dans le contexte de la commande courante).
@@ -281,7 +280,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         est bien permis, cad peut bien etre un fils de self, 
         Retourne 0 sinon 
     """
-    if type(fils) == bytes :
+    if type(fils) == bytes or type(fils) == str :
       # on veut juste savoir si self peut avoir un fils de nom 'fils'
       if fils in self.definition.entites:
         return 1

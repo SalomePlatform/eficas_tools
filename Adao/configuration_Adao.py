@@ -22,7 +22,6 @@
 #
 
 """
-    Ce module sert pour charger les paramètres de configuration d'EFICAS
 """
 # Modules Python
 # print "passage dans la surcharge de configuration pour Adao"

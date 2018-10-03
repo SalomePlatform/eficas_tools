@@ -91,7 +91,7 @@ class MCList:
         Ajoute le mot cle facteur obj a la MCLIST a la position pos
         Retourne None si l'ajout est impossible
       """
-      if type(obj)==bytes :
+      if type(obj)==bytes or type(obj) == str :
          # on est en mode creation d'un motcle
                   raise EficasException(tr("traitement non-prevu"))
 

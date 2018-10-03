@@ -196,7 +196,7 @@ class vers3DSalomeGenerator(PythonGenerator):
 
    def CARA(self,obj) :
        self.clefs=obj.val
-       if type(self.clefs) == bytes :
+       if type(self.clefs) == bytes or  type(self.clefs) == str:
           self.clefs=(obj.val,)
 
    def VALE(self,obj) :

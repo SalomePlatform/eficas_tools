@@ -719,7 +719,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       #print "evalValeurItem",valeurretour,validite
 
       if validite == 0:
-         if type(valeur) == bytes and self.object.waitTxm():
+         if (type(valeur) == bytes  or type(valeur) == str )and self.object.waitTxm():
             essai_valeur="'" + valeur + "'"
             valeurretour,validite= self.object.evalValeur(essai_valeur)
 
@@ -757,7 +757,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       # et donc pas dans sdprods (resultat d'une exception dans typeSDProd)
       if not valeur:valeur=self.object.valeur
       if valeur in self.object.etape.sdprods:return 1
-      if type(valeur) is not types.InstanceType:return 0
+      #if type(valeur) is not types.InstanceType:return 0
+      if type(valeur) is not object:return 0
       if valeur.__class__.__name__ == 'CO':return 1
       return 0
 

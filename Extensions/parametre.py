@@ -99,7 +99,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
                return None
        return l_new_val
 
-    if type(val) == bytes:
+    if type(val) == bytes or  type(val) == str:
        # on tente l'evaluation dans un contexte fourni par le parent s'il existe
        if self.parent:
           valeur=self.parent.evalInContext(val,self)
@@ -284,7 +284,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     """
         Donne un echo de self sous la forme nom = valeur
     """
-    if type(self.valeur) == bytes:
+    if type(self.valeur) == bytes or  type(self.valeur) == str :
          if self.valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr
             return self.nom+' = '+ repr(self.valeur)

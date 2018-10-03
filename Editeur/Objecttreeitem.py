@@ -290,10 +290,12 @@ class ObjectTreeItem(TreeItem,Delegate):
         elif type(pos) == int :
             # la position est fixee 
             index = pos
-        elif type(pos) == types.InstanceType:
+        #elif type(pos) == types.InstanceType:
+        elif type(pos) == object :
             # pos est un item. Il faut inserer name apres pos
             index = self.getIndex(pos) +1
-        elif type(name) == types.InstanceType:
+        #elif type(name) == types.InstanceType:
+        elif type(name) == object :
             index = self.getIndexChild(name.nom)
         else:
             index = self.getIndexChild(name)

@@ -1,1 +1,0 @@
-prefs_ASTER.py

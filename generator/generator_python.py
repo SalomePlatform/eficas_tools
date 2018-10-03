@@ -201,7 +201,7 @@ class PythonGenerator(object):
          # Si au moins une etape, on ajoute le retour chariot sur la derniere etape
          if type(l[-1])==list:
             l[-1][-1] = l[-1][-1]+'\n'
-         elif type(l[-1])==bytes:
+         elif type(l[-1])==bytes or  type(l[-1])==str:
             l[-1] = l[-1]+'\n'
       return l
 
@@ -516,7 +516,7 @@ class PythonGenerator(object):
            if valeur in self.appli.appliEficas.dict_reels[clefobj]:
              s=self.appli.appliEficas.dict_reels[clefobj][valeur]
          
-      elif type(valeur) == bytes :
+      elif type(valeur) == bytes or type(valeur) == str :
          if valeur.find('\n') == -1:
             # pas de retour chariot, on utilise repr
             s = repr(valeur)

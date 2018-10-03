@@ -152,7 +152,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         #if 1 :
          # print ('attention try devient if 1')
           self.ouvreFichiers()
-        except EficasException, exc:
+        except EficasException as exc:
         #except:
         #  print "je suis dans le except"
           if self.salome == 0 : exit()

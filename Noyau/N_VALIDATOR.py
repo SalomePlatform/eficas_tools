@@ -201,7 +201,7 @@ class TypeProtocol(PProtocol):
                         return obj
                 except Exception as err:
                     pass
-            elif type(type_permis) == types.InstanceType or isinstance(type_permis, object):
+            elif  isinstance(type_permis, object):
                 try:
                     if type_permis.__convert__(obj):
                         return obj
@@ -1533,7 +1533,8 @@ class InstanceVal(ListVal):
     def __init__(self, aClass):
         # Si aClass est une classe on la memorise dans self.aClass
         # sinon c'est une instance dont on memorise la classe
-        if type(aClass) == types.InstanceType:
+        #if type(aClass) == types.InstanceType:
+        if type(aClass) == object :
             # instance ancienne mode
             aClass = aClass.__class__
         elif type(aClass) == type:
@@ -1612,7 +1613,7 @@ class VerifTypeTuple(ListVal):
             if self.isComplexe(valeur):
                 return 1
         elif type_permis == 'TXM':
-            if type(valeur) == bytes:
+            if type(valeur) == bytes or type(valeur) == str:
                 return 1
         elif isinstance(valeur, type_permis):
                 return 1
