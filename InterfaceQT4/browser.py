@@ -735,7 +735,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         #print "NODE updateNodeLabel", self.item.getLabelText()
         labeltext,fonte,couleur = self.item.getLabelText()
         # PNPN a reflechir
-        if item.nom != tr(item.nom) : labeltext = str(tr(item.nom)+" :")
+        if self.item.nom != tr(self.item.nom) : labeltext = str(tr(self.item.nom)+" :")
         self.setText(0, tr(labeltext))
     
     def updateNodeLabelInBlack(self):
@@ -747,7 +747,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         if hasattr(self.appliEficas,'noeudColore'): self.appliEficas.noeudColore.setForeground(0,Qt.black)
         self.setForeground(0,Qt.blue)
         labeltext,fonte,couleur = self.item.getLabelText()
-        if item.nom != tr(item.nom) : labeltext = str(tr(item.nom)+" :")
+        if self.item.nom != tr(self.item.nom) : labeltext = str(tr(self.item.nom)+" :")
         self.setText(0, labeltext)        
         self.appliEficas.noeudColore=self
 
