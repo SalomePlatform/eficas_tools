@@ -323,7 +323,7 @@ class MCSIMP(I_OBJECT.OBJECT):
          self.parent.updateConditionBloc()
 
   def setValeur(self,new_valeur,evaluation='oui'):
-        print ("setValeur Ihm/IMCSIMP ",new_valeur)
+        #print ("setValeur Ihm/IMCSIMP ",new_valeur)
         self.initModif()
         self.valeur = new_valeur
         self.val = new_valeur

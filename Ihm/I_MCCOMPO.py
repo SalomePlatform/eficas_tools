@@ -41,7 +41,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
        Retourne le label de self 
        utilise pour l'affichage dans l'arbre
     """
-    return self.nom
+    return tr(self.nom)
 
   def getListeMcOrdonnee(self,liste,dico):
     """
@@ -231,6 +231,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         # Appel de la methode qui fait le menage dans les references
         # sur les concepts produits (verification que les concepts existent
         # dans le contexte de la commande courante).
+        objet = name
         objet.verifExistenceSd()
 
       # On verifie que l'ajout d'objet est autorise

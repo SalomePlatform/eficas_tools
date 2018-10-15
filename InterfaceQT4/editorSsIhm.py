@@ -169,7 +169,6 @@ class JDCEditorSsIhm :
             self.jdc.aReafficher=False
             txt_exception  = None
             if not jdc:
-# si on est en XMML ne faut-il pas passer en Accas ?
                 self.jdc.analyse()
                 txt_exception = self.jdc.cr.getMessException()
             if txt_exception :
@@ -223,7 +222,7 @@ class JDCEditorSsIhm :
 
         CONTEXT.unsetCurrentStep()
 
-        #if elf.appliEficas.maConfiguration
+        #jdc=self.readercata.cata[0].JdC(procedure=text,
         jdc=self.readercata.cata.JdC(procedure=text,
                                     appli=self,
                                     cata=self.readercata.cata,
@@ -439,7 +438,6 @@ class JDCEditorSsIhm :
     def getTextJDC(self,format,pourRun=0,formatLigne="beautifie"):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
-    
       if format in generator.plugins:
 
          # Le generateur existe on l'utilise
@@ -647,59 +645,114 @@ class JDCEditorSsIhm :
     # dans le JDC
         ouChercher=etape
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC != None :  ouChercher.suppentite(monMC)
         ouChercher.state='changed'
         ouChercher.isvalid()
 
-    #-------------------------------------#
+    #--------------------------------------------------------#
     def ajoutMC(self,etape,MCFils,valeurs,listeAvant=()):
-    #-------------------------------------#
+    #--------------------------------------------------------#
     # dans le JDC
+        debug=False
+        if debug : print ('ajoutMC', etape,MCFils,valeurs,listeAvant)
         ouChercher=etape
+        if debug : print (ouChercher)
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
-        monMC=etape.get_child(ouChercher,restreint="oui")
-        if monMC== None : monMC= ouChercher.addentite(MCFils)
+           ouChercher=ouChercher.getChild(mot,restreint="oui", debug=1)
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
+        if monMC == None : monMC = ouChercher.addEntite(MCFils)
         monMC.valeur=valeurs
         monMC.val=valeurs
         monMC.state='changed'
         monMC.isvalid()
+        return 1
+
+    #--------------------------------------------------------#
+    def ajoutMCinMCFactUnique(self,etape,MCFils,valeurs,listeAvant=()):
+    # Attention si +sieursMCFACT
+    #--------------------------------------------------------#
+    # dans le JDC
+        debug=False
+        if debug : print ('ajoutMC', etape,MCFils,valeurs,listeAvant)
+        ouChercher=etape
+        if debug : print (ouChercher)
+        for mot in listeAvant :
+           ouChercher=ouChercher.getChild(mot,restreint="oui", debug=1)
+        # Attention si +sieursMCFACT
+        ouChercher=ouChercher[0]
+        if debug : print (ouChercher)
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
+        if monMC == None : monMC = ouChercher.addEntite(MCFils)
+        monMC.valeur=valeurs
+        monMC.val=valeurs
+        monMC.state='changed'
+        monMC.isValid()
+        return 1
 
     #----------------------------------------------#
     def ajoutMCFact(self,etape,MCFils,listeAvant=()):
     #----------------------------------------------#
     # dans le JDC
-        print ('ajoutMCFact')
         ouChercher=etape
-        print (ouChercher)
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
-              print (mot)
-              print (ouChercher)
-        monMC=etape.get_child(ouChercher,restreint="oui")
-        if monMC== None : monMC= ouChercher.addentite(MCFils)
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
+        monMC=etape.getChild(ouChercher,restreint="oui")
+        if monMC== None : monMC= ouChercher.addEntite(MCFils)
         monMC.isvalid()
+
+    #-----------------------------------------------------------------#
+    def setValeurMCSimpInEtape(self,etape,listeAvant,valeur):
+    #-----------------------------------------------------------------#
+    # pour VP
+        monObj=etape
+        for mot in listeAvant :
+              monObj=monObj.getChild(mot,restreint="oui")
+              if monObj==None : return False
+        if monObj == None : return False
+        if monObj.valeur != valeur :
+           # PNPN le setValeur fait des bugs --> pourquoi
+           #monObj.setValeur(valeur)
+           monObj.valeur=valeur
+           monObj.isValid()
+        return True
 
     #-------------------------------------------------#
     def getValeur(self,nomEtape,MCFils,listeAvant=()):
     #-------------------------------------------------#
     # dans le JDC
 
+        debug=0
         ouChercher=None
         for e in self.jdc.etapes:
             if e.nom == nomEtape : ouChercher=e; break
         if debug : print ('etape trouvee', ouChercher)
         if ouChercher==None : return None
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
               if debug : print (mot, ouChercher)
               if ouChercher==None : return None
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         if debug : print ('monMC', monMC)
         if monMC== None : return None
         return monMC.valeur
+
+    #-------------------------------------------------#
+    def getMCDsEtape(self,etape,MCFils,listeAvant=()):
+    #-------------------------------------------------#
+    # dans le JDC
+
+        if etape==None : return None
+        ouChercher=etape
+        debug=0
+        for mot in listeAvant :
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
+              if debug : print (mot, ouChercher)
+              if ouChercher==None : return None
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
+        if debug : print ('monMC', monMC)
+        return monMC
 
     #-----------------------------------------------------------#
     def setValeur(self,nomEtape,MCFils,valeur,listeAvant=()):
@@ -711,10 +764,10 @@ class JDCEditorSsIhm :
             if e.nom == nomEtape : ouChercher=e; break
         if ouChercher==None : return None
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
               #print (mot, ouChercher)
               if ouChercher==None : return None
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
         monMC.set_valeur(valeur)
         monMC.isvalid()
 
@@ -730,10 +783,10 @@ class JDCEditorSsIhm :
         if ouChercher==None : return
 
         for mot in listeAvant :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
               if ouChercher==None : return
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
-        if monMC== None : monMC= ouChercher.addentite(MCFils)
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
+        if monMC== None : monMC= ouChercher.addEntite(MCFils)
 
         monMC.definition.into=valeurs
         from Noyau.N_VALIDATOR import  IntoProtocol
@@ -750,11 +803,11 @@ class JDCEditorSsIhm :
 
         for mot in listeAvant :
             try :
-              ouChercher=ouChercher.get_child(mot,restreint="oui")
+              ouChercher=ouChercher.getChild(mot,restreint="oui")
             # Le mot clef n est pas la
             except : return 0
         try :
-           monMC=ouChercher.get_child(MCFils,restreint="oui")
+           monMC=ouChercher.getChild(MCFils,restreint="oui")
         # Le mot clef n est pas la
         except : return 0
         if monMC == None : return 0
@@ -791,23 +844,29 @@ class JDCEditorSsIhm :
         return 1
 
     #------------------------------------------------#
-    def changeIntoDefMC(self,nomEtape,listeMC,valeurs):
+    def changeIntoDefMC(self,etape,listeMC,valeurs):
     #------------------------------------------------#
     # dans le MDD
         #definitionEtape=getattr(self.jdc.cata[0],nomEtape)
-        definitionEtape=getattr(self.jdc.cata,nomEtape)
-        ouChercher=definitionEtape
+        #definitionEtape=getattr(self.jdc.cata,nomEtape)
+        print ( 'changeIntoDefMC ',etape,listeMC,valeurs)
+        ouChercher=getattr(self.jdc.cata,etape.nom)
 
-        if len(listeMC) > 1 :
-           for mc in listeMC[0:-1]:
-             mcfact=ouChercher.entites[mc]
-             ouChercher=mcfact
-        mcAccas=ouChercher.entites[listeMC[-1]]
+        #if len(listeMC) > 1 :
+        #   for mc in listeMC[0:-1]:
+        #     mcfact=ouChercher.entites[mc]
+        #     ouChercher=mcfact
+        #mcAccas=ouChercher.entites[listeMC[-1]]
+
+        for mc in listeMC :
+            mcAccas=ouChercher.entites[mc]
+            ouChercher=mcAccas
+            if ouChercher == None : return 0
 
         if hasattr(mcAccas,'into') : oldValeurs=mcAccas.into
         else : oldValeurs=None
-        if oldValeurs==valeurs : return 0
 
+        if oldValeurs==valeurs : return 1
         mcAccas.into=valeurs
         from Noyau.N_VALIDATOR import  IntoProtocol
         mcAccas.intoProto = IntoProtocol("into", into=valeurs, val_min=mcAccas.val_min, val_max=mcAccas.val_max)
@@ -902,11 +961,11 @@ class JDCEditorSsIhm :
 
         ouChercher = etape
         for mot in listeMC[:-1] :
-            ouChercher=ouChercher.get_child(mot,restreint="oui")
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
             if ouChercher==None : return
         MCFils=listeMC[-1]
-        monMC=ouChercher.get_child(MCFils,restreint="oui")
-        if monMC== None : monMC= etape.addentite(MCFils)
+        monMC=ouChercher.getChild(MCFils,restreint="oui")
+        if monMC== None : monMC= etape.addEntite(MCFils)
 
         monMC.definition.into=into
         monMC.valeur=valeurs

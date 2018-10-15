@@ -76,7 +76,6 @@ class MyViewManager(object):
                         self.appliEficas.maConfiguration.savedir,
                          extensions)
             fichier=fichier[0]
-       if len(fichier) == 0: return None
        fichier = os.path.abspath(six.text_type(fichier))
        ulfile = os.path.abspath(six.text_type(fichier))
        self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]

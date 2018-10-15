@@ -55,7 +55,7 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
        isole ou d'un MCFACT appartenant a une MCList :
        utilisee pour l'affichage dans l'arbre
     """
-    objet = self.parent.getChild(self.nom)
+    objet = self.parent.getChild(self.nom, restreint='oui')
     # objet peut-etre self ou une MCList qui contient self ...
     if objet is None or objet is self:
      return tr("Erreur - mclist inexistante : %s", self.nom)
@@ -63,9 +63,9 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
     try:
       if len(objet) > 1 :
         index = objet.getIndex(self)+1 # + 1 a cause de la numerotation qui commence a 0
-        return self.nom +'_'+repr(index)+':'
+        return tr(self.nom) +'_'+repr(index)+':'
       else:
-        return self.nom
+        return tr(self.nom)
     except:
       return tr("Erreur - mot cle facteur de nom : %s", self.nom)
 

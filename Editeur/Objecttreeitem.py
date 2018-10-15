@@ -206,7 +206,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         - la couleur du texte
         """
         # None --> fonte et couleur par defaut
-        return self.labeltext,None,None
+        return tr(self.labeltext),None,None
 
     def getNature(self) :
         """ 

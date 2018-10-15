@@ -112,7 +112,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         if self.code in ['Adao','ADAO','MAP'] : self.afficheApresInsert=True
         if self.code in ['TELEMAC',]          : self.enteteQTree='premier'
         else                                  : self.enteteQTree='complet'
-        if self.code in ['Adao','ADAO','TELEMAC'] : self.affichePlie=True
+        if self.code in ['Adao','ADAO','TELEMAC','VP'] : self.affichePlie=True
         else                                      : self.affichePlie=False
 
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
@@ -420,7 +420,6 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
       # si possible on renomme l objet comme le noeud couper
 
       if (self.QWParent.edit == "couper"):
-         #print ('je pass la')
          if noeudACopier.treeParent.editor != noeudOuColler.treeParent.editor:
            QMessageBox.critical( self, tr("Deplacement refuse"),tr('Deplacement refuse entre 2 fichiers. Seule la copie est autorisee '))
 
@@ -521,9 +520,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
          nodeOuAjouter=self.node_selected[0]
          if nodeOuAjouter != self.tree.racine :
             while  nodeOuAjouter.treeParent != self.tree.racine:
-                   #print (nodeOuAjouter)
                    nodeOuAjouter=nodeOuAjouter.treeParent
-                   #print (nodeOuAjouter.parent == self.tree.racine)
          nouveau=nodeOuAjouter.appendBrother(nomEtape)
       try : 
         self.node_selected[0].setSelected(False)
@@ -993,47 +990,6 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     # dans le JDC
         self.jdc.suppEntite(etape)
 
-    #-------------------------------------#
-    def deleteMC(self,etape,MCFils,listeAvant=()):
-    #-------------------------------------#
-    # dans le JDC
-        ouChercher=etape
-        for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
-        monMC=ouChercher.getChild(MCFils,restreint="oui")
-        if monMC != None :  ouChercher.suppEntite(monMC)
-        ouChercher.state='changed'
-        ouChercher.isValid()
-
-    #-------------------------------------#
-    def ajoutMC(self,etape,MCFils,valeurs,listeAvant=()):
-    #-------------------------------------#
-    # dans le JDC
-        ouChercher=etape
-        for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
-        monMC=etape.getChild(ouChercher,restreint="oui")
-        if monMC== None : monMC= ouChercher.addEntite(MCFils)
-        monMC.valeur=valeurs
-        monMC.val=valeurs
-        monMC.state='changed'
-        monMC.isValid()
-
-    #----------------------------------------------#
-    def ajoutMCFact(self,etape,MCFils,listeAvant=()):
-    #----------------------------------------------#
-    # dans le JDC
-        #print ('ajoutMCFact')
-        ouChercher=etape
-        #print (ouChercher)
-        for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
-              #print (mot)
-              #print (ouChercher)
-        monMC=etape.getChild(ouChercher,restreint="oui")
-        if monMC== None : monMC= ouChercher.addEntite(MCFils)
-        monMC.isValid()
-
 
     #-----------------------------------------
     def initSplitterSizes(self, nbWidget=3):
@@ -1115,7 +1071,6 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     #-----------------------
     def getEtapeCourante(self) :
     #-----------------------
-      #print (self.tree.selectedItems())
       if len(self.tree.selectedItems()) != 1 : return None
       etape=self.tree.selectedItems()[0].item.object.getEtape()
       return etape

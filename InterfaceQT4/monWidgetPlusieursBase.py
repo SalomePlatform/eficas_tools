@@ -29,14 +29,14 @@ import types,os,sys
 
 from six.moves import range
 from PyQt5.QtGui     import QIcon 
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox, QScrollArea
 from PyQt5.QtCore    import QTimer, QSize, Qt
 
 # Modules Eficas
 from Extensions.i18n import tr
 
 from InterfaceQT4.feuille                import Feuille
-from desWidgetPlusieursBase        import Ui_WidgetPlusieursBase 
+from desWidgetPlusieursBase              import Ui_WidgetPlusieursBase 
 from InterfaceQT4.politiquesValidation   import PolitiquePlusieurs
 from InterfaceQT4.qtSaisie               import SaisieValeur
 from InterfaceQT4.gereListe              import GereListe
@@ -97,6 +97,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         self.inInit=False
         # PNPN a completer __ si tuple le type des tuples sinon le tuple
         self.monCommentaireLabel.setText(self.finCommentaireListe())
+        self.scrollArea.leaveEvent = self.leaveEventScrollArea
 
 
   def setValeurs(self):
@@ -213,10 +214,9 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
 
         validite,comm,comm2,listeRetour= self.politique.ajoutNTuple(listeComplete)
         if not validite : 
-           self.editor.afficheInfos(comm2,Qt.red)
+           self.editor.affiche_infos(texte,Qt.red)
            return
 
-       
         # on calcule le dernier lineedit rempli avant de changer la valeur
         if self.objSimp.valeur != None : indexDernierRempli=len(self.objSimp.valeur)
         else : indexDernierRempli=0
@@ -290,12 +290,14 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         self.editor.afficheInfos(tr('nb min de valeurs : ')+str( self.monSimpDef.min))
       if len(self.listeValeursCourantes) < min and oblige==True: return
       if len(self.listeValeursCourantes) > max : return
-      self.node.item.setValeur(self.listeValeursCourantes)
+      retour=self.node.item.setValeur(self.listeValeursCourantes)
       if len(self.listeValeursCourantes) == self.monSimpDef.max  :
         self.editor.afficheInfos(tr('nb max de valeurs atteint'))
       self.setValide()
       self.reaffiche()
 
-          
+  def leaveEventScrollArea(self,event):
+       self.changeValeur(changeDePlace=False)
+       QScrollArea.leaveEvent(self.scrollArea,event)
 
 # Avertissement quand on quitte le widget

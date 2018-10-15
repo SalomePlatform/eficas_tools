@@ -90,7 +90,6 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         self.actif = 1
         self.makeRegister()
         self.icmd = None
-        print ('uuuuuuuuuuuuuuu fin init de ETAPE', self,oper)
 
     def makeRegister(self):
         """
