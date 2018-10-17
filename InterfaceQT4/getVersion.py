@@ -21,8 +21,8 @@
 # A version has at least major and minor numbers, for easier comparison.
 
 __version = {
-    'major': 8,
-    'minor': 5
+    'major': 9,
+    'minor': 0
     }
 
 def getEficasVersion():
