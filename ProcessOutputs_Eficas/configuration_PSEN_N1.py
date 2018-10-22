@@ -27,7 +27,7 @@ import os
 
 
 class CONFIG(configuration.CONFIG_BASE):
-
+  ## test
   #-----------------------------------
   def __init__(self,appli,repIni):
   #-----------------------------------
