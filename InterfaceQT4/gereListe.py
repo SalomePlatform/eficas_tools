@@ -48,7 +48,7 @@ class LECustom(QLineEdit):
         Constructor
         """
         QLineEdit.__init__(self,parent)
-        
+
         self.parentQt=parentQt
         self.num=i
         self.dansUnTuple=False
@@ -77,8 +77,8 @@ class LECustom(QLineEdit):
        self.litValeur()
        if self.dansUnTuple : self.parentTuple.getValeur()
      QLineEdit.focusOutEvent(self,event)
-       
-    
+
+
  def litValeur(self):
      #print ("dans litValeur de LECustom")
      self.aEuLeFocus=False
@@ -96,8 +96,8 @@ class LECustom(QLineEdit):
           valeur=val
      self.valeur=valeur
      #print ('self.valeur', self.valeur)
-     
-     
+
+
  def clean(self):
      self.setText("")
 
@@ -165,7 +165,7 @@ class GereListe(object):
               if i.find(self.filtre) == 0 :l.append(i)
           self.listeAAfficher=l
        if self.alpha : self.listeAAfficher.sort()
-      
+
    def LEFiltreReturnPressed(self):
        self.filtre= self.LEFiltre.text()
        self.prepareListeResultatFiltre()
@@ -221,7 +221,7 @@ class GereListe(object):
        # on supprime le dernier
        if self.numLineEditEnCours == 0 : return
        if self.indexDernierLabel == 0 : return
-       if self.numLineEditEnCours==self.indexDernierLabel : 
+       if self.numLineEditEnCours==self.indexDernierLabel :
           nomLineEdit=self.nomLine+str(self.indexDernierLabel)
           courant=getattr(self,nomLineEdit)
           courant.clean()
@@ -256,7 +256,7 @@ class GereListe(object):
           nomLineEdit=self.nomLine+str(i+1)
           courant=getattr(self,nomLineEdit)
           valeur=courant.getValeur()
-          if valeur=="" : 
+          if valeur=="" :
              courant.setFocus(True)
              self.estVisible=courant
              return
@@ -306,14 +306,14 @@ class GereListe(object):
       filtre=str(self.LEFiltre.text())
       for cb in self.listeCbRouge:
           palette = QPalette(Qt.red)
-	  palette.setColor(QPalette.WindowText,Qt.black)
-	  cb.setPalette(palette)
+          palette.setColor(QPalette.WindowText,Qt.black)
+          cb.setPalette(palette)
           t=cb.text()
           cb.setText(t)
       self.LEFiltre.setText("")
       self.listeCbRouge = []
 
-  
+
 # ----------- #
 class GerePlie(object):
 # ----------- #
@@ -335,6 +335,3 @@ class GerePlie(object):
    def selectWidgetPlie(self):
       self.editor.listeDesListesOuvertes.remove(self.node.item)
       self.reaffichePourDeplier()
-
-        
-     
