@@ -303,7 +303,6 @@ class PARSEUR_PYTHON(object):
         Methode booleenne qui retourne 1 si le texte est celui d'une affectation dans un jeu de commandes
         Aster, 0 sinon
         """
-        print (texte)
         if '=' not in texte : return 0
         if self.pattern_commande.match(texte):
             # cas d'une procedure ...
