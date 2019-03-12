@@ -159,11 +159,15 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
   def creeListeCommande(self,filtre):
       listeGroupes,dictGroupes=self.jdc.getGroups()
       sensibleALaCasse=self.RBCasse.isChecked()
-      if "CACHE" in dictGroupes:
-         aExclure=dictGroupes["CACHE"]
-      else:
-         aExclure=()
+      if "CACHE" in dictGroupes: aExclure=list(dictGroupes["CACHE"])
+      else: aExclure=()
       listeACreer=[]
+      listeEtapesDejaPresentes=[]
+      if self.editor.maConfiguration.rendVisiblesLesCaches :
+         for e in self.jdc.etapes:
+            listeEtapesDejaPresentes.append(e.nom)
+         for c in aExclure :
+             if c not in listeEtapesDejaPresentes : aExclure.remove(c)
       for l in self.jdc.getListeCmd():
          if l not in aExclure : 
             if sensibleALaCasse and (filtre != None and not filtre in l) : continue

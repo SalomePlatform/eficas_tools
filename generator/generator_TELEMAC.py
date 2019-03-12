@@ -59,7 +59,7 @@ class TELEMACGenerator(PythonGenerator):
 
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None,appli=None,statut="Leger"):
-
+ 
       self.statut        = statut
       self.langue        = appli.langue
       try : self.TelemacdicoEn = appli.readercata.TelemacdicoEn
@@ -136,8 +136,9 @@ class TELEMACGenerator(PythonGenerator):
 
    def writeDefault(self,fn) :
        self.texteDico+='&ETA\n'
-       if self.statut == 'Leger' : extension = ".cas"
-       else                      : extension = "_complet.cas"
+       #if self.statut == 'Leger' : extension = ".Lcas"
+       #else                      : extension = ".cas"
+       extension=".cas"
        fileDico = fn[:fn.rfind(".")] + extension
        f = open( str(fileDico), 'w')
        f.write( self.texteDico )
@@ -180,7 +181,6 @@ class TELEMACGenerator(PythonGenerator):
           if hasattr(obj.definition,'defaut') and (obj.definition.defaut == obj.valeur) and (obj.nom not in self.listeTelemac) : return s
           if hasattr(obj.definition,'defaut') and obj.definition.defaut != None and (type(obj.valeur) == tuple or type(obj.valeur) == list) and (tuple(obj.definition.defaut) == tuple(obj.valeur)) and (obj.nom not in self.listeTelemac) : return s
 
-        
 
         #nomMajuscule=obj.nom.upper()
         #nom=nomMajuscule.replace('_',' ')

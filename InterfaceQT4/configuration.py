@@ -135,6 +135,7 @@ class configBase(object):
       self.enleverSupprimer=False
       self.ajoutExecution=False
       self.utilParExtensions=False
+      self.rendVisiblesLesCaches=False
 
 
 

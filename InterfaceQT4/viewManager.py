@@ -85,16 +85,16 @@ class MyViewManager(object):
        if maPage : self.myQtab.setTabText(self.myQtab.indexOf(maPage),os.path.basename(fichier))
        return result
 
-   def closeTab(self):
-       self.handleClose()
+   def closeTab(self,indexAFermer):
+       self.handleClose(indexAFermer = indexAFermer)
 
-   def handleClose(self,doitSauverRecent = 1,texte=tr('&Quitter')):
+   def handleClose(self,doitSauverRecent = 1,texte=tr('&Quitter'),indexAFermer=None):
        if doitSauverRecent : self.appliEficas.sauveRecents()
-       index=self.myQtab.currentIndex()
+       if indexAFermer == None :index=self.myQtab.currentIndex()
+       else : index = indexAFermer
        if index < 0 : return
        res=self.checkDirty(self.dict_editors[index],texte)
        if res == 2 : return 2             # l utilisateur a annule
-       index=self.myQtab.currentIndex()
        idx=index
        while idx < len(self.dict_editors) -1 :
              self.dict_editors[idx]=self.dict_editors[idx+1]

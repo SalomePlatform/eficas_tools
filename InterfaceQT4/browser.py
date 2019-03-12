@@ -760,6 +760,7 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         for noeud in liste :
             noeud.setTextColor( 0,Qt.blue )
             labeltext,fonte,couleur = noeud.item.getLabelText()
+            if item.nom != tr(item.nom) : labeltext = str(tr(item.nom)+" :")
             noeud.setText(0, labeltext)        
             self.appliEficas.listeNoeudsColores.append(noeud)
 

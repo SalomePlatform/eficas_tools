@@ -294,7 +294,9 @@ class TELEMACparser(Pythonparser):
           self.textePy += ");\n"
 
 
-      appli.listeTelemac=self.dictSimp
+      # ne sert plus
+      #appli.listeTelemac=self.dictSimp
+      appli.listeTelemac={}
       if 'debut' in dicoComment :
           commentaire="COMMENTAIRE("+repr(dicoComment['debut'])+")\n"
           self.textePy=commentaire+self.textePy
@@ -458,7 +460,6 @@ class TELEMACparser(Pythonparser):
 
 
    def tri(self, listeIn):
-      if len(listeIn) == 0 : return listeIn
       if len(listeIn) == 1 : return listeIn
       if self.Ordre_Des_Commandes == None : return listeIn
       listeOut=[listeIn[0],]

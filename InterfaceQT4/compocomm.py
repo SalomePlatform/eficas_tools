@@ -53,7 +53,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         """
         """
         debComm=self.item.getText()
-        self.setText(1,debComm)
+        self.setText(1,tr(debComm))
 
 
     

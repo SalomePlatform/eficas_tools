@@ -59,6 +59,6 @@ class DRecherche(Ui_desRecherche ,QDialog):
 
   def recherche(self):
       self.motAChercher=self.LERecherche.text()
-      self.listeTrouvee=self.tree.findItems(self.motAChercher,Qt.MatchContains|Qt.MatchRecursive,1)
+      self.listeTrouvee=self.tree.findItems(self.motAChercher,Qt.MatchContains|Qt.MatchRecursive,0)
       self.surLigne=0
 
