@@ -29,7 +29,7 @@ from desWidgetCommande import Ui_WidgetCommande
 from .groupe import Groupe
 from .gereIcones import FacultatifOuOptionnel
 
-from PyQt5.QtWidgets  import QApplication, QWidget, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets  import QApplication, QWidget, QSpacerItem, QSizePolicy, QRadioButton
 from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtCore import QTimer
 from PyQt5.QtCore import Qt
