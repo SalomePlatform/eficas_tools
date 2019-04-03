@@ -996,7 +996,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     #-----------------------------------------
        #print ("je passe ds initSplitterSizes", nbWidget)
 
-       if   self.code in [ 'Adao', 'ADAO','MAP' ] : self.splitterSizes3=[1,1550,150]
+       if   self.code in [ 'Adao', 'ADAO','MAP' ] : self.splitterSizes3=[1,1550,300]
        #elif self.code in [ 'MAP']            : self.splitterSizes3=[700,300]
        else                                  : self.splitterSizes3=[150,1000,300]
 
