@@ -549,13 +549,19 @@ class JDC(I_OBJECT.OBJECT):
           e.updateContext(context)
 
    def analyse(self):
-      if self.editor.format == 'xml' :
+      try :
+       if self.editor.format == 'xml' :
          # il ne faut pas le faire quand le jeu de donnees est vide
          self.setCurrentContext()
          self.analyseFromXML()
          #print ('stop demande'); exit()
          #self.execCompileFromXML()
-      else :    
+       else :    
+         self.compile()
+         self.execCompile()
+         if not self.cr.estvide():return
+         self.activeEtapes()
+      except:
          self.compile()
          self.execCompile()
          if not self.cr.estvide():return

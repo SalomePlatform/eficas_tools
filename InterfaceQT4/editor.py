@@ -946,6 +946,11 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     # ajoute une etape  de JdC a partir d un texte
         CONTEXT.setCurrentStep(etape)
         etape.buildIncludeEtape(texte)
+        if not (etape.text_included_converted) :
+           QMessageBox.information( self,
+                      tr("Impossible d importer le texte"),
+                      etape.text_included_error)
+               
         self.tree.racine.buildChildren()
 
     #-----------------------------------#

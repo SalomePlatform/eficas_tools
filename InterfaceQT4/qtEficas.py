@@ -974,17 +974,18 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.lesFonctionsUtilisateurs={}
         if self.code not in self.mesScripts : return
         if not hasattr(self.mesScripts[self.code],'dict_menu') : return
-        titre,lesFonctions=self.mesScripts[self.code].dict_menu.items()[0]
-        self.menuOptions = self.menubar.addMenu("menuOptions")
-        self.menuOptions.setTitle(tr(titre))
-        for elt in lesFonctions :
-            laFonctionUtilisateur, label, lesArguments = elt
-            action = QAction(self)
-            action.setText(label)
+        for monMenu in iter(self.mesScripts[self.code].dict_menu.items()) :
+            titre,lesFonctions= monMenu
+            self.menuOptions = self.menubar.addMenu("menuOptions")
+            self.menuOptions.setTitle(tr(titre))
+            for elt in lesFonctions :
+               laFonctionUtilisateur, label, lesArguments = elt
+               action = QAction(self)
+               action.setText(label)
             #action.triggered.connect(self.appelleFonctionUtilisateur)
-            self.menuOptions.addAction(action)
-            self.lesFonctionsUtilisateurs[action]=(laFonctionUtilisateur, lesArguments)
-        self.menuOptions.triggered.connect(self.handleFonctionUtilisateur)
+               self.menuOptions.addAction(action)
+               self.lesFonctionsUtilisateurs[action]=(laFonctionUtilisateur, lesArguments)
+            self.menuOptions.triggered.connect(self.handleFonctionUtilisateur)
 
     def handleFonctionUtilisateur(self,action) :
         (laFonctionUtilisateur, lesArguments)=self.lesFonctionsUtilisateurs[action]

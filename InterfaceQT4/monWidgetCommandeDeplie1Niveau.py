@@ -80,7 +80,7 @@ class MonWidgetCommandeDeplie1Niveau(MonWidgetCommande):
                   c.getPanel              = self.getPanel
                   c.affichePanneau      = self.affichePanneau
                   try :	
-		    c.fenetre.RBDeplie.setCheckable(False)
+                    c.fenetre.RBDeplie.setCheckable(False)
                     c.fenetre.RBDeplie.setEnabled(False)
                     c.fenetre.RBDeplie.setIcon(icon)
                   except :

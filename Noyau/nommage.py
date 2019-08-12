@@ -42,6 +42,7 @@ except :
    pass
 import re
 import linecache
+import sys
 from functools import partial
 
 # Modules EFICAS
@@ -77,7 +78,10 @@ def _getNomConceptResultat(ope, level=2):
     lineno = f.f_lineno     # XXX Too bad if -O is used
     # lineno = f_lineno(f)  # Ne marche pas toujours
     co = f.f_code
-    filename = six.text_type(co.co_filename, getEncoding())
+    if sys.version_info >= (3,0) :
+       filename = co.co_filename
+    else : 
+       filename = six.text_type(co.co_filename, getEncoding())
     name = co.co_name
     # pattern pour identifier le debut de la commande
     pattern_oper = re.compile(regex1 % ope)

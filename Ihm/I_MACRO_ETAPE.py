@@ -82,6 +82,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     #print ("getContexteJdc",self,self.nom, text)
     # On recupere l'etape courante
     step=CONTEXT.getCurrentStep()
+    self.text_included_converted=0
     #try:
     if 1 :
        # on essaie de creer un objet JDC auxiliaire avec un contexte initial
@@ -142,9 +143,13 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
                                 jdc_pere=self.jdc,etape_include=self,
                                 prefix_include=prefix_include,
                                 recorded_units=self.recorded_units,
-                                old_recorded_units=old_recorded_units,**args)
+                                old_recorded_units=old_recorded_units)
+                                #old_recorded_units=old_recorded_units,**args)
 
        j.analyse()
+       if not j.cr.estvide(): self.text_included_converted=0
+       else : self.text_included_converted=1
+       self.text_included_error=str(j.cr)
        # On recupere les etapes internes (pour validation)
        self.etapes=j.etapes
        self.jdc_aux=j

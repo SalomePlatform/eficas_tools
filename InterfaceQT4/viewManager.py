@@ -26,7 +26,6 @@ except : pass
 
 import os
 from Extensions.i18n import tr
-import six
 from  PyQt5.QtWidgets  import QFileDialog, QMessageBox
 from  PyQt5.QtCore     import QFileInfo
 
@@ -77,8 +76,8 @@ class MyViewManager(object):
                          extensions)
             fichier=fichier[0]
        if len(fichier) == 0: return None
-       fichier = os.path.abspath(six.text_type(fichier))
-       ulfile = os.path.abspath(six.text_type(fichier))
+       fichier = os.path.abspath(fichier)
+       ulfile = os.path.abspath(fichier)
        self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
        self.appliEficas.addToRecentList(fichier)
        maPage=self.getEditor( fichier,units=units)
@@ -248,7 +247,7 @@ class MyViewManager(object):
            return
        ok, newName = editor.saveFile()
        if ok :
-           fileName=os.path.basename(six.text_type(newName))
+           fileName=os.path.basename(newName)
            self.myQtab.setTabText(index,fileName)
        return ok
 
@@ -271,7 +270,7 @@ class MyViewManager(object):
            return
        ok, newName = editor.sauveLigneFile()
        if ok :
-           fileName=os.path.basename(six.text_type(newName))
+           fileName=os.path.basename(newName)
            self.myQtab.setTabText(index,fileName)
        return ok
 
@@ -282,7 +281,7 @@ class MyViewManager(object):
        oldName=editor.fichier
        ok,newName = editor.saveFileAs()
        if ok :
-           fileName=os.path.basename(six.text_type(newName))
+           fileName=os.path.basename(newName)
            self.myQtab.setTabText(index,fileName)
        if editor in self.doubles :
           if oldName != newName :
@@ -340,7 +339,7 @@ class MyViewManager(object):
 #PNPNPNPN --> a affiner
         if fichier is None:
             self.untitledCount += 1
-            self.myQtab.addTab(win, tr("Fichier non encore nomme  " + self.appliEficas.readercata.versionCode, self.untitledCount))
+            self.myQtab.addTab(win, tr("Fichier non encore nomme") +  str(self.untitledCount))
             #self.myQtab.addTab(win, str(self.appliEficas.code))
         else:
             liste=fichier.split('/')
@@ -400,7 +399,7 @@ class MyViewManager(object):
             if res == 0:
                 (ok, newName) = editor.saveFile()
                 if ok:
-                    fileName=os.path.basename(six.text_type(newName))
+                    fileName=os.path.basename(newName)
                     index=self.myQtab.currentIndex()
                     self.myQtab.setTabText(index,fileName)
                 return ok
@@ -425,9 +424,8 @@ class MyViewManager(object):
 
        listeParam = [] 
        for p in lesArguments:
-          print (p)
           if hasattr(editor,p): listeParam.append(getattr(editor,p))
           if p=="editor"      : listeParam.append(editor)
           if p=="etapeCourante" : listeParam.append(editor.getEtapeCourante())
-       apply(laFonctionUtilisateur,listeParam)
+       laFonctionUtilisateur(*listeParam)
 

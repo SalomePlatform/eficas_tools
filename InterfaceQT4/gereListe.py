@@ -30,8 +30,6 @@ import types,os
 import traceback
 
 
-import six
-from six.moves import range
 from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog
 from PyQt5.QtCore    import QEvent, Qt, QTimer
 from PyQt5.QtGui     import QIcon, QPalette
@@ -296,7 +294,7 @@ class GereListe(object):
        fn=fn[0]
        if fn == None : return
        if fn == "" : return
-       ulfile = os.path.abspath(six.text_type(fn))
+       ulfile = os.path.abspath(fn)
        self.editor.maConfiguration.savedir=os.path.split(ulfile)[0]
 
        from .monSelectVal import MonSelectVal
