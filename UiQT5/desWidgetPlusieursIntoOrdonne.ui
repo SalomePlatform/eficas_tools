@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1013</width>
+    <width>1386</width>
     <height>538</height>
    </rect>
   </property>
@@ -353,7 +353,7 @@
           <x>0</x>
           <y>0</y>
           <width>18</width>
-          <height>174</height>
+          <height>189</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -423,7 +423,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>300</width>
+        <width>425</width>
         <height>519</height>
        </rect>
       </property>
@@ -520,7 +520,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>297</width>
+            <width>421</width>
             <height>474</height>
            </rect>
           </property>
@@ -694,8 +694,8 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>../Editeur/icons/MoinsBleu.png</normaloff>../Editeur/icons/MoinsBleu.png</iconset>
+             <iconset theme="remove">
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -729,8 +729,8 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
-              <normaloff>../Editeur/icons/PlusBleu.png</normaloff>../Editeur/icons/PlusBleu.png</iconset>
+             <iconset theme="add">
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -779,8 +779,8 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
-            <normaloff>../Editeur/icons/verre-loupe-icone-6087-64.png</normaloff>../Editeur/icons/verre-loupe-icone-6087-64.png</iconset>
+           <iconset theme="find">
+            <normaloff>.</normaloff>.</iconset>
           </property>
           <property name="iconSize">
            <size>

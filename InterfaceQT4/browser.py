@@ -160,21 +160,22 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.inhibeExpand = True 
         self.itemCourant=item
         itemParent=item
+        itemAvant=item
 
         while not (hasattr (itemParent,'getPanel')) : 
            if itemParent.plie==True : itemParent.setDeplie()
            itemAvant=itemParent
            itemParent=itemParent.treeParent 
 
+    
         if itemParent.fenetre != self.editor.fenetreCentraleAffichee : 
             estUneFeuille=(isinstance(item,composimp.Node))
-             # il faut afficher le parent
-            if estUneFeuille and itemParent.fenetreIhm=='deplie1Niveau' : 
-               itemAvant.afficheCeNiveau()
-               return
-            if estUneFeuille                        : itemParent.affichePanneau()
+            if itemParent.fenetreIhm == 'deplie1Niveau' :
+               if item == itemParent : itemParent.affichePanneau()
+               else                  : itemAvant.afficheCeNiveau()
+            elif estUneFeuille       : itemParent.affichePanneau()
             elif self.editor.maConfiguration.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
-            else                                    : itemParent.affichePanneau()
+            else                     :  itemParent.affichePanneau()
 
 
         elif (isinstance(item,composimp.Node)) and item.fenetre : item.fenetre.rendVisible()
