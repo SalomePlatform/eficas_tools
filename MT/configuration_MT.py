@@ -26,7 +26,7 @@ from InterfaceQT4 import configuration
 import os
 
 
-class CONFIG(configuration.CONFIG_BASE):
+class CONFIG(configuration.configBase):
 
   #-----------------------------------
   def __init__(self,appli,repIni):
@@ -35,7 +35,7 @@ class CONFIG(configuration.CONFIG_BASE):
       self.labels_user=['catalogues','lang']
       self.labels_eficas=['lang','rep_cata','catalogues']
 
-      configuration.CONFIG_BASE.__init__(self,appli,repIni)
+      configuration.configBase.__init__(self,appli,repIni)
 
 
 def make_config(appli,rep):

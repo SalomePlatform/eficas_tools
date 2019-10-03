@@ -26,7 +26,6 @@ try :
    from builtins import str
 except : pass
 
-from PyQt5.QtWidgets import QApplication
 
 import sys,os
 repIni=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),".."))
@@ -52,6 +51,12 @@ def lanceEficas(code=None,fichier=None,ssCode=None,multi=False,langue='en'):
         Lance l'appli EFICAS
     """
     # Analyse des arguments de la ligne de commande
+    try :
+      from PyQt5.QtWidgets import QApplication
+    except :
+      print('Please, set qt environment')
+      return
+
     from Editeur  import session
     options=session.parse(sys.argv)
     if options.code!= None : code=options.code

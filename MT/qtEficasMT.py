@@ -23,16 +23,14 @@
 """
 # Modules Python
 # Modules Eficas
+import sys
 import prefs
 name='prefs_'+prefs.code
 __import__(name)
 
-import sys
-reload(sys)
-sys.setdefaultencoding('latin1')
 import os
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 
 import prefs
 from InterfaceQT4 import eficas_go
-eficas_go.lance_eficas(code=prefs.code)
+eficas_go.lanceEficas(code=prefs.code)
