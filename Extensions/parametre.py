@@ -74,6 +74,7 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
     #self.val=valeur
     self.valeur = valeur
     self.val=repr(valeur)
+    self.fenetreIhm=None
 
   def interpreteValeur(self,val):
     """

@@ -751,7 +751,8 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         titre = tr("version ")
         monVisuDialg=DVisu(parent=self,fl=0)
         monVisuDialg.setWindowTitle(titre)
-        monVisuDialg.TB.setText(self.VERSION_EFICAS +tr(" pour ") + self.code)
+        if self.code != None : monVisuDialg.TB.setText(self.VERSION_EFICAS +tr(" pour ") + self.code)
+        else :  monVisuDialg.TB.setText(self.VERSION_EFICAS )
         monVisuDialg.adjustSize()
         monVisuDialg.show()
 
