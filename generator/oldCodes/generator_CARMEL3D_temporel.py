@@ -68,7 +68,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
       self.text=PythonGenerator.gener(self,obj,format)
 
       if self.debug:
-         print "self.text = %s" % self.text
+         print ("self.text = ", self.text)
 
       # Cette instruction genere le contenu du fichier de parametres pour le code Carmel3D
       # si le jdc est valide (sinon cela n a pas de sens)
@@ -77,7 +77,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
              # constitution du bloc VERSION du fichier PHYS (existe toujours)
              self.generBLOC_VERSION(obj)
 
-           except ValueError, err:
+           except ValueError as err:
              raise ValueError(str(err))
 
       return self.text
@@ -181,11 +181,11 @@ class CARMEL3DTV0Generator(PythonGenerator):
         
         fileXML = os.path.join(repertory, 'configuration.xml') # nom du fichier de configuration XML (chemin complet)
         if self.debug: 
-            print "\necriture du fichier XML : ", fileXML
-            print "self.dictMaterial = ",self.dictMaterial
-            print "self.dictSource = ",self.dictSource
-            print "self.dictGroupes = ",self.dictGroupes
-            print "self.dictMacroGroupes = ",self.dictMacroGroupes
+            print ("\necriture du fichier XML : ", fileXML)
+            print ("self.dictMaterial = ",self.dictMaterial)
+            print ("self.dictSource = ",self.dictSource)
+            print ("self.dictGroupes = ",self.dictGroupes)
+            print ("self.dictMacroGroupes = ",self.dictMacroGroupes)
 
         root = ET.Element("configuration")
 
@@ -323,7 +323,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         #Bloc <TermeSourceElectrique>...</TermeSourceElectrique>
         TermeSourceElectrique=ET.SubElement(root, "TermeSourceElectrique")
         i=0 # ?
-        if self.debug: print 'self.dictSource = ',  self.dictSource
+        if self.debug: print ('self.dictSource = ',  self.dictSource)
         for source in self.dictSource.keys(): # parcours des sources
             if len(self.dictSource[source]['milieux']) > 0: # on continue si au moins un groupe de maillage, i.e., milieux est associé à cette source
                 if self.dictSource[source].has_key('STRANDED_INDUCTOR'): # inducteur bobiné
@@ -487,7 +487,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
        # print "le dico complet=%s" %(self.dictGroupes)
 
         if self.debug: 
-            print "ecriture du fichier d'execution (SH)"
+            print ("ecriture du fichier d'execution (SH)")
         RepCarmel=os.path.join(repertory,"lancer.sh")
         f = open( RepCarmel, 'wb')
         self.texteCarmel3D_SH+='cd ' + repertory + ' \n'
@@ -506,12 +506,12 @@ class CARMEL3DTV0Generator(PythonGenerator):
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         if self.debug: 
-            print "MCSIMP %(v_1)s  %(v_2)s" % {'v_1': obj.nom, "v_2": obj.valeur}
+            print ("MCSIMP", obj.nom, obj.valeur)
         s=PythonGenerator.generMCSIMP(self,obj)
         try:
             self.dicoCourant[obj.nom]=obj.valeurFormatee
         except:
-            print "Oubli des messages texte homo='information'"
+            print ("Oubli des messages texte homo='information'")
         return s
 
 
@@ -538,7 +538,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         obj.valeur=self.dicoEtapeCourant
 
         if self.debug: 
-            print "PROC_ETAPE %(v_1)s  %(v_2)s" % {'v_1': unicode(obj.nom), "v_2": unicode(obj.valeur)}
+            print ("PROC_ETAPE " ,obj.nom, str(obj.valeur))
         s=PythonGenerator.generPROC_ETAPE(self,obj)
         if obj.nom=="PARAMETERS" : self.generBLOC_PARAMETERS(obj)
         if obj.nom=="SOLVEUR" : self.generSOLVEUR(obj)
@@ -557,7 +557,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         s=PythonGenerator.generETAPE(self,obj)
         obj.valeur=self.dicoEtapeCourant
         if self.debug: 
-            print "ETAPE : obj.nom = %(v_1)s , obj.valeur= %(v_2)s" % {'v_1': obj.nom, 'v_2': obj.valeur}
+            print ("ETAPE " ,obj.nom, str(obj.valeur))
         if obj.nom=="MESHGROUP" : self.generMESHGROUP(obj)
         if obj.nom=="MATERIAL" : self.generMATERIAL(obj)
         if obj.nom=="SOURCE" : self.generSOURCE(obj)
@@ -577,7 +577,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         monGenerateur=generator.plugins[nomPlugin]()
         jdc_aux_texte=monGenerateur.gener(obj.jdc_aux)
         if self.debug: 
-            print "jdc_aux_texte : %s" % jdc_aux_texte
+            print ("jdc_aux_texte : ", jdc_aux_texte)
 
         # sauvegarde de tous les matériaux trouvés dans les bibliothèques INCLUDE
         for cle in monGenerateur.dictMaterial:
@@ -586,7 +586,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         for cle in monGenerateur.dictSource:
             self.dictSource[cle] = monGenerateur.dictSource[cle]
 
-        print "________FIN MACRO______________________________________"
+        print ("________FIN MACRO______________________________________")
         s=PythonGenerator.generMACRO_ETAPE(self,obj)
         return s
 
@@ -599,7 +599,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         """
         try:
             nomGroupe = obj.getSdname() # nom du groupe de maillage, i.e. nom du concept
-            print "liste des noms sans prefixes %s" %(nomGroupe)
+            print ("liste des noms sans prefixes", nomGroupe)
 
             # test: un et un seul nom de materiau ou source doit etre associe a ce groupe de maillage, via les cles MATERIAL et SOURCE, respectivement.
             # test sur un seul attribut, non pertinent car il peut y en avoir plusieurs.
@@ -608,7 +608,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
             # on utilise le fait que obj.valeur est un dictionnaire
             self.dictGroupes[nomGroupe] = {}   
             if self.debug: 
-                print "obj.valeur.keys()= %s" % obj.valeur.keys()
+                print ("obj.valeur.keys()" , obj.valeur.keys())
             #if 'MATERIAL' in obj.valeur.keys() and 'SOURCE' in obj.valeur.keys(): # test d'erreur lors de presence de materiau et source a la fois
             #    raise ValueError,tr(" ce groupe de maillage %s est associe a au moins un materiau  et au moins une source." % nomGroupe)
             # association a un materiau
@@ -631,9 +631,9 @@ class CARMEL3DTV0Generator(PythonGenerator):
             #    self.dictGroupes['ordreDomaineJdC'].append(nomGroupe)
                 texte=""
                 texte+="%s"%(obj.valeur['Domaine'])
-                print"le texte=%s" %(texte)
+                print ("le texte=", texte)
                 self.dictDomaine[obj.getSdname()]=texte  
-                print "liste des domaines =%s" %(self.dictGroupes[nomGroupe]['DOMAINE'])
+                print ("liste des domaines " ,self.dictGroupes[nomGroupe]['DOMAINE'])
             if 'Potentiel_Flottant' in obj.valeur.keys():
                 self.dictGroupes[nomGroupe]['Potentiel_Flottant'] = True
             if 'Spire_Exploratrice' in obj.valeur.keys():
@@ -642,9 +642,9 @@ class CARMEL3DTV0Generator(PythonGenerator):
 #            else:
 #                raise ValueError, tr("ce groupe de maillage %s n'est associe a aucun materiau, source ou stranded_inductor_geometry." % nomGroupe)
             if self.debug:
-                print "self.dictGroupes= %s" % repr(self.dictGroupes)
-        except ValueError, err:
-            raise ValueError, str(err)
+                print ("self.dictGroupes" , repr(self.dictGroupes))
+        except ValueError as err:
+            raise ValueError (str(err))
 
    def generMACRO_GROUPE(self, obj):
         """preparation de la ligne NAME referencant le groupe de mailles 
@@ -653,11 +653,11 @@ class CARMEL3DTV0Generator(PythonGenerator):
         """
         try:
             nomMacroGroupe = obj.getSdname() # nom du macro groupe
-            print "liste des noms sans prefixes %s" %(nomMacroGroupe)
+            print ("liste des noms sans prefixes " ,nomMacroGroupe)
             self.dictMacroGroupes[nomMacroGroupe] = obj.valeur # sauvegarde des propriétés du macro-groupe
 
             if self.debug: 
-                print "obj.valeur.keys()= %s" % obj.valeur.keys()
+                print ("obj.valeur.keys()" , obj.valeur.keys())
             # association a une source
             if 'LISTE_MESHGROUP' in obj.valeur.keys(): # test de liste définie dans la macro-groupe, sinon erreur
                 listeGroupesMauvaisFormat = obj.valeur['LISTE_MESHGROUP'] # sauvegarde de l'association entre ce macro groupe et un materiau ou source, par son nom, i.e. nom du concept du materiau ou de la source
@@ -667,56 +667,57 @@ class CARMEL3DTV0Generator(PythonGenerator):
                     groupe = groupe.replace('"', "") # suppression des guillement doubles
                     self.dictMacroGroupes[nomMacroGroupe]['LISTE'].append(groupe) # sauvegarde du nom au formatage correct
             else:
-                raise ValueError, nomMacroGroupe + tr(" : ce MACRO_GROUPE doit contenir une liste de groupes LISTE_MESHGROUP.")
+                raise ValueError (tr(" : ce MACRO_GROUPE doit contenir une liste de groupes LISTE_MESHGROUP."))
 
             for nomGroupe in self.dictMacroGroupes[nomMacroGroupe]['LISTE']: # liste des groupes MESHGROUP de ce macro-groupe. On leur associe les propriétés du MACRO_GROUPE
                 for propriete in ('SOURCE', 'MATERIAL',  'STRANDED_INDUCTOR_GEOMETRY'): # liste des propriétés automatiques à copier du MACRO_GROUPE à chaque MESHGROUP de la liste
                     if  propriete in obj.valeur.keys(): # ce macro-groupe est associé à cette propriété
                         if self.dictGroupes[nomGroupe].has_key(propriete) and self.dictGroupes[nomGroupe][propriete] != self.dictGroupes[nomGroupe][propriete].nom: # erreur, ce meshgroup a déjà une telle propriéte définie, différente
-                            print u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP %s associé à ce macro-groupe." % \
-                             ( propriete, obj.valeur[propriete].nom,  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe )
-                            raise ValueError, propriete + ',' + obj.valeur[propriete].nom + ',' + nomMacroGroupe + ',' + self.dictGroupes[nomGroupe][propriete] + ',' +  nomGroupe\
-                            + tr(" : conflit entre la propriete (#1:#2) du MACRO_GROUPE (de nom #3) et celle (#4) du MESHGROUP (#5) associe a ce macro-groupe.")
+                            print ("ERREUR! Conflit entre la  MACRO_GROUPE et celle :  du MESHGROUP  associé à ce macro-groupe." ,\
+                             ( propriete, obj.valeur[propriete].nom,  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe ))
+                            raise ValueError( propriete + ',' + obj.valeur[propriete].nom + ',' + nomMacroGroupe + ',' + self.dictGroupes[nomGroupe][propriete] + ',' +  nomGroupe\
+                            + tr(" : conflit entre la propriete (#1:#2) du MACRO_GROUPE (de nom #3) et celle (#4) du MESHGROUP (#5) associe a ce macro-groupe."))
                         else : # pas de conflit de cette propriété, alors copie, meme si les propriétés sont les memes pour simplifier
                             self.dictGroupes[nomGroupe][propriete] = obj.valeur[propriete].nom # sauvegarde du nom de la propriété du macro-groupe dans le meshgroup
                 for propriete in ('CONDITION_LIMITE', ): # liste des propriétés définies à l'avance automatiques à copier du MACRO_GROUPE à chaque MESHGROUP de la liste
                     if  propriete in obj.valeur.keys(): # ce macro-groupe est associé à cette propriété
                         if self.dictGroupes[nomGroupe].has_key(propriete) and self.dictGroupes[nomGroupe][propriete] != self.dictGroupes[nomGroupe][propriete]: # erreur, ce meshgroup a déjà une telle propriéte définie, différente
-                            print u"ERREUR! Conflit entre la %s : %s du MACRO_GROUPE %s et celle : %s du MESHGROUP %s associé à ce macro-groupe." % \
-                             ( propriete, obj.valeur[propriete],  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe )
-                            raise ValueError, propriete + ',' + obj.valeur[propriete].nom + ',' + nomMacroGroupe + ',' + self.dictGroupes[nomGroupe][propriete] + ',' +  nomGroupe\
-                            + tr(" : conflit entre la propriete (#1:#2) du MACRO_GROUPE (de nom #3) et celle (#4) du MESHGROUP (#5) associe a ce macro-groupe.")
+                            print ("ERREUR! Conflit entre la  MACRO_GROUPE et celle :  du MESHGROUP  associé à ce macro-groupe.") 
+                             #( propriete, obj.valeur[propriete],  nomMacroGroupe, self.dictGroupes[nomGroupe][propriete],  nomGroupe )
+                            #raise ValueError( propriete + ',' + obj.valeur[propriete].nom + ',' + nomMacroGroupe + ',' + self.dictGroupes[nomGroupe][propriete] + ',' +  nomGroupe\
+                            #+ tr(" : conflit entre la propriete (#1:#2) du MACRO_GROUPE (de nom #3) et celle (#4) du MESHGROUP (#5) associe a ce macro-groupe."))
+                            raise ValueError()
                         else : # pas de conflit de cette propriété, alors copie, meme si les propriétés sont les memes pour simplifier
                             self.dictGroupes[nomGroupe][propriete] = obj.valeur[propriete] # sauvegarde du nom de la propriété du macro-groupe dans le meshgroup
-        except ValueError, err:
-            raise ValueError, str(err)
+        except ValueError as err:
+            raise ValueError( str(err))
 
 
    def generSOLVEUR(self, obj):
         if self.debug:
-            print "generation solveur obj.valeur = %s" % obj.valeur
+            print ("generation solveur", obj.valeur )
         try :
             self.typeSolveur = obj.valeur['Type']
             if self.typeSolveur == "Solveur_lineaire" : self.generSOLVEUR_LINEAIRE(obj)
             if self.typeSolveur == "Solveur_non_lineaire" :
                 self.generSOLVEUR_LINEAIRE(obj)
                 self.generSOLVEUR_NON_LINEAIRE(obj)
-        except ValueError,  err:
-            raise ValueError,  str(err)
+        except ValueError as  err:
+            raise ValueError( str(err))
 
    def generSOLVEUR_LINEAIRE(self, obj):
         if self.debug:
-            print "generation material obj.valeur = %s" % obj.valeur    
+            print ("generation material" , obj.valeur    )
         try :
             nature = obj.valeur['Methode_lineaire']
             if nature =="Methode iterative BICGCR" : self.generMETHODE_ITERATIVE_BICGCR(obj)
             if nature  =="Methode directe MUMPS" : self.generMETHODE_DIRECTE_MUMPS(obj)
-        except ValueError,  err:
-            raise ValueError,  str(err)
+        except ValueError as  err:
+            raise ValueError( str(err))
 
    def generMETHODE_ITERATIVE_BICGCR(self, obj):
         if self.debug: 
-            print "generation methode iterative BICGCR obj.valeur = %s" % obj.valeur
+            print ("generation methode iterative BICGCR " , obj.valeur)
         self.kEpsilonGCP =  obj.valeur["Precision"]   
         self.precond=obj.valeur["Preconditionneur"]
         self.nbIterationMax=obj.valeur["Nombre_iterations_max"]
@@ -725,11 +726,11 @@ class CARMEL3DTV0Generator(PythonGenerator):
    def generMETHODE_DIRECTE_MUMPS(self, obj):
         texte=""
         if self.debug:
-            print "_____________directe_____________"
+            print ("_____________directe_____________")
 
    def generSOLVEUR_NON_LINEAIRE(self, obj):
         if self.debug: 
-            print "generation solveur_non_lineaire obj.valeur = %s" % obj.valeur
+            print ("generation solveur_non_lineaire",  obj.valeur)
         correspondance_methodeNonLineaire = {"Methode de Newton":2,"Methode de substitution":1} # correspondance sur la méthode non-linéaire entre le catalogue et le XML    
         self.methodeNonLineaire = correspondance_methodeNonLineaire[obj.valeur["Methode_non_lineaire"]]
         self.kEpsilonNonLinearite=obj.valeur["PrecisionNonLineaire"]
@@ -739,27 +740,27 @@ class CARMEL3DTV0Generator(PythonGenerator):
         """preparation du bloc correspondant a un materiau du fichier PHYS"""
         texte=""
         if self.debug: 
-            print "generation material obj.valeur = %s" % obj.valeur
+            print ("generation material obj.valeur" , obj.valeur)
         try :
             nomMaterial = obj.getSdname() 
             self.dictMaterial[nomMaterial]=obj.valeur
-            print"self.dictMaterial=%s" %(self.dictMaterial)
-        except ValueError, err:
-            raise ValueError, str(err)
+            print ("self.dictMaterial=" ,self.dictMaterial)
+        except ValueError as  err:
+            raise ValueError( str(err))
 #-------------------------------------------------------------------
 
    def generSOURCE(self,obj):
         """preparation du bloc correspondant a une source du fichier PHYS"""
         if self.debug: 
-            print "generation source obj valeur = %s" % obj.valeur
+            print ("generation source obj valeur " , obj.valeur)
         texte=""
         try :
             nomSource = obj.getSdname() 
             self.dictSource[nomSource]=obj.valeur # dictionnaire
             self.dictSource[nomSource]['milieux'] = [] # liste ordonnée des groupes associés à cette source
-            print"mon dico des sources=%s" %(self.dictSource)
-        except ValueError, err:
-            raise ValueError, str(err)
+            print ("mon dico des sources=" ,self.dictSource)
+        except ValueError as  err:
+            raise ValueError( str(err))
 
 #---------------------------------------------------------------------------------------
 # traitement fichier PHYS
@@ -782,7 +783,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
 
    def generBLOC_PARAMETERS(self,obj):
         if self.debug: 
-            print "generation parameters obj.valeur = %s" % obj.valeur    
+            print ("generation parameters " , obj.valeur    )
 
         self.identification = obj.valeur["Identification_du_Modele"]
         self.fichierMaillage = obj.valeur["Fichier_maillage"]
@@ -801,18 +802,17 @@ class CARMEL3DTV0Generator(PythonGenerator):
 
    def generBLOC_SYMETRIE(self, obj): 
         if self.debug: 
-            print "generation de la symetrie obj.valeur = %s" % obj.valeur  
+            print ("generation de la symetrie obj.valeur " , obj.valeur  )
 
         try:
             self.listSymetrie.append(obj.valeur)
-            print"ma liste symetrie =%s" %(self.listSymetrie)
-        except ValueError, err:
-            raise ValueError, str(err)
+        except ValueError as  err:
+            raise ValueError( str(err))
 #----------------------------------------------------------------------------------------
 
    def generMOUVEMENT(self, obj):
         if self.debug:
-            print "generation du mouvement obj.valeur = %s" % obj.valeur
+            print ("generation du mouvement obj.valeur " , obj.valeur  )
         
         try:
             nom = obj.getSdname()
@@ -820,26 +820,26 @@ class CARMEL3DTV0Generator(PythonGenerator):
             self.dictMouvement[nom] = {'ordre': self.nombreMouvements, 'valeurs': obj.valeur}
             self.dictMouvement['ordre'].append(nom)
             if self.debug:
-                print "self.dictMouvement =%s" %(self.dictMouvement)
-                print "self.nombreMouvements =%i" %(self.nombreMouvements)
-        except ValueError,  err:
-            raise valueError,  str(err)
+                print ("self.dictMouvement " ,self.dictMouvement)
+                print ("self.nombreMouvements " ,self.nombreMouvements)
+        except ValueError as  err:
+            raise valueError(  str(err))
 #----------------------------------------------------------------------------------------
    def generSTRANDED_INDUCTOR_GEOMETRY(self, obj):
         """preparation du bloc STRANDED_INDUCTOR_GEOMETRY"""
         if self.debug: 
-            print "generation strand obj valeur = %s" % obj.valeur
+            print ("generation strand obj valeur =" , obj.valeur)
         try :
             nomStrand = obj.getSdname() 
             self.dictStrand[nomStrand]=obj.valeur
-            print"mon dico des stranded inductor geometry=%s" %(self.dictStrand)
+            print ("mon dico des stranded inductor geometry" ,self.dictStrand)
 
-        except ValueError, err:
-            raise ValueError, str(err)
+        except ValueError as  err:
+            raise valueError(  str(err))
 
    def generPOST_TRAITEMENT(self, obj):
         if self.debug: 
-            print "generation post traitement obj.valeur = %s" % obj.valeur    
+            print ("generation post traitement obj.valeur " , obj.valeur    )
         self.carteChamp=obj.valeur["Cartes_des_champs"]
         self.carteCourantInduit=obj.valeur["Cartes_des_courants_induits"]
         self.carteForce=obj.valeur["Cartes_des_forces"]
@@ -860,8 +860,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         3 formats possibles : 2 listes (anciennement tuples?)  et 1 nombre complexe
         """
         if self.debug:
-            print "formatage"
-            print "type : %(type_nb_c)s pour %(nb_c)s" % {'type_nb_c': type(nbC), 'nb_c': nbC}
+            print ("formatage")
         nbformate =""
         if isinstance(nbC,(tuple,list)):
             if nbC[0] == "'RI'" :
@@ -871,7 +870,7 @@ class CARMEL3DTV0Generator(PythonGenerator):
         else:
             nbformate = "COMPLEX " + str(nbC.real)+" "+str(nbC.imag)
         if self.debug: 
-            print "nbformate : %s" % nbformate
+            print ("nbformate " , nbformate)
         return nbformate
 
 
