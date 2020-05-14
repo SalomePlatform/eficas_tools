@@ -480,11 +480,14 @@ class JDCEditorSsIhm :
     #---------------------------#
     def getChecksum(self,texte):
     #---------------------------#
-        newtexte=texte.replace('"','\\"')
-        commande='echo "'+newtexte+'"|md5sum'
-        a=os.popen(commande)
-        checksum=a.read()
-        a.close()
+        try :
+           newtexte=texte.replace('"','\\"')
+           commande='echo "'+newtexte+'"|md5sum'
+           a=os.popen(commande)
+           checksum=a.read()
+           a.close()
+        except :
+           checksum='Fichier trop long \n'
         ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
         return ligne
 
