@@ -481,15 +481,23 @@ class JDCEditorSsIhm :
     def getChecksum(self,texte):
     #---------------------------#
         try :
+           import haslib
            newtexte=texte.replace('"','\\"')
-           commande='echo "'+newtexte+'"|md5sum'
-           a=os.popen(commande)
-           checksum=a.read()
-           a.close()
-        except :
-           checksum='Fichier trop long \n'
-        ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
-        return ligne
+           hash_checksum = hashlib.md5()
+           hash_checksum.update(newtexte.encode('utf-8'))
+           checksum = hash_checksum.hexdigest()
+           ligne = ligne="#CHECKSUM:"+checksum+":FIN CHECKSUM"
+        except : 
+           try :
+              newtexte=texte.replace('"','\\"')
+              commande='echo "'+newtexte+'"|md5sum'
+              a=os.popen(commande)
+              checksum=a.read()
+              a.close()
+           except :
+              checksum='Fichier trop long \n'
+           ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
+           return ligne
 
     #----------------------#
     def getDico(self):
