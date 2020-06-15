@@ -486,7 +486,7 @@ class JDCEditorSsIhm :
            hash_checksum = hashlib.md5()
            hash_checksum.update(newtexte.encode('utf-8'))
            checksum = hash_checksum.hexdigest()
-           ligne = ligne="#CHECKSUM:"+checksum+":FIN CHECKSUM"
+           ligne = "#CHECKSUM:"+checksum+":FIN CHECKSUM"
         except : 
            try :
               newtexte=texte.replace('"','\\"')
