@@ -134,10 +134,11 @@ class TupleCustom(object) :
       if  valeurNulle == True : self.valeur=None
       else                    : self.valeur=listeVal
 
-  def getValeur(self):
+  def getValeurbad(self):
   #----------------------
       self.valeur=[]
       vide=True
+      print (self.tailleTuple)
       for i in range(self.tailleTuple):
          nomLE="lineEditVal_"+str(i+1)
          courant=getattr(self,nomLE)
@@ -145,6 +146,11 @@ class TupleCustom(object) :
          if courant.valeur!= None : vide = False 
       if vide : self.valeur=[]
       return self.valeur
+
+  def getValeur(self):
+  #----------------------
+      return self.valeur
+     
 
   def text(self):
   #--------------
@@ -346,6 +352,7 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
   def changeValeur(self,changeDePlace=False,oblige=True):
   # -----------------------------------------------------
       #Pour compatibilite signature
+      #print ('dschangeValeur', self.indexDernierLabel)
 
       aLeFocus=self.focusWidget()
       listeComplete=[]
@@ -355,7 +362,6 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
           nom=self.nomLine+str(i+1)
           courant=getattr(self,nom)
           valeurTuple=courant.valeur
-          #print (courant, i, valeurTuple)
           if valeurTuple == None or valeurTuple== "" or valeurTuple==[]: 
              libre=True
              continue
@@ -384,6 +390,21 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
          except :
            pass
           
+  def echange(self,num1,num2):
+       # on donne le focus au a celui ou on a bouge
+       # par convention le 2
+       nomLineEdit=self.nomLine+str(num1)
+       courant=getattr(self,nomLineEdit)
+       valeurAGarder=courant.getValeur()
+       nomLineEdit2=self.nomLine+str(num2)
+       courant2=getattr(self,nomLineEdit2)
+       courant.setText(courant2.text())
+       courant2.setText(valeurAGarder)
+       self.changeValeur(changeDePlace=True)
+       self.numLineEditEnCours=num2
+       self.LineEditEnCours=courant2
+       courant2.lineEditVal_1.setFocus(True)
+
   def ajoutNValeur(self,liste):
   #----------------------------
   # attention quand on charge par un fichier, on ne peut pas se contenter d ajouter N fois 1 valeur

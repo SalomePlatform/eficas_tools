@@ -7,7 +7,7 @@
 # 20120510 : suppression de la valeur par defaut de MATERIAU->PARAMETRES_MAT->NU
 #            changement du nom MATERIAU->PARAMETRES_MAT->MASS_VOL en MATERIAU->PARAMETRES_MAT->RHO
 #
-# 20120619 : changement ordre d'affichage des macros -> ordre de cr√©ation
+# 20120619 : changement ordre d'affichage des macros -> ordre de crtion
 # 20120725 : modification definition (matrices A,K,M) palier et support
 # 20130411 : ajout elements dans palier generalise (mail tdg + comm tdg)
 #
@@ -97,7 +97,7 @@ DIRECTION = MACRO(nom = "DIRECTION",
 # @todo
 # introduction manuelle => dans ce cas l'utilisateur definit le
 # materiau comme ci-dessous
-# recuperation depuis une biblioth√®que de materiau => sera specife
+# recuperation depuis une bibliothque de materiau => sera specife
 # plus tard
 MATERIAUX = MACRO(nom = 'MATERIAUX',
                  op = None,
@@ -178,7 +178,6 @@ ZONE = MACRO(nom = 'ZONE',
              MASSE = FACT(statut='f',
                           min=0,
                           max='**',
-			  fr = "Description†des masses ponctuelles",
 			  #POSITION = SIMP(statut='o',
 			  NOEUD = SIMP(statut='o', 
 					  typ='TXM', 
@@ -304,7 +303,7 @@ ZONE = MACRO(nom = 'ZONE',
 		                                                         ), # end PARAMETRES_MECANIQUE
 					   ), # end AILETTE
 			    QUELCONQUE = BLOC(condition = "((TYPE_MASSE == 'QUELCONQUE') )",
-			                      #TYPE_SAISIE = SIMP(statut='c',typ='TXM',defaut="MECANIQUE"), # cf 20120622 test : mot-cl√© cach√©
+			                      #TYPE_SAISIE = SIMP(statut='c',typ='TXM',defaut="MECANIQUE"), # cf 20120622 test : mot-cl cach
 					      PARAMETRES = FACT(statut = 'o',
 								fr = "Parametres pour masse de type QUELCONQUE",
 								MASSE = SIMP(statut='o', 
@@ -447,7 +446,7 @@ ZONE = MACRO(nom = 'ZONE',
                                                                  ), # end POSITION_FISSURE
                                             ORIENTATION_FISSURE = SIMP(statut='o',
                                                                        typ='R',
-                                                                       fr="Angle initial du fond de fissure par rapport ‡ sa dÈfinition dans la loi de comportement de fissure (0. par defaut)(degres)",
+                                                                       fr="Angle initial du fond de fissure par rapport a sa definition dans la loi de comportement de fissure (0. par defaut)(degres)",
                                                                        ), # end ORIENTATION_FISSURE
                                             FICHIER_RAIDEUR = SIMP(statut='o',
                                                                    typ=('Fichier','Fichier loi de raideur (*.*)'),

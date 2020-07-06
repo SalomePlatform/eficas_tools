@@ -184,6 +184,7 @@ class GereListe(object):
        self.prepareListeResultat()
 
    def hautPushed(self):
+       if self.numLineEditEnCours == 0 : return
        if self.numLineEditEnCours == 1 : return
        else : numEchange=self.numLineEditEnCours-1
        self.echange(self.numLineEditEnCours,numEchange)
@@ -192,6 +193,7 @@ class GereListe(object):
 
 
    def basPushed(self):
+       if self.numLineEditEnCours == 0 : return
        if self.numLineEditEnCours == self.indexDernierLabel : return
        else : numEchange=self.numLineEditEnCours+1
        self.echange(self.numLineEditEnCours,numEchange)
@@ -202,11 +204,11 @@ class GereListe(object):
        # on donne le focus au a celui ou on a bouge
        # par convention le 2
        nomLineEdit=self.nomLine+str(num1)
-       #print nomLineEdit
+       #print (nomLineEdit)
        courant=getattr(self,nomLineEdit)
        valeurAGarder=courant.text()
        nomLineEdit2=self.nomLine+str(num2)
-       #print nomLineEdit2
+       #print (nomLineEdit2)
        courant2=getattr(self,nomLineEdit2)
        courant.setText(courant2.text())
        courant2.setText(valeurAGarder)
@@ -254,7 +256,7 @@ class GereListe(object):
           nomLineEdit=self.nomLine+str(i+1)
           courant=getattr(self,nomLineEdit)
           valeur=courant.getValeur()
-          if valeur=="" :
+          if valeur=="" or valeur == None :
              courant.setFocus(True)
              self.estVisible=courant
              return
