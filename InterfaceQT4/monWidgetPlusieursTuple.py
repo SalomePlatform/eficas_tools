@@ -264,7 +264,9 @@ class MonWidgetPlusieursTuple(Feuille,GereListe):
         self.politique=PolitiquePlusieurs(self.node,self.editor)
         self.parentQt.commandesLayout.insertWidget(-1,self)
 
-        if sys.platform[0:5]!="linux":
+        #if sys.platform[0:5]!="linux":
+        if 1 : 
+        #Pour MT
           repIcon=self.node.editor.appliEficas.repIcon
           fichier=os.path.join(repIcon, 'arrow_up.png')
           icon = QIcon(fichier)
