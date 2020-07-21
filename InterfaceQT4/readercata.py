@@ -305,7 +305,7 @@ class ReaderCata (ReaderCataCommun):
       if self.appliEficas.maConfiguration.ficIcones==None : return
       try:
         ficIcones=self.appliEficas.maConfiguration.ficIcones
-        fichierIcones = __import__(ficIcones, globals(), locals(), [], -1)
+        fichierIcones = __import__(ficIcones, globals(), locals(), [], 0)
         self.appliEficas.maConfiguration.dicoIcones=fichierIcones.dicoDesIcones.dicoIcones
         self.appliEficas.maConfiguration.dicoImages=fichierIcones.dicoDesIcones.dicoImages
       except:
