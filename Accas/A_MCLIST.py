@@ -21,7 +21,7 @@ from __future__ import absolute_import
 from Noyau import N_MCLIST
 from Validation import V_MCLIST
 from Ihm import I_MCLIST
-from Efi2Xsd.MCAccasXsd  import X_MCLIST
+from Efi2Xsd.MCAccasXML  import X_MCLIST
 
 
 class MCList(I_MCLIST.MCList,N_MCLIST.MCList,X_MCLIST,V_MCLIST.MCList):

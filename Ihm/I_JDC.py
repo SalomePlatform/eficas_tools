@@ -73,7 +73,6 @@ class JDC(I_OBJECT.OBJECT):
       """
       d=self.getContexteAvant(etape)
       
-      
       l=[]
       for k,v in d.items():
         #if type(v) != types.InstanceType and not isinstance(v,object): continue
@@ -85,6 +84,14 @@ class JDC(I_OBJECT.OBJECT):
            if v.etape.sdnom != "sansnom" : l.append(k)
       l.sort()
       return l
+
+   def getSdCreeParObjet(self,classeAChercher):
+       l=[]
+       for v in list(self.sdsDict.keys()):
+          if (isinstance(self.sdsDict[v], classeAChercher)) : 
+             l.append(self.sdsDict[v])
+       return l
+      
 
    def getVariables(self,etape):
       etapeStop=etape
@@ -138,28 +145,42 @@ class JDC(I_OBJECT.OBJECT):
                   Correlation.isValid()
              etapeTraitee.isValid()
 
-   def recalculeValiditeApresChangementGlobalJdc(self):
-        #print "je passe dans recalculeValiditeApresChangementGlobalJdc"
+   def recalculeValiditeApresChangementGlobalJdc(self, motClef):
+        print ("je passe dans recalculeValiditeApresChangementGlobalJdc")
         try :
-          liste=self.getJdcRoot().cata.liste_condition
+          liste=self.getJdcRoot().cata.dict_condition[motClef.nom]
         except :
           liste=()
         for etapeTraitee in self.etapes :
            if etapeTraitee.nom not in liste: continue
-           self.forceRecalculBloc(etapeTraitee)
+           #self.forceRecalculBloc(etapeTraitee)
            etapeTraitee.state='arecalculer'
+           etapeTraitee.deepUpdateConditionBloc()
            etapeTraitee.isValid()
 
+   def activeBlocsGlobaux(self):
+       for nomMotClef in self.mc_globaux : 
+           motClef=self.mc_globaux[nomMotClef]
+           if nomMotClef in list(self.cata.dict_condition.keys()):
+              liste=self.cata.dict_condition[nomMotClef]
+           else : liste=()
+           for etapeTraitee in self.etapes :
+               if etapeTraitee.nom not in liste: continue
+               etapeTraitee.state='arecalculer'
+               etapeTraitee.deepUpdateConditionBlocApresCreation()
+               etapeTraitee.isValid()
         
-   def forceRecalculBloc(self,objet):
+      
+        
+   #def forceRecalculBloc(self,objet):
        # Attention : certains objets deviennent None quand on recalcule 
        # les conditions d existence des blocs
-       if objet != None:  objet.state='arecalculer'
-       if hasattr(objet,'listeMcPresents'):
-          for childNom in objet.listeMcPresents():
-              child=objet.getChild(childNom)
-              if hasattr(objet,'_updateConditionBloc'):objet._updateConditionBloc()
-              self.forceRecalculBloc(child)
+   #    if objet != None:  objet.state='arecalculer'
+   #    if hasattr(objet,'listeMcPresents'):
+   #       for childNom in objet.listeMcPresents():
+   #           child=objet.getChild(childNom)
+   #           if hasattr(objet,'_updateConditionBloc'):objet._updateConditionBloc()
+   #           self.forceRecalculBloc(child)
        
    
    def getSdAvantDuBonTypePourTypeDeBase(self,etape,type):
@@ -309,6 +330,8 @@ class JDC(I_OBJECT.OBJECT):
           self.resetContext()
           self.editmode=0
           self.activeEtapes()
+          self.enregistreEtapePyxb(e,pos)
+          # PN fait ds self.activeEtapes
           CONNECTOR.Emit(self,"add",e)
           self.finModif()
           return e
@@ -406,7 +429,12 @@ class JDC(I_OBJECT.OBJECT):
       """
       sd=self.getSdAvantEtape(nom_sd,etape)
       if sd:return sd
-      return self.getSdApresEtape(nom_sd,etape,avec)
+      sd=self.getSdApresEtape(nom_sd,etape,avec)
+      if sd:return sd
+      # Pour tenir compte des UserASSD
+      if nom_sd in self.sdsDict.keys() : 
+         sd=self.sdsDict[nom_sd]
+         return sd
 
    def getContexte_apres(self,etape):
       """
@@ -424,26 +452,9 @@ class JDC(I_OBJECT.OBJECT):
 
    def activeEtapes(self):
       """
-          Cette methode a pour fonction de desactiver les etapes qui doivent
-          l'etre cad, dans le cas d'ASTER, les etapes qui ne sont pas 
-          comprises entre le premier DEBUT/POURSUITE et le premier FIN 
-          et rendre actives les autres
       """
-      #if self.definition.code == 'ASTER' :
-         # Seulement pour ASTER :
-         # Avant DEBUT actif vaut 0
-         # Apres DEBUT et avant le 1er FIN actif vaut 1
-         # Apres le 1er FIN actif vaut -1
-      #   actif=0
-      #actif=1
       for etape in self.etapes:
-        #if actif == 0 and etape.nom in ['DEBUT','POURSUITE']:actif=1
-        #if actif == 1:
            etape.active()
-           #self.enregistreEtapePyxb(etape)
-        #else:
-        #   etape.inactive()
-        #if etape.nom == 'FIN':actif=-1
 
    def deplaceEntite(self,indexNoeudACopier,indexNoeudOuColler,pos):
       """
@@ -479,12 +490,13 @@ class JDC(I_OBJECT.OBJECT):
           Retourne 0 dans le cas contraire
       """
       #PN correction de bugs 
+      print ('suppEntite', etape.nom)
       if etape not in self.etapes: return 0
 
       self.initModif()
       index_etape=self.etapes.index(etape)
 
-      #etape.deletePyxbObject()
+      #etape.delObjPyxb()
       self.etapes.remove(etape)
 
       if etape.niveau is not self:
@@ -520,7 +532,7 @@ class JDC(I_OBJECT.OBJECT):
          Effectue les verifications sur les etapes du jdc mais aussi sur les
          jdc parents s'ils existent.
       """
-      #print "controlContextApres",self,etape
+      print ("controlContextApres",self,etape)
       #Regularise les etapes du jdc apres l'etape etape
       self.controlJdcContextApres(etape)
 
@@ -529,7 +541,7 @@ class JDC(I_OBJECT.OBJECT):
           Methode semblable a controlContextApres mais ne travaille
           que sur les etapes et sous etapes du jdc
       """
-      #print "controlJdcContextApres",self,etape
+      print ("controlJdcContextApres",self,etape)
       if etape is None:
          # on demarre de la premiere etape
          index_etape=0
@@ -543,29 +555,22 @@ class JDC(I_OBJECT.OBJECT):
          return
 
       context=self.getContexteAvant(etape)
-
       for e in self.etapes[index_etape:]:
           e.controlSdprods(context)
           e.updateContext(context)
 
    def analyse(self):
-      try :
-       if self.editor.format == 'xml' :
-         # il ne faut pas le faire quand le jeu de donnees est vide
+         self.compile()
+         self.execCompile()
+         if not self.cr.estvide():return
+         self.activeEtapes()
+         if self.mc_globaux != {} : self.activeBlocsGlobaux()
+
+   def analyseXML(self):
+         print ('analyseXML')
+         print (self.procedure)
          self.setCurrentContext()
          self.analyseFromXML()
-         #print ('stop demande'); exit()
-         #self.execCompileFromXML()
-       else :    
-         self.compile()
-         self.execCompile()
-         if not self.cr.estvide():return
-         self.activeEtapes()
-      except:
-         self.compile()
-         self.execCompile()
-         if not self.cr.estvide():return
-         self.activeEtapes()
 
    def registerParametre(self,param):
       """
@@ -644,9 +649,9 @@ class JDC(I_OBJECT.OBJECT):
       self.isValid()
       pass
 
-   def deepUpdateConditionBloc(self):
+   def deepUpdateConditionBloc(self,motClef=None):
       # pour le moment, on ne fait rien
-      self.getJdcRoot().recalculeValiditeApresChangementGlobalJdc()
+      self.getJdcRoot().recalculeValiditeApresChangementGlobalJdc(motClef)
       #raise EficasException(tr("Pas implemente"))
 
    def updateConditionBloc(self):
@@ -702,7 +707,7 @@ class JDC(I_OBJECT.OBJECT):
           de commandes, nommage de concepts, etc.
       """
       #print "resetContext",self,self.nom
-      self.current_context={}
+      self.currentContext={}
       self.index_etape_courante=0
       ind={}
       for i,etape in enumerate(self.etapes):
@@ -719,10 +724,10 @@ class JDC(I_OBJECT.OBJECT):
       #print "delSdprod",self,sd
       #print "delSdprod",self.sds
       #print "delSdprod",self.g_context
-      #print "delSdprod",self.sds_dict
+      #print "delSdprod",self.sdsDict
       #if sd in self.sds : self.sds.remove(sd)
       if sd.nom in self.g_context : del self.g_context[sd.nom]
-      if sd.nom in self.sds_dict : del self.sds_dict[sd.nom]
+      if sd.nom in self.sdsDict : del self.sdsDict[sd.nom]
 
    def delParam(self,param):
       """
@@ -746,11 +751,10 @@ class JDC(I_OBJECT.OBJECT):
           meme nom n'existe pas deja
       """
       if sd == None or sd.nom == None:return
-
-      o=self.sds_dict.get(sd.nom,None)
+      o=self.sdsDict.get(sd.nom,None)
       if isinstance(o,ASSD):
          raise AsException(tr("Nom de concept deja defini "+ sd.nom))
-      self.sds_dict[sd.nom]=sd
+      self.sdsDict[sd.nom]=sd
       self.g_context[sd.nom] = sd
       #if sd not in self.sds : self.sds.append(sd)
 
@@ -860,12 +864,12 @@ class JDC(I_OBJECT.OBJECT):
       Noyau.N_JDC.JDC.supprime(self)
       for etape in self.etapes:
          etape.supprime()
-      self.appli=None
+      self.appliEficas=None
       self.g_context={}
       self.const_context={}
-      self.sds_dict={}
+      self.sdsDict={}
       self.mc_globaux={}
-      self.current_context={}
+      self.currentContext={}
       self.condition_context={}
       self.etapes_niveaux=[]
       self.niveau=None
@@ -892,6 +896,8 @@ class JDC(I_OBJECT.OBJECT):
                 (dans ce cas l'ordre des etapes est bien l'ordre chronologique
                 de leur creation   )
       """
+      #import traceback
+      #traceback.print_stack()
       if not self.editmode:
          self.etapes.append(etape)
          self.index_etapes[etape] = len(self.etapes) - 1
@@ -900,7 +906,7 @@ class JDC(I_OBJECT.OBJECT):
       return self.gRegister(etape)
 
 #ATTENTION SURCHARGE : cette methode doit etre gardee en synchronisation avec celle de Noyau
-   def NommerSdprod(self,sd,sdnom,restrict='non'):
+   def nommerSDProd(self,sd,sdnom,restrict='non'):
       """
           Nomme la SD apres avoir verifie que le nommage est possible :
           nom non utilise
@@ -915,19 +921,20 @@ class JDC(I_OBJECT.OBJECT):
       # Cette etape est indiquee par l'attribut _etape_context qui a ete
       # positionne prealablement par un appel a setEtapeContext
 
-      if CONTEXT.debug : print(("JDC.NommerSdprod ",sd,sdnom))
+      if CONTEXT.debug : print(("JDC.nommerSDProd ",sd,sdnom))
 
       if self._etape_context:
          o=self.getContexteAvant(self._etape_context).get(sdnom,None)
       else:
-         o=self.sds_dict.get(sdnom,None)
+         o=self.sdsDict.get(sdnom,None)
 
       if isinstance(o,ASSD):
-         raise AsException(tr(" Nom de concept deja  defini : "+ sdnom))
+         raise AsException(tr(" Nom de concept deja defini : "+ sdnom))
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de regSD).
-      self.sds_dict[sdnom]=sd
+      #print (' je pass ici, pour ', sdnom, self.sdsDict)
+      self.sdsDict[sdnom]=sd
       sd.nom=sdnom
 
       # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC
@@ -957,9 +964,9 @@ class JDC(I_OBJECT.OBJECT):
           Retourne le nom du fichier correspondant a un numero d'unite
           logique (entier) ainsi que le source contenu dans le fichier
       """
-      if self.appli is not None:
-         # Si le JDC est relie a une application maitre, on delegue la recherche
-         file,text= self.appli.getFile(unite,fic_origine)
+      if self.appliEficas is not None:
+         # Si le JDC est relie a une appliEficascation maitre, on delegue la recherche
+         file,text= self.appliEficas.getFile(unite,fic_origine)
       else:
          file = None
          if unite != None:

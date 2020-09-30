@@ -28,7 +28,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 try :
    from builtins import str
-   from builtins import range
    from builtins import object
 except : pass
    
@@ -37,9 +36,8 @@ import traceback
 import re
 from .N_ASSD import ASSD
 from .N_types import isInt, isFloat_or_int, isComplex, isNumber, isStr, isSequence
+from Accas import A_TUPLE
 from Extensions.i18n import tr
-import six
-from six.moves import range
 
 
 
@@ -64,6 +62,7 @@ class Protocol(object):
         self.args = {}
 
     def register(self, T, A):
+        print ('register Protocol',T,A)
         self.registry[T] = A
 
     def adapt(self, obj):
@@ -146,9 +145,9 @@ class TypeProtocol(PProtocol):
         self.typ = typ
 
     def default(self, obj, typ):
-
         err = ""
         for type_permis in typ:
+            if type_permis == 'createObject': continue
             if type_permis == 'R':
                 if isFloat_or_int(obj):
                     return obj
@@ -201,6 +200,12 @@ class TypeProtocol(PProtocol):
                         return obj
                 except Exception as err:
                     pass
+            elif  isinstance(type_permis, A_TUPLE.Tuple):
+                try:
+                    if type_permis.__convert__(obj):
+                        return obj
+                except Exception as err:
+                    pass
             elif  isinstance(type_permis, object):
                 try:
                     if type_permis.__convert__(obj):
@@ -210,7 +215,9 @@ class TypeProtocol(PProtocol):
             else:
                 print(("Type non encore gere %s" %type_permis))
         raise ValError(
-            tr("%s (de type %s) n'est pas d'un type autorise: %s %s") % (repr(obj), type(obj), typ, err))
+            tr("%s (de type %s) n'est pas d'un type autorise: %s ") % (repr(obj), type(obj), typ))
+        #import traceback; traceback.print_stack()
+        #print (object, type_permis,)
 
     def isComplexe(self, valeur):
         """ Retourne 1 si valeur est un complexe, 0 sinon """
@@ -1470,15 +1477,14 @@ class FunctionVal(Valid):
         return valeur
 
 # MC ca ne devrait plus servir !
-CoercableFuncs = {int:     int,
-                  int:    int,
-                  float:   float,
-                  complex: complex,
-                  str: six.text_type}
+# PN : commenter le 22.11.19
+#CoercableFuncs = {int:     int,
+#                  int:    int,
+#                  float:   float,
+#                  complex: complex,
+#                  str: six.text_type}
 
 
-#class FunctionValObjet(FunctionVal):
-#OOOOOOOOOOOOOOo
 
 class TypeVal(ListVal):
 

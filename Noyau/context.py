@@ -21,6 +21,7 @@
 from __future__ import absolute_import
 _root = None
 _cata = None
+_jdc  = None
 debug = 0
 
 # Le "current step" est l'etape courante.
@@ -78,3 +79,26 @@ def unsetCurrentCata():
     """
     global _cata
     _cata = None
+
+
+def getCurrentJdC():
+    """
+       Fonction qui retourne l'objet JDC courant
+    """
+    return _jdc
+
+def setCurrentJdC(jdc):
+    """
+       Fonction qui permet de changer l'objet JDC courant
+    """
+    global _jdc
+    if _jdc:
+        raise Exception("Impossible d'affecter _jdc. Il devrait valoir None")
+    _jdc = jdc
+
+def unsetCurrentJdC():
+    """
+       Fonction qui permet de remettre a None le JDC courant
+    """
+    global _jdc
+    _jdc = None

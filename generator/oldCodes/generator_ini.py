@@ -87,7 +87,7 @@ class IniGenerator(object):
          Tous les mots-cles facteurs sont convertis en sections
          Un mot-cle facteur ne peut contenir que des mots-cles simples. Sinon => erreur
       """
-      liste_mcfact=[]
+      listeMcFact=[]
       sect_defaut=''
       if isinstance(obj,MCList):
         if len(obj.data) > 1:
@@ -100,9 +100,9 @@ class IniGenerator(object):
           if len(mocle.data) > 1:
             raise EficasException(tr("Pas supporte"))
           else:
-            liste_mcfact.append(self.generMCFACT(mocle.data[0]))
+            listeMcFact.append(self.generMCFACT(mocle.data[0]))
         elif isinstance(mocle,MCFACT):
-          liste_mcfact.append(self.generMCFACT(mocle))
+          listeMcFact.append(self.generMCFACT(mocle))
         elif isinstance(mocle,MCSIMP):
           sect_defaut=sect_defaut+self.generMCSIMP(mocle)
         else:
@@ -111,7 +111,7 @@ class IniGenerator(object):
       self.text=''
       if sect_defaut != '':
          self.text="[DEFAULT]\n"+sect_defaut
-      self.text=self.text + ''.join(liste_mcfact,'\n')
+      self.text=self.text + ''.join(listeMcFact,'\n')
       return self.text
 
    def generMCFACT(self,obj):

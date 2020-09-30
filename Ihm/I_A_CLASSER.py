@@ -23,7 +23,6 @@
 from __future__ import absolute_import
 
 from . import I_REGLE
-import six
 
 class A_CLASSER(I_REGLE.REGLE):
   def getText(self):
@@ -36,5 +35,5 @@ class A_CLASSER(I_REGLE.REGLE):
     for arg in self.args1:
       t=t+arg.strip()+' ou '
     text = text + t[0:-4] +'\n'
-    return six.text_type(text)
+    return text
 

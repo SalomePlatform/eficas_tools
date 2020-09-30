@@ -24,9 +24,6 @@ except : pass
 
 import os
 import tempfile
-from PyQt5.QtWidgets import QMessageBox, QAction, QApplication
-from PyQt5.QtGui  import QCursor
-from PyQt5.QtCore import Qt
 
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
@@ -51,7 +48,7 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
         self.editor.initModif()
         test,mess = self.item.nommeSd(nom)
         if (test== 0):
-           self.editor.afficheInfos(mess,Qt.red)
+           self.editor.afficheInfos(mess,'red')
            old=self.item.getText()
            self.monWidgetNom.setText(old)
         else :
@@ -69,59 +66,12 @@ class Node(browser.JDCNode, typeNode.PopUpMenuNode):
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNode.createPopUpMenu(self)
-        if ("AFFE_CARA_ELEM" in self.item.getGenealogie()) and self.editor.salome: 
-           self.ViewElt = QAction(tr('View3D'),self.tree)
-           self.tree.connect(self.ViewElt,SIGNAL("triggered()"),self.view3D)
-           self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
-           self.menu.addAction(self.ViewElt)
-           if self.item.isValid() :
-              self.ViewElt.setEnabled(1)
-           else:
-              self.ViewElt.setEnabled(0)
-        if  self.item.getNom() == "DISTRIBUTION" :
-           self.Graphe = QAction(tr('Graphique'),self.tree)
-           self.Graphe.triggered.connect(self.viewPng)
-           self.Graphe.setStatusTip(tr("affiche la distribution "))
-           self.menu.addAction(self.Graphe)
-           if self.item.isValid() :
-              self.Graphe.setEnabled(1)
-           else:
-              self.Graphe.setEnabled(0)
 
-    def view3D(self) :
-        from Editeur import TroisDPal
-        troisD=TroisDPal.TroisDPilote(self.item,self.editor.appliEficas)
-        troisD.envoievisu()
+#    def view3D(self) :
+#        from Editeur import TroisDPal
+#        troisD=TroisDPal.TroisDPilote(self.item,self.editor.appliEficas)
+#        troisD.envoievisu()
 
-    def viewPng(self) :
-        from monPixmap import MonLabelPixmap
-        import generator
-        try:
-            QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-            g = generator.plugins[self.appliEficas.format_fichier]()
-            g.gener(self.item.object, format='beautifie')
-            stdGener = g.getGenerateur()
-            loi = list(g.dictMCLois.keys())[0]
-            nomLoi = loi.getName()
-            (fd, fichier) = tempfile.mkstemp(prefix = "openturns_graph_", suffix = ".png")
-            os.close(fd)
-            chemin = os.path.dirname(fichier)
-            base = os.path.splitext(os.path.basename(fichier))[0]
-            script = stdGener.GraphiquePDF(loi, chemin, base)
-            #print script
-            d = {}
-            exec(script, d)
-            widgetPng=MonLabelPixmap(self.appliEficas,fichier,nomLoi)
-            os.remove(fichier)
-            QApplication.restoreOverrideCursor()
-            widgetPng.show()
-        except:
-            QApplication.restoreOverrideCursor()
-            QMessageBox.warning(
-                self.appliEficas,
-                tr("Erreur interne"),
-                tr("La PDF de la loi ne peut pas etre affichee."),
-                tr("&Annuler"))
 
 class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
   """ La classe EtapeTreeItem est un adaptateur des objets ETAPE du noyau
@@ -247,7 +197,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
             # nouvel objet : on cree un nouvel item
             def setFunction(value, object=obj):
                 object.setval(value)
-            item = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj, setFunction)
+            item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
             sublist[pos]=item
          pos=pos+1
 
@@ -279,8 +229,8 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
          oldnom=self.object.sd.nom
       test,mess= self.object.nommeSd(nom)
       if test:self.object.parent.resetContext()
-      if (test and oldnom in self.appli.dict_reels ):
-              self.appli.dict_reels[nom]=self.appli.dict_reels[oldnom]
+      if (test and oldnom in self.appliEficas.dict_reels ):
+              self.appliEficas.dict_reels[nom]=self.appliEficas.dict_reels[oldnom]
       return test,mess
 
   def isReentrant(self):
@@ -295,7 +245,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
           représentatif de self.object
       """
       # Format de fichier utilisé
-      format=self.appli.appliEficas.format_fichier
+      format=self.appliEficas.formatFichierIn
       return self.object.getObjetCommentarise(format)
 
   def getObjetCommentarise_BAK(self):
@@ -305,7 +255,7 @@ class EtapeTreeItem(Objecttreeitem.ObjectTreeItem):
       """
       import generator,Accas
       # Format de fichier utilisé
-      format=self.appli.appliEficas.format_fichier
+      format=self.appliEficas.format_fichier
       g=generator.plugins[format]()
       texte_commande = g.gener(self.object,format='beautifie')
       # Il faut enlever la premiere ligne vide de texte_commande que 

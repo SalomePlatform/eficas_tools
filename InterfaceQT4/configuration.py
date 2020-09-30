@@ -30,7 +30,6 @@ except : pass
 
 import os, sys,  types, re
 import traceback
-from PyQt5.QtWidgets import QMessageBox
 from  Editeur.Eficas_utils import read_file
 from Extensions.i18n import tr
 
@@ -38,7 +37,7 @@ from Extensions.i18n import tr
 class configBase(object):
 
   #-------------------------------
-  def __init__(self,appli,repIni):
+  def __init__(self,appliEficas,repIni):
   #-------------------------------
 
   # Classe de base permettant de lire, afficher
@@ -53,9 +52,9 @@ class configBase(object):
   # le fichier de catalogue va etre lu dans la directory de l utilisateur s il exite
   # dans le fichier general sinon
 
-      self.appli   = appli  
-      self.code    = appli.code
-      self.salome  = appli.salome
+      self.appliEficas   = appliEficas  
+      self.code    = appliEficas.code
+      self.salome  = appliEficas.salome
       if self.salome : self.name="editeur_salome.ini"
       else           : self.name="editeur.ini"
       self.rep_mat = None
@@ -63,7 +62,8 @@ class configBase(object):
      
       if self.code == None : self.code=''
       if sys.platform[0:5]=="linux" :
-              self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+              #self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+              self.rep_user   = os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
       else :
               self.rep_user   = os.path.join('C:/','.config/Eficas',self.code)
 
@@ -82,12 +82,13 @@ class configBase(object):
       #Particularite des schemas MAP
       if hasattr(self,'make_ssCode'): self.make_ssCode(self.ssCode)
 
-      #if self.appli: self.parent=appli.top
+      #if self.appliEficas: self.parent=appliEficas.top
       #else: 	     self.parent=None
 
       if not os.path.isdir(self.savedir) :
         if sys.platform[0:5]=="linux" :
-          self.savedir=os.environ['HOME']
+          #self.savedir=os.environ['HOME']
+          self.savedir=os.path.expanduser("~")
         else:
           self.savedir='C:/'
       
@@ -102,23 +103,26 @@ class configBase(object):
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
       if sys.platform[0:5]=="linux" :
-        self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
+        #self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
+        rep=os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
       else:
         self.savedir = os.path.abspath('C:/')
       self.modeNouvCommande='initial'
       self.affiche="alpha"
       self.closeAutreCommande = False
       self.closeFrameRechercheCommande = False
+      self.closeFrameRechercheCommandeSurPageDesCommandes = False
       self.closeEntete = False
       self.closeArbre = False
-      self.force_langue=False
+      self.demandeLangue=False
       self.suiteTelemac=False
       self.nombreDeBoutonParLigne=0
       self.translatorFichier=None
       self.dicoImages= {}
       self.dicoIcones= {}
       self.afficheCommandesPliees = True
-      self.simpleClic= False
+      self.afficheFirstPlies =  False
+      self.simpleClic = False
       self.afficheOptionnelVide=False
       self.afficheListesPliees=True
       self.boutonDsMenuBar=False
@@ -126,16 +130,21 @@ class configBase(object):
       self.repIcones=None
       self.differencieSiDefaut=False
       self.typeDeCata='Python'
-      self.dumpXSD=False
-      self.withXSD=False
-      self.afficheIhm=True
       self.closeParenthese=False
+      self.closeOptionnel=False
+      self.afficheFactOptionnel=False
       self.enleverActionStructures=False
+      self.enleverPoubellePourCommande=False
       self.enleverParametres=False
       self.enleverSupprimer=False
       self.ajoutExecution=False
-      self.utilParExtensions=False
+      self.utilParExtensions=[]
       self.rendVisiblesLesCaches=False
+      self.pasDeMCOptionnels=False
+
+      self.dumpXSD=False
+      self.withXSD=False
+      self.afficheIhm=True
 
 
 
@@ -144,8 +153,13 @@ class configBase(object):
   def lectureFichierIniStandard(self):
   #--------------------------------------
 
-      name='prefs_'+self.appli.code
-      prefsCode=__import__(name)
+      name='prefs_'+self.appliEficas.code
+      try :
+        prefsCode=__import__(name)
+      except :
+        self.catalogues=[]
+        print ('pas de fichier de prefs')
+        return
       for k in dir(prefsCode):
           if (k[0:1] != "__" and k[-1:-2] !='__'):
              valeur=getattr(prefsCode,k)
@@ -171,8 +185,12 @@ class configBase(object):
       try:
          exec(txt, d)
       except :
-         QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
+         try :
+           from PyQt5.QtWidgets import QMessageBox
+           QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
 			tr("Erreur a la lecture du fichier de configuration %s " , str(fic_ini_integrateur)))
+         except : 
+           print("Erreur a la lecture du fichier de configuration %s " , str(fic_ini_integrateur))
          return
       self.labels_eficas.append('rep_aide')
       for k in self.labels_eficas :
@@ -200,8 +218,12 @@ class configBase(object):
          exec(txt, d)
       except :
          l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],sys.exc_info()[2])
-         QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
+         try :
+           from PyQt5.QtWidgets import QMessageBox
+           QMessageBox.critical( None, tr("Import du fichier de Configuration"), 
 			tr("Erreur a la lecture du fichier de configuration %s " , str(fic_ini_integrateur)))
+         except :
+            print ("Erreur a la lecture du fichier de configuration %s " , str(fic_ini_integrateur))
       for k in self.labels_user :
          try :
             setattr(self,k,d[k])
@@ -235,3 +257,5 @@ class configBase(object):
 #
 
 
+def makeConfig(appliEficas,rep):
+    return configBase(appliEficas,rep)

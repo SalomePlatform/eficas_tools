@@ -44,8 +44,8 @@ class MCNUPLET(V_MCCOMPO.MCCOMPO,N_MCCOMPO.MCCOMPO):
       self.definition=definition
       self.nom=nom
       self.parent = parent
-      # GETVAL affecte la valeur par defaut si necessaire
-      self.valeur=self.GETVAL(self.val)
+      # getValeurEffective affecte la valeur par defaut si necessaire
+      self.valeur=self.getValeurEffective(self.val)
       if parent :
          self.jdc = self.parent.jdc
          self.niveau = self.parent.niveau

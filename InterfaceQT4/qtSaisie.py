@@ -42,9 +42,11 @@ class SaisieValeur(object):
 
 
   def LEvaleurPressed(self,valeur=None):
+         #print('LEvaleurPressed', valeur, type(valeur))
          if not hasattr(self, 'inSaisieValeur' ) : self.inSaisieValeur=False
          if self.inSaisieValeur : return
          self.inSaisieValeur=True
+
          if valeur == None :
             try :
               nouvelleValeur=str(self.lineEditVal.text())
@@ -56,24 +58,24 @@ class SaisieValeur(object):
                self.inSaisieValeur=False
                return
          else :
-            #PN PN PN ???? la 1 ligne est tres bizarre.
             try : 
-              if hasattr(self,"lineEditVal"):self.lineEditVal.setText(tr(valeur.nom))
+              # la 1 ligne est tres bizarre. remplacee par le 3nd le 01 10 19
+              #if hasattr(self,"lineEditVal"):self.lineEditVal.setText(tr(valeur.nom))
+              if hasattr(self,"lineEditVal") : self.lineEditVal.setText(tr(valeur))
             except : 
               if hasattr(self,"lineEditVal"):self.lineEditVal.setText(valeur)
             nouvelleValeur=valeur
+
          if self.node.item.definition.validators != None :
-          if self.node.item.definition.validators.verifItem(nouvelleValeur) !=1 :
+            if self.node.item.definition.validators.verifItem(nouvelleValeur) !=1 :
                 commentaire=self.node.item.definition.validators.infoErreurItem()
                 self.editor.afficheInfos(commentaire,Qt.red)
                 self.inSaisieValeur=False
                 return
+
          nouvelleValeurFormat=self.politique.getValeurTexte(nouvelleValeur)
          validite,commentaire=self.politique.recordValeur(nouvelleValeurFormat)
          if commentaire != "" :
-            #PNPNPNP Il faut trouver une solution pour les 2 cas 
-            #   self.editor.afficheInfos(commentaire)
-            #self.Commentaire.setText(tr(commentaire))
             if validite :
                 self.editor.afficheCommentaire(commentaire)
             else :
@@ -82,17 +84,6 @@ class SaisieValeur(object):
          self.setValide()
 
 
-  #def TraiteLEValeurTuple(self,valeurBrute=None) :
-  #      listeValeurs=[]
-  #      if valeurBrute== None :valeurBrute=str(self.LEValeur.text())
-  #      listeValeursSplit=valeurBrute.split(',')
-  #      for val in listeValeursSplit :
-  #          try :
-  #             valeur=eval(val,{})        
-  #          except :
-  #             valeur=val
-  #          listeValeurs.append(valeur)
-  #      return listeValeurs
 
   def TraiteLEValeur(self,valeurTraitee=None) :
         # lit la chaine entree dans le line edit

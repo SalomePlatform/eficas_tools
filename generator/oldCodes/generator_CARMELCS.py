@@ -152,7 +152,7 @@ class CARMELCSGenerator(PythonGenerator):
 #        print 'generMCSIMP self.texteDico = ',self.texteDico
         if hasattr(obj.etape,'sdnom'): clef=obj.etape.sdnom+"____"
         else: clef=""
-        for i in obj.get_genealogie() :
+        for i in obj.getGenealogie() :
             clef=clef+"__"+i
         self.dictMCVal[clef]=obj.valeur
 

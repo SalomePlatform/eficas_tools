@@ -163,15 +163,30 @@ class MCCOMPO(I_OBJECT.OBJECT):
           index=index+1
       return index
           
-  def findRangObjetDsArbre(self,objet) :
+  def chercheIndiceDsLeContenu(self,objet) :
   # uniquement pour Pyxb
-  # parcourt les Blocs
+  # ajoute la taille des les Blocs
+  # faut -il chercher plus loin ds les petits-enfants ?
+      if objet.nature == 'MCList' : objet=objet[0]
       leRang=0
-      pos=self.mcListe.index(objet)
+      positionDsLaListe=0
+      try :
+        positionDsLaListe=self.mcListe.index(objet)
+        positionDsLaListeDeFactSiFact =0
+      except :
+        for mc in self.mcListe:
+           if mc.nature == 'MCList':
+              try :
+                positionDsLaListeDeFactSiFact=mc.index(objet)
+                break
+              except :
+                positionDsLaListe=positionDsLaListe+1
+           else : positionDsLaListe=positionDsLaListe+1
       i=0
-      while (i+1) < pos :
+      while i < positionDsLaListe :
         leRang= leRang + self.mcListe[i].longueurDsArbre()
         i=i+1
+      leRang=leRang+positionDsLaListeDeFactSiFact
       return leRang
  
 
@@ -203,7 +218,11 @@ class MCCOMPO(I_OBJECT.OBJECT):
        return 0
 
     self.initModif()
-    #objet.deletePyxbObject()
+    objet.delObjPyxb()
+# PNPNPN a corriger
+    try :
+      objet.deleteRef()
+    except : pass
     self.mcListe.remove(objet)
     CONNECTOR.Emit(self,"supp",objet)
     objet.deleteMcGlobal()
@@ -221,6 +240,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
           Ajoute le mot-cle name a la liste des mots-cles de
           l'objet MCCOMPOSE
       """
+      #print ('addEntite', name, pos)
       self.initModif()
       if type(name)==bytes or type(name) == str :
         # on est en mode creation d'un motcle 
@@ -228,15 +248,15 @@ class MCCOMPO(I_OBJECT.OBJECT):
         objet=self.definition.entites[name](val=None,nom=name,parent=self)
       else :
         # dans ce cas on est en mode copie d'un motcle
+        objet = name
         # Appel de la methode qui fait le menage dans les references
         # sur les concepts produits (verification que les concepts existent
         # dans le contexte de la commande courante).
-        objet = name
         objet.verifExistenceSd()
 
       # On verifie que l'ajout d'objet est autorise
       if self.ispermis(objet) == 0:
-        self.jdc.appli.afficheAlerte(tr("Erreur"),
+        self.jdc.editor.afficheAlerte(tr("Erreur"),
                                       tr("L'objet %(v_1)s ne peut  etre un fils de %(v_2)s",\
                                       {'v_1': objet.nom, 'v_2': self.nom}))
         self.finModif()
@@ -255,7 +275,9 @@ class MCCOMPO(I_OBJECT.OBJECT):
            self.mcListe.insert(pos,objet)
          # Il ne faut pas oublier de reaffecter le parent d'obj (si copie)
          objet.reparent(self)
-         #objet.addPyxbObject(self.findRangObjetDsArbre(objet))
+         if  self.cata.modeleMetier :
+             if isinstance(objet,MCList): objet[0].addObjPyxb(self.chercheIndiceDsLeContenu(objet))
+             else : objet.addObjPyxb(self.chercheIndiceDsLeContenu(objet))
          CONNECTOR.Emit(self,"add",objet)
          objet.updateMcGlobal()
          objet.updateConditionBloc()
@@ -266,12 +288,15 @@ class MCCOMPO(I_OBJECT.OBJECT):
          # on cree une liste d'objets. Dans le cas contraire,
          # on emet un message d'erreur.
          if not old_obj.isRepetable():
-            self.jdc.appli.afficheAlerte(tr("Erreur"),tr("L'objet %s ne peut pas etre repete", objet.nom))
+            self.jdc.editor.afficheAlerte(tr("Erreur"),tr("L'objet %s ne peut pas etre repete", objet.nom))
             self.finModif()
             return 0
          else:
             # une liste d'objets de meme type existe deja
             old_obj.addEntite(objet)
+            if  self.cata.modeleMetier :
+             if isinstance(objet,MCList): objet[0].addObjPyxb(self.chercheIndiceDsLeContenu(objet))
+             else : objet.addObjPyxb(self.chercheIndiceDsLeContenu(objet))
             self.finModif()
             return old_obj
 
@@ -281,7 +306,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         est bien permis, cad peut bien etre un fils de self, 
         Retourne 0 sinon 
     """
-    if type(fils) == bytes or type(fils) == str :
+    if type(fils) == bytes or type(fils) == str  :
       # on veut juste savoir si self peut avoir un fils de nom 'fils'
       if fils in self.definition.entites:
         return 1
@@ -347,6 +372,18 @@ class MCCOMPO(I_OBJECT.OBJECT):
            l_mc.append(l)
      return l_mc
 
+  def deepUpdateConditionBlocApresCreation(self):
+     # idem deepUpdateConditionBloc sauf qu on cherche les MC qui
+     # avait ete laisse de cote par la construction
+     #print ('Ihm deepUpdateConditionBloc', self.nom, self.reste_val)
+     if self.reste_val != {} : self.buildMcApresGlobal()
+     for mcobj in self.mcListe:
+        if mcobj.nature=="MCList" :
+           for obj in mcobj : obj.deepUpdateConditionBlocApresCreation() 
+        elif hasattr(mcobj,"deepUpdateConditionBlocApresCreation"):
+           mcobj.deepUpdateConditionBlocApresCreation()
+     
+
   def deepUpdateConditionBloc(self):
      """
         Parcourt l'arborescence des mcobject et realise l'update 
@@ -370,6 +407,7 @@ class MCCOMPO(I_OBJECT.OBJECT):
         Realise l'update des blocs conditionnels fils de self
      """
      dict = self.creeDictCondition(self.mcListe,condition=1)
+     #print ('_updateConditionBloc', dict)
      for k,v in self.definition.entites.items():
         if v.label != 'BLOC' :continue
         globs= self.jdc and self.jdc.condition_context or {}
@@ -442,4 +480,5 @@ class MCCOMPO(I_OBJECT.OBJECT):
   def initModifUp(self):
     Validation.V_MCCOMPO.MCCOMPO.initModifUp(self)
     CONNECTOR.Emit(self,"valid")
+
 

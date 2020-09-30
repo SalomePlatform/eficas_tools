@@ -433,7 +433,8 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset theme="add"/>
+          <iconset>
+           <normaloff>../Editeur/icons/PlusBleu.png</normaloff>../Editeur/icons/PlusBleu.png</iconset>
          </property>
          <property name="iconSize">
           <size>

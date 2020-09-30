@@ -25,7 +25,6 @@ try :
 except : pass
 
 import types,os
-from six.moves import range
 from PyQt5.QtCore import  Qt
 
 

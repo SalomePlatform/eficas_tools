@@ -27,7 +27,6 @@ except : pass
 import types,sys,os, re
 import  subprocess
 import traceback
-import six
 
 
 from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QSplitter, QLabel
@@ -65,8 +64,8 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
 # Methodes faisant appel a ssIhm
 # ----------------------------------------
 
-    def __init__ (self,appli,fichier = None, jdc=None, QWParent=None, units = None, include=0):
-    #------------------------------------------------------------------------------------------
+    def __init__ (self,appliEficas,fichier = None, jdc=None, QWParent=None, units = None, include=0):
+    #------------------------------------------------------------------------------------------------
 
 
         QWidget.__init__(self,None)
@@ -77,32 +76,35 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         self.fenetreCentraleAffichee=None
         self.dejaDansPlieTout=False
         self.listeDesListesOuvertes=set()
-        self.afficheListesPliees=True
-        if appli!=None and hasattr(appli,"statusBar"): self.sb = appli.statusBar()
+        if appliEficas!=None and hasattr(appliEficas,"statusBar"): self.sb = appliEficas.statusBar()
         else : self.sb = None
         self.QWParent=QWParent
 
-        JDCEditorSsIhm. __init__ (self,appli,fichier, jdc,units,include)
+        JDCEditorSsIhm. __init__ (self,appliEficas,fichier, jdc,units,include)
+        if self.jdc:
+             comploader.chargerComposants()
+             self.jdc_item=Objecttreeitem.makeObjecttreeitem( self, "nom", self.jdc )
+
 
         # Particularites IHM : met la fenetre a jour
 
         self.initSplitterSizes()
-        if self.code == "ASTER" or self.code == "monCode" : self.afficheListesPliees =True
-        if self.code == 'PSEN_N1' : self.afficheListesPliees = False
 
         #self.affiche=self.appliEficas.maConfiguration.affiche
 
+        self.afficheListesPliees=self.maConfiguration.afficheListesPliees
         if self.code in ['MAP','CARMELCND','PSEN'] : self.maConfiguration.afficheCommandesPliees=False
         if self.code in ['MAP',]: self.fermeArbre()
         #   self.widgetTree.close()
         #   self.widgetTree=None
 
-        if self.maConfiguration.closeArbre: self.fermeArbre()
+        if self.maConfiguration.closeArbre      : self.fermeArbre()
+        if self.maConfiguration.closeOptionnel  : self.fermeOptionnel()
         if self.maConfiguration.boutonDsMenuBar : self.appliEficas.remplitIconesCommandes()
 
-        self.version_code = session.d_env.cata
      
-        self.format =  self.appliEficas.format_fichier
+        self.formatFichierOut =  self.appliEficas.formatFichierOut
+        self.formatFichierIn  =  self.appliEficas.formatFichierIn
 
         self.node_selected = []
         self.deplier = True
@@ -118,7 +120,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         self.Commandes_Ordre_Catalogue =self.readercata.Commandes_Ordre_Catalogue
 
         if self.appliEficas.readercata.demandeCatalogue==True  :
-           nomFichierTranslation='translatorFichier'+'_'+str(self.appliEficas.readercata.versionCode)
+           nomFichierTranslation='translatorFichier'+'_'+str(self.appliEficas.readercata.labelCode)
            if hasattr(self.appliEficas.maConfiguration,nomFichierTranslation) :
               translatorFichier=getattr(self.appliEficas.maConfiguration,nomFichierTranslation)
               from Extensions import localisation
@@ -547,7 +549,6 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     def run(self):
     #------------#
       fonction="run"+self.code
-      #print fonction
       if fonction in JDCEditor.__dict__: JDCEditor.__dict__[fonction](self,)
 
     #------------#
@@ -560,6 +561,11 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
 # ---------------------------------------------
 # Methodes Non Crees dans ssIHM 
 # ---------------------------------------------
+    #---------------#
+    def runVP(self):
+    #---------------#
+      texte=self.getTextJDC("MAPVp",pourRun=1)
+      print (texte)
 
     #---------------#
     def runMAP(self):
@@ -631,7 +637,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
       if self.modified or self.fichier==None  :
          QMessageBox.critical( self, tr( "Execution impossible "),tr("Sauvegarder SVP avant l'execution "))
          return
-      if not hasattr(self,'generator'): texte=self.getTextJDC(self.format)
+      if not hasattr(self,'generator'): texte=self.getTextJDC(self.formatFichierOut)
       from PrepareRunCarmel import prepareRunCarmel
       fichierGenerique=os.path.basename(self.fichier).split(".")[0]
       repMed=os.path.dirname(self.fichier)
@@ -656,13 +662,13 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
     #-----------------------------------------------------#
     def determineNomFichier(self,path,extension):
     #-----------------------------------------------------#
-      if self.appli.code in DictExtensions:
-         chaine1=DictExtensions[self.appli.code]+" (*."+DictExtensions[self.appli.code]+");;"
+      if self.appliEficas.code in DictExtensions:
+         chaine1=DictExtensions[self.appliEficas.code]+" (*."+DictExtensions[self.appliEficas.code]+");;"
          extensions= tr(chaine1+ "All Files (*)")
       else :
          extensions= tr("JDC (*.comm);;" "All Files (*)")
 
-      if self.appli.code == "MAP" :
+      if self.appliEficas.code == "MAP" :
          extensions = extensions + ";; Run (*.input);;"
 
       fn = QFileDialog.getSaveFileName( self,
@@ -679,7 +685,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
       if QFileInfo(fn).exists():
            msgBox = QMessageBox(self)
            msgBox.setWindowTitle(tr("Sauvegarde du Fichier"))
-           msgBox.setText(tr("Le fichier <b>%s</b> existe deja.", six.text_type(fn)))
+           msgBox.setText(tr("Le fichier")+ "  "+str(fn)+ "  " +tr("existe deja"))
            msgBox.addButton(tr("&Ecraser"),0)
            msgBox.addButton(tr("&Abandonner"),1)
            abort=msgBox.exec_()
@@ -773,7 +779,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         extension='.casR'
         fn = self.fichierComplet
         #saveas=True # Pour forcer le nom
-        self.generator=self.maConfiguration.mesGenerators.plugins[self.format]()
+        self.generator=self.maConfiguration.mesGenerators.plugins[self.formatFichierOut]()
         if self.fichierComplet is None or saveas:
           if path is None: path=self.maConfiguration.savedir
           bOK, fn=self.determineNomFichier(path,extension)
@@ -781,14 +787,14 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
           if fn == None : return (0, None)
           if fn== '' : return (0, None)
 
-          ulfile = os.path.abspath(six.text_type(fn))
+          ulfile = os.path.abspath(fn)
           self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
-          fn = six.text_type(QDir.toNativeSeparators(fn))
+          fn = QDir.toNativeSeparators(fn)
 
         self.fichierComplet = os.path.splitext(fn)[0]+extension
 
         if hasattr(self.generator, "writeComplet"):
-            self.generator.writeComplet(self.fichierComplet,self.jdc,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
+            self.generator.writeComplet(self.fichierComplet,self.jdc,config=self.appliEficas.maConfiguration,appliEficas=self.appliEficas)
 
         if self.salome : self.appliEficas.addJdcInSalome( self.fichierComplet)
 
@@ -812,8 +818,8 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         if not self.modified and not saveas:
             return (0, None)      # do nothing if text wasn't changed
 
-        if self.appli.code in DictExtensions :
-           extension=DictExtensions[self.appli.code]
+        if self.appliEficas.code in DictExtensions :
+           extension=DictExtensions[self.appliEficas.code]
         else :
            extension='.comm'
 
@@ -826,9 +832,9 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
           if fn == None : return (0, None)
           if fn== '' : return (0, None)
 
-          ulfile = os.path.abspath(six.text_type(fn))
+          ulfile = os.path.abspath(fn)
           self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
-          fn = six.text_type(QDir.toNativeSeparators(fn))
+          fn = QDir.toNativeSeparators(fn)
           newName = fn
 
 
@@ -844,8 +850,12 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
            self.tree.racine.item.getObject().nom=os.path.basename(newName)
            self.tree.racine.updateNodeLabel()
 
-        #print ('sortie du XML')
-        #self.jdc.toXml()
+ 
+        if  self.jdc.cata.modeleMetier:self.jdc.toXml(self.fichier)
+        if  self.jdc.cata.modeleMetier and self.jdc.isValid():
+            if self.generator != self.XMLgenerator :
+               self.XMLgenerator.gener(self.jdc)
+               self.XMLgenerator.writeDefault(fn)
 
         if self.jdc.isValid() != 0 and hasattr(self.generator, "writeDefault"):
         #if hasattr(self.generator, "writeDefault"):
@@ -927,10 +937,10 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
         if not fn : return (0, " ")
         fn=fn[0]
 
-        ulfile = os.path.abspath(six.text_type(fn))
+        ulfile = os.path.abspath(fn)
         self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
 
-        # On utilise le convertisseur defini par format_fichier
+        # On utilise le convertisseur defini par formatFichierIn
         source=self.getSource(ulfile)
         if source:
             # On a reussia convertir le fichier self.ulfile
@@ -1019,6 +1029,7 @@ class JDCEditor(JDCEditorSsIhm,Ui_baseWidget,QWidget):
       if nbWidget==2  : newSizes=self.splitterSizes2
       if nbWidget==3  : newSizes=self.splitterSizes3
       #self.inhibeSplitter = 1
+      #print (newSizes)
       self.splitter.setSizes(newSizes)
       #self.inhibeSplitter = 0
       QApplication.processEvents()

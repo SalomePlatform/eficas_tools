@@ -48,9 +48,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">/*background-color : rgb(168, 227, 142);rgb(57, 146, 228)*/
-background-color : rgb(66, 165, 238);
-/*border-style : outset;*/
+      <string notr="true">background-color : rgb(66, 165, 238);
 border-radius : 10px;
 border-width : 30 px;
 border-color : beige;

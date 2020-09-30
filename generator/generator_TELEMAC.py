@@ -58,11 +58,11 @@ class TELEMACGenerator(PythonGenerator):
    """
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appli=None,statut="Leger"):
+   def gener(self,obj,format='brut',config=None,appliEficas=None,statut="Leger"):
  
       self.statut        = statut
-      self.langue        = appli.langue
-      try : self.TelemacdicoEn = appli.readercata.TelemacdicoEn
+      self.langue        = appliEficas.langue
+      try : self.TelemacdicoEn = appliEficas.readercata.TelemacdicoEn
       except : 
         print ('Attention : pas de TelemacdicoEn declare') 
         self.TelemacdicoEn = {}
@@ -76,7 +76,7 @@ class TELEMACGenerator(PythonGenerator):
           self.DicoEnumCasEnInverse[motClef]=d
       if self.langue == 'fr' : 
          #from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
-         self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+         self.DicoEnumCasFrToEnumCasEn = appliEficas.readercata.DicoEnumCasFrToEnumCasEn
          for motClef in self.DicoEnumCasFrToEnumCasEn:
               d={}
               for valTelemac in self.DicoEnumCasFrToEnumCasEn[motClef]:
@@ -85,12 +85,12 @@ class TELEMACGenerator(PythonGenerator):
               self.DicoEnumCasEnInverse[motClef]=d
       self.initDico()
       # Pour Simplifier les verifs d ecriture
-      if hasattr(appli,'listeTelemac') : self.listeTelemac=appli.listeTelemac
+      if hasattr(appliEficas,'listeTelemac') : self.listeTelemac=appliEficas.listeTelemac
       else : self.listeTelemac = ()
 
       self.dicoCataToCas={}
       try :
-        self.dicoCasToCata=appli.readercata.dicoCasToCata
+        self.dicoCasToCata=appliEficas.readercata.dicoCasToCata
       except :
         print ('Attention pas de dicoCasToCata declare')
         self.dicoCasToCata={}
@@ -148,8 +148,8 @@ class TELEMACGenerator(PythonGenerator):
 # ecriture de Leger
 #----------------------------------------------------------------------------------------
 
-   def writeComplet(self,fn,jdc,config,appli) :
-       jdc_formate=self.gener(jdc,config=config,appli=appli,statut="Entier")
+   def writeComplet(self,fn,jdc,config,appliEficas) :
+       jdc_formate=self.gener(jdc,config=config,appliEficas=appliEficas,statut="Entier")
        self.writeDefault(fn)
 
 

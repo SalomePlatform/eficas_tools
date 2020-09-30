@@ -25,6 +25,7 @@
 from __future__ import absolute_import
 import types
 
+import Accas
 from Noyau import N_ENTITE
 from Noyau import N_MCSIMP
 
@@ -48,8 +49,8 @@ class SIMP(N_ENTITE.ENTITE):
 
     def __init__(self, typ,ang="", fr="", statut='f', into=None, intoSug = None,siValide = None, defaut=None,
                  min=1, max=1, homo=1, position='local',
-                 val_min=float('-inf'), val_max=float('inf'), docu="", validators=None,
-                 sug=None,fenetreIhm=None):
+                 val_min=float('-inf'), val_max=float('inf'), docu="", validators=None, nomXML=None,
+                 sug=None,fenetreIhm=None, attribut=False,  sortie='n', intoXML=None):
         """
             Un mot-clé simple est caractérisé par les attributs suivants :
             - type : cet attribut est obligatoire et indique le type de valeur attendue
@@ -67,7 +68,11 @@ class SIMP(N_ENTITE.ENTITE):
             - val_max : valeur maximale autorisée
             - docu : clef sur de la documentation utilisateur
             - sug : valeur suggere
-            - fenetreIhm=None 
+            - fenetreIhm : si widget particulier
+            - attribut : si projection XSD sur attribut
+            - creeDesObjetsDeType : type des UserASSD si siValide en cree
+            - nomXML   : se projette en XSD avec un autre nom pour accepter les tirets
+            - sortie : force l ecriture dans le fichier de sortie (utile pour Telemac)
         """
         #print (self)
         #import traceback
@@ -75,31 +80,50 @@ class SIMP(N_ENTITE.ENTITE):
         #print (self)
         N_ENTITE.ENTITE.__init__(self, validators)
         # Initialisation des attributs
+        self.creeDesObjets = False
+        self.utiliseUneReference = False
+        self.creeDesObjetsDeType = None
+        self.utiliseDesObjetsDeType = None
         if type(typ) == tuple:
             self.type = typ
         else:
             self.type = (typ,)
-        self.fr = fr
-        self.statut = statut
-        self.into = into
-        self.intoSug = intoSug
+        for t in (self.type) :
+            try :   
+              if issubclass(t,Accas.UserASSD) : 
+                 creeDesObjetsDeType = t 
+                 self.utiliseUneReference = True
+            except : pass
+            if t == 'createObject' : self.creeDesObjets=True
+        if self.utiliseUneReference : 
+           if self.creeDesObjets : 
+                  self.utiliseUneReference = False
+                  self.creeDesObjetsDeType = creeDesObjetsDeType
+           else : self.utiliseDesObjetsDeType = creeDesObjetsDeType
+        self.fr       = fr
+        self.statut   = statut
+        self.into     = into
+        self.intoSug  = intoSug
         self.siValide = siValide
-        self.defaut = defaut
-        self.min = min
-        self.max = max
-        self.homo = homo
+        self.defaut   = defaut
+        self.min      = min
+        self.max      = max
+        self.homo     = homo
         self.position = position
-        self.val_min = val_min
-        self.val_max = val_max
-        self.docu = docu
-        self.sug = sug
-        self.ang=ang
+        self.val_min  = val_min
+        self.val_max  = val_max
+        self.docu     = docu
+        self.sug      = sug
+        self.ang      = ang
         if self.max     == '**' : self.max     = float('inf')
         if self.val_max == '**' : self.val_max = float('inf')
         if self.min     == '**' : self.min     = float('-inf')
         if self.val_min == '**' : self.val_min = float('-inf')
-        self.fenetreIhm=fenetreIhm
-        #self.creeT_SIMP()
+        self.fenetreIhm = fenetreIhm
+        self.attribut   = attribut
+        self.nomXML     = nomXML
+        self.intoXML    = intoXML
+        self.sortie     = sortie
 
     def verifCata(self):
         """
@@ -113,6 +137,7 @@ class SIMP(N_ENTITE.ENTITE):
         self.checkInto()
         self.checkPosition()
         self.checkValidators()
+   
 
     def __call__(self, val, nom, parent=None, objPyxbDeConstruction = None):
         """
@@ -121,38 +146,4 @@ class SIMP(N_ENTITE.ENTITE):
         """
         return self.class_instance(nom=nom, definition=self, val=val, parent=parent, objPyxbDeConstruction=objPyxbDeConstruction)
 
-#    def creeT_SIMP(self):
-#        from Efi2Xsd.readerEfficas import monSIMP
-#        from Efi2Xsd.mapDesTypes import dictSIMPEficasXML
-#        self.objXML=monSIMP()
-#        for nomEficasArg in dictSIMPEficasXML :
-#           argu=getattr(self,nomEficasArg)
-#           nomXMLarg=dictSIMPEficasXML[nomEficasArg]
-#           if not isinstance(nomXMLarg, (list, tuple)) :
-#              print(nomXMLarg, argu)
-              #if nomEficasArg  in listeParamDeTypeTypeAttendu:
-              #   typeAttendu = self.typ
-#                 
-#              setattr(self.objXML, nomXMLarg, argu)
            
-
-
-# for nomXMLArg in dir(self) :
-#          if nomXMLArg in self.dictATraiter :
-#              nomEficasArg=self.dictATraiter[nomXMLArg]
-#              argu=getattr(self,nomXMLArg)
-#              if argu==None : continue
-#
-#              if type(nomEficasArg) == types.DictionaryType:
-#                 for nomXML in list(nomEficasArg.keys()):
-#                      arguDecoupe=getattr(argu,nomXML)
-#                      nomEficasDecoupe=nomEficasArg[nomXML]
-#                      if arguDecoupe == None : continue
-#                      self.dictArgsEficas[nomEficasDecoupe]=arguDecoupe
-#              else :
-#                self.dictArgsEficas[nomEficasArg] = argu
-#
-# 
-#        
-#       
-#

@@ -23,67 +23,72 @@ except : pass
 
 class CatalogDescription(object):
     
-    def __init__(self, identifier, cata_file_path, file_format = "python",
-                 default = False, code = None,ss_code=None, user_name = None,
-                 selectable = True, file_format_in = "python"):
+    def __init__(self, labelCode, fichierCata, formatFichierOut = "python", formatFichierIn='python',
+                 default = False, code = None,ss_code=None,):
         """
         This class can be used to describe an Eficas catalog.
 
-        :type  identifier: string
-        :param identifier: unique identifier for the catalog
+        :type  labelCode: string
+        :param labelCode: unique labelCode for the catalog
                 
-        :type  cata_file_path: string
-        :param cata_file_path: path of the file containing the catalog itself
+        :type  fichierCata: string
+        :param fichierCata: path of the file containing the catalog itself
                 
-        :type  file_format: string
-        :param file_format: format of the files generated when using this
-                            catalog
+        :type  fileFormatOut: string
+        :param fileFormatOut: format of the files generated when using this catalog
                 
         :type  default: boolean
-        :param default: indicate if this catalog is the default one (appear on
-                        the top of the catalogs list)
+        :param default: indicate if this catalog is the default one (appear on the top of the catalogs list)
                 
         :type  code: string
-        :param code: Deprecated. Used to indicate the code associated to this
-                     catalog
+        :param code: Used to indicate the code associated to this catalog
                 
         :type  ss_code: string
         :param ss_code: scheme associated to this catalog (Map only)
 
-        :type  user_name: string
-        :param user_name: name of the catalog as it will appear in the list
-                
-        :type  selectable: boolean
-        :param selectable: indicate if this catalog appears in the list.
-                           Setting this parameter to False is useful to keep
-                           old catalogs to edit existing files but to forbid
-                           to use them to create new files.
                 
         """
-        self.identifier = identifier
-        self.cata_file_path = cata_file_path
-        self.file_format = file_format
+
+        self.labelCode = labelCode
+        self.fichierCata = fichierCata
+        self.formatFichierOut = formatFichierOut
+        self.formatFichierIn = formatFichierIn 
         self.default = default
         self.code = code
-        if user_name is None:
-            self.user_name = identifier
-        else:
-            self.user_name = user_name
-        self.selectable = selectable
-        self.file_format_in = file_format_in
 
     @staticmethod
-    def create_from_tuple(cata_tuple):
+    def createFromTuple(cataTuple):
         #print "Warning: Describing a catalog with a tuple is deprecated. " \
         #      "Please create a CatalogDescription instance directly."
-        desc = CatalogDescription(code = cata_tuple[0],
-                                  identifier = cata_tuple[1],
-                                  cata_file_path = cata_tuple[2],
-                                  file_format = cata_tuple[3])
+        if cataTuple[0] == 'MAP' :
+           desc = CatalogDescription(code = cataTuple[0],
+                                  labelCode = cataTuple[1],
+                                  fichierCata = cataTuple[2],
+                                  ssCode      = cataTuple[3],
+                                  formatFichierOut = 'MAP',
+                                  formatFichierIn  = 'MAP')
+        elif len(cataTuple) == 4:
+           desc = CatalogDescription(code = cataTuple[0],
+                                  labelCode = cataTuple[1],
+                                  fichierCata = cataTuple[2],
+                                  formatFichierOut = cataTuple[3],
+                                  formatFichierIn  = 'python')
+        elif len(cataTuple) == 5 : 
+           desc = CatalogDescription(code = cataTuple[0],
+                                  labelCode = cataTuple[1],
+                                  fichierCata = cataTuple[2],
+                                  formatFichierOut = cataTuple[3],
+                                  formatFichierIn  = cataTuple[4])
+        elif len(cataTuple) == 6 : 
+           desc = CatalogDescription(code = cataTuple[0],
+                                  labelCode = cataTuple[1],
+                                  fichierCata = cataTuple[2],
+                                  formatFichierOut = cataTuple[3],
+                                  formatFichierIn  = cataTuple[4],
+                                  defaut=cataTuple[5])
+        else : 
+           print ('pb a la description du catalogue avec les donnees')
+           print (cataTuple)
+           desc=None
         
-        if len(cata_tuple) == 5:
-            if cata_tuple[4] == "defaut":
-                desc.default = True
-            else:
-                desc.file_format_in = cata_tuple[4]
         return desc

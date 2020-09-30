@@ -84,7 +84,7 @@ class OpenturnsGenerator(PythonGenerator):
        Remplit le dictionnaire des MCSIMP si nous ne sommes ni dans une loi, ni dans une variable
        """
        s=PythonGenerator.generMCSIMP(self,obj)
-       if not( type(obj.valeur) in (list, tuple)) and (obj.get_min_max()[1] != 1):
+       if not( type(obj.valeur) in (list, tuple)) and (obj.getMinMax()[1] != 1):
           valeur=(obj.valeur,)
        else :
           valeur=obj.valeur
@@ -124,7 +124,7 @@ class OpenturnsGenerator(PythonGenerator):
 
    def genereXML(self):
        print "IDM: genereXML dans generator_openturns_wrapper.py"
-       #print "appli.CONFIGURATION=",self.appli.CONFIGURATION.__dict__
+       #print "appli.maConfiguration=",self.appli.maConfiguration.__dict__
        if self.listeFichiers != [] :
           self.dictMCVal["Files"]=self.listeFichiers
        print "dictMCVal", self.dictMCVal, "dictVariables", self.dictVariables

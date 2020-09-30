@@ -27,7 +27,7 @@
        le dictionnaire composants.
      - gettreeitem(object) -> type d'item : fonction qui retourne un type
        d'item correspondant au type de l'objet noyau fourni.
-     - makeObjecttreeitem(appli,labeltext, object, setFunction=None) -> item : fonction qui retourne un item
+     - makeObjecttreeitem(appliEficas,labeltext, object, setFunction=None) -> item : fonction qui retourne un item
        correspondant a l'objet noyau fourni.
 """
 # import generaux
@@ -85,11 +85,11 @@ def gettreeitem(object):
     itemtype=composants[None]
     return itemtype
 
-def makeObjecttreeitem(appli,labeltext, object, setFunction=None):
+def makeObjecttreeitem(appliEficas,labeltext, object, setFunction=None):
     """
        Cette fonction permet de construire et de retourner un objet
        de type item associe a l'object passe en argument.
     """
     c = gettreeitem(object)
-    return c(appli,labeltext, object, setFunction)
+    return c(appliEficas,labeltext, object, setFunction)
 

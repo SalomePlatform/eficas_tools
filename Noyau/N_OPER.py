@@ -119,6 +119,7 @@ class OPER(N_ENTITE.ENTITE):
         self.UIinfo = UIinfo
         self.affecter_parente()
         self.checkDefinition(self.nom)
+        self.txtNomComplet=""
 
     def __call__(self, reuse=None, **args):
         """
@@ -128,6 +129,7 @@ class OPER(N_ENTITE.ENTITE):
         nomsd = self.nommage.getNomConceptResultat(self.nom)
         etape = self.class_instance(oper=self, reuse=reuse, args=args)
         etape.MCBuild()
+        etape.metAJourNomASSD(nomsd)
         return etape.buildSd(nomsd)
 
     def make_objet(self, mc_list='oui'):

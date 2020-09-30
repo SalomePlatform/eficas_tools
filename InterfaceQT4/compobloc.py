@@ -48,11 +48,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 class BLOCTreeItem(compofact.FACTTreeItem):
   itemNode=Node
 
-  #def get_objet(self,name) :
-  #    for v in self.object.mcListe:
-  #        if v.nom == name : return v
-  #    return None
-    
   def isCopiable(self):
     return 0
 

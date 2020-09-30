@@ -21,14 +21,12 @@ from __future__ import absolute_import
 from __future__ import print_function
 try :
   from builtins import str
-  from builtins import range
   from builtins import object
 except :
   pass
 import sys,string,re
 import traceback
 from Extensions.i18n import tr
-from six.moves import range
 
 escapedQuotesRE = re.compile(r"(\\\\|\\\"|\\\')")
 stringsAndCommentsRE =  \
@@ -296,7 +294,7 @@ class PARSEUR_PYTHON(object):
     def __init__(self,texte):
         self.texte = texte
         self.l_objets=None
-        self.appli=None
+        self.appliEficas=None
 
     def isAffectation(self,texte):
         """
@@ -581,7 +579,7 @@ class PARSEUR_PYTHON(object):
                     if nouvelindice == len(texte) :
                         nouvelindice=nouvelindice -1
                         break
-                 if mot in self.appli.liste_simp_reel:
+                 if mot in self.appliEficas.liste_simp_reel:
                     if valeur[0] != "'":
                        try :
                          clef=eval(valeur)
@@ -612,7 +610,7 @@ class PARSEUR_PYTHON(object):
                        #cas du tuple de valeurs
                        valeur=texte[indiceC+1:nouvelindice+1]
                        indiceC=nouvelindice+1 
-                       if mot in self.appli.liste_simp_reel:
+                       if mot in self.appliEficas.liste_simp_reel:
                           valeur=valeur[1:-1]
                           for val in valeur.split(',') :
                           # Attention la derniere valeur est""
@@ -650,21 +648,21 @@ class PARSEUR_PYTHON(object):
            #index=epure1.find(u"=")
            #epure2=epure1[index+1:len(epure1)].replace(u"_F(u","(u")
            #dict_reel_concept=self.construitGenea(epure2)
-           if self.appli:
-             dict_reel_concept=construitGenea(epure2,self.appli.liste_simp_reel)
+           if self.appliEficas:
+             dict_reel_concept=construitGenea(epure2,self.appliEficas.liste_simp_reel)
            else:
              dict_reel_concept={}
         if nomConcept == "sansnom" :
            nomConcept = ""
         if nomConcept !=None :
            if len(dict_reel_concept) != 0:
-              self.appli.dict_reels[nomConcept]=dict_reel_concept
+              self.appliEficas.dict_reels[nomConcept]=dict_reel_concept
 
-    def getTexte(self,appli=None):
+    def getTexte(self,appliEficas=None):
         """
         Retourne le texte issu de l'analyse
         """
-        self.appli=appli
+        self.appliEficas=appliEficas
         try:
         #if 1:
             if not self.l_objets : self.analyse()
@@ -688,10 +686,10 @@ if __name__ == "__main__" :
     #fichier = 'D:/Eficas_dev/Tests/zzzz100a.comm'
     #fichier = 'U:/Eficas_dev/Tests/test_eval.comm'
     texte = open(fichier,'r').read()
-    class appli(object):
+    class appliEficas(object):
        dict_reels={}
        liste_simp_reel=["VALE","VALE_C","GROUP_MA","RAYON"]
-    a=appli()
+    a=appliEficas()
 
     compile(txt, '<string>', 'exec')
     print((a.dict_reels))

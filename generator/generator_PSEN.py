@@ -31,7 +31,6 @@ import traceback
 import types,re,os
 from Extensions.i18n import tr
 from .generator_dicoImbrique import DicoImbriqueGenerator
-import pdb
 
 def entryPoint():
    """
@@ -57,7 +56,7 @@ class PSENGenerator(DicoImbriqueGenerator):
    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None, appli=None):
+   def gener(self,obj,format='brut',config=None, appliEficas=None):
 
       try :
          self.MachineDico = obj.MachineDico

@@ -27,7 +27,6 @@ except : pass
 import types,os
 
 # Modules Eficas
-from six.moves import range
 from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication, QLabel
 from PyQt5.QtWidgets  import QSizePolicy,QSpacerItem
 from PyQt5.QtGui  import QPalette, QFont

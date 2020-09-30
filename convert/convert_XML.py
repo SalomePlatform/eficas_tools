@@ -44,6 +44,7 @@ class XMLparser:
    """
 
    def __init__(self,cr=None):
+      print ('dans XML convert')
       self.text=''
       if cr : self.cr=cr
       else: self.cr=N_CR.CR(debut='CR convertisseur format XML',
@@ -60,7 +61,7 @@ class XMLparser:
 
 
 
-   def convert(self, outformat, appli=None):
+   def convert(self, outformat, appliEficas=None):
    # ici on ne fait rien
    # on le fera a la creation du JDC
        try:

@@ -47,12 +47,12 @@ class REGLE:
     return []
 
 
-  def enregistreXML(self,root,catalogueXml):
-      import xml.etree.ElementTree as ET
-      regleXml=ET.SubElement(root,'regles')
-      txt=""
-      for mot in self.getText().split('\n'):
-          mot.replace(' ','') 
-          txt=txt + mot + " "
-      regleXml.text= txt
+#  def enregistreXML(self,root,catalogueXml):
+#      import xml.etree.ElementTree as ET
+#      regleXml=ET.SubElement(root,'regles')
+#      txt=""
+#      for mot in self.getText().split('\n'):
+#          mot.replace(' ','') 
+#          txt=txt + mot + " "
+#      regleXml.text= txt
 

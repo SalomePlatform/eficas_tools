@@ -101,7 +101,7 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
          self.boolOrdre==1;  
          self.RBOrdre.setChecked(True);  
          self.afficheOrdre()
-      if self.editor.maConfiguration.closeFrameRechercheCommande == True : self.frameAffichage.close()
+      if self.editor.maConfiguration.closeFrameRechercheCommandeSurPageDesCommandes == True : self.frameAffichage.close()
 
       if self.editor.widgetTree != None : self.editor.restoreSplitterSizes(2) 
       else: self.editor.restoreSplitterSizes(3)

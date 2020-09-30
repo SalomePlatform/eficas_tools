@@ -34,9 +34,12 @@ class Validation(object)  :
   def __init__(self,node,parent) :
          self.node=node
          self.parent=parent
+   
 
   def testeUneValeur(self,valeurentree):
          commentaire = None
+         #import traceback
+         #traceback.print_stack()
          valeur,validite=self.node.item.evalValeur(valeurentree)
          if not validite :
                   commentaire = "impossible d'evaluer : %s " %repr(valeurentree)
@@ -270,14 +273,13 @@ class PolitiquePlusieurs(Validation):
          return valide,commentaire,commentaire2,listeRetour
 
   def ajoutNTuple(self,liste):
-         listeRetour=[]
          commentaire="Nouvelles valeurs acceptee"
          commentaire2=""
-         print (self.node.item.valideListePartielle)
          valide=self.node.item.valideListePartielle(None,liste)
+         print ('uuuuuuuuuuu',valide)
          if not valide :
             commentaire2=self.node.item.infoErreurListe()
-         return valide,commentaire,commentaire2,listeRetour
+         return valide,commentaire,commentaire2
 
   def recordValeur(self,liste,dejaValide=True):
          ancienneVal = self.node.item.getValeur()

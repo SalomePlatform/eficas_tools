@@ -25,6 +25,7 @@ try :
 except : pass
 import math
 import types
+# PNPN a resorber
 import six
 
 try:

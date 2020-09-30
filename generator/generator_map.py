@@ -56,7 +56,7 @@ class MapGenerator(PythonGenerator):
 
    """
 
-   def gener(self,obj,format='brut',config=None,appli=None):
+   def gener(self,obj,format='brut',config=None,appliEficas=None):
       self.initDico()
       self.text=PythonGenerator.gener(self,obj,format)
       if obj.isValid() :self.genereExeMap()

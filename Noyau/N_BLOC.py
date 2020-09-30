@@ -35,6 +35,7 @@ from .N_Exception import AsException
 from .N_types import forceList
 
 
+
 class BLOC(N_ENTITE.ENTITE):
 
     """
@@ -51,7 +52,7 @@ class BLOC(N_ENTITE.ENTITE):
     class_instance = N_MCBLOC.MCBLOC
     label = 'BLOC'
 
-    def __init__(self, fr="", docu="", regles=(), statut='f', condition=None,ang="",
+    def __init__(self, fr="", docu="", regles=(), statut='f', condition=None,ang="", nomXML=None,
                  **args):
         """
             Un bloc est caractérisé par les attributs suivants :
@@ -77,8 +78,10 @@ class BLOC(N_ENTITE.ENTITE):
             self.regles = (regles,)
         self.statut = statut
         self.condition = condition
+        self.nomXML = nomXML
         self.entites = args
         self.affecter_parente()
+        self.txtNomComplet = ''
 
     def __call__(self, val, nom, parent=None, dicoPyxbDeConstruction=None):
         """
@@ -99,6 +102,7 @@ class BLOC(N_ENTITE.ENTITE):
         self.checkCondition()
         self.verifCataRegles()
 
+
     def verifPresence(self, dict, globs):
         """
            Cette méthode vérifie si le dictionnaire passé en argument (dict)
@@ -117,8 +121,11 @@ class BLOC(N_ENTITE.ENTITE):
         dico.update(dict)
         if self.condition != None:
             try:
+            #if 1 :
                 test = eval(self.condition, globs, dico)
                 return test
+            #try:
+            #   1
             except NameError:
                 # erreur 'normale' : un mot-clé n'est pas présent et on veut
                 # l'évaluer dans la condition
@@ -143,11 +150,14 @@ class BLOC(N_ENTITE.ENTITE):
                     '\n', "Erreur dans la condition : ", self.condition, ''.join(l))
         else:
             return 0
+
+
+
     
     def longueurDsArbre(self):
       longueur=0
       for mc in self.mcListe : 
-         longueur = longueur + longueurDsArbre(mc)
+         longueur = longueur + mc.longueurDsArbre()
       return longueur
 
 def blocUtils():
@@ -164,5 +174,13 @@ def blocUtils():
     def aucun(mcsimp, valeurs):
         """Valide si aucune des valeurs de 'mcsimp' n'est dans 'valeurs'."""
         return not au_moins_un(mcsimp, valeurs)
+
+    def getEficasAttribut( nomUserASSD, nomAttr):
+        if nomUserASSD == None : return None
+        return ( nomUserASSD.getEficasAttribut(nomAttr))
+
+    def getEficasListOfAttributs( nomASSD, listeAttributs):
+        if nomASSD == None : return ()
+        return ( nomASSD.getEficasListOfAttributs(listeAttributs))
 
     return locals()

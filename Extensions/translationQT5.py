@@ -20,7 +20,6 @@ mechanism, in the ``Eficas`` application of EDF. Handles unformatted and
 formatted strings, according to all formatting schemes: via dictionaries,
 tuples, or atoms.
 
-``PyQt4`` is currently supported.
 """
 from __future__ import absolute_import
 try : 
@@ -30,13 +29,14 @@ try :
 except : 
   pass
 from .eficas_exception import EficasException
-#from Extensions.eficas_exception import EficasException
+
 import re
-from six.moves import map
+regex=re.compile(r"% *[0-9]+")
+
 import six
+from six.moves import map
 from six.moves import range
 from six.moves import zip
-regex=re.compile(r"% *[0-9]+")
 
 
 
@@ -246,7 +246,11 @@ def tr(string, *args):
        string or Unicode object with formatting specifications, and, 
        optionally, an iterable or an int or float.
        Lets Python do the string formatting."""
-    from PyQt5.QtWidgets import QApplication
+    try :
+      from PyQt5.QtWidgets import QApplication
+    except :
+      return string
+
     string = _preprocess_atom(string)
     if len(args) == 0:
         r = six.text_type(QApplication.translate("@default", string))

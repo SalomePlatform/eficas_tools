@@ -149,6 +149,7 @@ class MonWidgetNiveauFact(Ui_WidgetNiveauFact,Groupe):
   def afficheOptionnel(self):
       # N a pas de parentQt. doit donc etre redefini
       #print ('ds afficheOptionnel')
+      if self.editor.maConfiguration.closeOptionnel : return
       if self.editor.widgetOptionnel!= None :
         self.monOptionnel=self.editor.widgetOptionnel
       else :

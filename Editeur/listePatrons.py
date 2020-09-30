@@ -18,12 +18,10 @@
 #
 from __future__ import absolute_import
 try :
-   from builtins import range
    from builtins import object
 except : pass
 import os
 import re
-from six.moves import range
 
 sous_menus={
 #	    "OPENTURNS_STUDY" : {0:{"Essai":"Std.comm"}},

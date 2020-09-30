@@ -37,22 +37,22 @@ class MonChoixLangue(Ui_ChoixLangue,QDialog):
   a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discretes
   """
-  def __init__(self,  parentAppli=None):
-      QDialog.__init__(self,parentAppli)
+  def __init__(self,  appliEficas=None):
+      QDialog.__init__(self,appliEficas)
       self.setModal(True)
       self.setupUi(self)
-      self.parentAppli=parentAppli
+      self.appliEficas=appliEficas
       self.installLangue()
       self.code=None
       self.pB_OK.clicked.connect(self.choisitLangue)
 
 
   def installLangue(self):
-      if self.parentAppli.langue == 'fr' : self.rbFrancais.setChecked(True)
+      if self.appliEficas.langue == 'fr' : self.rbFrancais.setChecked(True)
       else : self.rbEnglish.setChecked(True)
 
   def choisitLangue(self):
-      if self.rbFrancais.isChecked() : self.parentAppli.langue='fr'
-      else                           : self.parentAppli.langue ='ang'
+      if self.rbFrancais.isChecked() : self.appliEficas.langue='fr'
+      else                           : self.appliEficas.langue ='ang'
       self.close()
 

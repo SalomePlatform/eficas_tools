@@ -38,7 +38,7 @@ class CO(ASSD) :
         #
         if self.parent:
             try:
-                self.parent.NommerSdprod(self, nom)
+                self.parent.nommerSDProd(self, nom)
             except AsException as e:
                 appel = N_utils.calleeWhere(niveau=2)
                 raise AsException(

@@ -24,12 +24,10 @@ from __future__ import absolute_import
 from __future__ import print_function
 try :
    from builtins import str
-   from builtins import range
    from builtins import object
 except :
    pass
 import types,os,glob,imp,sys
-from six.moves.reprlib import Repr
 from copy import copy,deepcopy
 
 # import du chargeur de composants
@@ -37,8 +35,11 @@ from .comploader import makeObjecttreeitem
 from Ihm import CONNECTOR
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
-from six.moves import range
 
+try :
+   from repr import Repr
+except :
+   from reprlib import Repr
 myrepr = Repr()
 myrepr.maxstring = 100
 myrepr.maxother = 100
@@ -143,9 +144,9 @@ class Delegate(object):
 
 
 class ObjectTreeItem(TreeItem,Delegate):
-    def __init__(self, appli, labeltext, object, setFunction=None):
+    def __init__(self, appliEficas, labeltext, object, setFunction=None):
         self.labeltext = labeltext
-        self.appli = appli
+        self.appliEficas = appliEficas
         # L'objet delegue est stocke dans l'attribut object
         # L'objet associe a l'item est stocke dans l'attribut _object
         # Il peut etre obtenu par appel a la methode getObject
@@ -180,10 +181,10 @@ class ObjectTreeItem(TreeItem,Delegate):
         Cree un item copie de self
         """
         object = self._object.copy()
-        appli = copy(self.appli)
+        appliEficas = copy(self.appliEficas)
         labeltext = copy(self.labeltext)
         fonction = deepcopy(self.setFunction)
-        item = makeObjecttreeitem(appli,labeltext,object,fonction)
+        item = makeObjecttreeitem(appliEficas,labeltext,object,fonction)
         return item
     
     def isActif(self):
@@ -403,10 +404,6 @@ class ObjectTreeItem(TreeItem,Delegate):
             self.setFunction(value)
         except:
             pass
-# Modif de ma part CCar : je ne comprend pas a quoi ca sert
-# ca parait meme incorrect
-      #  else:
-      #      self.object = value
 
     def isExpandable(self):
         return 1
@@ -420,7 +417,7 @@ class ObjectTreeItem(TreeItem,Delegate):
             except AttributeError:
                 continue
             item = makeObjecttreeitem(
-                self.appli,
+                self.appliEficas,
                 str(key) + " =",
                 value,
                 lambda value, key=key, object=self.object:
@@ -434,12 +431,12 @@ class ObjectTreeItem(TreeItem,Delegate):
         (ex: macros POURSUITE et INCLUDE de Code_Aster), 0 SINON """
     #    return self.object.definition.fichier_ini
 
-    def makeObjecttreeitem(self,appli,labeltext, object, setFunction=None):
+    def makeObjecttreeitem(self,appliEficas,labeltext, object, setFunction=None):
         """
            Cette methode, globale pour les objets de type item, permet de construire et de retourner un objet
            de type item associe a l'object passe en argument.
         """
-        return makeObjecttreeitem(appli,labeltext,object,setFunction)
+        return makeObjecttreeitem(appliEficas,labeltext,object,setFunction)
 
     #def __del__(self):
     #    print "__del__",self
@@ -478,7 +475,7 @@ class SequenceTreeItem(ObjectTreeItem):
 
     def addItem(self,obj,pos):
         self._object.insert(pos,obj)
-        item = self.makeObjecttreeitem(self.appli, obj.nom + ":", obj)
+        item = self.makeObjecttreeitem(self.appliEficas, obj.nom + ":", obj)
         return item
 
     def suppItem(self,item):
@@ -486,7 +483,7 @@ class SequenceTreeItem(ObjectTreeItem):
             self._object.remove(item.getObject())
             # la liste peut etre retournee vide !
             message = "Mot-clef " + item.getObject().nom + " supprime"
-            self.appli.afficheInfos(message)
+            self.appliEficas.afficheInfos(message)
             return 1
         except:
             return 0
@@ -508,7 +505,7 @@ class SequenceTreeItem(ObjectTreeItem):
               # nouvel objet : on cree un nouvel item
               def setFunction(value, object=obj):
                   object=value
-              it = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj, setFunction)
+              it = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
               self.sublist.append(it)
            if old_obj is None and obj is None:break
            if old_obj is obj: self.sublist.append(item)

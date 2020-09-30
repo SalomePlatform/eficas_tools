@@ -21,7 +21,7 @@ from __future__ import absolute_import
 from Noyau import N_MCSIMP
 from Validation import V_MCSIMP
 from Ihm import I_MCSIMP
-from Efi2Xsd.MCAccasXsd  import X_MCSIMP
+from Efi2Xsd.MCAccasXML  import X_MCSIMP
 
 class MCSIMP(I_MCSIMP.MCSIMP,N_MCSIMP.MCSIMP,X_MCSIMP,V_MCSIMP.MCSIMP):
    def __init__(self,val,definition,nom,parent,objPyxbDeConstruction=None):

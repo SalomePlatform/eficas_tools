@@ -89,7 +89,6 @@ class MonWidgetRadioButtonCommun (Feuille):
   def boutonclic(self):
       for valeur in self.dict_bouton:
           if self.dict_bouton[valeur].isChecked():
-             #print "dans boutonclic is checked", valeur, type(valeur)
              SaisieValeur.LEvaleurPressed(self,valeur)
       self.reaffiche()
 

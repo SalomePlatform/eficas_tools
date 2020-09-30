@@ -223,10 +223,8 @@ class Formatage (object):
           self.texte_etape = self.texte_etape + ('\n'+self.indent_courant*' ')*ind +s_mcsimp.strip()
       else :
           # il faut couper ...
-          #nom,valeur = string.split(s_mcsimp,self.sep,1)
           nom,valeur = str.split(s_mcsimp,self.sep,1)
           chaine = self.creerChaine(nom,valeur,'\n'+self.indent_courant*' ',ind)
-          #self.jdc_fini = self.jdc_fini + ('\n'+self.indent_courant*' ')*ind + s_mcsimp.strip()
           self.texte_etape = self.texte_etape + chaine
       return
 
@@ -259,11 +257,11 @@ class Formatage (object):
         # il s'agit d'une vraie chaîne de caractères
         val = len(valeur)
         texte = (self.l_max-2-val)*' '+valeur
-        s=s+'\n'+texte
+        s=s+'\\\n'+texte
       elif re.match(filePattern,valeur) or re.match(filePattern2,valeur):
         val = len(valeur)
         texte = (self.l_max-2-val)*' '+valeur
-        s=s+'\n'+texte
+        s=s+'\\\n'+texte
       elif ',' in valeur:
         # il s'agit d'une liste de tuple
         # c est trop complique on ne splitte pas
@@ -294,10 +292,13 @@ class Formatage (object):
 
       else :
         # On a une ( mais pas de , . On passe la chaine sans modification
-        val = len(valeur)
+        val = len(valeur) +len(label)
         texte = (self.l_max-2-val)*' '+valeur
-        s=s+'\n'+texte
-
+        s='\n'+s+texte
+    else : 
+      label = nom + self.sep
+      val = len(valeur) +len(label)
+      s = '\n'+(self.l_max-2-val)*' '+label+valeur
     return s
 
 class FormatageLigne(Formatage) :

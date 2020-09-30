@@ -42,7 +42,9 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
-        self.lineEditVal.returnPressed.connect(self.LEvaleurPressed)
+        if monSimpDef.homo == 'constant' : self.lineEditVal.setReadOnly(True)
+        if monSimpDef.homo == 'constant' : self.lineEditVal.setStyleSheet("background:rgb(210,235,235);\n" "border:0px;")
+        else : self.lineEditVal.returnPressed.connect(self.LEvaleurPressed)
         self.AAfficher=self.lineEditVal
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
         self.lineEditVal.focusInEvent=self.monFocusInEvent
@@ -59,12 +61,6 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
          self.LEvaleurPressed()
       QLineEdit.focusOutEvent(self.lineEditVal,event)
 
-  #def showEvent(self, event):
-  #    if self.prendLeFocus==1 :
-  #       self.activateWindow()
-  #       self.lineEditVal.setFocus()
-  #       self.prendLeFocus=0
-  #    QWidget.showEvent(self,event)
 
   def setValeurs(self):
        #print ("dans setValeurs")
@@ -117,8 +113,4 @@ class MonWidgetSimpBase (Ui_WidgetSimpBase,Feuille):
       self.setValeurs()
       self.reaffiche()
       
-      #if self.objSimp.parent.nom == "MODEL" :
-      #   if self.objSimp.isValid():
-      #      self.objSimp.parent.change_fichier="1"
-            #self.node.item.parent.buildInclude(None,"")
 

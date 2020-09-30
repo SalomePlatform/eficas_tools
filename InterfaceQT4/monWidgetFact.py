@@ -30,17 +30,18 @@ from desWidgetFactTableau import Ui_WidgetFactTableau
 from Extensions.i18n import tr
 # Import des panels
 
+# PN 18 mai 2020 : affiche systematique des optionnels
 class MonWidgetFactCommun(Groupe):
   """
   """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
       #print "fact : ",node.item.nom
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       labeltext,fonte,couleur = self.node.item.getLabelText()
       self.GroupBox.setText(tr(labeltext))
       self.GroupBox.setTextInteractionFlags(Qt.TextSelectableByMouse)
-      self.parentQt.commandesLayout.insertWidget(insertIn,self)
-      self.doitAfficherOptionnel=False
+      self.parentQt.commandesLayout.insertWidget(-1,self)
+      self.doitAfficherOptionnel=True
       min,max=obj.getMinMax()
       if max < 2 and  hasattr(self, 'RBPlus') : self.RBPlus.close() 
       if max > 1 and  hasattr(self, 'RBPlus') : self.RBPlus.clicked.connect(self.ajouteMCParPB)
@@ -53,7 +54,7 @@ class MonWidgetFactCommun(Groupe):
 
   def leaveEvent(self,event):
       #print "leaveEvent", self.node.item.getLabelText()[0]
-      self.doitAfficherOptionnel=False
+      #self.doitAfficherOptionnel=False
       QWidget.leaveEvent(self,event)
 
   def delayAffiche(self):
@@ -69,13 +70,24 @@ class MonWidgetFactCommun(Groupe):
       parentOuAjouter.ajoutMC(texteListeNom)
 
 
-class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
-      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
+#  def reaffiche(self, nodeAVoir=None):
+#      print ('ds reaffiche : ', self.obj.nom, self.node.firstDeplie) 
+#      if self.node.editor.maConfiguration.afficheFirstPlies and self.node.firstDeplie:
+#         self.node.firstDeplie =False
+#         self.node.setPlie()
+#      Groupe.reaffiche(self,nodeAVoir)
 
-#class MonWidgetFactTableau(Ui_WidgetFactTableau,MonWidgetFactCommun):
+
+
+class MonWidgetFact(Ui_WidgetFact,MonWidgetFactCommun):
+  #def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
+  #    MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
+      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
+
 class MonWidgetFactTableau(Ui_WidgetFact,MonWidgetFactCommun):
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
-      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
-      #print ('je passe dans FactTableau')
+  #def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=1):
+  #    MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande,insertIn)
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
+      MonWidgetFactCommun.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       MonWidgetFactTableau.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)

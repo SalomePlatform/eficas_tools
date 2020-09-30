@@ -42,10 +42,9 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
             - nom
             - parent
         """
-        #print ('MCFACT', self, val, definition, nom, parent, objPyxbDeConstruction)
-        import traceback
+        print ('MCFACT', self, val, definition, nom, parent, dicoPyxbDeConstruction)
+        #import traceback
         #traceback.print_stack()
-        #if nom == 'experience' : print ('MCFACT', self, parent, dicoPyxbDeConstruction); exit()
         self.dicoPyxbDeConstruction=dicoPyxbDeConstruction
         if self.dicoPyxbDeConstruction :
            self.objPyxbDeConstruction=self.dicoPyxbDeConstruction['objEnPyxb']
@@ -56,7 +55,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         self.nom = nom
         self.val = val
         self.parent = parent
-        self.valeur = self.GETVAL(self.val)
+        self.valeur = self.getValeurEffective(self.val)
         if parent:
             self.jdc = self.parent.jdc
             self.niveau = self.parent.niveau
@@ -68,7 +67,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
             self.etape = None
         self.mcListe = self.buildMc()
 
-    def GETVAL(self, val):
+    def getValeurEffective(self, val):
         """
             Retourne la valeur effective du mot-clé en fonction
             de la valeur donnée. Defaut si val == None

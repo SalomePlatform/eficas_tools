@@ -86,14 +86,14 @@ class PythonGenerator(object):
                          fin='fin CR format python pour python')
       # Le texte au format python est stocke dans l'attribut text
       self.text=''
-      self.appli=None
+      self.appliEficas=None
 
    def writefile(self,filename):
       fp=open(filename,'w')
       fp.write(self.text)
       fp.close()
 
-   def gener(self,obj,format='brut',config=None,appli=None):
+   def gener(self,obj,format='brut',config=None,appliEficas=None):
       """
           Retourne une representation du JDC obj sous une
           forme qui est parametree par format.
@@ -105,8 +105,7 @@ class PythonGenerator(object):
       if obj == None : 
          print ('appel a gener avec None')
          return
-      self.appli=obj.getJdcRoot().appli
-      #self.appli=obj.appli
+      self.appliEficas=appliEficas
       liste= self.generator(obj)
       #format='standard'
       if format == 'brut':
@@ -189,6 +188,11 @@ class PythonGenerator(object):
          caracteres a la syntaxe python
       """
       l=[]
+
+      #print ('generJDC', obj.sdsDict)
+      for objRef in obj.sdsDict :
+          if (isinstance(obj.sdsDict[objRef],Accas.UserASSD)):
+              l.append(self.generUserASSD(obj.sdsDict[objRef]))
       if obj.definition.l_niveaux == ():
          # Il n'y a pas de niveaux
          for etape in obj.etapes:
@@ -204,6 +208,12 @@ class PythonGenerator(object):
          elif type(l[-1])==bytes or  type(l[-1])==str:
             l[-1] = l[-1]+'\n'
       return l
+
+   def generUserASSD(self,obj):
+       classeName =  obj.__class__.__name__
+       if obj.valeur == None :
+          texte = obj.nom + '=' + classeName + '()'
+          return texte
 
    def generMCNUPLET(self,obj):
       """ 
@@ -424,6 +434,7 @@ class PythonGenerator(object):
       """
       return obj.getName()
 
+
    def generMCFACT(self,obj):
       """
           Convertit un objet MCFACT en une liste de chaines de caracteres a la
@@ -512,9 +523,9 @@ class PythonGenerator(object):
          if vientDeListe and repr(valeur) != str(valeur) : s=repr(valeur)
          if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : s=s+'.0'
          clefobj=etape.getSdname()
-         if self.appli.appliEficas and clefobj in self.appli.appliEficas.dict_reels:
-           if valeur in self.appli.appliEficas.dict_reels[clefobj]:
-             s=self.appli.appliEficas.dict_reels[clefobj][valeur]
+         if self.appliEficas and clefobj in self.appliEficas.dict_reels:
+           if valeur in self.appliEficas.dict_reels[clefobj]:
+             s=self.appliEficas.dict_reels[clefobj][valeur]
          
       elif type(valeur) == bytes or type(valeur) == str :
          if valeur.find('\n') == -1:
@@ -527,6 +538,9 @@ class PythonGenerator(object):
             s = repr(valeur)
       elif isinstance(valeur,Accas.CO) or hasattr(etape,'sdprods') and valeur in etape.sdprods:
          s = "CO('"+ self.generator(valeur) +"')"
+      elif isinstance(valeur,Accas.UserASSD):
+      # ici on ne prend que la reference
+         s = valeur.nom
       elif isinstance(valeur,Accas.ASSD):
          s = self.generator(valeur)
       elif isinstance(valeur,Accas.PARAMETRE):
@@ -587,8 +601,8 @@ class PythonGenerator(object):
 
 
    def formatColonnes(self,nbrColonnes,listeValeurs,obj):
-      #try :
-      if 1 == 1 :
+      try :
+      #if 1 == 1 :
         indice=0
         textformat="("
         while ( indice < len(listeValeurs) ) :
@@ -607,7 +621,7 @@ class PythonGenerator(object):
                 indice=indice+1
             textformat=textformat+"\n"
         textformat=textformat[0:-1]+"),\n"
-      #except :
-      else :
+      except :
+      #else :
          textformat=str(obj.valeur)
       return textformat

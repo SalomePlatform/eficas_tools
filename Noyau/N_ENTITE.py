@@ -67,6 +67,9 @@ class ENTITE(object):
             self.validators = self.factories['validator'](validators)
         else:
             self.validators = validators
+        #self.doitSenregistrerComme = None
+        self.txtNomComplet=''
+        self.redefinit=False
 
     def affecter_parente(self):
         """
@@ -76,6 +79,7 @@ class ENTITE(object):
             Il s'agit principalement des mots cles
         """
         for k, v in list(self.entites.items()):
+            #print( k,v)
             v.pere = self
             v.nom = k
 
@@ -262,17 +266,54 @@ class ENTITE(object):
             self.cr.fatal(_(u"L'attribut 'position' doit valoir 'local', 'global' "
                             u"ou 'global_jdc' : %r"), self.position)
 
-    def dumpXSD(self):
-        args = self.entites.copy()
-        mcs = set()
-        for nom, val in list(args.items()):
-            if val.label == 'SIMP':
-                mcs.add(nom)
-                # XXX
-                # if val.max != 1 and val.type == 'TXM':
-                    # print "#CMD", parent, nom
-            elif val.label == 'FACT':
-                liste=val.dumpXSD()
-                mcs.update(liste)
-        print (self.nom, mcs) 
-        return mcs
+    def nomComplet(self):
+        if self.txtNomComplet  != '' : return self.txtNomComplet
+        qui=self
+        while hasattr(qui, 'pere' ):
+              self.txtNomComplet+='_'+qui.nom
+              qui=qui.pere
+        self.txtNomComplet+='_'+qui.nom
+        return self.txtNomComplet
+
+    def addDefinitionMC(self,listeMCAvant,**args):
+        ouChercher=self
+        for mot in listeMCAvant:
+            try :
+              ouChercher=ouChercher.entites[mot]
+            except :
+              print ('impossible de trouver : ',mot,' ',listeMCAvant)
+        (nomMC,defMC)=args.items()[0]
+        defMC.pere = ouChercher
+        defMC.pere.propageRedefinit()
+        defMC.nom = nomMC
+        cata = CONTEXT.getCurrentCata()
+        print (cata)
+        ouChercher.entites[nomMC]=defMC
+
+    def changeDefinitionMC(self,listeMCAvant,**args):
+        ouChercher=self
+        for mot in listeMCAvant:
+            try :
+              ouChercher=ouChercher.entites[mot]
+            except :
+              print ('impossible de trouver : ',mot,' ',listeMCAvant)
+        monSIMP=ouChercher
+        for (nomAttributDef,valeurAttributDef) in args.items():
+             if hasattr(monSIMP, nomAttributDef) :
+               setattr(monSIMP, nomAttributDef, valeurAttributDef) 
+             else :
+               print ('pb avec ', nomAttributdef,valeurAttributMC)
+        monSIMP.propageRedefinit()
+
+    def propageRedefinit(self):
+   # a reflechir
+       self.redefinit=True
+       # PNPN il faut remonter a l etape
+   
+
+
+    def makeObjetPourVerifSignature(self,**args):
+        etape = self.class_instance(oper=self, args=args)
+        etape.MCBuild()
+        return etape
+

@@ -38,7 +38,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
      self.parentQt=parentQt
 
   def afficheOptionnel(self,liste,liste_rouge,MC):
-     #print ('afficheOptionnel MonWidgetOptionnel', self,liste,MC)
+     #print ('afficheOptionnel MonWidgetOptionnel',self, liste,MC.node.item.nom)
      self.vireLesAutres(MC)
    
      if MC.node.item.nom in self.dicoMCWidgetOptionnel :
@@ -77,7 +77,7 @@ class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
             del self.dicoMCWidgetOptionnel[k]
 
   def titre(self,MC):
-     if self.parentCommande.node.editor.code in ['Adao','ADAO'] and self.parentCommande.node.editor.maConfiguration.closeFrameRechercheCommande==True :
+     if self.parentCommande.node.editor.maConfiguration.closeFrameRechercheCommande==True :
         self.frameLabelCommande.close()
         return
      labeltext,fonte,couleur = self.parentCommande.node.item.getLabelText()

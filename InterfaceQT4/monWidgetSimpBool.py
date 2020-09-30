@@ -47,7 +47,9 @@ class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
        if valeur == None  : return
        if valeur == True  : self.RBTrue.setChecked(True)
        if valeur == False : self.RBFalse.setChecked(True)
-
+       if self.monSimpDef.homo == 'constant' :
+          if valeur == True  : self.RBFalse.setDisabled(True)
+          else :               self.RBTrue.setDisabled(True)
 
   def boutonTrueClic(self):
       SaisieValeur.LEvaleurPressed(self,True)

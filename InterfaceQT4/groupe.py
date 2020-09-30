@@ -62,10 +62,12 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       self.dictMCVenantDesBlocs={}
       if hasattr(self,'RBDeplie')  : self.RBDeplie.clicked.connect(self.setDeplie)
       if hasattr(self,'RBPlie')    : self.RBPlie.clicked.connect( self.setPlie)
+
       self.setAcceptDrops(True)
-      if hasattr (self, 'commandesLayout'): 
-         spacerItem = QSpacerItem(20, 5, QSizePolicy.Minimum, QSizePolicy.Expanding)
-         self.commandesLayout.addItem(spacerItem)
+      #if hasattr (self, 'commandesLayout'): 
+      #   print (' j ajoute un spacer dans ', self.node.item.nom)
+      #   spacerItem = QSpacerItem(20, 5, QSizePolicy.Minimum, QSizePolicy.Expanding)
+      #   self.commandesLayout.addItem(spacerItem)
      
   def donneFocus(self):
       for fenetre in self.listeFocus:
@@ -81,7 +83,6 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       for node in self.node.children:
            # non return mais  continue car il faut tenir compte des blocs
            if node.appartientAUnNoeudPlie==True : continue
-           #print "je suis apres le if pour ",node.item.nom
            widget=node.getPanelGroupe(self,self.maCommande)
            #print ("widget pour ", node.item.nom, widget)
            self.listeFocus.append(node.fenetre)
@@ -111,10 +112,10 @@ class Groupe(QWidget,FacultatifOuOptionnel):
            return
         
   def afficheOptionnel(self):
+        if self.editor.maConfiguration.closeOptionnel : return
         liste,liste_rouge=self.ajouteMCOptionnelDesBlocs()
         self.monOptionnel=self.editor.widgetOptionnel
         self.monOptionnel.afficheOptionnel(liste,liste_rouge,self)
-        #self.monOptionnel.affiche(liste)
            
 
   def ajouteMCOptionnelDesBlocs(self):
@@ -195,11 +196,16 @@ class Groupe(QWidget,FacultatifOuOptionnel):
       self.reaffiche(self.node) 
 
   def setDeplie(self):
-      #print ('je passe ds setDeplie de groupe')
+      #print ('je passe ds setDeplie de groupe', self.obj.nom)
+      self.node.firstDeplie = False
       self.node.setDeplie()
       self.reaffiche(self.node) 
     
 
   def traiteClicSurLabel(self,texte):
       if self.editor.code != "CARMELCND" : self.afficheOptionnel()
+
+
+  def propageChange(self,leType):
+      self.parentQt.propageChange(leType)
 

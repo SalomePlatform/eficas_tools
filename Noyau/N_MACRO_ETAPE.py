@@ -28,7 +28,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 try :
    from builtins import str
-   from builtins import range
 except : pass
 import types
 import sys
@@ -43,7 +42,6 @@ from . import N_utils
 from .N_utils import AsType
 from .N_CO import CO
 from .N_ASSD import ASSD
-from six.moves import range
 
 
 class MACRO_ETAPE(N_ETAPE.ETAPE):
@@ -69,7 +67,7 @@ class MACRO_ETAPE(N_ETAPE.ETAPE):
         N_ETAPE.ETAPE.__init__(self, oper, reuse, args, niveau=5)
         self.g_context = {}
         # Contexte courant
-        self.current_context = {}
+        self.currentContext = {}
         self.macro_const_context = {}
         self.index_etape_courante = 0
         self.etapes = []
@@ -249,8 +247,8 @@ Causes possibles :
         """
         # L'etape courante pour laquelle le contexte a ete calcule est
         # memorisee dans self.index_etape_courante
-        # self.current_context.items() if isinstance(v, ASSD)])
-        d = self.current_context = self.g_context.copy()
+        # self.currentContext.items() if isinstance(v, ASSD)])
+        d = self.currentContext = self.g_context.copy()
         if etape is None:
             return d
         # retirer les sd produites par 'etape'
@@ -503,10 +501,10 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
             # On est dans le cas de la creation d'un nouveau concept
             sd = etape.getSdProd()
             if sd != None:
-                self.NommerSdprod(sd, nomsd)
+                self.nommerSDProd(sd, nomsd)
         return sd
 
-    def NommerSdprod(self, sd, sdnom, restrict='non'):
+    def nommerSDProd(self, sd, sdnom, restrict='non'):
         """
           Cette methode est appelee par les etapes internes de la macro.
           La macro appelle le JDC pour valider le nommage.
@@ -552,14 +550,14 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
         if restrict == 'non':
             # On demande le nommage au parent mais sans ajout du concept dans le contexte du parent
             # car on va l'ajouter dans le contexte de la macro
-            self.parent.NommerSdprod(sd, sdnom, restrict='oui')
+            self.parent.nommerSDProd(sd, sdnom, restrict='oui')
             # On ajoute dans le contexte de la macro les concepts nommes
             # Ceci est indispensable pour les CO (macro) dans un INCLUDE
             self.g_context[sdnom] = sd
         else:
             # La demande de nommage vient probablement d'une macro qui a mis
             # le concept dans son contexte. On ne traite plus que le nommage (restrict="oui")
-            self.parent.NommerSdprod(sd, sdnom, restrict='oui')
+            self.parent.nommerSDProd(sd, sdnom, restrict='oui')
 
     def deleteConceptAfterEtape(self, etape, sd):
         """
@@ -666,7 +664,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
            l'etape courante.
         """
         ctx = {}
-        # update car par ricochet on modifierait jdc.current_context
+        # update car par ricochet on modifierait jdc.currentContext
         ctx.update(self.parent.getContexteCourant(self))
         # on peut mettre None car toujours en PAR_LOT='NON', donc la dernière
         ctx.update(self.getContexteAvant(None))
@@ -719,7 +717,7 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
                 if etp.reuse:
                     new_sd.setName(etp.sd.nom)
                 else:
-                    self.NommerSdprod(new_sd, etp.sd.nom)
+                    self.nommerSDProd(new_sd, etp.sd.nom)
             new_etp.copyIntern(etp)
             self.etapes.append(new_etp)
             self.index_etapes[new_etp] = len(self.etapes) - 1
@@ -729,9 +727,9 @@ Le type demande (%s) et le type du concept (%s) devraient etre derives""" % (t, 
            Reinitialise l'etape avec un nouveau jdc parent new_jdc
         """
         if self.sd and self.reuse == None:
-            self.parent.NommerSdprod(self.sd, self.sd.nom)
+            self.parent.nommerSDProd(self.sd, self.sd.nom)
         for concept in self.sdprods:
-            self.parent.NommerSdprod(concept, concept.nom)
+            self.parent.nommerSDProd(concept, concept.nom)
 
     def reparent(self, parent):
         """

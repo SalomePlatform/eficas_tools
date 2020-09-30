@@ -27,7 +27,6 @@ except : pass
 
 import types,os,re,sys
 import traceback
-import six
 import inspect
 
 from PyQt5.QtWidgets import QMessageBox, QFileDialog , QMenu, QPushButton, QTreeView ,QListView, QAbstractItemView
@@ -281,7 +280,7 @@ class ContientIcones(object):
 
       fichier=fichier[0]
       if not(fichier == ""):
-         ulfile = os.path.abspath(six.text_type(fichier))
+         ulfile = os.path.abspath(fichier)
          self.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
          self.lineEditVal.setText(fichier)
          self.editor.afficheCommentaire(tr("Fichier selectionne"))
@@ -350,7 +349,7 @@ class ContientIcones(object):
             options = QFileDialog.ShowDirsOnly)
 
       if not (directory == "") :
-         absdir = os.path.abspath(six.text_type(directory))
+         absdir = os.path.abspath(directory)
          self.appliEficas.maConfiguration.savedir = os.path.dirname(absdir)
          self.lineEditVal.setText(directory)
          self.LEvaleurPressed()

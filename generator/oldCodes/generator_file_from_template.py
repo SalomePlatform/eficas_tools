@@ -76,7 +76,7 @@ class FileFromTemplateGenerator(PythonGenerator):
         """
         short_keyword = obj.nom.strip()
         long_keyword = ""
-        for i in obj.get_genealogie()[:-1]:
+        for i in obj.getGenealogie()[:-1]:
             long_keyword += i + "."
         long_keyword += short_keyword
         self.kw_dict[short_keyword] = obj.valeur

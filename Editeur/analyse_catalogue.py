@@ -21,7 +21,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 try : 
    from builtins import str
-   from builtins import range
    from builtins import object
 except :
    pass
@@ -31,7 +30,6 @@ import re,six.moves.cPickle,os
 from Extensions.i18n import tr
 from Noyau.N_CR import CR
 
-from six.moves import range
 
 #
 __Id__="$Id: analyseCatalogue.py,v 1.9.8.1.2.1.2.6 2014-01-23 09:14:44 pnoyret Exp $"
@@ -296,15 +294,15 @@ def analyseCatalogueCommande(parent,nom_cata):
         return cata
 
 
-def makeCataPickle(fic_cata):
+def makeCataPickle(ficCata):
         """
         Lance l'analyse de l'ordre des mots-cles dans le catalogue dont le nom
         est passe en argument et sauvegarde ces infos dans le fichier pickle relu
         par Eficas
         """
-        fic_cata_p = os.path.splitext(fic_cata)[0]+'_pickled.py'
-        cata_ordonne = analyseCatalogue(None,fic_cata)
-        f = open(fic_cata_p,'w+')
+        ficCata_p = os.path.splitext(ficCata)[0]+'_pickled.py'
+        cata_ordonne = analyseCatalogue(None,ficCata)
+        f = open(ficCata_p,'w+')
         p = six.moves.cPickle.Pickler(f)
         p.dump(cata_ordonne.entites)
         f.close()

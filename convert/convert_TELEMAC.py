@@ -26,7 +26,6 @@ from Extensions.i18n import tr
 #traceback.print_stack()
 
 from convert.convert_python import Pythonparser
-from six.moves import range
 try:
   basestring
 except NameError:
@@ -93,31 +92,31 @@ class TELEMACparser(Pythonparser):
 
    
 
-   def convert(self, outformat, appli=None):
+   def convert(self, outformat, appliEficas=None):
 
 
       from Accas import A_BLOC, A_FACT, A_SIMP
       try :
-        self.dicoCasToCata = appli.readercata.dicoCasToCata
+        self.dicoCasToCata = appliEficas.readercata.dicoCasToCata
       except :
         self.dicoCasToCata = {}
         print ('pas de dicoCasToCata')
-      self.dicoInverse              = appli.readercata.dicoInverse
-      self.dicoMC                   = appli.readercata.dicoMC
-      self.Ordre_Des_Commandes      = appli.readercata.Ordre_Des_Commandes
+      self.dicoInverse              = appliEficas.readercata.dicoInverse
+      self.dicoMC                   = appliEficas.readercata.dicoMC
+      self.Ordre_Des_Commandes      = appliEficas.readercata.Ordre_Des_Commandes
       try :
-        self.TelemacdicoEn            = appli.readercata.TelemacdicoEn
+        self.TelemacdicoEn            = appliEficas.readercata.TelemacdicoEn
       except :
         self.TelemacdicoEn = {}
         print ('pas de TelemacdicoEn')
       try :
-        self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+        self.DicoEnumCasFrToEnumCasEn = appliEficas.readercata.DicoEnumCasFrToEnumCasEn
       except :
         self.DicoEnumCasFrToEnumCasEn = {}
         print ('pas de DicoEnumCasFrToEnumCasEn')
       
 
-      if appli.langue=='fr' :
+      if appliEficas.langue=='fr' :
           #from enum_Telemac2d_auto       import DicoEnumCasFrToEnumCasEn
           for k in self.DicoEnumCasFrToEnumCasEn :
               self.TelemacdicoEn[k]=self.DicoEnumCasFrToEnumCasEn[k]
@@ -295,8 +294,8 @@ class TELEMACparser(Pythonparser):
 
 
       # ne sert plus
-      #appli.listeTelemac=self.dictSimp
-      appli.listeTelemac={}
+      #appliEficas.listeTelemac=self.dictSimp
+      appliEficas.listeTelemac={}
       if 'debut' in dicoComment :
           commentaire="COMMENTAIRE("+repr(dicoComment['debut'])+")\n"
           self.textePy=commentaire+self.textePy

@@ -21,8 +21,6 @@
 
 from __future__ import absolute_import
 import re
-import six
-
 import os
 
 
@@ -42,7 +40,7 @@ class MonBoutonValide(QToolButton) :
         strAide=self.parent.node.item.object.getFr()
         if hasattr(self.parent.node.item.object.definition, 'defaut') :
                 strAide+='\ndefaut : \n'+str(self.parent.node.item.object.definition.defaut)
-        strRapport=six.text_type(self.parent.node.item.object.report())
+        strRapport=str(self.parent.node.item.object.report())
         self.parent.editor._viewText(strAide+"\n"+strRapport, "JDC_RAPPORT")
 
      def mousePressEvent(self, event):
@@ -57,7 +55,7 @@ class MonBoutonValide(QToolButton) :
           QToolTip.showText(event.globalPos(),myToolTip )
        else :
           t=""
-          texte=six.text_type(self.parent.node.item.object.report())
+          texte=self.parent.node.item.object.report().report()
           deb=1
           for l in texte.split('\n')[2:-2]:
               if re.match('^[\t !]*$',l) : continue

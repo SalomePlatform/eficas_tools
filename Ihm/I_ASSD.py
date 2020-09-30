@@ -27,15 +27,11 @@ from Noyau.N_VALIDATOR import ValError
 
 class ASSD:
    def __repr__(self):
-      return tr("concept %(inst_name)s de type %(class_name)s", \
-                       {'inst_name': self.getName(), \
-                        'class_name': self.__class__.__name__})
+      return "concept " + self.getName() + " type " + self.__class__.__name__
 
    def __str__(self):
       return self.getName() or "<None>"
 
-   #def __del__(self):
-   #   print "__del__",self
 
 class assd(ASSD):
    def __convert__(cls,valeur):
@@ -45,7 +41,7 @@ class assd(ASSD):
 class GEOM(ASSD):
    def __convert__(cls,valeur):
       return valeur
-   __convert__=classmethod(__convert__)
+   __convert__= classmethod(__convert__)
 
 class geom(GEOM):
    pass

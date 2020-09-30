@@ -33,6 +33,7 @@ class ASSD(object):
     """
        Classe de base pour definir des types de structures de donnees ASTER
        equivalent d un concept ASTER
+       Doit_on garder tout ce qui concerne jeveux ? les concepts ?
     """
     idracine = "SD"
 
@@ -66,7 +67,7 @@ class ASSD(object):
             self.order = self.parent.icmd
         else:
             self.order = 0
-        # attributs pour le Catalogue de Structure de Données Jeveux
+        # attributs pour le Catalogue de Structure de Données
         # "self.cata_sdj" est un attribut de classe
         self.ptr_class_sdj = None
         self.ptr_sdj = None
@@ -102,8 +103,13 @@ class ASSD(object):
         return self.etape[key]
 
     def setName(self, nom):
-        """Positionne le nom de self (et appelle sd_init)
+        """Positionne le nom de self 
         """
+        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
+        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
+        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
+        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
+        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
         self.nom = nom
 
     def isTypCO(self):
@@ -130,7 +136,8 @@ class ASSD(object):
                 self.nom = self.parent.getName(self) or self.id
             except:
                 self.nom = ""
-        if self.nom.find('sansnom') != -1 or self.nom == '':
+
+        if self.nom=='sansnom' or self.nom == '':
             self.nom = self.id
         return self.nom
 
@@ -214,9 +221,36 @@ class ASSD(object):
             val = self.jdc.parLot
         return val == 'OUI'
 
-    def rebuild_sd(self):
-        """Conserver uniquement pour la compatibilite avec le catalogue v10 dans eficas."""
 
+    def getEficasAttribut(self, attribut): 
+        #print ('getEficasAttribut : ', self, attribut)
+        valeur=self.etape.getMocle(attribut)
+        try :
+          valeur=self.etape.getMocle(attribut)
+        except :
+          valeur = None
+        #print (valeur)
+        return valeur
+
+    def getEficasListOfAttributs(self,listeAttributs):
+        from .N_MCLIST import MCList
+        #print ('getEficasListOfAttributs pour', self,listeAttributs)
+        aTraiter=(self.etape,)
+        while len(listeAttributs) > 0 : 
+          attribut=listeAttributs.pop(0)
+          print ("attribut", attribut)
+          nvListe=[]
+          for mc in aTraiter :
+             print (mc)
+             try : 
+               resultat=mc.getMocle(attribut)
+               if isinstance(resultat,MCList): 
+                  for rmc in resultat : nvListe.append(rmc) 
+               else : nvListe.append(resultat)
+             except : pass
+          aTraiter=nvListe
+        #print ('fin getEficasListOfAttributs ', nvListe)
+        return nvListe
 
 class assd(ASSD):
 

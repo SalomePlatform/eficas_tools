@@ -75,11 +75,11 @@ class NUPL(N_ENTITE.ENTITE,I_ENTITE.ENTITE):
           self.cr.fatal(tr("L'attribut 'max' doit etre un entier : ")+str(self.max))
       if self.min > self.max :
          self.cr.fatal(tr("Nombres d'occurrence min et max invalides :") +str(self.min)+","+str(self.max))
-      if type(self.fr) != bytes and type(self.fr) != str :
+      if type(self.fr) != bytes and type(self.fr) != str  :
         self.cr.fatal(tr("L'attribut 'fr' doit etre une chaine de caracteres"))
       if self.statut not in ['o','f','c','d']:
         self.cr.fatal(tr("L'attribut 'statut' doit valoir 'o','f','c' ou 'd'"))
-      if type(self.docu) != bytes and type(self.docu) != str  :
+      if type(self.docu) != bytes and type(self.docu) != str   :
         self.cr.fatal(tr("L'attribut 'docu' doit etre une chaine de caracteres"))
       self.verifCataRegles()
 

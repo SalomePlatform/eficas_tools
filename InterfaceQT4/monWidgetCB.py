@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2020   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -34,7 +34,7 @@ from InterfaceQT4.politiquesValidation  import PolitiqueUnique
 from InterfaceQT4.qtSaisie              import SaisieValeur
 
 from PyQt5.QtWidgets import QComboBox, QCompleter
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QEvent
 
 
 class MonWidgetCBCommun (Feuille):
@@ -45,7 +45,7 @@ class MonWidgetCBCommun (Feuille):
         self.determineChoix()
         self.setValeursApresBouton()
         self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
-        #self.CBChoix.lineEdit().setText(tr("Select"))
+        self.CBChoix.wheelEvent=self.wheelEvent
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.maCommande.listeAffichageWidget.append(self.CBChoix)
         self.AAfficher=self.CBChoix
@@ -54,7 +54,6 @@ class MonWidgetCBCommun (Feuille):
   def setValeursApresBouton(self):
       if self.objSimp.getValeur()==None : 
          self.CBChoix.setCurrentIndex(-1)
-         #self.CBChoix.lineEdit().setStyleSheet(("QLineEdit {" " background:yellow;\n" "font: italic ;\n" " }\n" " "))
          self.CBChoix.lineEdit().setText(tr("Select"))
          return
       valeur=self.objSimp.getValeur()
@@ -83,14 +82,20 @@ class MonWidgetCBCommun (Feuille):
       SaisieValeur.LEvaleurPressed(self,valeur)
       self.reaffiche()
 
+  def wheelEvent(self,  event):
+  # Sinon poum sur les fenetres trop longues
+  # lorsque la widget attrape le wheelevent
+    event.ignore()
+
+
 class MonWidgetCB (Ui_WidgetCB, MonWidgetCBCommun):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-      self.maListeDeValeur=monSimpDef.into
+      self.maListeDeValeur = monSimpDef.into
       MonWidgetCBCommun. __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 
 class MonWidgetCBSD (Ui_WidgetCB,MonWidgetCBCommun):
 
   def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-      self.maListeDeValeur=node.item.getSdAvantDuBonType()
+      self.maListeDeValeur = node.item.getSdAvantDuBonType()
       MonWidgetCBCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)

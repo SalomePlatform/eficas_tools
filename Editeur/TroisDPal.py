@@ -32,9 +32,9 @@ from Extensions.i18n import tr
 
 class TroisDPilote(object):
 
-   def __init__(self,node,appli):
+   def __init__(self,node,appliEficas):
       self.node=node
-      self.appli=appli
+      self.appliEficas=appliEficas
 
    def envoievisu(self):
       """ 
@@ -51,6 +51,6 @@ class TroisDPilote(object):
          return ""
       from Extensions.param2 import originalMath
       originalMath.toOriginal()
-      self.appli.envoievisu(texte)
+      self.appliEficas.envoievisu(texte)
       originalMath.toSurcharge()
   

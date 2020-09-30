@@ -35,6 +35,7 @@ from Editeur      import Objecttreeitem
 from InterfaceQT4 import browser
 from Noyau.N_CR   import justifyText
 from Accas        import SalomeEntry
+from Accas        import UserASSD
     
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):    
 
@@ -43,6 +44,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
 
     def getPanelGroupe(self,parentQt,maCommande):
+        #print (self,self.item.nom, )
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
@@ -134,13 +136,22 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                from InterfaceQT4.monWidgetSDCOInto import MonWidgetSDCOInto
                widget=MonWidgetSDCOInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           elif self.item.waitAssd():
-            if len(self.item.getSdAvantDuBonType()) == 0 :
+            
+            # PN - pour ne pas appeller trop souvent self.item.getSdAvantDuBonType()
+            if not (self.item.waitUserAssdEnCreation()) : maListe=self.item.getSdAvantDuBonType()
+            if self.item.waitUserAssdEnCreation() : 
+               from InterfaceQT4.monWidgetCreeUserAssd import MonWidgetCreeUserAssd
+               widget=MonWidgetCreeUserAssd(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            #elif len(self.item.getSdAvantDuBonType()) == 0 :
+            elif len(maListe) == 0 :
                from InterfaceQT4.monWidgetVide import MonWidgetVide
                widget=MonWidgetVide(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif len(self.item.getSdAvantDuBonType()) < 4 :
+            #elif len(self.item.getSdAvantDuBonType()) < 4 :
+            elif len(maListe) < 4 :
               from InterfaceQT4.monWidgetRadioButton import MonWidgetRadioButtonSD
               widget=MonWidgetRadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-            elif len(self.item.getSdAvantDuBonType()) < 7 :
+            #elif len(self.item.getSdAvantDuBonType()) < 7 :
+            elif len(maListe) < 7 :
               from InterfaceQT4.monWidget4a6RadioButton import MonWidget4a6RadioButtonSD
               widget=MonWidget4a6RadioButtonSD(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
@@ -177,8 +188,9 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                else :
                  from InterfaceQT4.monWidgetPlusieursInto import MonWidgetPlusieursInto
                  widget=MonWidgetPlusieursInto(self,maDefinition,monNom,monObjet,parentQt,maCommande)
-          elif self.item.waitAssd() :
+          elif self.item.waitAssd()  and not self.item.waitUserAssdEnCreation() :
                listeAAfficher = self.item.getSdAvantDuBonType()
+               #if not (self.item.waitUserAssdEnCreation()) : maListe=self.item.getSdAvantDuBonType()
                mctype=maDefinition.type[0]
                enable_salome_selection = self.editor.salome and \
                       (('grma' in repr(mctype)) or ('grno' in repr(mctype)) or ('SalomeEntry' in repr(mctype)) or \
@@ -229,7 +241,10 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
                   from InterfaceQT4.monWidgetPlusieursPlie import MonWidgetPlusieursPlie
                   widget=MonWidgetPlusieursPlie(self,maDefinition,monNom,monObjet,parentQt,maCommande)
           else :
-            if self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
+            if self.item.waitUserAssdEnCreation() : 
+               from InterfaceQT4.monWidgetCreeUserAssd import MonWidgetCreeListeUserAssd
+               widget=MonWidgetCreeListeUserAssd(self,maDefinition,monNom,monObjet,parentQt,maCommande)
+            elif self.item in self.editor.listeDesListesOuvertes or not(self.editor.afficheListesPliees)  : 
                from InterfaceQT4.monWidgetPlusieursBase import MonWidgetPlusieursBase
                widget=MonWidgetPlusieursBase(self,maDefinition,monNom,monObjet,parentQt,maCommande)
             else :
@@ -340,17 +355,17 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       try :
         if "R" in self.object.definition.type:
            clef=self.object.getNomConcept()
-           if clef in self.appli.dict_reels:
+           if clef in self.appliEficas.dict_reels:
               if type(valeurs) == tuple:
                  valeurs_reelles=[]
                  for val in valeurs :
-                    if val in self.appli.dict_reels[clef]:
-                       valeurs_reelles.append(self.appli.dict_reels[clef][val])
+                    if val in self.appliEficas.dict_reels[clef]:
+                       valeurs_reelles.append(self.appliEficas.dict_reels[clef][val])
                     else :
                        valeurs_reelles.append(val)
               else :
-                 if valeurs in self.appli.dict_reels[clef]:
-                    valeurs_reelles=self.appli.dict_reels[clef][valeurs]
+                 if valeurs in self.appliEficas.dict_reels[clef]:
+                    valeurs_reelles=self.appliEficas.dict_reels[clef][valeurs]
               valeurs=valeurs_reelles
       except :
         pass
@@ -500,7 +515,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
 
   def getIconName(self):
-    if self.appli.maConfiguration.differencieSiDefaut and self.isValid():
+    if self.appliEficas.maConfiguration.differencieSiDefaut and self.isValid():
       if self.object.definition.defaut != None :
          if self.object.valeur == self.object.definition.defaut : return "ast-green-dark-ball"
          if self.object.definition.max > 1 and list(self.object.valeur) == list(self.object.definition.defaut) : return "ast-green-dark-ball"
@@ -523,21 +538,23 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
     return text
     
 
-  def setValeurCo(self,nom_co):
+  def setValeurCo(self,nomCo):
       """
-      Affecte au MCS pointé par self l'objet de type CO et de nom nom_co
+      Affecte au MCS pointe par self l'objet de type CO et de nom nom_co
       """
-      ret = self.object.setValeurCo(nom_co)
+      ret = self.object.setValeurCo(nomCo)
       #print "setValeurCo",ret
       return ret
       
   def getSdAvantDuBonType(self):
       """
-      Retourne la liste des noms des SD présentes avant l'étape qui contient
-      le MCS pointé par self et du type requis par ce MCS
+      Retourne la liste des noms des SD presentes avant l'etape qui contient
+      le MCS pointe par self et du type requis par ce MCS
       """
       a=self.object.etape.parent.getSdAvantDuBonType(self.object.etape,self.object.definition.type)
-      return a
+      if self.waitUserAssd() : l=self.jdc.getSdCreeParObjet(self.object.definition.type)
+      else :l=[]
+      return a+l
 
   def getSdAvantDuBonTypePourTypeDeBase(self):
       a=self.object.jdc.getSdAvantDuBonTypePourTypeDe_Base(self.object.etape,"LASSD")
@@ -569,7 +586,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def waitCo(self):
       """
-      Méthode booléenne qui retourne 1 si l'objet pointé par self
+      Methode booleenne qui retourne 1 si l'objet pointe par self
       attend un objet de type ASSD qui n'existe pas encore (type CO()),
       0 sinon
       """
@@ -585,7 +602,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def waitGeom(self):
       """
-      Méthode booléenne qui retourne 1 si l'objet pointé par self
+      Methode booleenne qui retourne 1 si l'objet pointe par self
       attend un objet GEOM, 0 sinon
       """
       return self.object.waitGeom()
@@ -595,7 +612,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
     
   def waitComplex(self):
-      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
+      """ Methode booleenne qui retourne 1 si l'objet pointe par self
       attend un complexe, 0 sinon """
       if 'C' in self.object.definition.type:
           return 1
@@ -603,8 +620,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           return 0
 
   def waitReel(self):
-      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
-      attend un réel, 0 sinon """
+      """ Methode booleenne qui retourne 1 si l'objet pointe par self
+      attend un reel, 0 sinon """
       if 'R' in self.object.definition.type:
           return 1
       else:
@@ -614,16 +631,16 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return  self.object.waitTuple()
 
   def waitDate(self):
-      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
-      attend un réel, 0 sinon """
+      """ Methode booleenne qui retourne 1 si l'objet pointe par self
+      attend un reel, 0 sinon """
       if 'DateHHMMAAAA' in self.object.definition.type:
           return 1
       else:
           return 0
         
   def waitHeure(self):
-      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
-      attend un réel, 0 sinon """
+      """ Methode booleenne qui retourne 1 si l'objet pointe par self
+      attend un reel, 0 sinon """
       if 'HeureHHMMSS' in self.object.definition.type:
           return 1
       else:
@@ -632,7 +649,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
         
         
   def waitTuple(self):
-      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
+      """ Methode booleenne qui retourne 1 si l'objet pointe par self
       attend un Tuple, 0 sinon """
       for ss_type in self.object.definition.type:
           if repr(ss_type).find('Tuple') != -1 :
@@ -640,7 +657,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return 0
 
   def waitMatrice(self):
-      """ Méthode booléenne qui retourne 1 si l'objet pointé par self
+      """ Methode booleenne qui retourne 1 si l'objet pointe par self
       attend un Tuple, 0 sinon """
       for ss_type in self.object.definition.type:
           if repr(ss_type).find('Matrice') != -1 :
@@ -648,8 +665,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
       return 0
 
   def waitAssd(self):
-      """Méthode booléenne qui retourne 1 si l'objet pointé par self
-      attend un objet de type ASSD ou dérivé, 0 sinon """
+      """Methode booleenne qui retourne 1 si l'objet pointe par self
+      attend un objet de type ASSD ou derive, 0 sinon """
       return self.object.waitAssd()
     
   def waitAssdOrTypeBase(self) :
@@ -673,7 +690,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
    
   def getType(self):
       """ 
-          Retourne le type de valeur attendu par l'objet représenté par l'item.
+          Retourne le type de valeur attendu par l'objet represente par l'item.
       """
       return self.object.getType()
 
@@ -697,7 +714,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
 
   def evalValeurItem(self,valeur):
-      """ Lance l'interprétation de 'valeur' qui doit ne pas etre un tuple 
+      """ Lance l'interpretation de 'valeur' qui doit ne pas etre un tuple 
           - va retourner la valeur de retour et la validite
             selon le type de l objet attendu
           - traite les reels et les parametres 
@@ -716,7 +733,6 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
              valeurretour,validite = valeur,1
       else :
              valeurretour,validite= self.object.evalValeur(valeur)
-      #print "evalValeurItem",valeurretour,validite
 
       if validite == 0:
          if (type(valeur) == bytes  or type(valeur) == str )and self.object.waitTxm():
@@ -736,7 +752,7 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
          #except:
             #valeurretour=None
             #validite=0
-      # on est dans le cas ou on a évalué et ou on n'aurait pas du
+      # on est dans le cas ou on a evalue et ou on n'aurait pas du
       if self.object.waitTxm() :
           if type(valeurretour) != bytes:
              valeurretour=str(valeur)
@@ -746,11 +762,11 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
   def isCO(self,valeur=None):
       """
          Indique si valeur est un concept produit de la macro
-         Cette méthode n'a de sens que pour un MCSIMP d'une MACRO
+         Cette methode n'a de sens que pour un MCSIMP d'une MACRO
          Si valeur vaut None on teste la valeur du mot cle
       """
       # Pour savoir si un concept est un nouveau concept de macro
-      # on regarde s'il est présent dans l'attribut sdprods de l'étape
+      # on regarde s'il est present dans l'attribut sdprods de l'etape
       # ou si son nom de classe est CO.
       # Il faut faire les 2 tests car une macro non valide peut etre
       # dans un etat pas tres catholique avec des CO pas encore types
@@ -770,8 +786,8 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
 
   def traiteReel(self,valeur):
       """
-      Cette fonction a pour but de rajouter le '.' en fin de chaine pour un réel
-      ou de détecter si on fait référence a un concept produit par DEFI_VALEUR
+      Cette fonction a pour but de rajouter le '.' en fin de chaine pour un reel
+      ou de detecter si on fait reference a un concept produit par DEFI_VALEUR
       ou un EVAL ...
       """
       valeur = valeur.strip()
@@ -780,10 +796,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
           return valeur
       if len(valeur) >= 3 :
           if valeur[0:4] == 'EVAL' :
-              # on a trouvé un EVAL --> on retourne directement la valeur
+              # on a trouve un EVAL --> on retourne directement la valeur
               return valeur
       if valeur.find('.') == -1 :
-          # aucun '.' n'a été trouvé dans valeur --> on en rajoute un a la fin
+          # aucun '.' n'a ete trouve dans valeur --> on en rajoute un a la fin
           if (self.isParam(valeur)):
               return valeur
           else:

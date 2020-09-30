@@ -46,12 +46,13 @@ class ReaderCata (ReaderCataCommun):
       self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
       self.code=self.appliEficas.code
       self.ssCode=self.appliEficas.ssCode
-      self.appliEficas.format_fichier='python'
-      self.appliEficas.format_fichier_in ='xml'
+      # PN ?? bizarre le 22/04/20
+      self.appliEficas.formatfichierOut='python'
+      self.appliEficas.formatfichierIn ='xml'
       self.modeNouvCommande=self.appliEficas.maConfiguration.modeNouvCommande
-      self.versionCode=self.appliEficas.versionCode
+      self.labelCode=self.appliEficas.labelCode
       self.version_cata=None
-      self.fic_cata=None
+      self.ficCata=None
       self.OpenCata()
       self.cataitem=None
       self.titre='Eficas XML'
@@ -65,11 +66,11 @@ class ReaderCata (ReaderCataCommun):
 
    def OpenCata(self):
 
-      #self.fic_cata = 'Cata_MED_FAM.xml'
+      #self.ficCata = 'Cata_MED_FAM.xml'
       #xml = open('/home/A96028/QT5GitEficasTravail/eficas/Med/Cata_MED_FAM.xml').read()
       #xml = open('/home/A96028/QT5GitEficasTravail/eficas/CataTestXSD/cata_test1.xml').read()
       self.choisitCata()
-      xml=open(self.fic_cata).read()
+      xml=open(self.ficCata).read()
       SchemaMed = readerEfiXsd.efficas.CreateFromDocument(xml)
       SchemaMed.exploreCata() 
       self.cata=SchemaMed

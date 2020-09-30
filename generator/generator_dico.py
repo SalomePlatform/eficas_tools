@@ -55,7 +55,7 @@ class DicoGenerator(PythonGenerator):
    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appli=None):
+   def gener(self,obj,format='brut',config=None,appliEficas=None):
        
       self.initDico()
       
@@ -91,9 +91,6 @@ class DicoGenerator(PythonGenerator):
    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
-        print ('jjjjjjjjjj')
-        print (obj.nom)
-        print (s)
         courant=self.Dico
         for p in obj.getGenealogiePrecise()[0:-1]:
             if not (p in courant.keys()) : courant[p]={}

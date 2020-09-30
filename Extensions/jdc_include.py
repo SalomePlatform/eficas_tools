@@ -57,7 +57,7 @@ class JDC_POURSUITE(JDC):
    def o_register(self,sd):
       return self.jdc_pere.o_register(sd)
 
-   def NommerSdprod(self,sd,sdnom,restrict='non'):
+   def nommerSDProd(self,sd,sdnom,restrict='non'):
       """
           Nomme la SD apres avoir verifie que le nommage est possible : nom
           non utilise
@@ -65,7 +65,7 @@ class JDC_POURSUITE(JDC):
           Si le nom est deja utilise, leve une exception
           Met le concept cree dans le contexe global g_context
       """
-      #print "NommerSdprod",sd,sdnom,restrict
+      #print "nommerSDProd",sd,sdnom,restrict
       if self.prefix_include:
           if sdnom != self.prefix_include:sdnom=self.prefix_include+sdnom
 
@@ -90,7 +90,7 @@ class JDC_POURSUITE(JDC):
           sdnom=sd.id[2:]
           pass
 
-      o=self.sds_dict.get(sdnom,None)
+      o=self.sdsDict.get(sdnom,None)
       if isinstance(o,ASSD):
          raise AsException(tr("Nom de concept deja defini : %s" ,sdnom))
 
@@ -104,7 +104,7 @@ class JDC_POURSUITE(JDC):
 
       # ATTENTION : Il ne faut pas ajouter sd dans sds car il s y trouve deja.
       # Ajoute a la creation (appel de regSD).
-      self.sds_dict[sdnom]=sd
+      self.sdsDict[sdnom]=sd
       sd.nom=sdnom
 
       # En plus si restrict vaut 'non', on insere le concept dans le contexte du JDC

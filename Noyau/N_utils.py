@@ -37,7 +37,6 @@ import sys
 from .N_Exception import AsException
 from .N_types import isInt, isFloat, isComplex, isStr, isSequence, isASSD
 from .strfunc import getEncoding
-import six
 
 SEP = '_'
 
@@ -57,6 +56,7 @@ def calleeWhere(niveau=4):
         # Python 2.7 compile function does not accept unicode filename, so we encode it
         # with the current locale encoding in order to have a correct traceback.
         # Here, we convert it back to unicode.
+        import six
         filename = six.text_type(frame.f_code.co_filename, getEncoding())
         return frame.fLineNo, filename, frame.f_code.co_firstlineno, frame.f_locals
     except:

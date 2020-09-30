@@ -37,7 +37,6 @@ from .gereListe              import LECustom
 from .gereListe              import MonLabelListeClic
 from Extensions.i18n import tr
 
-from six.moves import range
 from PyQt5.QtWidgets  import   QFrame, QApplication, QScrollBar
 from PyQt5.QtCore import QTimer, QSize, Qt
 from PyQt5.QtGui  import QIcon, QPalette
@@ -49,7 +48,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.nomLine="LEResultat"
         self.listeLE=[]
         self.ouAjouter=0
-        self.NumLineEditEnCours=0
+        self.numLineEditEnCours=0
         self.alpha=0
         self.filtre=""
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parent,commande)
@@ -65,7 +64,6 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.prepareListeResultat()
         if len(self.listeAAfficher) < 20 : self.frameRecherche2.close()
         if len(self.listeAAfficher) < 20 : self.frameRecherche.close()
-        self.adjustSize()
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
           fichier=os.path.join(repIcon, 'arrow_up.png')
@@ -109,8 +107,12 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           self.ajoutLE(0)
           return
        self.filtreListe()
-       if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
-       else : self.setMinimumHeight(len(self.listeAAfficher)*30)
+       if len(self.listeAAfficher)*30 > 400 : self.setMinimumHeight(400)
+       else : 
+         if self.monSimpDef.min > len(self.listeAAfficher) : self.setMinimumHeight(self.monSimpDef.min*30+30)
+         if self.monSimpDef.max > len(self.listeAAfficher) : self.setMinimumHeight(180)
+         else :  self.setMinimumHeight(len(self.listeAAfficher)*30+30)
+       self.adjustSize()
 
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        for i in range(1,len(self.listeAAfficher)+1): self.ajoutLE(i)
@@ -217,7 +219,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
       setattr(self,nomLE,nouveauLE)
       
   def ajoutLineEdit(self):
-      print ('ajoutLineEdit')
+      #print ('ajoutLineEdit')
       self.indexDernierLabel=self.indexDernierLabel+1
       self.ajoutLEResultat (self.indexDernierLabel)
 
@@ -257,7 +259,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.changeValeur()
         self.setValeurs(first=False)
 
-  def changeValeur(self,changeDePlace=False,oblige=False):
+  def changeValeur(self,changeDePlace=False,oblige=False, numero=None):
 #PN les 2 arg sont pour que la signature de ma fonction soit identique a monWidgetPlusieursBase
         listeVal=[]
         for i in range(1,self.indexDernierLabel+1):

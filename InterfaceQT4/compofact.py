@@ -25,34 +25,35 @@ from Extensions.i18n import tr
 
 
 from Editeur import Objecttreeitem
-import six
 import traceback
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 
-    def getPanelGroupe(self,parentQt,commande,insertIn=-1):
+    def getPanelGroupe(self,parentQt,commande):
+    # ----------------------------------------
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
         maCommande=commande
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
-        #if  hasattr(self,'plie') :print self.item.nom, self.plie
-        #if maDefinition.fenetreIhm == 'Tableau':
-        #   from InterfaceQt4.monWidgetFact import MonWidgetFactTableau
-        #   widget=MonWidgetFactTableau(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
-        #elif  hasattr(self,'plie') and self.plie==True : 
         if  hasattr(self,'plie') and self.plie==True : 
            from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
-           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
+           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+        elif self.editor.maConfiguration.afficheFirstPlies and self.firstAffiche: 
+           self.firstAffiche = False
+           self.setPlie()
+           from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
+           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         else:
            from InterfaceQT4.monWidgetFact import MonWidgetFact
-           widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
+           widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         return widget
 
 
     def createPopUpMenu(self):
+    # ------------------------
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
 
@@ -60,12 +61,15 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   itemNode=Node
   
   def isExpandable(self):
+  # ----------------------
     return 1
 
   def getText(self):
+  # ----------------
       return  ''
 
   def getLabelText(self):
+  # ----------------------
       """ Retourne 3 valeurs :
         - le texte à afficher dans le noeud representant l'item
         - la fonte dans laquelle afficher ce texte
@@ -76,18 +80,18 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
       return self.object.getLabelText(),None,None
 
   def isValid(self):
+  # ----------------
     return self.object.isValid()
 
   def isCopiable(self):
+  # ----------------
     return 1
 
   def getIconName(self):
-    if self.object.isValid():
-      return "ast-green-los"
-    elif self.object.isOblig():
-      return "ast-red-los"
-    else:
-      return "ast-yel-los"
+  # ----------------
+    if self.object.isValid()  : return "ast-green-los"
+    elif self.object.isOblig(): return "ast-red-los"
+    else                      : return "ast-yel-los"
 
   #PNPN ????
   #def keys(self):
@@ -95,6 +99,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
   #  return keys
 
   def getSubList(self):
+  # ----------------
       """
          Reactualise la liste des items fils stockes dans self.sublist
       """
@@ -115,7 +120,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
             # nouvel objet : on cree un nouvel item
             def setFunction(value, object=obj):
                 object.setval(value)
-            item = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj, setFunction)
+            item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
             sublist[pos]=item
          pos=pos+1
 
@@ -138,7 +143,7 @@ class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
          return (0, tr('Impossible de supprimer un mot-cle obligatoire '))
 
       if self.object.suppEntite(itemobject):
-         message = tr("Mot-cle %s supprime")+ six.text_type(itemobject.nom)
+         message = tr("Mot-cle %s supprime")+ itemobject.nom
          return (1, message)
       else:
          return (0,tr('Pb interne : impossible de supprimer ce mot-cle'))

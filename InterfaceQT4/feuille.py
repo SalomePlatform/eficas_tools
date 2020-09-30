@@ -174,9 +174,9 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
             #c=str('<html><head/><body><p><span style=" font-size:8pt; ">')+c+"</span></p></body></html>"
             c=str('<html><head/><body><p>')+c+"</p></body></html>"
             self.label.setToolTip(c)
+
       if self.editor.maConfiguration.differencieSiDefaut :
             self.label.setToolTip('defaut : ' + tr(str(self.node.item.object.definition.defaut)))
-
 
 
 

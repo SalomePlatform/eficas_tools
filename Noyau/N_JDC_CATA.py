@@ -48,8 +48,10 @@ class JDC_CATA(N_ENTITE.ENTITE):
     class_instance = N_JDC.JDC
     label = 'JDC'
 
-    def __init__(self, code='', execmodul=None, regles=(), niveaux=(), **args):
+    def __init__(self, code='', execmodul=None, regles=(), niveaux=(),fichierSource=None, **args):
         """
+        on se laisse la possibilite d initier fichierSource avec autre chose que le nom du fichier
+        au cas ou ... pour pouvoir changer le nom du 'sous code' implementer (cf readercata)
         """
         self.code = code
         self.execmodul = execmodul
@@ -63,6 +65,7 @@ class JDC_CATA(N_ENTITE.ENTITE):
         self.d_niveaux = {}
         self.l_niveaux = niveaux
         self.commandes = []
+        self.fichierSource = fichierSource
         for niveau in niveaux:
             self.d_niveaux[niveau.nom] = niveau
         # On change d'objet catalogue. Il faut d'abord mettre le catalogue
@@ -71,6 +74,10 @@ class JDC_CATA(N_ENTITE.ENTITE):
         CONTEXT.setCurrentCata(self)
         self.fenetreIhm=None
         self.dictTypesXSD={}
+        self.listeDesTypesXSDRedefini=[]
+        self.dictTypesASSDorUserASSDCrees={}
+        self.dictTypesASSDorUserASSDUtilises={}
+
  
     def __call__(self, procedure=None, cata=None, cata_ord_dico=None,
                  nom='SansNom', parent=None, **args):

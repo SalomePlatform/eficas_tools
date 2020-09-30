@@ -40,11 +40,11 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
   a l'utilisateur de choisir une seule valeur parmi une liste de valeurs
   discretes
   """
-  def __init__(self,  parentAppli=None):
-      QDialog.__init__(self,parent=parentAppli,flags=Qt.Window)
+  def __init__(self,  appliEficas=None):
+      QDialog.__init__(self,parent=appliEficas,flags=Qt.Window)
       self.setModal(True)
       self.setupUi(self)
-      self.parentAppli=parentAppli
+      self.appliEficas=appliEficas
       self.verifieInstall()
       self.code=None
       self.buttonBox.accepted.disconnect(self.accept)
@@ -93,14 +93,14 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
               self.groupCodes.addButton(bouton)
           except :
               pass
-      self.parentAppli.listeCode=self.parentAppli.listeCode+listeCodesIntegrateur
+      self.appliEficas.listeCode=self.appliEficas.listeCode+listeCodesIntegrateur
 
   def choisitCode(self):
       bouton=self.groupCodes.checkedButton()
       if bouton==None : return
       code=str(bouton.text())
       codeUpper=code.upper()
-      self.parentAppli.code=codeUpper
+      self.appliEficas.code=codeUpper
       try :
           dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
           l=os.listdir(dirCode)

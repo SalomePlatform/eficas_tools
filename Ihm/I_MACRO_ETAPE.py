@@ -42,8 +42,6 @@ import Noyau, Validation.V_MACRO_ETAPE
 from Noyau import N_Exception
 from Noyau.N_Exception import AsException
 import Accas # attention aux imports circulaires
-import six
-from six.moves import range
 # fin import a resorber
 
 class MACRO_ETAPE(I_ETAPE.ETAPE):
@@ -79,12 +77,12 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisee par ops.POURSUITE et INCLUDE
     """
-    #print ("getContexteJdc",self,self.nom, text)
+    print ("getContexteJdc",self,self.nom, text)
     # On recupere l'etape courante
     step=CONTEXT.getCurrentStep()
     self.text_included_converted=0
-    #try:
-    if 1 :
+    try:
+    #if 1 :
        # on essaie de creer un objet JDC auxiliaire avec un contexte initial
        # Attention getContexteAvant retourne un dictionnaire qui contient
        # le contexte courant. Ce dictionnaire est reactualise regulierement.
@@ -116,7 +114,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.text_converted=0
        self.text_error=""
        if self.nom != "INCLUDE_MATERIAU":
-          format=self.parent.appli.appliEficas.format_fichier
+          format=self.jdc.appliEficas.format_fichier
           #on force a python pour Carmel
           if format=="CARMEL3D" : format="python"
           import convert
@@ -124,7 +122,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
               # Le convertisseur existe on l'utilise
               p=convert.plugins[format]()
               p.text=text
-              text=p.convert('exec',self.jdc.appli)
+              text=p.convert('exec',self.jdc.appliEficas)
               #Si le fichier ne peut pas etre converti, le cr n'est pas vide
               #et le texte est retourne tel que
               if not p.cr.estvide(): 
@@ -136,15 +134,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
        if hasattr(self,'sd') and self.sd != None : context_ini[self.sd.nom]=self.sd
        j=self.JdC_aux( procedure=text, nom=fichier,
-                                appli=self.jdc.appli,
+                                appliEficas=self.jdc.appliEficas,
                                 cata=self.jdc.cata,
                                 cata_ord_dico=self.jdc.cata_ordonne_dico,
                                 context_ini = context_ini,
                                 jdc_pere=self.jdc,etape_include=self,
                                 prefix_include=prefix_include,
                                 recorded_units=self.recorded_units,
-                                old_recorded_units=old_recorded_units)
-                                #old_recorded_units=old_recorded_units,**args)
+                                old_recorded_units=old_recorded_units,**args)
 
        j.analyse()
        if not j.cr.estvide(): self.text_included_converted=0
@@ -155,8 +152,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        self.jdc_aux=j
        self.jdc.jdcDict=self.jdc_aux
 
-    #except:
-    else :
+    except:
+    #else :
        traceback.print_exc()
        # On retablit l'etape courante step
        CONTEXT.unsetCurrentStep()
@@ -172,7 +169,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
        #print ("valid ",j.isValid())
        CONTEXT.unsetCurrentStep()
        CONTEXT.setCurrentStep(step)
-       raise EficasException(tr("Impossible de relire le fichier %s \n ")+ six.text_type(j.cr))
+       raise EficasException(tr("Impossible de relire le fichier %s \n ")+ str(j.cr))
 
 
     if not j.isValid() and doitEtreValide:
@@ -205,14 +202,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
     # On remplit le dictionnaire des concepts produits inclus
     # en retirant les concepts presents dans le  contexte initial
-    # On ajoute egalement le concept produit dans le sds_dict du parent
+    # On ajoute egalement le concept produit dans le sdsDict du parent
     # sans verification car on est sur (verification integree) que 
     # le nommage est possible
     self.g_context.clear()
     for k,v in j_context.items():
        if (not k in context_ini) or (context_ini[k] != v):
            self.g_context[k]=v
-           self.parent.sds_dict[k]=v
+           self.parent.sdsDict[k]=v
 
     #Ce traitement n'est realise que dans les cas suivants:
     #     - si convert n'a pas pu convertir le jeu de commandes
@@ -229,15 +226,24 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             if callable(v):continue
             self.g_context[k]=param2.Variable(k,v)
 
+    print (j)
+    print (dir(j))
+    print (j.currentContext)
     # On recupere le contexte courant
-    self.current_context=j.current_context
+    self.currentContext=j.currentContext
+    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     self.index_etape_courante=j.index_etape_courante
+    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     self.jdc_aux=j
+    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
 
     # On retablit l'etape courante step
     CONTEXT.unsetCurrentStep()
+    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     CONTEXT.setCurrentStep(step)
+    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
 
+    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     return j_context
 
   def reevalueSdJdc(self):
@@ -324,6 +330,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       """
          Supprime le concept produit sd s'il est produit par l'etape
       """
+      print ('supprimeSdprod de MACRO_ETAPE')
       if sd in self.sdprods:
          self.initModif()
          self.parent.delSdprod(sd)
@@ -477,7 +484,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     self.jdc_aux.cr=self.jdc_aux.CR()
     # On remplit le dictionnaire des concepts produits inclus
     # en retirant les concepts presents dans le  contexte initial
-    # On ajoute egalement le concept produit dans le sds_dict du parent
+    # On ajoute egalement le concept produit dans le sdsDict du parent
     # sans verification car on est sur (verification integree) que
     # le nommage est possible
     j_context=self.jdc_aux.getContexteAvant(None)
@@ -486,9 +493,9 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     for k,v in j_context.items():
        if not k in context_ini or context_ini[k] != v:
            self.g_context[k]=v
-           self.parent.sds_dict[k]=v
+           self.parent.sdsDict[k]=v
     # On recupere le contexte courant
-    self.current_context=self.jdc_aux.current_context
+    self.currentContext=self.jdc_aux.currentContext
     self.index_etape_courante=self.jdc_aux.index_etape_courante
     self.contexte_fichier_init = j_context
     self.fichier_err = None
@@ -602,8 +609,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     except:
        # Impossible de construire le jdc auxiliaire (sortie par exception)
        l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-       if self.jdc.appli is not None:
-          self.jdc.appli.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+       if self.jdc.editor is not None:
+          self.jdc.editor.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
                                        message= tr("Ce fichier ne sera pas pris en compte\n %s",''.join(l)))
 
        self.g_context={}
@@ -619,9 +626,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     """
         Cette methode sert a craer un contexte en interpratant un texte source Python.
     """
-    #print ("makeContexteInclude",fichier)
+    print ("makeContexteInclude",fichier)
     # on recupere le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.getContexteJdc(fichier,text)
+    print (contexte)
     if contexte == None :
       raise EficasException("Impossible de construire le jeu de commandes correspondant au fichier")
     else:
@@ -633,7 +641,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # g_context est utilise pour avoir les concepts produits par la macro
       # contexte_fichier_init est utilise pour avoir les concepts supprimes par la macro
       self.contexte_fichier_init = contexte
-    #print ("fin makeContexteInclude",fichier)
+    print ("fin makeContexteInclude",fichier)
 
   def reevalueFichierInitObsolete(self):
       """Recalcule les concepts produits par le fichier enregistre"""
@@ -768,8 +776,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          f,text=None,None
 
       self.recorded_units=units
-      if f is None and self.jdc.appli:
-         self.jdc.appli.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+      if f is None and self.jdc.editor:
+         self.jdc.editor.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
                message= tr("Ce fichier ne sera pas pris en compte\nLe fichier associe n'est pas defini"))
       return f,text
 
@@ -785,7 +793,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             # car il appelle directement ou indirectement updateContext
             # equivalent a resetContext. Evite les recursions
             self.jdc_aux.context_ini=d.copy()
-            self.jdc_aux.current_context={}
+            self.jdc_aux.currentContext={}
             self.jdc_aux.index_etape_courante=0
             #ATTENTION: il ne faut pas utiliser self.jdc_aux.getContexteAvant
             #car cet appel conduit a des remontees multiples incoherentes dans le
@@ -798,6 +806,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             return
 
       if type(self.definition.op_init) == types.FunctionType:
+        print ('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm dans updateContext')
         self.definition.op_init(*(self,d))
       if self.sd != None :d[self.sd.nom]=self.sd
       for co in self.sdprods:
@@ -871,7 +880,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          for concept in self.old_context_fichier_init.values():
              self.jdc.deleteConcept(concept)
       if fichier == None :
-         fichier=str(self.jdc.appli.getFile_dictDonnees())
+         fichier=str(self.jdc.appliEficas.getFile_dictDonnees())
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
@@ -936,7 +945,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              self.jdc.deleteConcept(concept)
 
       if fichier == None :
-         fichier=str(self.jdc.appli.getFileVariable())
+         fichier=str(self.jdc.appliEficas.getFileVariable())
          if fichier  == str("") : 
            self.fichier_ini="badfile"
            self.fichier_text=""
@@ -1024,14 +1033,14 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
   def makeIncl2Except(self,mess=None):
          l=traceback.format_exception_only(tr("Fichier invalide"),sys.exc_info()[1])
-         if self.jdc.appli is not None:
+         if self.jdc.editor is not None:
              if mess == None :
-                     self.jdc.appli.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+                     self.jdc.editor.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
                      message= tr("Le contenu de ce fichier ne sera pas pris en compte\n %s",\
                                                                    ''.join(l)))
 
              else :
-                     self.jdc.appli.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+                     self.jdc.editor.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
                                             message=tr(mess))
          #self.parent.recordUnit(unite,self)
          self.g_context={}
@@ -1047,6 +1056,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
 
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
+  #def makeInclude(self, unite=None, fname=None):
   def makeInclude(self, unite=None, fname=None):
       """
           Inclut un fichier dont l'unite logique est unite
@@ -1055,12 +1065,16 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           Sinon on retourne None. Les concepts produits par l'INCLUDE sont
           pris en compte par le JDC parent lors du calcul du contexte (appel de ???)
       """
-      #print "makeInclude",unite
+      print ("makeInclude",fname)
       # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
       # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
       # Si unite n'a pas de valeur, l'etape est forcement invalide. On peut retourner None
-      if not unite and not fname:
-          return
+      #if not unite and not fname:
+      #    return
+      # 2020 on supprime unite
+      #      attention cependant c est utilise pour poursuite
+      #      PNPN a revoir
+      if not fname : return 
 
       if not hasattr(self,'fichier_ini') : 
          # Si le fichier n'est pas defini on le demande
@@ -1085,12 +1099,15 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              raise EficasException(self.fichier_err)
 
          try:
+           print ('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
            self.makeContexteInclude(self.fichier_ini ,self.fichier_text)
+           print ('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
            self.parent.recordUnit(unite,self)
+           print ('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
          except:
            l=traceback.format_exception_only(tr("Fichier invalide %s",sys.exc_info()[1]))
-           if self.jdc.appli:
-              self.jdc.appli.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
+           if self.jdc.editor:
+              self.jdc.editor.afficheAlerte(tr("Erreur lors de l'evaluation du fichier inclus"),
                                             message=tr("Le contenu de ce fichier ne sera pas pris en compte\n"+''.join(l)))
            self.parent.recordUnit(unite,self)
            self.g_context={}
@@ -1106,6 +1123,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.updateFichierInit(unite)
          self.fichier_unite=unite
          if self.fichier_err is not None: raise EficasException(self.fichier_err)
+      print ('self.g_context', self.g_context)
         
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)
@@ -1227,8 +1245,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
            self.parent.recordUnit(None,self)
          except:
            l=traceback.format_exception_only("Fichier invalide",sys.exc_info()[1])
-           if self.jdc.appli:
-              self.jdc.appli.afficheAlerte(tr("Erreur lors de l'evaluation du fichier poursuite"),
+           if self.jdc.editor:
+              self.jdc.editor.afficheAlerte(tr("Erreur lors de l'evaluation du fichier poursuite"),
                                             message=tr("Ce fichier ne sera pas pris en compte\n %s",''.join(l)))
            self.parent.recordUnit(None,self)
            self.g_context={}

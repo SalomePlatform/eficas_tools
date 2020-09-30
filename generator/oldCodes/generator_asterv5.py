@@ -96,7 +96,7 @@ class AsterGenerator:
          self.text=string.join(liste)
       elif format == 'beautifie':
          jdc_formate = Formatage(liste,sep=':',l_max=72)
-         self.text=jdc_formate.formate_jdc()
+         self.text=jdc_formate.formateJdc()
       else:
          raise EficasException(tr("Format pas implemente : %s", format))
       return self.text
@@ -262,7 +262,7 @@ class AsterGenerator:
             Methode particuliere pour les objets de type FORMULE
         """
         l=[]
-        nom = obj.get_nom()
+        nom = obj.getNom()
         if nom == '' : nom = 'sansnom'
         if len(obj.mc_liste)>0:
             l.append(nom + ' = FORMULE(')
@@ -463,7 +463,7 @@ class AsterGenerator:
           Convertit un objet derive d'ASSD en une chaine de caracteres à la
           syntaxe asterv5
       """
-      return obj.get_name()
+      return obj.getName()
 
    def generMCFACT(self,obj):
       """

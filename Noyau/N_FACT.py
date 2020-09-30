@@ -133,9 +133,12 @@ class FACT(N_ENTITE.ENTITE):
             indice=0
             for v in val:
                 if type(v) == dict or isinstance(v, _F):
-                    objet = self.class_instance(
-                        nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=None)
-                        #nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction[indice])
+                    if dicoPyxbDeConstruction :
+                       objet = self.class_instance(
+                          nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction[indice])
+                    else : 
+                       objet = self.class_instance(
+                          nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=None)
                     indice=indice+1
                     l.append(objet)
                 elif isinstance(v, self.class_instance):
@@ -145,16 +148,20 @@ class FACT(N_ENTITE.ENTITE):
                 else:
                     l.append(N_OBJECT.ErrorObj(self, v, parent, nom))
         elif type(val) == dict or isinstance(val, _F):
-            objet = self.class_instance(
-                nom=nom, definition=self, val=val, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
-            l.append(objet)
+             if dicoPyxbDeConstruction :
+                objet = self.class_instance(
+                   nom=nom, definition=self, val=val, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
+             else : 
+                objet = self.class_instance(
+                nom=nom, definition=self, val=val, parent=parent,dicoPyxbDeConstruction=None)
+             l.append(objet)
         elif isinstance(val, self.class_instance):
 # idem --> quand passe t on la 
             l.append(val)
         else:
             l.append(N_OBJECT.ErrorObj(self, val, parent, nom))
         l.cata=l.jdc.cata
-        #l.buildObjPyxb(l)
+        l.buildObjPyxb(l)
         return l
 
     def verifCata(self):
@@ -165,3 +172,5 @@ class FACT(N_ENTITE.ENTITE):
         self.checkDocu()
         self.checkValidators()
         self.verifCataRegles()
+
+

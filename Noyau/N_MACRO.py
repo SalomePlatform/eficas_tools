@@ -87,7 +87,7 @@ class MACRO(N_ENTITE.ENTITE):
     nommage = nommage
 
     def __init__(
-        self, nom, op, sd_prod=None, reentrant='n', repetable='o', fr="",ang="",fenetreIhm=None,
+        self, nom, op=None, sd_prod=None, reentrant='n', repetable='o', fr="",ang="",fenetreIhm=None,
             docu="", regles=(), op_init=None, niveau = None, fichier_ini=0, UIinfo=None, **args):
         """
            Méthode d'initialisation de l'objet MACRO. Les arguments sont utilisés pour initialiser

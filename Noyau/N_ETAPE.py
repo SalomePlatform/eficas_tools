@@ -97,7 +97,7 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         enregistrements necessaires
         surcharge dans Ihm
         """
-        print ('makeRegister de  ETAPE')
+        #print ('makeRegister de  ETAPE')
         if self.parent:
             self.jdc = self.parent.getJdcRoot()
             self.id = self.parent.register(self)
@@ -430,7 +430,7 @@ Causes possibles :
             new_sd = self.sd.__class__(etape=new_etape)
             new_etape.sd = new_sd
             if self.reuse == None:
-                new_etape.parent.NommerSdprod(new_sd, self.sd.nom)
+                new_etape.parent.nommerSDProd(new_sd, self.sd.nom)
             else:
                 new_sd.setName(self.sd.nom)
         new_etape.copyIntern(self)
@@ -441,7 +441,7 @@ Causes possibles :
            Reinitialise le nommage du concept de l'etape lors d'un changement de jdc
         """
         if self.sd and self.reuse == None:
-            self.parent.NommerSdprod(self.sd, self.sd.nom)
+            self.parent.nommerSDProd(self.sd, self.sd.nom)
 
     def isInclude(self):
         """Permet savoir si on a affaire a la commande INCLUDE
@@ -463,3 +463,4 @@ Causes possibles :
         # pourrait etre appelee par une commande fortran faisant appel a des fonctions python
         # on passe la main au parent
         return self.parent.getConcept(nomsd)
+ 

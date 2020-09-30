@@ -36,7 +36,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
 
-    def getPanelGroupe(self,parentQt,commande,insertIn=-1):
+    def getPanelGroupe(self,parentQt,commande):
         maDefinition=self.item.get_definition()
         monObjet=self.item.object
         monNom=self.item.nom
@@ -47,10 +47,15 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         if not (monObjet.isMCList()) :
            if  hasattr(self,'plie') and self.plie==True : 
                from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
-               widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
+               widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+           elif self.editor.maConfiguration.afficheFirstPlies and self.firstAffiche:
+               self.firstAffiche = False
+               self.setPlie()
+               from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
+               widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
            else:
                from InterfaceQT4.monWidgetFact import MonWidgetFact
-               widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande,insertIn)
+               widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         else :
            from InterfaceQT4.monWidgetBloc import MonWidgetBloc
            widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
@@ -133,7 +138,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
               # nouvel objet : on cree un nouvel item
               def setFunction(value, object=obj):
                   object=value
-              item = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj, setFunction)
+              item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
               sublist[pos]=item
               #Attention : on ajoute une information supplementaire pour l'actualisation de 
               # la validite. L'attribut parent d'un MCFACT pointe sur le parent de la MCLISTE
@@ -206,8 +211,8 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 import Accas
 objet = Accas.MCList    
 
-def treeitem(appli,labeltext,object,setFunction):
+def treeitem(appliEficas,labeltext,object,setFunction):
   """ Factory qui produit un objet treeitem adapte a un objet 
       Accas.MCList (attribut objet de ce module)
   """
-  return MCListTreeItem(appli,labeltext,object,setFunction)
+  return MCListTreeItem(appliEficas,labeltext,object,setFunction)

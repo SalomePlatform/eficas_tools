@@ -77,7 +77,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "IncrementMaxTemperature" : "DTPREC",
 	 "ChoixExtractionTransitoires" : "CHOIEXTR",
 	 "IncrementMaxTempsAffichage" : "DTARCH",
-	 "TraitementGeometrie" : "TYPEGEOM",
+	 "traitementGeometrie" : "TYPEGEOM",
 	 "RayonInterne" : "RINT",
 	 "RayonInterne_mess" : "RINT_MESSAGE",
 	 "RayonExterne" : "REXT",
@@ -287,7 +287,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "IncrementMaxTemperature" : "increment max de temp/noeud/instant (degC)",
 	 "ChoixExtractionTransitoires" : "choix d'extraction de transitoires de temp et contraintes",
 	 "IncrementMaxTempsAffichage" : "increment max de temps pour affichage (s)",
-	 "TraitementGeometrie" : "traitement de la geometrie de la cuve : {GEOMETRIE, MAILLAGE}",
+	 "traitementGeometrie" : "traitement de la geometrie de la cuve : {GEOMETRIE, MAILLAGE}",
 	 "RayonInterne" : "rayon interne (m)",
 	 "RayonInterne_mess" : "affichage ecran du rayon interne (m)",
 	 "RayonExterne" : "rayon externe (m)",
@@ -428,7 +428,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "IncrementMaxTemperature" : "0.1",
 	 "ChoixExtractionTransitoires" : "NON",
 	 "IncrementMaxTempsAffichage" : "1000.",
-	 "TraitementGeometrie" : "GEOMETRIE",
+	 "traitementGeometrie" : "GEOMETRIE",
 	 "RayonInterne" : "1.994",
 	 "RayonInterne_mess" : "NON",
 	 "RayonExterne" : "2.2015",
@@ -568,7 +568,7 @@ class Cuve2dgGenerator(PythonGenerator):
 	 "IncrementMaxTemperature" : "OPTIONS",
 	 "ChoixExtractionTransitoires" : "OPTIONS",
 	 "IncrementMaxTempsAffichage" : "OPTIONS",
-	 "TraitementGeometrie" : "DONNEES DE LA CUVE",
+	 "traitementGeometrie" : "DONNEES DE LA CUVE",
 	 "RayonInterne" : "DONNEES DE LA CUVE",
 	 "RayonInterne_mess" : "DONNEES DE LA CUVE",
 	 "RayonExterne" : "DONNEES DE LA CUVE",
@@ -707,7 +707,7 @@ class Cuve2dgGenerator(PythonGenerator):
    def generMCSIMP(self,obj) :
        self.dico_mot[obj.nom]=obj.valeur
        clef=""
-       for i in obj.get_genealogie() :
+       for i in obj.getGenealogie() :
            clef=clef+"_"+i
        self.dico_genea[clef]=obj.valeur
        s=PythonGenerator.generMCSIMP(self,obj)
@@ -888,9 +888,9 @@ class Cuve2dgGenerator(PythonGenerator):
 
       # Rubrique DONNEES DE LA CUVE
       self.texteCuve += self.rubrique('DONNEES DE LA CUVE')
-      if self.dico_mot.has_key('TraitementGeometrie'):
-         self.texteCuve += self.affecteValeur('TraitementGeometrie', self.valeurproposee[str(self.dico_mot["TraitementGeometrie"])])
-         if str(self.dico_mot["TraitementGeometrie"])=='Topologie':
+      if self.dico_mot.has_key('traitementGeometrie'):
+         self.texteCuve += self.affecteValeur('traitementGeometrie', self.valeurproposee[str(self.dico_mot["traitementGeometrie"])])
+         if str(self.dico_mot["traitementGeometrie"])=='Topologie':
             self.texteCuve+="# - si MAILLAGE, fournir NBNO et liste des abscisses (m)"+"\n"
             self.texteCuve+="# - si GEOMETRIE, fournir (RINT, RINT_MESSAGE),"+"\n"
             self.texteCuve+="#                         (REXT, REXT_MESSAGE),"+"\n"
@@ -909,7 +909,7 @@ class Cuve2dgGenerator(PythonGenerator):
             self.texteCuve += self.ecritVariable('LigamentExterneMin_mess')
             self.texteCuve+="#"+"\n"
             self.texteCuve += self.ecritVariable('NombreNoeudsMaillage')
-         if str(self.dico_mot["TraitementGeometrie"])=='Maillage':
+         if str(self.dico_mot["traitementGeometrie"])=='Maillage':
             self.texteCuve+="# - si MAILLAGE, fournir NBNO et liste des abscisses (m)"+"\n"
             self.texteCuve+="# - si GEOMETRIE, fournir (RINT, RINT_MESSAGE),"+"\n"
             self.texteCuve+="#                         (REXT, REXT_MESSAGE),"+"\n"
@@ -920,7 +920,7 @@ class Cuve2dgGenerator(PythonGenerator):
             self.texteCuve += self.ecritVariable('NombreNoeudsMaillage')
             self.imprime(1,(self.dico_mot["ListeAbscisses"]))
       else :
-         self.texteCuve += self.affecteValeurDefaut('TraitementGeometrie')
+         self.texteCuve += self.affecteValeurDefaut('traitementGeometrie')
          self.texteCuve+="# - si MAILLAGE, fournir NBNO et liste des abscisses (m)"+"\n"
          self.texteCuve+="# - si GEOMETRIE, fournir (RINT, RINT_MESSAGE),"+"\n"
          self.texteCuve+="#                         (REXT, REXT_MESSAGE),"+"\n"

@@ -88,7 +88,7 @@ class Dicoparser(Pythonparser):
              if isinstance(valeurs[mot],dict) : self.traiteMCFact(mot,valeurs[mot])
              else : self.textePy += mot+' = ' +str(valeurs[mot])+','
          self.textePy+=');\n' # fin de la commande
-     print (self.textePy)
+     #print (self.textePy)
      return self.textePy
 
   def traiteMCFact(self,mot,valeurs):

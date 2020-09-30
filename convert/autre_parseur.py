@@ -171,7 +171,7 @@ class PARSEUR_PYTHON(object):
         self.getOptions()
         return self.line
 
-    def getTexte(self,appli=None):
+    def getTexte(self,appliEficas=None):
         """
            Retourne le texte issu de l'analyse
         """

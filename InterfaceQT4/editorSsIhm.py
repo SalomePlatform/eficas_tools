@@ -28,8 +28,6 @@ import types,sys,os, re
 import  subprocess
 import traceback
 
-import six
-from six.moves import range
 
 import traceback
 
@@ -55,15 +53,16 @@ class JDCEditorSsIhm :
 # Methodes Communes ou appelees depuis avec Ihm
 # ---------------------------------------------
 
-    def __init__ (self,appli,fichier = None, jdc = None,  units = None, include=0 ):
-    #------------------------------------------------------------------------------#
+    def __init__ (self,appliEficas,fichier = None, jdc = None,  units = None, include=0 ):
+    #-----------------------------------------------------------------------------------#
     # paticularisee avec Ihm
 
         if debug : print ('dans le init de JDCEditorSsIhm')
-        self.appliEficas = appli
-        self.appli       = appli
+        self.appliEficas = appliEficas
         self.fichier     = fichier
-        self.fichierComplet  = fichier
+        self.fichierComplet   = fichier
+        if fichier != None : self.extensionFichier = os.path.splitext(fichier)[1]
+        else : self.extensionFichier = None
         self.jdc         = jdc
         self.first	 = True
         self.jdc_item    = None
@@ -72,14 +71,12 @@ class JDCEditorSsIhm :
         self.dict_reels       = {}
         self.liste_simp_reel  = []
 
-        if appli != None : self.salome =  self.appliEficas.salome
+        if self.appliEficas != None : self.salome =  self.appliEficas.salome
         else             : self.salome =  0
 
         # ces attributs sont mis a jour par definitCode appelee par newEditor
         self.code              = self.appliEficas.maConfiguration.code
         self.maConfiguration   = self.appliEficas.maConfiguration
-
-        self.version_code = session.d_env.cata
 
 
         if not hasattr ( self.appliEficas, 'readercata') or self.appliEficas.readercata.demandeCatalogue==True or self.appliEficas.multi==True:
@@ -92,10 +89,11 @@ class JDCEditorSsIhm :
            self.appliEficas.code=self.code
         else :
            self.readercata=self.appliEficas.readercata
-        if self.readercata.fic_cata == None : return    #Sortie Salome
+        if self.readercata.fichierCata == None : return    #Sortie Salome
         self.titre=self.readercata.titre
 
-        self.format =  self.appliEficas.format_fichier
+        self.formatFichierOut =  self.appliEficas.formatFichierOut
+        self.formatFichierIn  =  self.appliEficas.formatFichierIn
 
         if self.appliEficas.maConfiguration.dumpXSD==True : self.appliEficas.dumpXsd()
         self.dict_reels={}
@@ -123,6 +121,13 @@ class JDCEditorSsIhm :
 
         self.maConfiguration.mesGenerators     = generator
         self.maConfiguration.mesconvertisseurs = convert
+        try    : self.XMLgenerator=generator.plugins['xml']()
+        except : self.XMLgenerator=None
+        
+
+        if self.formatFichierOut in generator.plugins.keys():
+           self.generator = generator.plugins[self.formatFichierOut]()
+
 
         self.fileInfo       = None
         self.lastModified   = 0
@@ -143,10 +148,8 @@ class JDCEditorSsIhm :
                except :
                    print ("mauvaise lecture du fichier")
                if self.salome :
-                  try :
-                     self.appliEficas.addJdcInSalome( self.fichier)
-                  except :
-                     print ("mauvais enregistrement dans Salome")
+                  try    : self.appliEficas.addJdcInSalome( self.fichier)
+                  except : print ("mauvais enregistrement dans Salome")
             else :
                self.jdc=jdc
 
@@ -156,27 +159,27 @@ class JDCEditorSsIhm :
 
         else:
             if not self.jdc:                   #  nouveau jdc
-                if not include :
-                   self.jdc = self._newJDC(units=units)
-                else :
-                   self.jdc = self._newJDCInclude(units=units)
+                if not include : self.jdc = self._newJDC(units=units)
+                else : self.jdc = self._newJDCInclude(units=units)
                 self.nouveau=1
 
         if self.jdc:
-            self.jdc.appli = self # a resorber
             self.jdc.editor = self
-            self.jdc.lang    = self.appli.langue
+            self.jdc.lang    = self.appliEficas.langue
             self.jdc.aReafficher=False
             txt_exception  = None
-            if not jdc:
-                self.jdc.analyse()
+            if not jdc:            
+                if self.extensionFichier == '.xml' :
+                   if self.appliEficas.maConfiguration.withXSD: self.jdc.analyseXML()
+                   else : print ('run MDM with -x option  (MDM for XML)'); exit()
+                else : self.jdc.analyse()
                 txt_exception = self.jdc.cr.getMessException()
             if txt_exception :
                 self.jdc = None
                 self.informe('pb chargement jdc',txt_exception)
-            else:
-                comploader.chargerComposants()
-                self.jdc_item=Objecttreeitem.makeObjecttreeitem( self, "nom", self.jdc )
+            #else:
+                #comploader.chargerComposants()
+                #self.jdc_item=Objecttreeitem.makeObjecttreeitem( self, "nom", self.jdc )
 
     #-------------------------------#
     def readFile(self, fn):
@@ -189,42 +192,42 @@ class JDCEditorSsIhm :
         # charge un JDC
         # paticularisee avec Ihm
 
-        fn = six.text_type(fn)
+        fn = str(fn)
         jdcName=os.path.basename(fn)
 
         # Il faut convertir le contenu du fichier en fonction du format
-        if self.appliEficas.format_fichier_in in convert.plugins:
+        formatIn=self.appliEficas.formatFichierIn
+        if self.extensionFichier == '.xml' and self.appliEficas.maConfiguration.withXSD: formatIn='xml'
+        if formatIn in convert.plugins:
              # Le convertisseur existe on l'utilise
-
-             p=convert.plugins[self.appliEficas.format_fichier_in]()
+             p=convert.plugins[formatIn]()
              p.readfile(fn)
 
              if p.text=="" : self.nouveau=1
              #print ('PNPN --> CIST a faire')
 
-             pareil,texteNew=self.verifieChecksum(p.text)
-             if  not pareil :
-                self.informe(("fichier modifie"),("Attention! fichier change hors EFICAS"),False)
-
-             p.text=texteNew
-             memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
-             if memeVersion == 0 : texteNew=self.traduitCatalogue(texteNew)
-             p.text=texteNew
-
-             text=p.convert('exec',self.appliEficas)
-
-             if not p.cr.estvide(): self.afficheInfos("Erreur a la conversion",'red')
+             if formatIn != 'xml':
+                pareil,texteNew=self.verifieChecksum(p.text)
+                if  not pareil : self.informe(("fichier modifie"),("Attention! fichier change hors EFICAS"),False)
+                p.text=texteNew
+                memeVersion,texteNew=self.verifieVersionCataDuJDC(p.text)
+                if memeVersion == 0 : texteNew=self.traduitCatalogue(texteNew)
+                p.text=texteNew
+                text=p.convert('exec',self.appliEficas)
+                if not p.cr.estvide(): self.afficheInfos("Erreur a la conversion",'red')
+             else:
+                text=p.text
         else :
             self.afficheInfos("Type de fichier non reconnu",'red')
             self.informe( "Type de fichier non reconnu",
-                    "EFICAS ne sait pas ouvrir le type de fichier " + self.appliEficas.format_fichier_in)
+                    "EFICAS ne sait pas ouvrir le type de fichier " + self.appliEficas.formatFichierIn)
             return None
 
         CONTEXT.unsetCurrentStep()
 
         #jdc=self.readercata.cata[0].JdC(procedure=text,
         jdc=self.readercata.cata.JdC(procedure=text,
-                                    appli=self,
+                                    appliEficas=self.appliEficas,
                                     cata=self.readercata.cata,
                                     cata_ord_dico=self.readercata.cata_ordonne_dico,
                                     nom=jdcName,
@@ -249,30 +252,24 @@ class JDCEditorSsIhm :
         if self.code == "PSEN"    : texte = self._newPSEN()
         if self.code == "PSEN_N1" : texte = self._newPSEN_N1()
 
-        #if hasattr(self.readercata.cata[0],'TEXTE_NEW_JDC') : texte=self.readercata.cata[0].TEXTE_NEW_JDC
         if hasattr(self.readercata.cata,'TEXTE_NEW_JDC') : texte=self.readercata.cata.TEXTE_NEW_JDC
 
 
-        #jdc=self.readercata.cata[0].JdC( procedure =texte,
-        #print (self.readercata.cata)
         jdc=self.readercata.cata.JdC( procedure =texte,
-                                         appli=self,
+                                         appliEficas=self.appliEficas,
                                          cata=self.readercata.cata,
                                          cata_ord_dico=self.readercata.cata_ordonne_dico,
                                          rep_mat=self.maConfiguration.rep_mat
                                         )
 
-        jdc.lang    = self.appli.langue
+        jdc.lang    = self.appliEficas.langue
         if units is not None:
            jdc.recorded_units=units
            jdc.old_recorded_units=units
-        ## PNPN est ce que la ligne suivante est bien utile ?
-        # elle positionne le contexte
+        # chgt le 15/10/19 
+        # Attention positionne  contexte ?
         # est ce qu on ne doit pas changer le format en Accas si on vient d accas ?
-        if self.format == 'xml' : return jdc
-        if texte == "" :
-           jdc.editor=self
-           jdc.analyse()
+        jdc.editor=self
         return jdc
 
    #--------------------------------#
@@ -287,20 +284,22 @@ class JDCEditorSsIhm :
 
         #jaux=self.readercata.cata[0].JdC( procedure="",
         jaux=self.readercata.cata.JdC( procedure="",
-                               appli=self,
+                               appliEficas=self.appliEficas,
                                cata=self.readercata.cata,
                                cata_ord_dico=self.readercata.cata_ordonne_dico,
                                rep_mat=self.maConfiguration.rep_mat,
                               )
+        jaux.editor=self
         jaux.analyse()
 
         J=JdC_aux( procedure="",
-                   appli=self,
+                   appliEficas=self.appliEficas,
                    cata=self.readercata.cata,
                    cata_ord_dico=self.readercata.cata_ordonne_dico,
                    jdc_pere=jaux,
                    rep_mat=self.maConfiguration.rep_mat,
                    )
+        J.editor=self
         J.analyse()
         if units is not None:
            J.recorded_units=units
@@ -314,9 +313,9 @@ class JDCEditorSsIhm :
     #-----------------------#
 
         # Il faut convertir le contenu du fichier en fonction du format
-        if self.format in convert.plugins :
+        if self.formatFichierIn in convert.plugins :
             # Le convertisseur existe on l'utilise
-            p=convert.plugins[self.format]()
+            p=convert.plugins[self.formatFichierIn]()
             p.readfile(file)
             text=p.convert('execnoparseur')
             if not p.cr.estvide():
@@ -326,7 +325,7 @@ class JDCEditorSsIhm :
             # Il n'existe pas c'est une erreur
             self.afficheInfos("Type de fichier non reconnu",'red')
             self.informe( "Type de fichier non reconnu",
-                    "EFICAS ne sait pas ouvrir le type de fichier " + self.appliEficas.format_fichier_in)
+                    "EFICAS ne sait pas ouvrir le type de fichier " + self.appliEficas.formatFichierIn)
             return None
 
     #----------------------------------------------#
@@ -353,22 +352,26 @@ class JDCEditorSsIhm :
     def viewJdcSource(self):
     #-----------------------#
         if self.fichier == None : return
-        f=open(self.fichier,'r')
-        texteSource=f.read()
-        f.close()
-        self._viewText(texteSource, "JDC_SOURCE")
+        if os.path.isfile(self.fichier):
+           f=open(self.fichier,'r')
+           texteSource=f.read()
+           f.close()
+           self._viewText(texteSource, "JDC_SOURCE")
+        else :
+           self._viewText("file doesn't exist", "JDC_SOURCE")
+
 
     #-----------------------#
     def viewJdcPy(self):
     #-----------------------#
-        strSource = str( self.getTextJDC(self.format) )
+        strSource = str( self.getTextJDC(self.formatFichierOut) )
         self._viewText(strSource, "JDC_RESULTAT")
 
     #-----------------------#
     def viewJdcRapport(self):
     #-----------------------#
         # on ajoute les regles
-        strRapport = six.text_type( self.jdc.report() )
+        strRapport = str( self.jdc.report() )
         self._viewText(strRapport, "JDC_RAPPORT")
 
     #-----------------------#
@@ -382,7 +385,7 @@ class JDCEditorSsIhm :
     def getJdcRapport(self):
     #-----------------------#
         # on ajoute les regles
-        strRapport = six.text_type( self.jdc.report() )
+        strRapport = str( self.jdc.report() )
         return strRapport
 
     #---------------------#
@@ -410,10 +413,10 @@ class JDCEditorSsIhm :
         @return flag indicating success
         """
 
-        fn = six.text_type(fn)
+        fn = str(fn)
 
         if txt == None :
-            txt = self.getTextJDC(self.format,formatLigne=formatLigne)
+            txt = self.getTextJDC(self.formatFichierOut,formatLigne=formatLigne)
             eol = '\n'
             if len(txt) >= len(eol):
                if txt[-len(eol):] != eol:
@@ -431,19 +434,22 @@ class JDCEditorSsIhm :
             f.close()
             return 1
         except IOError as why:
-            self.afficheInfos('Sauvegarde du Fichier', 'Le fichier'+str(fn) + 'n a pas pu etre sauvegarde :'  + str(why))
+            print('Sauvegarde du Fichier', 'Le fichier'+str(fn) + 'n a pas pu etre sauvegarde :'  , str(why))
+            self.afficheInfos('Le fichier'+str(fn) + 'n a pas pu etre sauvegarde '  , 'red')
             return 0
+           
 
     #-----------------------------------------------------------#
-    def getTextJDC(self,format,pourRun=0,formatLigne="beautifie"):
+    def getTextJDC(self,format = None,pourRun=0,formatLigne="beautifie"):
     #-----------------------------------------------------------#
       if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
+      if format == None : format = self.formatFichierOut
       if format in generator.plugins:
 
          # Le generateur existe on l'utilise
          self.generator=generator.plugins[format]()
          try :
-            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
+            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.maConfiguration,appliEficas=self.appliEficas)
             if pourRun : jdc_formate=self.generator.textePourRun
             if self.code == 'TELEMAC' : jdc_formate=self.generator.texteDico
          except ValueError as e:
@@ -486,7 +492,7 @@ class JDCEditorSsIhm :
            hash_checksum = hashlib.md5()
            hash_checksum.update(newtexte.encode('utf-8'))
            checksum = hash_checksum.hexdigest()
-           ligne = "#CHECKSUM:"+checksum+":FIN CHECKSUM"
+           ligne = ligne="#CHECKSUM:"+checksum+":FIN CHECKSUM"
         except : 
            try :
               newtexte=texte.replace('"','\\"')
@@ -509,7 +515,7 @@ class JDCEditorSsIhm :
          dico=self.generator.Dico
          return dico
       else :
-         self.afficheInfos(tr("Format %s non reconnu" , self.format),Qt.red)
+         self.afficheInfos(tr("Format %s non reconnu" , 'Dictionnaire Imbrique' ),'red')
          return ""
 
    #-----------------------------------------#
@@ -522,7 +528,7 @@ class JDCEditorSsIhm :
     def chercheDico(self):
     #-----------------------------------------#
         dicoCourant={}
-        format =  self.appliEficas.format_fichier
+        format =  self.appliEficas.formatFichierOut
         if format in generator.plugins:
            # Le generateur existe on l'utilise
            self.generator=generator.plugins[format]()
@@ -545,7 +551,7 @@ class JDCEditorSsIhm :
         self.generator=generator.plugins[self.format]()
         print (self.generator)
         if hasattr(self.generator, "writeComplet"):
-            self.generator.writeComplet(fichier,self.jdc,config=self.appliEficas.maConfiguration,appli=self.appliEficas)
+            self.generator.writeComplet(fichier,self.jdc,config=self.appliEficas.maConfiguration,appliEficas=self.appliEficas)
 
 
 # ---------------------------------------------
@@ -594,16 +600,18 @@ class JDCEditorSsIhm :
         """
 
 
-        if not (self.writeFile(fichier,formatLigne=formatLigne)): return (0, None)
         self.fichierOut = fichier
-
-        if self.jdc.isValid() != 0 and hasattr(self.generator, "writeDefault"):
+        if not (self.writeFile(fichier,formatLigne=formatLigne)): return (0, None)
+        if  self.jdc.cata.modeleMetier and self.jdc.isValid():
+            if self.generator != self.XMLgenerator :
+               self.XMLgenerator.gener(self.jdc)
+               self.XMLgenerator.writeDefault(fichier)
+               return(1,self.fichier)
+        if self.jdc.isValid() and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fichier)
         elif self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fichier)
-
         self.modified = 0
-
         return (1, self.fichier)
 #
 
@@ -671,7 +679,7 @@ class JDCEditorSsIhm :
         ouChercher=etape
         if debug : print (ouChercher)
         for mot in listeAvant :
-           ouChercher=ouChercher.getChild(mot,restreint="oui", debug=1)
+           ouChercher=ouChercher.getChild(mot,restreint="oui")
         monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC == None : monMC = ouChercher.addEntite(MCFils)
         monMC.valeur=valeurs
@@ -690,7 +698,7 @@ class JDCEditorSsIhm :
         ouChercher=etape
         if debug : print (ouChercher)
         for mot in listeAvant :
-           ouChercher=ouChercher.getChild(mot,restreint="oui", debug=1)
+           ouChercher=ouChercher.getChild(mot,restreint="oui")
         # Attention si +sieursMCFACT
         ouChercher=ouChercher[0]
         if debug : print (ouChercher)

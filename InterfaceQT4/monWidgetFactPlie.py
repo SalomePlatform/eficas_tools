@@ -28,12 +28,13 @@ from Extensions.i18n import tr
 class MonWidgetFactPlie(Ui_WidgetFactPlie,Groupe):
   """
   """
-  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
+  #def __init__(self,node,editor,parentQt,definition, obj, niveau,commande,insertIn=-1):
+  def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
       #print "fact plie : ",node.item.nom
       node.fenetreAAfficher=self
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
       self.groupBox.setText(self.node.item.getLabelText()[0])
-      self.parentQt.commandesLayout.insertWidget(insertIn,self)
+      self.parentQt.commandesLayout.insertWidget(-1,self)
 
   def traiteClicSurLabel(self,texte):
       return

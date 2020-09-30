@@ -111,13 +111,13 @@ class Pythonparser(object):
          self.cr.fatal(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
          return
    
-   def convert(self,outformat,appli=None):
+   def convert(self,outformat,appliEficas=None):
       if outformat == 'exec':
          try:
             #import cProfile, pstats, StringIO
             #pr = cProfile.Profile()
             #pr.enable()            
-            l= PARSEUR_PYTHON(self.text).getTexte(appli)
+            l= PARSEUR_PYTHON(self.text).getTexte(appliEficas)
 
             #pr.disable()
             #s = StringIO.StringIO()

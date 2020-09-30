@@ -23,6 +23,8 @@ from __future__ import absolute_import
 import Noyau
 
 from . import CONNECTOR
+import re
+conceptRE=re.compile(r'[a-zA-Z_]\w*$')
 
 class OBJECT:
   from Noyau.N_CO import CO
@@ -115,6 +117,7 @@ class OBJECT:
     else:
        return [self.nom.strip()]
 
+
   def getGenealogie(self):
     """ 
         Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
@@ -162,6 +165,28 @@ class OBJECT:
 
   #def __del__(self):
   #   print "__del__",self
+
+  def nommeSd(self):
+  # surcharge dans I_ETAPE.py
+      if ( nom in dir(self.jdc.cata)) : return (0, nom + tr("mot reserve"))
+      if not conceptRE.match(nom):
+         return 0, tr("Un nom de concept doit etre un identificateur Python")
+      self.initModif()
+      #self.getSdProd()
+      #self.sd.nom = nom
+      #self.sdnom=nom
+      #self.parent.updateConceptAfterEtape(self,self.sd)
+      #self.finModif()
+      #return 1, tr("Nommage du concept effectue")
+
+  def deleteRef(self):
+  # doit etre surcharge dans MC_COMPO et MC_SIMP 
+      pass
+
+  def demandeRedessine(self):
+      CONNECTOR.Emit(self,"redessine")
+
+
 
 class ErrorObj(OBJECT):pass
 

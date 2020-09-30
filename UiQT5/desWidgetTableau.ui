@@ -153,8 +153,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
-            <normaloff>../Editeur/icons/PlusBleu.png</normaloff>../Editeur/icons/PlusBleu.png</iconset>
+           <iconset theme="add"/>
           </property>
           <property name="iconSize">
            <size>
@@ -188,8 +187,7 @@
            <string notr="true">border : 0px</string>
           </property>
           <property name="icon">
-           <iconset>
-            <normaloff>../Editeur/icons/MoinsBleu.png</normaloff>../Editeur/icons/MoinsBleu.png</iconset>
+           <iconset theme="remove"/>
           </property>
           <property name="iconSize">
            <size>
@@ -304,8 +302,7 @@
            <string>...</string>
           </property>
           <property name="icon">
-           <iconset>
-            <normaloff>../Editeur/icons/verre-loupe-icone-6087-64.png</normaloff>../Editeur/icons/verre-loupe-icone-6087-64.png</iconset>
+           <iconset theme="find"/>
           </property>
           <property name="iconSize">
            <size>

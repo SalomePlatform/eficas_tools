@@ -48,6 +48,19 @@ class MCFACT(I_MCCOMPO.MCCOMPO):
      """
      return self.definition.min,self.definition.max
 
+  def getNomDsXML(self):
+     # en xml on a une sequence si max est superieur a 1
+     # sinon non
+     objet = self.parent.getChild(self.nom, restreint='oui')
+     if len(objet) > 1 :
+        index = objet.getIndex(self) 
+        nom = self.nom + "[" + str(index) + "]"
+     else :
+        if self.definition.max == 1 : nom = self.nom
+        else :  nom = self.nom+"[0]"
+     nomDsXML=self.parent.getNomDsXML()+"."+nom
+     return nomDsXML
+
 
   def getLabelText(self):
     """

@@ -77,11 +77,6 @@ dictPROCEficasXML =  { 'nom'        : 'nom',
                        'fr'         : ('doc','fr',),
                        'docu'       : ('doc','docu'),
                       }
-     #                  'UIinfo' : 'UIinfo'
-     #                  'reentrant'
-     #                  'repetable'
-     #                  'op_init'
-     #                  'fenetreIhm' : 'fenetreIhm'
 
 dictPROCXMLEficas = inverseDico(dictPROCEficasXML)
 
@@ -89,7 +84,7 @@ dictOPEREficasXML = dictPROCEficasXML
 dictOPERXMLEficas = dictPROCXMLEficas
 
 dictPourCast                = { 'I' : int, 'R' : float, 'bool' : bool ,   }
-dictNomsDesTypes = { 'I' : 'int', 'R' : 'float', bool : 'boolean' , 'TXM' : 'string', 'Fichier' : 'string', 'Repertoire':'string', 'FichierNoAbs' : 'string', 'FichierOuRepertoire':'string'   }
+dictNomsDesTypes = { 'I' : 'xs:int', 'R' : 'xs:float', bool : 'xs:boolean' , 'TXM' : 'xs:string', 'Fichier' : 'xs:string', 'Repertoire':'xs:string', 'FichierNoAbs' : 'xs:string', 'FichierOuRepertoire':'xs:string'   }
 
 listeParamDeTypeTypeAttendu = ( 'defaut', 'sug', 'val_min', 'val_max', 'into', 'intoSug')
 listeParamDeTypeStr         = ('fr', 'docu', 'ang', 'nom' )

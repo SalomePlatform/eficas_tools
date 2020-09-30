@@ -26,7 +26,6 @@ except : pass
 
 from desWidgetParam import Ui_WidgetParam
 from InterfaceQT4.gereIcones import FacultatifOuOptionnel
-import six
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtGui import QIcon
 
@@ -131,7 +130,7 @@ class MonWidgetParam(QWidget,Ui_WidgetParam,FacultatifOuOptionnel):
         try :
           exec(monTexte, contexte)
         except (ValueError,TypeError, NameError,RuntimeError,ZeroDivisionError) as  exc:
-          self.LECommentaire.setText(tr("Valeur incorrecte: ")+six.text_type (exc))
+          self.LECommentaire.setText(tr("Valeur incorrecte: ")+str(exc))
           return False
         except :
           self.LECommentaire.setText(tr("Valeur incorrecte "))

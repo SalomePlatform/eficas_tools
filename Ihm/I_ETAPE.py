@@ -30,7 +30,7 @@ from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
 # Objet re pour controler les identificateurs Python
-concept_re=re.compile(r'[a-zA-Z_]\w*$')
+conceptRE=re.compile(r'[a-zA-Z_]\w*$')
 
 # import rajoute suite a l'ajout de buildSd --> a resorber
 import traceback
@@ -105,8 +105,8 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             - 0 si le nommage n'a pas pu etre menea son terme,
             - 1 dans le cas contraire
       """
-      # Le nom d'un concept doit etre un identificateur Python (toujours vrai ?)
-      if not concept_re.match(nom):
+      # Le nom d'un concept doit etre un identificateur Python (toujours vrai ou insuffisant?)
+      if not conceptRE.match(nom):
          return 0, tr("Un nom de concept doit etre un identificateur Python")
 
       # pour eviter que le nom du concept soit le nom de la classe --> souci pour utiliser le concept
@@ -123,6 +123,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
       if not self.isValid(sd='non') : return 0,"Nommage du concept refuse : l'operateur n'est pas valide"
       #
       # Cas particulier des operateurs obligatoirement reentrants
+      # plus de concept reentrant (pour Aster)
       #
       if self.definition.reentrant == 'o':
         self.sd = self.reuse = self.jdc.getSdAvantEtape(nom,self)
@@ -175,6 +176,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
                # Renommage du concept : Il suffit de changer son attribut nom pour le nommer
                self.sd.nom = nom
                self.sdnom=nom
+               self.parent.sdsDict[nom]=self.sd
                self.parent.updateConceptAfterEtape(self,self.sd)
                self.finModif()
                return 1, tr("Nommage du concept effectue")
@@ -258,7 +260,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
           deja definis dans le contexte
           Si c'est le cas, les concepts produits doivent etre supprimes
       """
-      #print "controlSdprods",d.keys(),self.sd and self.sd.nom,self.nom
+      print ("controlSdprods etape",d.keys(),self.sd and self.sd.nom,self.nom)
       if self.sd:
         if self.sd.nom in d :
            # Le concept est deja defini
@@ -296,6 +298,7 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
             Une procedure n'en a aucun
             Une macro en a en general plus d'un
       """
+      self.deleteRef()
       #print "supprimeSdProds",self
       if self.reuse is self.sd :return
       # l'etape n'est pas reentrante
@@ -370,6 +373,16 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
 
    def getGenealogiePrecise(self):
       return [self.nom]
+
+   def getNomDsXML(self):
+     # en xml on a un choice 
+     index=0
+     for e in self.parent.etapes :
+         if e == self : break
+         if e.nom == self.nom : index+=1
+     nomDsXML = self.nom + "[" + str(index) + "]"
+     return nomDsXML
+
 
    def getGenealogie(self):
       """ 
@@ -490,7 +503,6 @@ class ETAPE(I_MCCOMPO.MCCOMPO):
      #rafraichisst de la validite de l'etape (probleme avec l'ordre dans les macros : etape puis mots cles)
      self.isValid()
      if not self.isValid() and self.nom == "INCLUDE" :
-        self.cr.fatal(('Etape : %s ligne : %r  %s'),
-        self.nom, self.appel[0],  tr("\n   Include Invalide. \n  ne sera pas pris en compte"))
+        self.cr.fatal('Etape : {} ligne : {}  {}'.format(self.nom, self.appel[0],  tr("\n   Include Invalide. \n  ne sera pas pris en compte")))
      return cr
 

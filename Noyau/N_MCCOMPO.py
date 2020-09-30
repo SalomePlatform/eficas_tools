@@ -45,7 +45,6 @@ class MCCOMPO(N_OBJECT.OBJECT):
         #import traceback
         #traceback.print_stack()
         #print(("MCCOMPO.buildMc _____________________________________", self.nom))
-        #print (self.dicoPyxbDeConstruction)
         if CONTEXT.debug:
             print(("MCCOMPO.buildMc ", self.nom))
         # Dans la phase de reconstruction args peut contenir des mots-clés
@@ -54,6 +53,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # mais qui sont malgré tout des descendants de l'objet courant
         # (petits-fils, ...)
         args = self.valeur
+        #print ('MCCOMPO___________________', self.valeur)
         if args == None: args = {}
         mcListe = []
         
@@ -68,8 +68,6 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # 2- les entités non présentes dans les arguments, présentes dans la définition avec un défaut
         # Phase 1.1 : on traite d'abord les SIMP pour enregistrer les mots cles
         # globaux
-        # PN ligne suivante uniquement pour commodite
-        # a detruire quand cela fonctionne recursivement
         if not hasattr(self, 'dicoPyxbDeConstruction') : self.dicoPyxbDeConstruction = {}
         for k, v in list(self.definition.entites.items()):
             if v.label != 'SIMP':
@@ -85,6 +83,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
                    del self.dicoPyxbDeConstruction[k]
                 else :
                    objPyxbDeConstruction=None
+                #print (args.get(k, None))
                 objet = v(val=args.get(k, None), nom=k, parent=self,objPyxbDeConstruction=objPyxbDeConstruction)
                 mcListe.append(objet)
                 # Si l'objet a une position globale on l'ajoute aux listes
@@ -124,11 +123,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # args ne contient plus que des mots-clés qui n'ont pas été attribués car ils sont
         #      à attribuer à des blocs du niveau inférieur ou bien sont des mots-clés erronés
         for k, v in list(self.definition.entites.items()):
-            if v.label != 'BLOC':
-                continue
-            # condition and a or b  : Equivalent de l'expression :  condition ?
-            # a : b du langage C
-
+            if v.label != 'BLOC': continue
             #PNPN on recalcule dico_valeurs dans le for
             # pour les globaux imbriques (exple Telemac Advection)
             # avant le calcul etait avant le for
@@ -155,11 +150,29 @@ class MCCOMPO(N_OBJECT.OBJECT):
         # on retourne la liste ainsi construite
         if self.jdc  : self.cata=self.jdc.cata
         else : self.cata = None
-        #self.buildObjPyxb(mcListe)
+        self.buildObjPyxb(mcListe)
         #else : print ('pas de construction pour ', self.nom, self.objPyxbDeConstruction)
         #print ('buildObjPyxb : ' , self.nom)
         #print(("MCCOMPO.buildMc fin_____________________________________", self.nom))
         return mcListe
+
+    def buildMcApresGlobal(self):
+        print ('Noyau ---------------- buildMcApresGlobal pour', self.nom)
+        nouveau_args = self.reste_val
+        blocsDejaLa=[]
+        for mc in self.mcListe :
+            if mc.nature == 'MCBLOC' : blocsDejaLa.append(mc.nom) 
+        for k, v in list(self.definition.entites.items()):
+            if v.label != 'BLOC': continue
+            if k in blocsDejaLa : continue
+            dico_valeurs = self.creeDictCondition(self.mcListe, condition=1)
+            globs = self.jdc and self.jdc.condition_context or {}
+            if v.verifPresence(dico_valeurs, globs):
+                bloc = v(nom=k, val=nouveau_args, parent=self,dicoPyxbDeConstruction=self.dicoPyxbDeConstruction)
+                if bloc :
+                   self.mcListe.append(bloc)
+                   self.reste_val = bloc.reste_val
+       
 
     def ordonneListe(self, mcListe):
         """
@@ -480,6 +493,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
         for child in self.mcListe:
             l.extend(child.getAllCo())
         return l
+
 
 
 def intersection_vide(dict1, dict2):

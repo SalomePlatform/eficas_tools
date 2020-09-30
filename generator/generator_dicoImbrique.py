@@ -54,7 +54,7 @@ class DicoImbriqueGenerator(PythonGenerator):
    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None, appli=None):
+   def gener(self,obj,format='brut',config=None, appliEficas=None):
        
       self.initDico()
       

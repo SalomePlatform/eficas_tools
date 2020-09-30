@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*-  coding: utf-8 -*-
 # Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -30,12 +30,7 @@ try :
    from builtins import object
 except : pass
 
-import time
-import os,sys,py_compile
-import traceback
-import six.moves.cPickle
-import re
-import types
+import os, sys
 
 # Modules Eficas
 from Noyau.N_CR import CR
@@ -45,29 +40,34 @@ import analyse_catalogue
 import analyse_catalogue_initial
 import autre_analyse_cata
 import uiinfo
-from InterfaceQT4.monChoixCata import MonChoixCata
 from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
-from PyQt5.QtWidgets import QMessageBox, QApplication, QDialog
 
 #-------------------------------
 class ReaderCataCommun(object):
 #-------------------------------
 
-   def askChoixCatalogue(self, cata_choice_list):
+   def askChoixCatalogue(self, cataListeChoix):
    # ____________________________________________
       """
       Ouvre une fenetre de selection du catalogue dans le cas où plusieurs
       ont ete definis dans Accas/editeur.ini
       """
+      try : 
+         from PyQt5.QtWidgets import QDialog
+      except : 
+         print ('Pas de choix interactif sans qt')
+         return
+
       code = getattr(self.appliEficas.maConfiguration, "code", None)
       if code != None :
           title=tr("Choix d une version du code ")+str(code)
       else :
           title=tr("Choix d une version ")
 
-      widgetChoix = MonChoixCata(self.appliEficas, [cata.user_name for cata in cata_choice_list], title)
+      from InterfaceQT4.monChoixCata import MonChoixCata
+      widgetChoix = MonChoixCata(self.appliEficas, [cata.labelCode for cata in cataListeChoix], title)
       ret=widgetChoix.exec_()
 
 
@@ -76,14 +76,13 @@ class ReaderCataCommun(object):
       lab+=str(self.code)
       lab+=tr(" avec le catalogue ")
       if ret == QDialog.Accepted:
-          cata = cata_choice_list[widgetChoix.CBChoixCata.currentIndex()]
-          self.fic_cata = cata.cata_file_path
-          self.versionCode = cata.identifier
-          self.appliEficas.format_fichier = cata.file_format
-          self.appliEficas.format_fichier_in = cata.file_format_in
-          lab+=self.versionCode
+          cata = cataListeChoix[widgetChoix.CBChoixCata.currentIndex()]
+          self.fichierCata = cata.fichierCata
+          self.labelCode   = cata.labelCode
+          self.appliEficas.formatFichierOut = cata.formatFichierOut
+          self.appliEficas.formatFichierIn  = cata.formatFichierIn
+          lab+=self.labelCode
           self.appliEficas.setWindowTitle(lab)
-          #qApp.mainWidget().setCaption(lab)
           widgetChoix.close()
       else:
           widgetChoix.close()
@@ -92,65 +91,91 @@ class ReaderCataCommun(object):
    def choisitCata(self):
    # ____________________
 
-      liste_cata_possibles=[]
+ 
+      listeCataPossibles=[]
       self.Commandes_Ordre_Catalogue=[]
 
-      all_cata_list = []
+
+      listeTousLesCatas = []
       for catalogue in self.appliEficas.maConfiguration.catalogues:
-          if isinstance(catalogue, CatalogDescription): all_cata_list.append(catalogue)
-          elif isinstance(catalogue, tuple)           : all_cata_list.append(CatalogDescription.create_from_tuple(catalogue))
+          if isinstance(catalogue, CatalogDescription): listeTousLesCatas.append(catalogue)
+          elif isinstance(catalogue, tuple)           : listeTousLesCatas.append(CatalogDescription.createFromTuple(catalogue))
           else: print(("Catalog description cannot be interpreted: ", catalogue))
 
       # This filter is only useful for codes that have subcodes (like MAP).
       # Otherwise, the "code" attribute of the catalog description can (should) be None.
-      if self.ssCode is None: liste_cata_possibles = all_cata_list
+      if self.ssCode is None: listeCataPossibles = listeTousLesCatas
       else:
-          for catalogue in all_cata_list:
-              if catalogue.code == self.code and catalogue.file_format == self.ssCode: liste_cata_possibles.append(catalogue)
+          for catalogue in listeTousLesCatas:
+             if catalogue.code == self.code and catalogue.ssCode == self.ssCode: listeCataPossibles.append(catalogue)
 
-      if len(liste_cata_possibles)==0:
-          QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+      # le catalogue est fixe dans la ligne de commande
+      if self.appliEficas.fichierCata != None : 
+         trouve=False
+         for catalogue in listeTousLesCatas: 
+             if os.path.abspath(catalogue.fichierCata) ==  (os.path.abspath(self.appliEficas.fichierCata)) :
+                listeCataPossibles=(catalogue,)
+                trouve=True
+                break
+         if not trouve:
+                catalogue=CatalogDescription.createFromTuple((self.code ,self.code,self.appliEficas.fichierCata,'python','python'))
+                listeCataPossibles=(catalogue,)
+             
+
+      if len(listeCataPossibles)==0:
+          try : 
+             from PyQt5.QtWidgets import QMessageBox, QDialog
+             QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
                                tr("Pas de catalogue defini pour le code ") + self.code)
+          except : 
+             print ("Pas de catalogue defini pour le code " + self.code)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 : sys.exit(1)
           return
 
 
-      if self.versionCode is not None:
+      # le label est fixe dans la ligne de commande
+      if self.labelCode is not None:
           # La version a ete fixee
-          for cata in liste_cata_possibles:
-             if self.versionCode == cata.identifier:
-                self.fic_cata = cata.cata_file_path
-                self.appliEficas.format_fichier = cata.file_format
-                self.appliEficas.format_fichier_in = cata.file_format_in
+          for cata in listeCataPossibles:
+             if self.labelCode == cata.labelCode:
+                self.fichierCata = cata.fichierCata
+                self.appliEficas.formatFichierIn  = cata.formatFichierIn
+                self.appliEficas.formatFichierOut = cata.formatFichierOut
       else:
-          cata_choice_list = []
-          for cata in liste_cata_possibles:
-              if cata.selectable:
-                  if cata.default : cata_choice_list.insert(0, cata)
-                  else            : cata_choice_list.append(cata)
+          cataListeChoix = []
+          for cata in listeCataPossibles:
+              if cata.default : cataListeChoix.insert(0, cata)
+              else            : cataListeChoix.append(cata)
 
-          if len(cata_choice_list) == 0:
-              QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+          if len(cataListeChoix) == 0:
+              try : 
+                from PyQt5.QtWidgets import QMessageBox
+                QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
                                    tr("Aucun catalogue trouve"))
+              except :
+                print ("Pas de catalogue defini pour le code " + self.code)
               self.appliEficas.close()
               if self.appliEficas.salome == 0 : sys.exit(1)
 
-          elif len(cata_choice_list) == 1:
-              self.fic_cata = cata_choice_list[0].cata_file_path
-              self.versionCode = cata_choice_list[0].identifier
-              self.appliEficas.format_fichier = cata_choice_list[0].file_format
-              self.appliEficas.format_fichier_in = cata_choice_list[0].file_format_in
+          elif len(cataListeChoix) == 1:
+              self.fichierCata = cataListeChoix[0].fichierCata
+              self.labelCode   = cataListeChoix[0].labelCode
+              self.appliEficas.formatFichierOut = cataListeChoix[0].formatFichierOut
+              self.appliEficas.formatFichierIn  = cataListeChoix[0].formatFichierIn
 
           else:
               # plusieurs catalogues sont disponibles : il faut demander a l'utilisateur
               # lequel il veut utiliser ...
-              self.askChoixCatalogue(cata_choice_list)
+              if self.appliEficas.ssIhm : 
+                 print ('Unable to know which catafile is choosen')
+                 exit()
+              self.askChoixCatalogue(cataListeChoix)
               self.demandeCatalogue=True
 
-      if self.fic_cata == None :
+      if self.fichierCata == None :
           if self.appliEficas.salome == 0 :
-             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.versionCode)))
+             print(("Pas de catalogue pour code %s, version %s" %(self.code,self.labelCode)))
              sys.exit(1)
           else :
              self.appliEficas.close()
@@ -162,23 +187,25 @@ class ReaderCata (ReaderCataCommun):
 #------------------------------------
 
    def __init__(self,QWParent, appliEficas):
-   # ______________________________________
+   # _______________________________________
 
+     
       self.QWParent=QWParent
       self.appliEficas=self.QWParent.appliEficas
       self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
       self.demandeCatalogue=False
       self.code=self.appliEficas.code
       self.ssCode=self.appliEficas.ssCode
-      self.appliEficas.format_fichier='python'
-      self.versionCode=self.appliEficas.versionCode
-      self.fic_cata=None
+      # on positionne par defaut mais est-ce vraiment necessaire
+      self.appliEficas.formatFichierIn='python'
+      self.appliEficas.formatFichierOut='python'
+      self.labelCode=self.appliEficas.labelCode
+      self.fichierCata=self.appliEficas.fichierCata
       self.openCata()
       self.traiteIcones()
       self.cataitem=None
       self.creeDicoInverse()
       if self.code=="TELEMAC": self.creeDicoCasToCata()
-
 
 
    def openCata(self):
@@ -189,22 +216,45 @@ class ReaderCata (ReaderCataCommun):
       # import du catalogue
       self.choisitCata()
 
-      if self.appliEficas.maConfiguration.withXSD :
-         try :
-           #import raw.Telemac2d as modeleMetier
-           #import raw.cata_genere_fact as modeleMetier
-           import raw.cata_map_genere as modeleMetier
-           #import raw.cata_bloc as modeleMetier
-           print ('import Test ad modeleMetier')
-         except :
-           modeleMetier = None
-      else :
-           modeleMetier = None
+      modeleMetier = None
+      if not (self.appliEficas.genereXSD) :
+         if (self.appliEficas.maConfiguration.withXSD or self.appliEficas.withXSD)  :
+           try :
+             import pyxb
+           except :
+             self.QWParent.informe('environnement', 'please source pyxb environment')
+             exit()
+           try : 
+             nomCataXsd = os.path.splitext(os.path.basename(self.fichierCata))[0]
+             fichierCataTrunc=os.path.splitext(os.path.basename(self.fichierCata))[0]  
+             nomCataXsd = fichierCataTrunc+'_driver' 
+             pathCata = os.path.dirname(self.fichierCata)+'/raw/'+nomCataXsd+'.py'
+             import imp
+             modeleMetier= imp.load_source(nomCataXsd,pathCata)
+           except :
+             if self.appliEficas.ssIhm == False :print ('______________ poum import cata_genere ')
+             self.QWParent.informe('XSD driver', 'unable to load xsd driver',critique=False)
+             modeleMetier = None
 
-      self.cata = self.importCata(self.fic_cata)
+      self.cata = self.importCata(self.fichierCata)
+      if hasattr(self.cata, 'implement'): self.cata.JdC.implement = self.cata.implement
+      else : self.cata.JdC.implement = ""
+      if hasattr(self.cata, 'importedBy'): self.cata.JdC.importedBy = self.cata.importedBy
+      else : self.cata.JdC.importedBy = [] 
+      self.cata.JdC.labelCode = self.labelCode 
+      if not(hasattr(self.cata, 'dict_condition')): self.cata.dict_condition = {}
+      
+      # pointeur pour le dumpXSD
+      self.cata.JdC.cata=self.cata
+      
       self.cata.modeleMetier = modeleMetier
       if not self.cata :
-          QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
+          #try:
+            #from PyQt5.QtWidgets import QMessageBox, QDialog
+            #QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fichierCata)
+          #except : 
+          #  print ("Impossible d'importer le catalogue "+ self.fichierCata)
+          self.QWParent.informe("Catalogue","Impossible d'importer le catalogue "+ self.fichierCata)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)
@@ -214,7 +264,6 @@ class ReaderCata (ReaderCataCommun):
       # retrouveOrdreCataStandard fait une analyse textuelle du catalogue
       # remplace par retrouveOrdreCataStandardAutre qui utilise une numerotation
       # des mots cles a la creation
-      #print (self.cata)
       #print (dir(self.cata))
       self.retrouveOrdreCataStandardAutre()
       if self.appliEficas.maConfiguration.modeNouvCommande == "initial" : self.retrouveOrdreCataStandard()
@@ -242,7 +291,7 @@ class ReaderCata (ReaderCataCommun):
       # traitement des clefs documentaires
       #
 
-      self.titre=self.VERSION_EFICAS+" "+tr( " avec le catalogue ") + os.path.basename(self.fic_cata)
+      self.titre=self.VERSION_EFICAS+" "+tr( " avec le catalogue ") + os.path.basename(self.fichierCata)
       if self.appliEficas.ssIhm == False : self.appliEficas.setWindowTitle(self.titre)
       self.appliEficas.titre=self.titre
       self.QWParent.titre=self.titre
@@ -257,9 +306,13 @@ class ReaderCata (ReaderCataCommun):
       sys.path[:0] = [rep_cata]
       self.appliEficas.listeAEnlever.append(rep_cata)
 
+      # PNPNPN pas propre __ A reflechir
+      if 'cata_Vimmp' in list(sys.modules.keys()) :
+          del sys.modules['cata_Vimmp']
 
       if nom_cata in list(sys.modules.keys()) :
         del sys.modules[nom_cata]
+
       for k in sys.modules:
         if k[0:len(nom_cata)+1] == nom_cata+'.':
           del sys.modules[k]
@@ -275,6 +328,8 @@ class ReaderCata (ReaderCataCommun):
           o=__import__(nom_cata)
           return o
       except Exception as e:
+          self.QWParent.informe('catalog', 'unable to load catalog file')
+          import traceback
           traceback.print_exc()
           return 0
 
@@ -288,6 +343,8 @@ class ReaderCata (ReaderCataCommun):
           contient le nom des mots cles dans le bon ordre
       """
       self.cata_ordonne_dico, self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
+      #print ('_________________________________________', self)
+      #print (self.cata_ordonne_dico)
       #self.appliEficas.liste_simp_reel = ()
       #self.cata_ordonne_dico = {}
 
@@ -296,9 +353,9 @@ class ReaderCata (ReaderCataCommun):
           Retrouve l'ordre des mots-cles dans le catalogue, cad :
           Attention s appuie sur les commentaires
       """
-      nom_cata = os.path.splitext(os.path.basename(self.fic_cata))[0]
-      rep_cata = os.path.dirname(self.fic_cata)
-      self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyseCatalogue(self.fic_cata)
+      nom_cata = os.path.splitext(os.path.basename(self.fichierCata))[0]
+      rep_cata = os.path.dirname(self.fichierCata)
+      self.Commandes_Ordre_Catalogue = analyse_catalogue_initial.analyseCatalogue(self.fichierCata)
       #print self.Commandes_Ordre_Catalogue
 
    def traiteIcones(self):

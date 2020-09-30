@@ -22,7 +22,7 @@ from Noyau import N_MACRO_ETAPE
 from Validation import V_MACRO_ETAPE
 from Ihm import I_MACRO_ETAPE
 from .A_ASSD import CO
-from Efi2Xsd.MCAccasXsd  import X_MCCOMPO
+from Efi2Xsd.MCAccasXML  import X_MCCOMPO
 
 class MACRO_ETAPE(I_MACRO_ETAPE.MACRO_ETAPE,
                   X_MCCOMPO,

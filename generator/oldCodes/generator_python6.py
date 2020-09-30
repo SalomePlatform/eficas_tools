@@ -73,7 +73,7 @@ class PythonGenerator(generator_python.PythonGenerator):
             Méthode particulière pour les objets de type FORMULE
         """
         l=[]
-        nom = obj.get_nom()
+        nom = obj.getNom()
         if nom == '' : nom = 'sansnom'
         l.append(nom + ' = FORMULE(')
         for v in obj.mc_liste:

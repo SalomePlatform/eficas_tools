@@ -21,10 +21,10 @@
 Ce module centralise les informations issues de la ligne de commande.
 
 La ligne de commande est parsee avec l'aide du module python optparse.
-Les options possibles sont : -c, -j, -p, -d, -i, -f comme definies ci-dessous.
+Les options possibles sont : -l, -j, -p, -d, -i, -f comme definies ci-dessous.
 
 Un exemple typique d'utilisation est :
->>> ./appli.py -c V7.3 -d 1 -j aa -i 11 iii -p ppp -i 22 ii -j bb -f ff
+>>> ./appli.py -v V7.3 -d 1 -j aa -i 11 iii -p ppp -i 22 ii -j bb -f ff
 
 qui demande a l'application d'ouvrir trois jeux de commandes.
 
@@ -198,7 +198,13 @@ def checkFich(option, opt_str, fich, parser):
     if not hasattr(parser.values,"studies"):
        parser.values.studies=[]
        parser.values.comm=[]
-    config = six.moves.configparser.configparser()
+   # Python 2 to 3
+    try :
+     import ConfigParser
+     config=ConfigParser.ConfigParser()
+    except :
+     import configparser
+     config=configparser.configparser()
     config.read([fich])
     if not config.has_option(u"jdc","jdc"):
        raise OptionValueError(tr(" jdc %s manque option jdc dans section jdc", str(fich)))
@@ -237,7 +243,7 @@ def printDEnv():
 def createparser():
     # creation du parser des options de la ligne de commande
     #import prefs
-    parser=optparse.OptionParser(usage=tr("utilisation : %prog [options]"), version="%prog 1.13")
+    parser=optparse.OptionParser(usage=tr("utilisation : %prog [options]"), version="%prog 9.5")
 
     parser.add_option(u"-j","--jdc",dest="comm",type='string',
                     action="callback",callback=checkComm,
@@ -251,14 +257,14 @@ def createparser():
                   action="callback", callback=checkInclude,
                   nargs=2, help=tr("numero d'unite suivi du nom du fichier include"))
 
-    parser.add_option(u"-f","--fich", type="string",dest="fich",
-                  action="callback", callback=checkFich,
-                  help=tr("fichier decrivant une etude"))
+    #parser.add_option(u"-f","--fich", type="string",dest="fich",
+    #              action="callback", callback=checkFich,
+    #              help=tr("fichier decrivant une etude"))
 
-    parser.add_option(u"-c","--cata", action="store", type="string",dest="cata",
-                  help=tr("version de catalogue a utiliser"))
+    parser.add_option(u"-c","--cata", action="store", type="string",dest="fichierCata",
+                  help=tr("catalogue a utiliser"))
 
-    parser.add_option(u"-v","--version_cata", action="store", type="string",dest="version_cata",
+    parser.add_option(u"-v","--label", action="store", type="string",dest="labelCode",
                   help=tr("version de catalogue a utiliser"))
 
 
@@ -268,11 +274,19 @@ def createparser():
     parser.add_option(u"-d","--debug", action="store", type="int",dest="debug",
                   help=tr("niveau de debug"))
 
+    parser.add_option(u"-x","--withXSD", action="store_true", dest="withXSD",
+                  default=False,
+                  help=tr("construit le .xml en meme temps que le .comm"))
+
+    parser.add_option(u"-a","--withEltAbstrait", action="store_true", dest="avecEltAbstrait",
+                  default=False,
+                  help=tr("construit des elements abstraits dans le XSD pour gerer le cascading"))
+
     parser.add_option(u"-s","--schema", action="store", type="string",dest="ssCode",
                   help=tr("schema"))
     # To handle locale information
-    parser.add_option("-l", "--locale", action="store", type="string", dest="locale",
-                  help=tr("localisation de l'application, pour la traduction"))
+    #parser.add_option("-l", "--locale", action="store", type="string", dest="locale",
+    #              help=tr("localisation de l'application, pour la traduction"))
 
 
     return parser
@@ -283,6 +297,11 @@ def parse(args):
     if not hasattr(options,"studies"):
        options.studies=[]
        options.comm=[]
+    if not hasattr(options,"fichierCata"): options.fichierCata=None
+    if not hasattr(options,"labelCode"): options.labelCode=None
+    if options.withXSD :
+       try : import pyxb
+       except : print ('Please, source pyxb environment'); exit()
     try:
        del parser.values.current
     except:
@@ -292,7 +311,7 @@ def parse(args):
             options.comm.append(file)
             options.studies.append({"comm":file})
             #print options.studies
-         elif len(args)==1 and (re.search('.comm',file) or re.search('.map',file) or re.search('.cas',file)):
+         elif len(args)==1 and (re.search('.comm',file) or re.search('.map',file) or re.search('.cas',file) or re.search('.xml',file)):
             try :
                 f=open(file,'w')
                 f.close()
@@ -308,9 +327,10 @@ def parse(args):
     global d_env
     d_env=options
     #printDEnv()
+    #print (options)
     return options
 
-def getUnit(d_study,appli):
+def getUnit(d_study,appliEficas):
     """
        Fonction : construit et retourne un dictionnaire contenant les informations
        sur les fichiers poursuite et includes sous la forme adaptee
@@ -321,22 +341,22 @@ def getUnit(d_study,appli):
                     ...] 
 
        d_study : dictionnaire de l'etude
-       appli : objet application EFICAS (permet d'acceder aux services comme getSource)
+       appliEficas : objet application EFICAS (permet d'acceder aux services comme getSource)
     """
-    return getDunit(d_study,appli)
+    return getDunit(d_study,appliEficas)
 
-def getDunit(d_unit,appli):
+def getDunit(d_unit,appliEficas):
     d={}
     if 'pours' in d_unit:
        # on a une poursuite
        comm=d_unit["pours"]["comm"]
-       g=getDunit(d_unit["pours"],appli)
-       text=appli.getSource(comm)
+       g=getDunit(d_unit["pours"],appliEficas)
+       text=appliEficas.getSource(comm)
        d[None]=comm,text,g
 
     for k,v in list(d_unit.items()):
        if k in (u"pours","comm"): continue
-       text=appli.getSource(v)
+       text=appliEficas.getSource(v)
        d[k]=v,text,d
 
     return d

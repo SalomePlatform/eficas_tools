@@ -30,7 +30,6 @@ from __future__ import absolute_import
 from __future__ import print_function
 try :
    from builtins import str
-   from builtins import range
    from builtins import object
 except : pass
 
@@ -40,12 +39,13 @@ import traceback
 
 # import de modules Eficas
 from Noyau.N_CR import CR
+from Noyau.N_UserASSD import UserASSD
 from Noyau import N_OBJECT
 from Ihm import I_OBJECT
 from .param2 import *
 from Ihm import CONNECTOR
 from Extensions.i18n import tr
-from six.moves import range
+
 
 class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   """
@@ -58,7 +58,20 @@ class PARAMETRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT,Formula) :
   nature = 'PARAMETRE'
   idracine = 'param'
 
+  def __new__(cls,nom,valeur=None):
+    # on est en relecture du .comm: l objet a ete detecte comme parametre par le parsing
+    # mais il  s agit d une reference, une UserASDD
+     if (issubclass(valeur.__class__, UserASSD)):
+        valeur.initialiseNom(nom)
+        return valeur
+     try :
+        return super(PARAMETRE, cls).__new__(cls,*args,**kwargs)
+     except : 
+        return super(PARAMETRE, cls).__new__(cls)
+
+
   def __init__(self,nom,valeur=None):
+    #print ('__init__ de parametre pour', nom,valeur)
     self.nom = nom
     # La classe PARAMETRE n'a pas de definition : on utilise self pour
     # completude

@@ -27,7 +27,6 @@ import types,os
 import traceback
 
 from Extensions.i18n import tr
-import six
 
 from PyQt5.QtWidgets import QDialog, QMessageBox, QFileDialog
 from PyQt5.QtCore import QSize
@@ -68,7 +67,7 @@ class ViewText(Ui_dView,QDialog):
         if fn == ""  : return
         if fn == None : return (0, None)
 
-        ulfile = os.path.abspath(six.text_type(fn))
+        ulfile = os.path.abspath(fn)
         if self.editor != None :
            self.editor.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
         try:

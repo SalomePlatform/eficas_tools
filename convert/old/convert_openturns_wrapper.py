@@ -32,7 +32,7 @@ def entryPoint():
         # Le nom du plugin
           'name' : 'openturns_wrapper',
         # La factory pour créer une instance du plugin
-          'factory' : PythonParser,
+          'factory' : Pythonparser,
           }
 
 

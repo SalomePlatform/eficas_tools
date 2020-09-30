@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2019   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -41,10 +41,14 @@ from .A_PROC import PROC
 from .A_MACRO import MACRO
 from .A_FORM import FORM
 from .A_BLOC import BLOC
+#from .A_BLOC import BLOC_EXCLUS_ABC
+#from .A_BLOC import BLOC_FICHIER
 from .A_FACT import FACT
 from .A_SIMP import SIMP
 from .A_EVAL import EVAL
 from .A_NUPLET import NUPL
+from .A_TUPLE import Tuple
+
 
 from .A_JDC import JDC
 from .A_ETAPE import ETAPE
@@ -68,7 +72,7 @@ from .A_ENSEMBLE import ENSEMBLE
 from .A_A_CLASSER import A_CLASSER
 from .A_AVANT import AVANT
 
-from .A_ASSD import ASSD,assd
+from .A_ASSD import ASSD,assd, UserASSD
 from .A_ASSD import GEOM,geom
 # Pour le moment on laisse fonction (ceinture et bretelles)
 from .A_ASSD import FONCTION, fonction

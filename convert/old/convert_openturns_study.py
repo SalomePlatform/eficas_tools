@@ -17,7 +17,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import re
-from convert_python import PythonParser
+from convert_python import Pythonparser
 
 def entryPoint():
    """
@@ -25,12 +25,12 @@ def entryPoint():
    """
    return {
           'name' : 'openturns_study',
-          'factory' : OTStudyParser
+          'factory' : OTStudyparser
           }
 
-class OTStudyParser(PythonParser):
+class OTStudyparser(Pythonparser):
    """
-   This converter works like PythonParser, except that it also initializes all
+   This converter works like Pythonparser, except that it also initializes all
    model variables to None in order to avoid Python syntax errors when loading
    a file with a different or inexistent definition of variables.
    """
@@ -38,7 +38,7 @@ class OTStudyParser(PythonParser):
    pattern_model_variable = re.compile(r'ModelVariable\s*=\s*(\w+)\s*,')
 
    def convert(self, outformat, appli=None):
-      text = PythonParser.convert(self, outformat, appli)
+      text = Pythonparser.convert(self, outformat, appli)
       varnames = self.pattern_model_variable.findall(text)
       newtext = ""
       for var in varnames:

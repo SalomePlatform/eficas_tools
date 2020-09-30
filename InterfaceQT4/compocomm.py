@@ -20,7 +20,6 @@
 
 from __future__ import absolute_import
 
-from PyQt5.QtWidgets import QAction
 
 from Editeur     import Objecttreeitem
 from . import browser
@@ -38,6 +37,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodePartiel.createPopUpMenu(self)
+        from PyQt5.QtWidgets import QAction
         self.Decommente = QAction(tr("decommenter"),self.tree)
         self.Decommente.triggered.connect(self.decommenter)
         self.Decommente.setStatusTip(tr("Decommente la commande "))
@@ -54,7 +54,6 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         """
         debComm=self.item.getText()
         self.setText(1,tr(debComm))
-
 
     
 class COMMTreeItem(Objecttreeitem.ObjectTreeItem):

@@ -21,7 +21,7 @@ from __future__ import absolute_import
 from Noyau import N_MCFACT
 from Validation import V_MCFACT
 from Ihm import I_MCFACT
-from Efi2Xsd.MCAccasXsd  import X_MCFACT
+from Efi2Xsd.MCAccasXML  import X_MCFACT
 
 class MCFACT(I_MCFACT.MCFACT,N_MCFACT.MCFACT,X_MCFACT,V_MCFACT.MCFACT):
    def __init__(self,val,definition,nom,parent,dicoPyxbDeConstruction=None):

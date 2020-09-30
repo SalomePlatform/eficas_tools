@@ -50,7 +50,7 @@ class ProcessOutputsGenerator(PythonGenerator,ModificationGenerator):
    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None, appli=None):
+   def gener(self,obj,format='brut',config=None, appliEficas=None):
 
       # Cette instruction genere le contenu du fichier de commandes (persistance)
       texteModification=self.generTexteModif(obj)

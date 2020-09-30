@@ -1,4 +1,4 @@
-# coding=utf-8
+## coding=utf-8
 # Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -64,6 +64,7 @@ class OBJECT(object):
         self.jdc = None
         self.niveau = None
 
+
     def getVal(self):
         """
             Retourne la valeur de l'objet. Cette méthode fournit
@@ -83,7 +84,7 @@ class OBJECT(object):
         else:
             return self
 
-    def GETVAL(self, val):
+    def getValeurEffective(self, val):
         """
             Retourne la valeur effective du mot-clé en fonction
             de la valeur donnée. Defaut si val == None
@@ -109,6 +110,7 @@ class OBJECT(object):
 
     def longueurDsArbre(self):
       return 1
+
 
 
 class ErrorObj(OBJECT):

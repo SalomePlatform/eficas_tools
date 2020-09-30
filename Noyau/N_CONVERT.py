@@ -40,9 +40,9 @@ class Conversion(object):
     """Conversion de type.
     """
 
-    def __init__(self, name, typ):
+    def __init__(self, name, typeACreer):
         self.name = name
-        self.typ = typ
+        self.typeACreer = typeACreer
 
     def convert(self, obj):
         """Filtre liste
@@ -68,11 +68,11 @@ class Conversion(object):
 
 class TypeConversion(Conversion):
 
-    """Conversion de type
+    """Conversion de typeACreer
     """
 
-    def __init__(self, typ):
-        Conversion.__init__(self, 'type', typ)
+    def __init__(self, typeACreer):
+        Conversion.__init__(self, 'type', typeACreer)
 
 
 class IntConversion(TypeConversion):
@@ -103,14 +103,27 @@ class FloatConversion(TypeConversion):
         return o
 
 
+class UserASSDConversion(TypeConversion):
+    def __init__(self, classUser):
+        TypeConversion.__init__(self, classUser)
+
+    def function(self, o):
+        #print ('je convertis : ', o, 'en ', self.typeACreer )
+        #import traceback
+        #traceback.print_stack()
+        if o == None : return None
+        nouvelObj=self.typeACreer(o)
+        return nouvelObj
+
 _convertI = IntConversion()
 _convertR = FloatConversion()
 
 
 def ConversionFactory(name, typ):
     if name == 'type':
-        if 'I' in typ:
-            return _convertI
-        elif 'R' in typ:
-            return _convertR
+        if 'I' in typ   : return _convertI
+        elif 'R' in typ : return _convertR
+    if name == 'UserASSD':
+       #print(typ)
+       return (UserASSDConversion(typ))
     return None

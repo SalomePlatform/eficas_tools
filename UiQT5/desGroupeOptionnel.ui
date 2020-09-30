@@ -6,14 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>420</width>
+    <height>363</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>1</number>
+   </property>
+   <property name="bottomMargin">
+    <number>1</number>
+   </property>
    <item>
     <widget class="QFrame" name="frameLabelMC">
      <property name="sizePolicy">
@@ -95,8 +104,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>382</width>
-        <height>223</height>
+        <width>402</width>
+        <height>306</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -106,6 +115,15 @@
        </sizepolicy>
       </property>
       <layout class="QVBoxLayout" name="MCOptionnelLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
+        <number>2</number>
+       </property>
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">

@@ -54,15 +54,19 @@ class XMLGenerator(PythonGenerator):
    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appli=None):
+   def gener(self,obj,format='brut',config=None,appliEficas=None):
        
-      try :
-        print (obj)
+      print ('dans gener XMLGenerator Attention if 1 a la place de try ')
+      #try :
+      if 1 :
         self.texteXML=obj.toXml()
-      except : 
-        self.texteXML='erreur generation'
-        pass
+      #except : 
+      #  self.texteXML='erreur generation'
+      #  pass
       
+      print (self.texteXML)
+      self.textePourAide =""
+      self.dictNbNomObj={}
       # Cette instruction genere le contenu du fichier de commandes (persistance)
       self.text=PythonGenerator.gener(self,obj,format)
       return self.text
@@ -76,11 +80,35 @@ class XMLGenerator(PythonGenerator):
 #----------------------------------------------------------------------------------------
 
    def writeDefault(self,fn) :
-       #fileDico = fn[:fn.rfind(".")] + '.py'
-       fileDico='/tmp/toto.xml'
-       print (self.texteXML)
-       f = open( str(fileDico), 'w')
-       f.write('Dico = '+str(self.texteXML))
+       fileXML  = fn[:fn.rfind(".")] + '.xml'
+       #filePyxb = fn[:fn.rfind(".")] + '.py'
+       fileBase = os.path.basename(fileXML)
+       fileBase = fileBase[:fileBase.rfind(".")] + '.py'
+       filePyxb = '/tmp/' + fileBase
+       print (filePyxb)
+       #fileDico='/tmp/toto.xml'
+       #print (self.texteXML)
+       f = open( str(fileXML), 'w')
+       f.write(str(self.texteXML))
+       f.close()
+
+       f = open( str(filePyxb), 'w')
+       f.write(str(self.textePourAide))
        f.close()
 
 
+   def generMCSIMP(self,obj) :
+       if obj.nom in self.dictNbNomObj.keys():
+          nomUtil = obj.nom + "_" + str(self.dictNbNomObj[obj.nom])
+          self.dictNbNomObj[obj.nom] += 1
+       else :
+          nomUtil = obj.nom 
+          self.dictNbNomObj[obj.nom] = 1
+       self.textePourAide +=  nomUtil + " = vimmpCase." + obj.getNomDsXML() + "\n"
+       #self.textePourAide +=  "print  '"+ nomUtil+ " ='  , " + str(nomUtil) + "\n"
+       #self.textePourAide +='txt += "' + nomUtil + '" + " = " +str( ' + nomUtil + ') ' + "\n"
+
+
+
+       s=PythonGenerator.generMCSIMP(self,obj)
+       return s

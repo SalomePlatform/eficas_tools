@@ -47,84 +47,75 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
   """
   """
   def __init__(self,node,editor,etape):
+
       self.listeAffichageWidget=[]
       self.inhibe=0
       self.ensure=0
       editor.inhibeSplitter=1
       Groupe.__init__(self,node,editor,None,etape.definition,etape,1,self)
+      spacerItem = QSpacerItem(21, 500, QSizePolicy.Expanding, QSizePolicy.Expanding)
+      self.verticalLayoutCommande.addItem(spacerItem)
       editor.inhibeSplitter=0
 
-      resize=0
-      if node.item.getFr() != "" : 
-         self.labelDoc.setText(node.item.getFr())
-         resize=1
-      else : self.labelDoc.close()
-      
-      if not(hasattr(etape.definition,'sd_prod')) or (etape.definition.sd_prod==None): self.LENom.close()
+      # Gestion du nom de L OPER si il est nomme 
+      if   not(hasattr(etape.definition,'sd_prod')) or (etape.definition.sd_prod==None): self.LENom.close()
       elif (hasattr(etape.definition,'sd_prod') and type(etape.definition.sd_prod)== types.FunctionType):self.LENom.close()
       elif (hasattr(etape, 'sdnom')) and etape.sdnom != "sansnom" and etape.sdnom != None: 
-           self.LENom.setText(etape.sdnom)
-           resize=resize*1
+         self.LENom.setText(etape.sdnom)
       else : 
-           self.LENom.setText("")
-           resize=resize*1
-      if resize :
+         self.LENom.setText("")
+      if hasattr(self,'LENom'): self.LENom.returnPressed.connect(self.nomChange)
+      self.racine=self.node.tree.racine
+      if self.node.item.getIconName() == "ast-red-square" : self.LENom.setDisabled(True)
+
+      # Gestion de la doc de l objet
+      if node.item.getFr() != "" : 
+         self.labelDoc.setText(node.item.getFr())
          nouvelleSize=self.frameAffichage.height()+60
          self.frameAffichage.setMinimumHeight(nouvelleSize)
          self.frameAffichage.resize(self.frameAffichage.width(),nouvelleSize)
+      else : self.labelDoc.close()
       
-
-
+   
+      # Gestion du nom de l etape
       maPolice= QFont("Times", 10,)
       self.setFont(maPolice)
       self.labelNomCommande.setText(tr(self.obj.nom))
 
 
+      # Gestion du Frame d affichage des autres commandes
       if self.editor.maConfiguration.closeAutreCommande == True  : self.closeAutreCommande()
       else :
-        try :
-           self.bCatalogue.clicked.connect(self.afficheCatalogue)
-           self.bAvant.clicked.connect(self.afficheAvant)
-           self.bApres.clicked.connect(self.afficheApres)
-        except :
-           pass
+         self.bCatalogue.clicked.connect(self.afficheCatalogue)
+         self.bAvant.clicked.connect(self.afficheAvant)
+         self.bApres.clicked.connect(self.afficheApres)
        
-      if hasattr(self,'LENom'): self.LENom.returnPressed.connect(self.nomChange)
-   
-      if self.editor.code in ['Adao','ADAO'] and self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
-                      self.frameAffichage.close()
       if self.editor.maConfiguration.closeFrameRechercheCommande==True  : 
+         self.frameAffichage.close()
          self.closeAutreCommande()
 
-      if self.editor.code in ['CARMELCND',] : self.closeAutreCommande()
-      self.racine=self.node.tree.racine
-      if self.node.item.getIconName() == "ast-red-square" : self.LENom.setDisabled(True)
 
       self.setAcceptDrops(True)
       self.etablitOrdre()
 
-      if self.editor.code == "CARMELCND" : 
+      if self.editor.maConfiguration.enleverPoubellePourCommande  : 
          self.RBPoubelle.close() # JDC Fige
+
+      if self.editor.maConfiguration.pasDeMCOptionnels  : 
          return                  # Pas de MC Optionnels pour Carmel
 
       from .monWidgetOptionnel import MonWidgetOptionnel
       if self.editor.widgetOptionnel!= None : 
-        self.monOptionnel=self.editor.widgetOptionnel
+         self.monOptionnel=self.editor.widgetOptionnel
       else :
-        self.editor.inhibeSplitter=1
-        self.monOptionnel=MonWidgetOptionnel(self.editor)
-        self.editor.widgetOptionnel=self.monOptionnel
-        self.editor.splitter.addWidget(self.monOptionnel)
-        self.editor.ajoutOptionnel()
-        self.editor.inhibeSplitter=0
-        self.monOptionnel=self.editor.widgetOptionnel
+         self.editor.inhibeSplitter=1
+         self.monOptionnel=MonWidgetOptionnel(self.editor)
+         self.editor.widgetOptionnel=self.monOptionnel
+         self.editor.splitter.addWidget(self.monOptionnel)
+         self.editor.ajoutOptionnel()
+         self.editor.inhibeSplitter=0
+         self.monOptionnel=self.editor.widgetOptionnel
       self.afficheOptionnel()
-      spacerItem = QSpacerItem(21, 500, QSizePolicy.Expanding, QSizePolicy.Expanding)
-      #spacerItem = QSpacerItem(21, 20, QSizePolicy.Preferred, QSizePolicy.Preferred)
-      #self.commandesLayout.addItem(spacerItem)
-      self.verticalLayoutCommande.addItem(spacerItem)
-
-      #self.editor.restoreSplitterSizes()
 
       #print "fin init de widget Commande"
       
@@ -147,12 +138,12 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       # on s assure que ce n est pas un chgt de fenetre
       #print "je passe dans focusNextPrevChild"
       if self.editor.fenetreCentraleAffichee != self : return True
-      f=self.focusWidget()
+      f = self.focusWidget()
       if f not in self.listeAffichageWidget :
          i=0
          while not hasattr (f,'AAfficher') :
            if f==None :i=-1; break
-           f=f.parentWidget()
+           f = f.parentWidget()
          if hasattr(f,'AAfficher') : f=f.AAfficher
          if i != -1 : i=self.listeAffichageWidget.index(f)
       else :i=self.listeAffichageWidget.index(f) 
@@ -197,10 +188,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
          i=i+1
       # si on boucle on perd l'ordre
  
-  def  afficheNieme(self,n):
-      #print ('ds afficheNieme')
-      self.listeAffichageWidget[n].setFocus(7)
-
   def  afficheSuivant(self,f):
       #print ('ds afficheSuivant')
       try :
@@ -231,6 +218,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def afficheOptionnel(self):
       # N a pas de parentQt. doit donc etre redefini
+      if self.editor.maConfiguration.closeOptionnel : self.editor.fermeOptionnel()
       liste,liste_rouge=self.ajouteMCOptionnelDesBlocs()
       #print "dans afficheOptionnel", self.monOptionnel
       # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
@@ -242,7 +230,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
 
   def focusInEvent(self,event):
       #print "je mets a jour dans focusInEvent de monWidget Commande "
-      if self.editor.code == "CARMELCND" : return #Pas de MC Optionnels pour Carmel
       self.afficheOptionnel()
 
 
@@ -264,17 +251,6 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       else : self.recentre()
       self.inhibeExpand=False
 
-  def reafficheSeulement(self,nodeAReafficher,index):
-      #print ('ds reafficheSeulement', nodeAReafficher)
-      parentNodeAReafficher=nodeAReafficher.parentQt
-      index=parentNodeAReafficher.commandesLayout.indexOf(nodeAReafficher)
-      oldFenetre=nodeAReafficher.node.fenetre
-      newWidget=nodeAReafficher.node.getPanelGroupe(parentNodeAReafficher,self,index)
-      nodeAReafficher.node.fenetre=newWidget
-      oldFenetre.setParent(None)
-      oldFenetre.close()
-      oldFenetre.deleteLater()
-      #print ("fin pour " , self.node.item.nom)
 
 
   def recentre(self):
@@ -283,13 +259,7 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       s.horizontalScrollBar().setSliderPosition(self.avantH)
       s.verticalScrollBar().setSliderPosition(self.avantV)
 
-  def rendVisibleNoeud(self,node):
-      self.f=node.fenetre
-      #print "dans rendVisibleNoeud",self.f
-      QTimer.singleShot(1, self.rendVisible)
-     
   def rendVisible(self):
-      #print "dans rendVisible",self.f
       QApplication.processEvents()
       self.f.setFocus(7)
       self.editor.fenetreCentraleAffichee.scrollAreaCommandes.ensureWidgetVisible(self.f)
@@ -310,12 +280,27 @@ class MonWidgetCommande(Ui_WidgetCommande,Groupe):
       if not(hasattr (self,'RBValide')) : return
       icon = QIcon()
       if self.node.item.object.isValid() : icon=QIcon(self.repIcon+"/ast-green-ball.png")
-      else : icon=QIcon(self.repIcon+"/ast-red-ball.png")
+      else :                               icon=QIcon(self.repIcon+"/ast-red-ball.png")
       nomIcone = self.node.item.getIconName()
       if nomIcone == "ast-yellow-square" : icon=QIcon(self.repIcon+"/ast-yel-ball.png")
-      if nomIcone == "ast-red-square" : self.LENom.setDisabled(True)
+      if nomIcone == "ast-red-square"    : self.LENom.setDisabled(True)
 
       self.LENom.setDisabled(False)
       self.RBValide.setIcon(icon)
 
 
+  def propageChange(self,typeChange):
+      aReecrire=self.propageChangeEnfant(self.node.item.object,typeChange)
+      if aReecrire : self.node.affichePanneau()
+
+  def propageChangeEnfant(self,mc, typeChange):
+      for enfant in mc.mcListe:
+          if enfant.nature == 'MCSIMP' :
+             if enfant.waitUserAssd():
+                if enfant.definition.type[0] == typeChange: return True
+          else :
+            if enfant.nature == 'MCList' : enfant=enfant[0]
+            if self.propageChangeEnfant(enfant, typeChange) : return True
+      return False
+             
+             

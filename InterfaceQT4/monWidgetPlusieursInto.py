@@ -27,7 +27,6 @@ except : pass
 import types,os
 
 # Modules Eficas
-from six.moves import range
 from PyQt5.QtWidgets  import QCheckBox, QScrollBar, QFrame, QApplication, QLabel
 from PyQt5.QtWidgets  import QSizePolicy,QSpacerItem
 from PyQt5.QtGui  import QPalette, QFont
@@ -176,7 +175,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
       self.listeCB.append(nouveauCB)
       nouveauCB.setText("")
       if index % 2 == 1 : nouveauCB.setStyleSheet("background:rgb(210,210,210)")
-      else :	                    nouveauCB.setStyleSheet("background:rgb(240,240,240)")
+      else :              nouveauCB.setStyleSheet("background:rgb(240,240,240)")
       self.vScrollBar.triggerAction(QScrollBar.SliderToMaximum)
       nouveauCB.setFocus()
       setattr(self,nomCB,nouveauCB)
@@ -201,7 +200,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
 
-  def changeValeur(self):
+  def changeValeur(self,changeDePlace=False,oblige=True, numero=None):
       #print ('changeValeur')
       if self.inhibe == True: return
       if hasattr(self,'LEFiltre') :self.noircirResultatFiltre()

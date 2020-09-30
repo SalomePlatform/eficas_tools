@@ -29,8 +29,7 @@
    <string/>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color : rgb(224,223,222);
-font : 'times' 9px</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <property name="spacing">
@@ -200,14 +199,12 @@ font : 'times' 9px</string>
      border-radius: 10px;
      padding: 0 8px;
      background: darkgray;
-   /*  selection-background-color: darkgray;*/
  }
 QLineEdit:disabled
 {
     background: lightgray;
 }
-/*read-only {
-     background: lightblue;*/</string>
+</string>
             </property>
             <property name="readOnly">
              <bool>false</bool>

@@ -41,7 +41,6 @@ from . import N_CR
 from .N_Exception import AsException, InterruptParsingError
 from .N_ASSD import ASSD
 from .strfunc import getEncoding
-from six.moves import range
 
 
 MemoryErrorMsg = """MemoryError :
@@ -88,17 +87,14 @@ NONE = None
 
     def __init__(self, definition=None, procedure=None, cata=None,
                  cata_ord_dico=None, parent=None,
-                 nom='SansNom', appli=None, context_ini=None, **args):
+                 nom='SansNom', appliEficas=None, context_ini=None, **args):
         self.procedure = procedure
         self.definition = definition
         self.cata = cata
-        # PN pourquoi ?
-        #if type(self.cata) != tuple and cata != None:
-        #    self.cata = (self.cata,)
         self._build_reserved_kw_list()
         self.cata_ordonne_dico = cata_ord_dico
         self.nom = nom
-        self.appli = appli
+        self.appliEficas = appliEficas
         self.parent = parent
         self.context_ini = context_ini
         # On conserve les arguments supplementaires. Il est possible de passer
@@ -128,13 +124,15 @@ NONE = None
         # on met le jdc lui-meme dans le context global pour l'avoir sous
         # l'etiquette "jdc" dans le fichier de commandes
         self.g_context = {'jdc': self}
+        CONTEXT.unsetCurrentJdC()
+        CONTEXT.setCurrentJdC(self)
         # Dictionnaire pour stocker tous les concepts du JDC (acces rapide par
         # le nom)
-        self.sds_dict = {}
+        self.sdsDict = {}
         self.etapes = []
         self.index_etapes = {}
         self.mc_globaux = {}
-        self.current_context = {}
+        self.currentContext = {}
         self.condition_context = {}
         self.index_etape_courante = 0
         self.UserError = "UserError"
@@ -149,9 +147,6 @@ NONE = None
            compte-rendu self.cr
         """
         try:
-            if self.appli != None:
-                self.appli.afficheInfos(
-                    'Compilation du fichier de commandes en cours ...')
             # Python 2.7 compile function does not accept unicode filename, so we encode it
             # with the current locale encoding in order to have a correct
             # traceback
@@ -188,6 +183,7 @@ Causes possibles :
            Cette methode execute le jeu de commandes compile dans le contexte
            self.g_context de l'objet JDC
         """
+      
         CONTEXT.setCurrentStep(self)
         # Le module nommage utilise le module linecache pour acceder
         # au source des commandes du jeu de commandes.
@@ -219,11 +215,12 @@ Causes possibles :
                 # Update du dictionnaire des concepts
                 for sdnom, sd in list(self.context_ini.items()):
                     if isinstance(sd, ASSD):
-                        self.sds_dict[sdnom] = sd
+                        self.sdsDict[sdnom] = sd
 
-            if self.appli != None:
-                self.appli.afficheInfos(
-                    'Interpretation du fichier de commandes en cours ...')
+            #if self.appliEficas != None:
+            #    self.appliEficas.afficheInfos(
+            #        'Interpretation du fichier de commandes en cours ...')
+
             # On sauve le contexte pour garder la memoire des constantes
             # En mode edition (EFICAS) ou lors des verifications le contexte
             # est recalcule
@@ -232,8 +229,6 @@ Causes possibles :
             exec(self.proc_compile, self.g_context)
 
             CONTEXT.unsetCurrentStep()
-            if self.appli != None:
-                self.appli.afficheInfos('')
 
         except InterruptParsingError:
             # interrupt the command file parsing used by FIN to ignore the end
@@ -264,7 +259,7 @@ Causes possibles :
         except NameError as e:
             etype, value, tb = sys.exc_info()
             l = traceback.extract_tb(tb)
-            s = traceback.format_exception_only(NameError,e)
+            s = traceback.format_exception_only(NameError, e)
             msg = "erreur de syntaxe,  %s ligne %d" % (s, l[-1][1])
             if CONTEXT.debug:
                 traceback.print_exc()
@@ -292,6 +287,10 @@ Causes possibles :
                 "erreur non prevue et non traitee prevenir la maintenance " + '\n' + ''.join(l))
             del exc_typ, exc_val, exc_fr
             CONTEXT.unsetCurrentStep()
+        idx=0
+        for e in self.etapes:
+            self.enregistreEtapePyxb(e,idx)
+            idx=idx+1
 
     def afficheFinExec(self):
         """
@@ -368,17 +367,17 @@ Causes possibles :
         if sd != None and (etape.definition.reentrant == 'n' or etape.reuse is None):
             # ATTENTION : On ne nomme la SD que dans le cas de non reutilisation
             # d un concept. Commande non reentrante ou reuse absent.
-            self.NommerSdprod(sd, nomsd)
+            self.nommerSDProd(sd, nomsd)
         return sd
 
-    def NommerSdprod(self, sd, sdnom, restrict='non'):
+    def nommerSDProd(self, sd, sdnom, restrict='non'):
         """
             Nomme la SD apres avoir verifie que le nommage est possible : nom
             non utilise
             Si le nom est deja utilise, leve une exception
             Met le concept cree dans le concept global g_context
         """
-        o = self.sds_dict.get(sdnom, None)
+        o = self.sdsDict.get(sdnom, None)
         if isinstance(o, ASSD):
             raise AsException("Nom de concept deja defini : %s" % sdnom)
         if sdnom in self._reserved_kw:
@@ -386,13 +385,21 @@ Causes possibles :
                 "Nom de concept invalide. '%s' est un mot-cle reserve." % sdnom)
 
         # Ajoute a la creation (appel de regSD).
-        self.sds_dict[sdnom] = sd
+        self.sdsDict[sdnom] = sd
         sd.setName(sdnom)
 
         # En plus si restrict vaut 'non', on insere le concept dans le contexte
         # du JDC
         if restrict == 'non':
             self.g_context[sdnom] = sd
+
+    def regUserSD(self,sd):
+    # utilisee pour creer les references
+    # se contente d appeler la methode equivalente sur le jdc
+      id=self.regSD(sd)
+      self.nommerSDProd(sd,sd.nom)
+      return id
+
 
     def regSD(self, sd):
         """
@@ -435,32 +442,31 @@ Causes possibles :
             Retourne le nom du fichier correspondant a un numero d'unite
             logique (entier) ainsi que le source contenu dans le fichier
         """
-        if self.appli:
-            # Si le JDC est relie a une application maitre, on delègue la
+        #if self.appliEficas:
+            # Si le JDC est relie a une appliEficascation maitre, on delègue la
             # recherche
-            return self.appli.getFile(unite, fic_origine)
-        else:
-            if unite != None:
-                if os.path.exists("fort." + str(unite)):
-                    fname = "fort." + str(unite)
-            if fname == None:
-                raise AsException("Impossible de trouver le fichier correspondant"
-                                  " a l unite %s" % unite)
-            if not os.path.exists(fname):
-                raise AsException("%s n'est pas un fichier existant" % fname)
-            fproc = open(fname, 'r')
-            text = fproc.read()
-            fproc.close()
-            text = text.replace('\r\n', '\n')
-            linecache.cache[fname] = 0, 0, text.split('\n'), fname
-            return fname, text
+        #    return self.appliEficas.getFile(unite, fic_origine)
+        #else:
+        #    if unite != None:
+        #        if os.path.exists("fort." + str(unite)):
+        #            fname = "fort." + str(unite)
+        if fname == None:
+           raise AsException("Impossible de trouver le fichier correspondant")
+        if not os.path.exists(fname):
+                raise AsException(fname + " n'est pas un fichier existant" )
+        fproc = open(fname, 'r')
+        text = fproc.read()
+        fproc.close()
+        text = text.replace('\r\n', '\n')
+        linecache.cache[fname] = 0, 0, text.split('\n'), fname
+        return fname, text
 
     def set_parLot(self, parLot, user_value=False):
         """
         Met le mode de traitement a PAR LOT
         ou a COMMANDE par COMMANDE
         en fonction de la valeur du mot cle PAR_LOT et
-        du contexte : application maitre ou pas
+        du contexte : appliEficascation maitre ou pas
 
         En PAR_LOT='NON', il n'y a pas d'ambiguite.
         d'analyse et juste avant la phase d'execution.
@@ -469,11 +475,11 @@ Causes possibles :
         """
         if user_value:
             self.parLot_user = parLot
-        if self.appli == None:
-            # Pas d application maitre
+        if self.appliEficas == None:
+            # Pas d appliEficascation maitre
             self.parLot = parLot
         else:
-            # Avec application maitre
+            # Avec appliEficascation maitre
             self.parLot = 'OUI'
 
     def accept(self, visitor):
@@ -522,35 +528,35 @@ Causes possibles :
         # courante pendant le processus de construction des etapes.
         # Si on insère des commandes (par ex, dans EFICAS), il faut prealablement
         # remettre ce pointeur a 0
-        # self.current_context.items() if isinstance(v, ASSD)])
-        if self.parLot_user == 'NON':
-            d = self.current_context = self.g_context.copy()
-            if etape is None:
-                return d
+        # self.currentContext.items() if isinstance(v, ASSD)])
+        #if self.parLot_user == 'NON':
+        #    d = self.currentContext = self.g_context.copy()
+        #    if etape is None:
+        #        return d
             # retirer les sd produites par 'etape'
-            sd_names = [sd.nom for sd in etape.getCreated_sd()]
-            for nom in sd_names:
-                try:
-                    del d[nom]
-                except KeyError:
-                    from warnings import warn
-                    warn(
-                        "concept '%s' absent du contexte de %s" % (
-                            nom, self.nom),
-                        RuntimeWarning, stacklevel=2)
-            return d
+        #    sd_names = [sd.nom for sd in etape.getCreated_sd()]
+        #    for nom in sd_names:
+        #        try:
+        #            del d[nom]
+        #        except KeyError:
+        #            from warnings import warn
+        #            warn(
+        #                "concept '%s' absent du contexte de %s" % (
+        #                    nom, self.nom),
+        #                RuntimeWarning, stacklevel=2)
+        #    return d
         if etape:
             index_etape = self.index_etapes[etape]
         else:
             index_etape = len(self.etapes)
         if index_etape >= self.index_etape_courante:
             # On calcule le contexte en partant du contexte existant
-            d = self.current_context
+            d = self.currentContext
             if self.index_etape_courante == 0 and self.context_ini:
                 d.update(self.context_ini)
             liste_etapes = self.etapes[self.index_etape_courante:index_etape]
         else:
-            d = self.current_context = {}
+            d = self.currentContext = {}
             if self.context_ini:
                 d.update(self.context_ini)
             liste_etapes = self.etapes
@@ -603,13 +609,13 @@ Causes possibles :
         co.executed = 1
         return co
 
-    def del_concept(self, nomsd):
+    def delConcept(self, nomsd):
         """
-           Methode pour supprimer la reference d'un concept dans le sds_dict.
+           Methode pour supprimer la reference d'un concept dans le sdsDict.
            Ne detruire pas le concept (different de supprime).
         """
         try:
-            del self.sds_dict[nomsd.strip()]
+            del self.sdsDict[nomsd.strip()]
         except:
             pass
 
@@ -647,7 +653,10 @@ Causes possibles :
         #for cat in self.cata:
         cat=self.cata
         self._reserved_kw.update(
-                [kw for kw in dir(cat) if len(kw) <= 8 and kw == kw.upper()])
+                #PN 14  2020 [kw for kw in dir(cat) if len(kw) <= 8 and kw == kw.upper()])
+                [kw for kw in dir(cat) ])
         self._reserved_kw.difference_update(
             ['OPER', 'MACRO', 'BLOC', 'SIMP', 'FACT', 'FORM',
              'GEOM', 'MCSIMP', 'MCFACT'])
+
+

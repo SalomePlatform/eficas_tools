@@ -24,7 +24,6 @@ try :
 except : pass
 
 import types,os,re
-from six.moves import range
 pattern_name       = re.compile(r'^[^\d\W]\w*\Z')
 
 # Modules Eficas

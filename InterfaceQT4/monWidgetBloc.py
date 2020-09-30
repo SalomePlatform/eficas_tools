@@ -31,6 +31,9 @@ class MonWidgetBloc(Ui_WidgetBloc,Groupe):
   def __init__(self,node,editor,parentQt,definition, obj, niveau,commande):
       #print ("bloc : ",node.item.nom)
       Groupe.__init__(self,node,editor,parentQt, definition,obj,niveau,commande)
+      #if self.editor.maConfiguration.afficheCommandesPliees ==True:  self.node.plieToutEtReaffiche()
       self.parentQt.commandesLayout.insertWidget(-1,self,1)
 
 
+  def afficheOptionnel(self):
+      return

@@ -45,11 +45,8 @@ class MCSIMP(N_OBJECT.OBJECT):
            Attributs :
 
             - val : valeur du mot clé simple
-
             - definition
-
             - nom
-
             - parent
 
           Autres attributs :
@@ -57,43 +54,106 @@ class MCSIMP(N_OBJECT.OBJECT):
             - valeur : valeur du mot-clé simple en tenant compte de la valeur par défaut
 
         """
-        #print ("MCSIMP, ------------------------")
         #print (self, val, definition, nom, parent)
-        #print ("MCSIMP, ------------------------")
         self.definition = definition
         self.nom = nom
         self.val = val
         self.parent = parent
-        self.convProto = ConversionFactory('type', typ=self.definition.type)
-        self.valeur = self.GETVAL(self.val)
-        self.objPyxbDeConstruction=objPyxbDeConstruction
+        self.objPyxbDeConstruction = objPyxbDeConstruction
         if parent:
-            self.jdc  = self.parent.jdc
+            self.jdc = self.parent.jdc
             if self.jdc : self.cata = self.jdc.cata
-            else : self.cata = None
+            else        : self.cata = None
             self.niveau = self.parent.niveau
-            self.etape = self.parent.etape
-            #self.buildObjPyxb()
+            self.etape  = self.parent.etape
         else:
             # Le mot cle simple a été créé sans parent
             # est-ce possible ?
             print ('je suis dans le else sans parent du build')
-            self.jdc = None
-            self.cata = None
+            print (poum)
+            self.jdc    = None
+            self.cata   = None
             self.niveau = None
-            self.etape = None
+            self.etape  = None
+        if self.definition.creeDesObjets : 
+           self.convProto = ConversionFactory('UserASSD', self.definition.creeDesObjetsDeType)
+        else : 
+           self.convProto = ConversionFactory('type', typ=self.definition.type)
+        self.valeur = self.getValeurEffective(self.val)
+        if self.definition.utiliseUneReference :
+          if self.valeur != None: 
+             if not type(self.valeur) in (list, tuple): self.valeur.ajoutUtilisePar(self)
+             else : 
+               #PNPN --> chgt pour Vimmp
+               for v in self.valeur : 
+                   try : v.ajoutUtilisePar(self)
+                   except : print ('il y a un souci ici', self.nom, self.valeur)
+        self.buildObjPyxb()
+        self.listeNomsObjsCrees = []
 
-    def GETVAL(self, val):
+    def getValeurEffective(self, val):
         """
             Retourne la valeur effective du mot-clé en fonction
             de la valeur donnée. Defaut si val == None
         """
-        if (val is None and hasattr(self.definition, 'defaut')):
-            val = self.definition.defaut
+        if (val is None and hasattr(self.definition, 'defaut')): val = self.definition.defaut
+        if self.jdc != None and val in list(self.jdc.sdsDict.keys()): return self.jdc.sdsDict[val]
+         # dans le cas de lecture de .comm, il est possible que l objet est deja ete cree
+         # peut-etre devrait on aussi verifier que val est de type string ?
+        if self.definition.creeDesObjets : 
+           # isinstance(val, self.definition.creeDesObjetsDeType) ne fonctionne pas car il y a un avec cata devant et l autre non
+           if val != None :
+             if  (not(val.__class__.__name__ == self.definition.creeDesObjetsDeType.__name__)) : 
+                 val=self.convProto.convert(val)
+             else :
+                 if val.nom=='sansNom' : 
+                    for leNom,laVariable in self.jdc.g_context.items():
+                      if id(laVariable)== id(val) and (leNom != 'sansNom'):
+                         val.initialiseNom(leNom)
+                 if val.parent== None : val.initialiseParent(self) 
+           return val
         if self.convProto:
-            val = self.convProto.convert(val)
+           val = self.convProto.convert(val)
         return val
 
+    def creeUserASSDetSetValeur(self, val):
+        self.state='changed'
+        nomVal=val
+        if nomVal in self.jdc.sdsDict.keys():
+           if isinstance(self.jdc.sdsDict[nomVal],self.definition.creeDesObjetsDeType): return (0, 'concept deja reference')
+           else : return (0, 'concept d un autre type existe deja')
+        if self.convProto:
+            objVal = self.convProto.convert(nomVal)
+            objVal.initialiseNom(nomVal)
+            if objVal.parent== None : objVal.initialiseParent(self) 
+            p=self.parent
+            while p in self.parent :
+                  print ('mise a jour de ',p)
+                  if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(objVal)
+                  else : p.listeDesReferencesCrees=(objVal,)
+                  p=p.parent
+        return (self.setValeur(objVal), 'reference creee')
+
+    def creeUserASSD(self, val):
+        self.state='changed'
+        nomVal=val
+        if nomVal in self.jdc.sdsDict.keys():
+           if isinstance(self.jdc.sdsDict[nomVal],self.definition.creeDesObjetsDeType): return (0,None, 'concept deja reference')
+           else : return (0, None, 'concept d un autre type existe deja')
+        if self.convProto:
+            objVal = self.convProto.convert(nomVal)
+            objVal.initialiseNom(nomVal)
+        return (1, objVal, 'reference creee')
+
+    def rattacheUserASSD(self, objASSD):
+        if objASSD.parent== None : objASSD.initialiseParent(self) 
+        p=self.parent
+        while p in self.parent :
+           if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(objASSD)
+           else : p.listeDesReferencesCrees=(objASSD,)
+           p=p.parent
+
+      
     def getValeur(self):
         """
             Retourne la "valeur" d'un mot-clé simple.
@@ -185,6 +245,7 @@ class MCSIMP(N_OBJECT.OBJECT):
             dico[self.nom] = l
         return dico
 
+
     def getMcsWithCo(self, co):
         """
             Cette methode retourne l'objet MCSIMP self s'il a le concept co
@@ -201,3 +262,7 @@ class MCSIMP(N_OBJECT.OBJECT):
         """
         return [co for co in forceList(self.valeur)
                 if isinstance(co, CO) and co.isTypCO()]
+
+    def supprime(self):
+        if hasattr(self, 'val') and hasattr(self.val, 'supprime') :self.val.supprime()
+        N_OBJECT.OBJECT.supprime(self)

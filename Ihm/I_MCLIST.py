@@ -80,7 +80,7 @@ class MCList:
       self.remove(obj)
       CONNECTOR.Emit(self,"supp",obj)
       self.updateConditionBloc()
-      #obj.deletePyxbObject()
+      obj.delObjPyxb()
       obj.supprime()
       self.etape.modified()
       self.finModif()
@@ -91,12 +91,12 @@ class MCList:
         Ajoute le mot cle facteur obj a la MCLIST a la position pos
         Retourne None si l'ajout est impossible
       """
-      if type(obj)==bytes or type(obj) == str :
+      if type(obj)==bytes or type(obj) == str  :
          # on est en mode creation d'un motcle
                   raise EficasException(tr("traitement non-prevu"))
 
       if not self.ajoutPossible():
-         self.jdc.appli.afficheAlerte(tr("Erreur"),
+         self.jdc.editor.afficheAlerte(tr("Erreur"),
                                        tr("L'objet %s ne peut pas etre ajoute", obj.nom))
          return None
 
@@ -286,6 +286,7 @@ class MCList:
   def deleteMcGlobal(self):
      for motcle in self.data :
          motcle.deleteMcGlobal()
+
 
   #def __del__(self):
   #   print "__del__",self

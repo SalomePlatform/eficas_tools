@@ -34,7 +34,6 @@ from .feuille         import Feuille
 
 from desWidgetMatrice  import Ui_desWidgetMatrice 
 
-from six.moves import range
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtGui import QIcon
@@ -152,7 +151,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
        self.nbLigs=len(self.listeVariables)
        self.nbCols=len(self.listeVariables)
 
-  def  nNbDeDistributions(self):
+  def  nbDeDistributions(self):
        jdc=self.node.item.object.jdc
        etape=self.node.item.object.etape
        self.listeVariables=jdc.getDistributions(etape)

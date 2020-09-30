@@ -115,7 +115,7 @@ class Pythparser(object):
          s= s.replace('"<string>"','"<%s>"'%self.filename)
          self.cr.fatal(tr("Erreur a l'evaluation :\n %s", s))
 
-   def convert(self,outformat,appli=None):
+   def convert(self,outformat,appliEficas=None):
       if outformat == 'dict':
          return self.getdict()
       else:

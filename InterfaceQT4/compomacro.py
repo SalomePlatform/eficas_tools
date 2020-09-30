@@ -30,9 +30,6 @@ from Extensions.i18n import tr
 from InterfaceQT4 import compooper
 from InterfaceQT4 import browser
 from InterfaceQT4 import typeNode
-from PyQt5.QtWidgets import QAction
-from PyQt5.QtCore import Qt
-
 
 
 class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):         
@@ -44,20 +41,11 @@ class MACRONode(browser.JDCNode,typeNode.PopUpMenuNode):
 
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
-      if ("AFFE_CARA_ELEM" in self.item.getGenealogie()) and self.editor.salome:
-           self.ViewElt = QAction(tr('View3D'),self.tree)
-           self.ViewElt.triggered.connect(self.view3D)
-           self.ViewElt.setStatusTip(tr("affiche dans Geom les elements de structure"))
-           self.menu.addAction(self.ViewElt)
-           if self.item.isValid() :
-              self.ViewElt.setEnabled(1)
-           else:
-              self.ViewElt.setEnabled(0)
 
-    def view3D(self) :
-        from Editeur import TroisDPal
-        troisD=TroisDPal.TroisDPilote(self.item,self.editor.appliEficas)
-        troisD.envoievisu()
+#    def view3D(self) :
+#        from Editeur import TroisDPal
+#        troisD=TroisDPal.TroisDPilote(self.item,self.editor.appliEficas)
+#        troisD.envoievisu()
 
         
     
@@ -73,8 +61,8 @@ class MACROTreeItem(compooper.EtapeTreeItem):
 
 class INCLUDETreeItemBase(MACROTreeItem):
 
-    def __init__(self,appli, labeltext, object, setFunction):    
-       MACROTreeItem.__init__(self,appli, labeltext, object, setFunction)
+    def __init__(self,appliEficas, labeltext, object, setFunction):    
+       MACROTreeItem.__init__(self,appliEficas, labeltext, object, setFunction)
 
     def isCopiable(self):
        return 0
@@ -89,7 +77,7 @@ class INCLUDENode(browser.JDCNode,typeNode.PopUpMenuNode):
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
       
-    def makeEdit(self):    #,appli,node
+    def makeEdit(self):    #,appliEficas,node
         if self.item.object.text_converted == 0:
                 # Le texte du fichier inclus n'a pas pu etre converti par le module convert
                 msg=tr("Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n")
@@ -121,7 +109,7 @@ class POURSUITENode(browser.JDCNode, typeNode.PopUpMenuNode):
     def createPopUpMenu(self):
       typeNode.PopUpMenuNode.createPopUpMenu(self)
 
-    def makeEdit(self):    #,appli,node
+    def makeEdit(self):    #,appliEficas,node
         if self.item.object.text_converted == 0:
                 msg=tr("Le fichier de commande n'a pas pu etre converti pour etre editable par Eficas\n\n")
                 msg=msg+self.item.object.text_error
@@ -174,18 +162,18 @@ class INCLUDE_MATERIAUTreeItem(INCLUDETreeItemBase):
 # ------------------------------------
     
 
-def treeitem(appli, labeltext, object, setFunction=None):
+def treeitem(appliEficas, labeltext, object, setFunction=None):
    """ Factory qui retourne l'item adapte au type de macro : 
        INCLUDE, POURSUITE, MACRO
    """
    if object.nom == "INCLUDE_MATERIAU":
-      return INCLUDE_MATERIAUTreeItem(appli, labeltext, object, setFunction)
+      return INCLUDE_MATERIAUTreeItem(appliEficas, labeltext, object, setFunction)
    elif object.nom == "INCLUDE" or object.nom== "DICTDATA":
-      return INCLUDETreeItem(appli, labeltext, object, setFunction)
+      return INCLUDETreeItem(appliEficas, labeltext, object, setFunction)
    elif object.nom == "POURSUITE":
-      return POURSUITETreeItem(appli, labeltext, object, setFunction)
+      return POURSUITETreeItem(appliEficas, labeltext, object, setFunction)
    else:
-      return MACROTreeItem(appli, labeltext, object, setFunction)
+      return MACROTreeItem(appliEficas, labeltext, object, setFunction)
 
 import Accas
 objet=Accas.MACRO_ETAPE

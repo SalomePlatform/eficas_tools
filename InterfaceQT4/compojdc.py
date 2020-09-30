@@ -115,7 +115,7 @@ class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
     for obj in liste:
        if sublist[pos] is None:
           # nouvel objet : on cree un nouvel item
-          item = self.makeObjecttreeitem(self.appli, obj.nom + " : ", obj)
+          item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj)
           sublist[pos]=item
        pos=pos+1
 

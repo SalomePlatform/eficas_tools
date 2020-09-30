@@ -37,7 +37,6 @@
 from __future__ import absolute_import
 try :
    from builtins import str
-   from builtins import range
 except :
    pass
 import re
@@ -48,8 +47,6 @@ from functools import partial
 # Modules EFICAS
 from . import N_utils
 from .strfunc import getEncoding
-import six
-from six.moves import range
 
 regex1 = '=?\s*%s\s*\('
 # commentaire standard precede d'un nombre quelconque de blancs (pas
@@ -81,6 +78,7 @@ def _getNomConceptResultat(ope, level=2):
     if sys.version_info >= (3,0) :
        filename = co.co_filename
     else : 
+       import six
        filename = six.text_type(co.co_filename, getEncoding())
     name = co.co_name
     # pattern pour identifier le debut de la commande

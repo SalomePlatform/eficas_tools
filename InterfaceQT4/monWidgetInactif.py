@@ -64,6 +64,7 @@ class MonWidgetInactif(QWidget,Ui_WidgetInactif):
 
   def afficheOptionnel(self):
       # N a pas de parentQt. doit donc etre redefini
+      if self.editor.maConfiguration.closeOptionnel : return
       liste=[]
       #print "dans afficheOptionnel", self.monOptionnel
       # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
