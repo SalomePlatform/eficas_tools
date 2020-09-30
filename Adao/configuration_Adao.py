@@ -43,7 +43,8 @@ class CONFIG(configuration.configBase):
     self.labels_eficas=['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
     configuration.configBase.__init__(self,appli,repIni)
 
-    self.rep_user = os.environ["HOME"]
+    #self.rep_user = os.environ["HOME"]
+    self.rep_user = os.path.expanduser("~")
     self.appli   = appli
     self.code    = appli.code
     # self.lang    = "fr"

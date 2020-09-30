@@ -44,7 +44,8 @@ def getRepUser(dir):
       le repertoire de l'utilisateur /$home/Eficas_install
   """
 
-  rep_user_eficas= os.path.join(os.environ['HOME'],dir)
+  #rep_user_eficas= os.path.join(os.environ['HOME'],dir)
+  rep_user_eficas= os.path.join(os.path.expanduser("~"),dir)
   if os.path.exists(rep_user_eficas):
     if os.path.isfile(rep_user_eficas) :
       print (tr("Un fichier de nom %s existe deja : impossible de creer un repertoire de meme nom", rep_user_eficas))

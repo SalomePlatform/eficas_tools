@@ -63,7 +63,8 @@ class configBase(object):
      
       if self.code == None : self.code=''
       if sys.platform[0:5]=="linux" :
-              self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+              #self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+              self.rep_user   = os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
       else :
               self.rep_user   = os.path.join('C:/','.config/Eficas',self.code)
 
@@ -87,7 +88,8 @@ class configBase(object):
 
       if not os.path.isdir(self.savedir) :
         if sys.platform[0:5]=="linux" :
-          self.savedir=os.environ['HOME']
+          #self.savedir=os.environ['HOME']
+          self.savedir=os.path.expanduser("~")
         else:
           self.savedir='C:/'
       
@@ -102,7 +104,9 @@ class configBase(object):
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
       if sys.platform[0:5]=="linux" :
-        self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
+        #self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
+        self.savedir   = os.path.abspath(os.path.join(os.path.expanduser("~"),nomDir))
+
       else:
         self.savedir = os.path.abspath('C:/')
       self.modeNouvCommande='initial'
