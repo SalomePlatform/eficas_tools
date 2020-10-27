@@ -20,7 +20,7 @@
 # ======================================================================
 
 
-install ( FILES aideAuxConvertisseurs.py configuration_TELEMAC.py dicoCasEnToCata.py dicoCasFrToCata.py enum_Telemac2d_auto.py prefs.py prefs_TELEMAC.py properties.py qtEficas_Telemac.py Telemac2d_Cata_auto.py labelCataToIhm_en.qm labelCataToIhm_fr.qm
+install ( FILES aideAuxConvertisseurs.py configuration_TELEMAC.py dicoCasEnToCata.py dicoCasFrToCata.py enum_Telemac2d_auto.py prefs.py prefs_TELEMAC.py properties.py qtEficas_Telemac.py telemac2d_cata_auto.py labelCataToIhm_en.qm labelCataToIhm_fr.qm
 	  DESTINATION ${CMAKE_INSTALL_PREFIX}/Telemac
         )
 
