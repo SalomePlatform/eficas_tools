@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,10 @@ from __future__ import print_function
 try :
    from builtins import str
 except : pass
+print ('yyyyyyyyyyyyyy')
+print ('yyyyyyyyyyyyyy')
+print ('yyyyyyyyyyyyyy')
+print ('yyyyyyyyyyyyyy')
 
 
 import sys,os
