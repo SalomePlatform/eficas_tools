@@ -44,7 +44,7 @@ JdC = JDC_CATA (code = 'STBTEL',
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
-VERSION_CATALOGUE="TRUNK_20201028"
+VERSION_CATALOGUE="TRUNK_20210323"
 # -----------------------------------------------------------------------
 TREATMENT = PROC(nom= "TREATMENT",op = None,
 # -----------------------------------------------------------------------
@@ -148,34 +148,6 @@ type of mesh generator.
         ),
     ),
 #   -----------------------------------
-    b_MESH_GENERATORI = BLOC(condition="MESH_GENERATOR == 'FASTTABS'",
-#   -----------------------------------
-#       -----------------------------------
-        BOUNDARY_CONDITIONS_IN_THE_ADDITIONAL_FILE = SIMP(statut ='o',
-#       -----------------------------------
-            typ = bool,
-            defaut = False,
-            fr = """Permet de relire les conditions limites dans le fichier
-additionnel (Fasttabs).""",
-            ang = """The boundary condition will be read in the additional file
- (Fasttabs).""",
-        ),
-#       -----------------------------------
-        b_BOUNDARY_CONDITIONS_IN_THE_ADDITIONAL_FILEG = BLOC(condition="BOUNDARY_CONDITIONS_IN_THE_ADDITIONAL_FILE == True",
-#       -----------------------------------
-#           -----------------------------------
-            BOUNDARY_UNIVERSAL_FILE = SIMP(statut ='o',
-#           -----------------------------------
-                typ = ('Fichier','All Files (*)'),
-                defaut = '',
-                fr = """Nom du fichier construit par le mailleur, a partir duquel \stbtel va
-travailler.""",
-                ang = """Name of the file created by the mesh generator, and from which \stbtel
-will work.""",
-            ),
-        ),
-    ),
-#   -----------------------------------
     BINARY_STANDARD = SIMP(statut ='f',
 #   -----------------------------------
         typ = 'TXM',
@@ -212,7 +184,7 @@ travailler.""",
 will work.""",
     ),
 #   -----------------------------------
-    GEOMETRY_FILE_FORMAT_FOR_TELEMAC = SIMP(statut ='o',
+    GEOMETRY_FILE_FORMAT_FOR_TELEMAC = SIMP(statut ='f',
 #   -----------------------------------
         typ = 'TXM',
         into = ['','SERAFIN','SERAFIND','MED'],
@@ -251,6 +223,26 @@ from the \telkey{UNIVERSAL FILE}, and to be used in \telemac{2D}
 computations. (The boundary conditions are defined when preparing the
 meshes, through colours that are allotted to the nodes of the
 computation domain boundaries).""",
+    ),
+#   -----------------------------------
+    BOUNDARY_CONDITIONS_IN_THE_ADDITIONAL_FILE = SIMP(statut ='o',
+#   -----------------------------------
+        typ = bool,
+        defaut = False,
+        fr = """Permet de relire les conditions limites dans le fichier
+additionnel (Fasttabs).""",
+        ang = """The boundary condition will be read in the additional file
+ (Fasttabs).""",
+    ),
+#   -----------------------------------
+    BOUNDARY_UNIVERSAL_FILE = SIMP(statut ='f',
+#   -----------------------------------
+        typ = ('Fichier','All Files (*)'),
+        defaut = '',
+        fr = """Nom du fichier construit par le mailleur, a partir duquel \stbtel va
+travailler.""",
+        ang = """Name of the file created by the mesh generator, and from which \stbtel
+will work.""",
     ),
 #   -----------------------------------
     OVERSTRESSED_TRIANGLES_CUTTING = SIMP(statut ='o',
@@ -352,7 +344,7 @@ The keyword can then be used for specifying the minimum distance to
 the boundaries below which the recorded points should be ignored.""",
         ),
 #       -----------------------------------
-        BOTTOM_TOPOGRAPHY_FILES = SIMP(statut ='o',
+        BOTTOM_TOPOGRAPHY_FILES = SIMP(statut ='f',
 #       -----------------------------------
             typ = ('Fichier','All Files (*)'),
             defaut = '',
@@ -490,7 +482,7 @@ should be projected through the faces of the polygon or not.""",
         ),
     ),
 #   -----------------------------------
-    REFFINEMENT = FACT(statut='f',
+    REFINEMENT = FACT(statut='f',
 #   -----------------------------------
 #       -----------------------------------
         CUTTING_ELEMENTS_IN_FOUR = SIMP(statut ='o',
@@ -501,6 +493,16 @@ should be projected through the faces of the polygon or not.""",
 en joignant les milieux des aretes.""",
             ang = """Cuts every element of the mesh in four homothetic elements
 by joigning the middle points of each side.""",
+        ),
+#       -----------------------------------
+        MAX_SEGMENTS_PER_POINT = SIMP(statut ='f',
+#       -----------------------------------
+            typ = 'I',
+            defaut = 11,
+            fr = """Nombre max de segments qui contiennent le meme point.
+Cette valeur est à incrémentée si le code le demande.""",
+            ang = """Max number of segments containing the same point.
+This is to be increased if the code asks for it.""",
         ),
 #       -----------------------------------
         NUMBER_OF_VERTICES_OF_THE_POLYGON_TO_REFINE_THE_MESH = SIMP(statut ='f',
@@ -772,9 +774,9 @@ SETTINGS = PROC(nom= "SETTINGS",op = None,
 \end{itemize}""",
     ),
 #   -----------------------------------
-    FORTRAN_FILE = SIMP(statut ='o',
+    FORTRAN_FILE = SIMP(statut ='f',
 #   -----------------------------------
-        typ = ('Fichier','All Files (*)'),
+        typ = 'FichierOuRepertoire',
         defaut = '',
         fr = """Nom du fichier Fortran a soumettre.
 Il ne sert a priori qu''a dimensionner les tableaux utilises par

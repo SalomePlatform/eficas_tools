@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2021   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,6 @@ from Extensions.i18n import tr
 #traceback.print_stack()
 
 from convert.convert_python import Pythonparser
-from six.moves import range
 try:
   basestring
 except NameError:
@@ -46,17 +45,17 @@ pattern_finit_par_virgule_ou_affect=re.compile(r'^.*(,|;|=|:)\s*$')
 
 pattern_ligne=re.compile(r'^\s*(?P<ident>[^=:]*)\s*[:=]\s*(?P<reste>.*)$')
 
-pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES FOR GRAPHIC PRINTOUTS|VARIABLES POUR LES SORTIES GRAPHIQUES)\s*[:=]\s*(?P<valeur>[A-Za-z]+(\d*|\*)(,[A-Za-z]+(\d*|\*))*)\s*(?P<reste>.*)$")
+pattern_variables=re.compile(r"^\s*(?P<ident>C_VSM_PRINTOUT_SELECTION|COUPLAGE AVEC|COUPLING WITH|VARIABLES FOR GRAPHIC PRINTOUTS|VARIABLES POUR LES SORTIES GRAPHIQUES|VARIABLES TO BE PRINTED|VARIABLES A IMPRIMER|VARIABLES FOR 3D GRAPHIC PRINTOUTS|VARIABLES POUR LES SORTIES GRAPHIQUES 3D|VARIABLES POUR LES SORTIES GRAPHIQUES 2D|VARIABLES FOR 2D GRAPHIC PRINTOUTS)\s*[:=]\s*(?P<quote>[']?)(?P<valeur>[A-Za-z]+(\d*|\*)([,;][A-Za-z]+(\d*|\*))*)\s*(?P=quote)(?P<reste>.*)$")
 
 # Attention aux listes de flottants
 pattern_liste=re.compile(r'^\s*(?P<valeur>[+-.\w]+(\s*;\s*[+-.\w]+)+)\s*(?P<reste>.*)$')
 pattern_liste_texte=re.compile(r"^\s*(?P<valeur>('.*(';\s*))+('.*'\s*)?)(?P<reste>.*)$")
 pattern_flottant=re.compile(r'^\s*(?P<valeur>[+-]?((\d+(\.\d*)?)|(\.\d+))([dDeE][+-]?\d+)?)\s*(?P<reste>.*)$')
-pattern_texteQuote  = re.compile (r"^\s*(?P<valeur>'[^']+(''[^']+)*')\s*(?P<reste>.*)$")
-pattern_texteSimple = re.compile (r"(?P<valeur>(^|\s)\s*[\w\.-]+)\s*(?P<reste>.*)$")
-pattern_texteVide   = re.compile (r"^\s*(?P<valeur>'')\s*(?P<reste>.*)$")
+pattern_texteQuote  = re.compile(r"^\s*(?P<valeur>'[^']+(''[^']+)*')\s*(?P<reste>.*)$")
+pattern_texteSimple = re.compile(r"(?P<valeur>(^|\s)\s*[\w\.-]+)\s*(?P<reste>.*)$")
+pattern_texteVide   = re.compile(r"^\s*(?P<valeur>'')\s*(?P<reste>.*)$")
 
-pattern_ContientDouble=re.compile (r"^.*''.*$")
+pattern_ContientDouble=re.compile(r"^.*''.*$")
 
 # le pattern texte reconnait
 #nom1 nom 2 : ou = chaine entre '
@@ -91,33 +90,33 @@ class TELEMACparser(Pythonparser):
    a file with a different or inexistent definition of variables.
    """
 
-   
 
-   def convert(self, outformat, appli=None):
+
+   def convert(self, outformat, appliEficas=None):
 
 
       from Accas import A_BLOC, A_FACT, A_SIMP
       try :
-        self.dicoCasToCata = appli.readercata.dicoCasToCata
+        self.dicoCasToCata = appliEficas.readercata.dicoCasToCata
       except :
         self.dicoCasToCata = {}
         print ('pas de dicoCasToCata')
-      self.dicoInverse              = appli.readercata.dicoInverse
-      self.dicoMC                   = appli.readercata.dicoMC
-      self.Ordre_Des_Commandes      = appli.readercata.Ordre_Des_Commandes
+      self.dicoInverse              = appliEficas.readercata.dicoInverse
+      self.dicoMC                   = appliEficas.readercata.dicoMC
+      self.Ordre_Des_Commandes      = appliEficas.readercata.Ordre_Des_Commandes
       try :
-        self.TelemacdicoEn            = appli.readercata.TelemacdicoEn
+        self.TelemacdicoEn            = appliEficas.readercata.TelemacdicoEn
       except :
         self.TelemacdicoEn = {}
-        print ('pas de TelemacdicoEn')
+        print('pas de TelemacdicoEn')
       try :
-        self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
+        self.DicoEnumCasFrToEnumCasEn = appliEficas.readercata.DicoEnumCasFrToEnumCasEn
       except :
         self.DicoEnumCasFrToEnumCasEn = {}
         print ('pas de DicoEnumCasFrToEnumCasEn')
-      
 
-      if appli.langue=='fr' :
+
+      if appliEficas.langue=='fr' :
           #from enum_Telemac2d_auto       import DicoEnumCasFrToEnumCasEn
           for k in self.DicoEnumCasFrToEnumCasEn :
               self.TelemacdicoEn[k]=self.DicoEnumCasFrToEnumCasEn[k]
@@ -191,7 +190,13 @@ class TELEMACparser(Pythonparser):
               if pattern_variables.match(finLigne) :
                  m=pattern_variables.match(finLigne)
                  simpCas=self.traiteIdent(m.group('ident'))
-                 valeur=m.group('valeur')
+                 if simpCas in ["COUPLING WITH", "COUPLAGE AVEC"]:
+                     if "," in m.group('valeur'):
+                         valeur=m.group('valeur').split(",")
+                     else:
+                         valeur=m.group('valeur').split(";")
+                 else:
+                     valeur=m.group('valeur')
                  finLigne=m.group('reste')
                  self.dictSimp[simpCas]=valeur
                  continue
@@ -238,7 +243,8 @@ class TELEMACparser(Pythonparser):
                  valeur=re.sub("d","e",valeur)
                  valeur=re.sub("D","E",valeur)
 
-              if pattern_liste.match(finLigne) or pattern_liste_texte.match(finLigne):
+              if pattern_liste.match(finLigne) or \
+                 pattern_liste_texte.match(finLigne):
                  valeur=valeur.split(";")
 
 
@@ -295,8 +301,8 @@ class TELEMACparser(Pythonparser):
 
 
       # ne sert plus
-      #appli.listeTelemac=self.dictSimp
-      appli.listeTelemac={}
+      #appliEficas.listeTelemac=self.dictSimp
+      appliEficas.listeTelemac={}
       if 'debut' in dicoComment :
           commentaire="COMMENTAIRE("+repr(dicoComment['debut'])+")\n"
           self.textePy=commentaire+self.textePy
@@ -445,6 +451,19 @@ class TELEMACparser(Pythonparser):
                 self.textePy += nom + "= (" + str(oldValeur) +",),"
              return
 
+          # Cas des liste de booléen
+          if bool in obj.type:
+            values = []
+            for val in valeur:
+              if val == True or pattern_oui.match(val) or val == 'True':
+                values.append('True')
+              elif val == False or pattern_non.match(val) or val == 'False':
+                values.append('False')
+              else:
+                values.append('None')
+            self.textePy += nom + "= [" + ','.join(values) + '],'
+            return
+
 
           if valeur == None : return
           newVal=[]
@@ -475,59 +494,3 @@ class TELEMACparser(Pythonparser):
           #listeOut.insert(i,kF)
           listeOut.insert(i,k)
       return listeOut
-
-#   def BOUNDARY_CONDITIONS(self):
-#       texte_Boundaries="BOUNDARY_CONDITIONS=_F(LIQUID_BOUNDARIES=( "
-#       if 'PRESCRIBED_ELEVATIONS' in self.dictSimp:
-#              valeursPE=self.dictSimp["PRESCRIBED_ELEVATIONS"]
-#              if not type(valeursPE)==list : valeursPE = (valeursPE,)
-#              longueur=len(self.dictSimp["PRESCRIBED_ELEVATIONS"])
-#       else : valeursPE=None
-#       if 'PRESCRIBED_FLOWRATES' in self.dictSimp:
-#              valeursPF=self.dictSimp["PRESCRIBED_FLOWRATES"]
-#              if not type(valeursPF)==list : valeursPF = (valeursPF,)
-#              longueur=len(self.dictSimp["PRESCRIBED_FLOWRATES"])
-#       else : valeursPF=None
-#       if 'PRESCRIBED_VELOCITIES' in self.dictSimp:
-#              valeursPV=self.dictSimp["PRESCRIBED_VELOCITIES"]
-#              if not type(valeursPV)==list : valeursPV = (valeursPV,)
-#              longueur=len(self.dictSimp["PRESCRIBED_VELOCITIES"])
-#       else : valeursPV=None
-#
-#       if valeursPE == None and valeursPF == None and valeursPV == None :
-#             texte_Boundaries +="),\n"
-#             return
-#
-#       if valeursPE == None or valeursPF == None or valeursPV == None :
-#          listNulle=[]
-#          for i in range(longueur) : listNulle.append('0')
-#
-#
-#       if valeursPE == None : valeursPE = listNulle
-#       if valeursPF == None : valeursPF = listNulle
-#       if valeursPV == None : valeursPV = listNulle
-#
-#
-#       for e in range(len(valeursPE)):
-#          if valeursPE[e] != "" or valeursPE[e] != "\n" :
-#            if eval(valeursPE[e],{}) != 0 :
-#               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Elevations',\n"
-#               texte_Boundaries += "PRESCRIBED_ELEVATIONS = " + str(valeursPE[e]) + "),\n"
-#               continue
-#
-#          if valeursPF[e] != "" or valeursPF[e] != "\n" :
-#            if eval(valeursPF[e],{}) != 0 :
-#               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Flowrates',\n"
-#               texte_Boundaries += "PRESCRIBED_FLOWRATES = " + str(valeursPF[e]) + "),\n"
-#               continue
-#
-#          if valeursPV[e] != "" or valeursPV[e] != "\n" :
-#             if eval(valeursPV[e],{})!=0 :
-#                texte_Boundaries += "_F( BOUNDARY_TYPE= 'Prescribed Velocity',\n"
-#                texte_Boundaries += "PRESCRIBED_VELOCITIES = " + str(valeursPV[e]) + "),\n"
-#                continue
-#          print ("pb texte_Boundaries avec la valeur numero ", e)
-#
-#       texte_Boundaries +="),),"
-#       self.textePy += texte_Boundaries
-#

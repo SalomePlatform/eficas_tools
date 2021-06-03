@@ -202,7 +202,8 @@ TelemacdicoEn = {
     'TPR5':"Peak period by Read method of order 5  (s)",
     'TPR8':"Peak period by Read method of order 8  (s)",
     'PRI':"Private table  (?)",
-    'BETA':"Breaking waves coefficient  (-)",
+    'BETA':"Breaking waves rate (-)",
+    'BETAWC':"White capping rate  (-)",
   },
 }
 TelemacdicoFr = {
@@ -407,7 +408,8 @@ TelemacdicoFr = {
     'TPR5':"Periode de pic de Read ordre 5  (s)",
     'TPR8':"Periode de pic de Read ordre 8  (s)",
     'PRI':"tableau prive  (?)",
-    'BETA':"coefficient de deferlement  (-)",
+    'BETA':"taux de deferlement  (-)",
+    'BETAWC':"taux de moutonnement  (-)",
   },
 }
 

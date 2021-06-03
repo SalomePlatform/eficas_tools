@@ -44,7 +44,7 @@ JdC = JDC_CATA (code = 'ARTEMIS',
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
-VERSION_CATALOGUE="TRUNK_20201028"
+VERSION_CATALOGUE="TRUNK_20210323"
 # -----------------------------------------------------------------------
 COMPUTATION_ENVIRONMENT = PROC(nom= "COMPUTATION_ENVIRONMENT",op = None,
 # -----------------------------------------------------------------------
@@ -79,7 +79,7 @@ after interpolation.""",
 #           -----------------------------------
             FORTRAN_FILE = SIMP(statut ='f',
 #           -----------------------------------
-                typ = ('Fichier','All Files (*)'), max='**',
+                typ = 'FichierOuRepertoire',
                 defaut = '',
                 fr = """Nom du fichier FORTRAN a soumettre, contenant les
 sous-programmes specifiques au modele.""",
@@ -330,7 +330,7 @@ in the \telkey{RESULTS FILE}.""",
 #           -----------------------------------
             VARIABLES_FOR_GRAPHIC_PRINTOUTS = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'TXM',
+                typ = 'TXM', min=0, max='**',
                 into = ["wave height","wave phase","velocity u (free surface)(t=0)","velocity v (free surface)(t=0)","free surface elevation (t=0)","bottom elevation","still water height","phase velocity","group velocity","wave number","real potential","imaginal potential","prive(1,1)","prive(1,2)","prive(1,3)","prive(1,4)","first mean spectral period","second mean spectral period","third mean spectral period","force along X","force along Y","wave incidence radian","breaking rate","SXX stress","SXY stress","SYY stress"],
                 defaut = [],
                 fr = """Noms des variables que l utilisateur veut ecrire dans

@@ -44,7 +44,7 @@ JdC = JDC_CATA (code = 'TELEMAC2D',
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
-VERSION_CATALOGUE="TRUNK_20201028"
+VERSION_CATALOGUE="TRUNK_20210323"
 # -----------------------------------------------------------------------
 COMPUTATION_ENVIRONMENT = PROC(nom= "COMPUTATION_ENVIRONMENT",op = None,
 # -----------------------------------------------------------------------
@@ -573,7 +573,7 @@ in the \telkey{RESULTS FILE}.""",
             VARIABLES_FOR_GRAPHIC_PRINTOUTS = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM', min=0, max='**',
-                into = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer 1","tracer 2","tracer 3","tracer 4","tracer 5","tracer 6","tracer 7","tracer 8","tracer 9","All the tracers 1 to 9.","All the tracers 10 to 19.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","Courant number","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","maximum elevation (m)","time of maximum elevation (s)","maximum velocity (m/s)","time of maximum velocity (s)","friction velocity (m/s)","gradient 1, etc.","TAU_S","1/R (1/m)","OMEGA","distance to the closest wall (m)","reference level for Nestor (m)"],
+                into = ["velocity along x axis (m/s)","velocity along y axis (m/s)","wave celerity (m/s)","water depth (m)","free surface elevation (m)","bottom elevation (m)","Froude number","scalar flowrate of fluid (m2/s)","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","tracer* etc.","tracer1 etc.","tracer2 etc.","tracer3 etc.","tracer4 etc.","tracer5 etc.","tracer6 etc.","tracer7 etc.","tracer8 etc.","tracer9 etc.","tracer10 etc.","tracer11 etc.","tracer12 etc.","tracer13 etc.","tracer14 etc.","tracer15 etc.","tracer16 etc.","tracer17 etc.","tracer18 etc.","tracer19 etc.","tracer** etc.","All the tracers 1 to 9.","All the tracers 10 to 19.","turbulent kinetic energy in k-epsilon model (J/kg)","dissipation of turbulent energy (W/kg)","turbulent viscosity (m2/s)","flowrate along x axis (m2/s)","flowrate along y axis (m2/s)","scalar velocity (m/s)","wind along x axis (m/s)","wind along y axis (m/s)","air pressure (Pa)","friction coefficient","drift along x (m)","drift along y (m)","Courant number","supplementary variable N","supplementary variable O","supplementary variable R","supplementary variable Z","maximum elevation (m)","time of maximum elevation (s)","maximum velocity (m/s)","time of maximum velocity (s)","friction velocity (m/s)","gradient 1, etc.","TAU_S","1/R (1/m)","OMEGA","distance to the closest wall (m)","reference level for Nestor (m)"],
                 defaut = ["velocity along x axis (m/s)","velocity along y axis (m/s)","water depth (m)","bottom elevation (m)"],
                 fr = """Noms des variables ecrites dans FICHIER DES RESULTATS.
 Chaque variable est representee par une lettre (choix des
@@ -800,6 +800,60 @@ de l''utilisateur.""",
                 fr = """Fichier de resultats formate mis a la disposition de
 l''utilisateur.""",
                 ang = """Formatted file of results available to the user.""",
+            ),
+#           -----------------------------------
+            FORMATTED_RESULTS_FILE_1 = SIMP(statut ='f',
+#           -----------------------------------
+                typ = ('Fichier','All Files (*)','Sauvegarde'),
+                defaut = '',
+                fr = """Fichier de resultats formate 1 mis a la disposition de
+l''utilisateur.""",
+                ang = """Formatted file of results 1 available to the user.""",
+            ),
+#           -----------------------------------
+            FORMATTED_RESULTS_FILE_2 = SIMP(statut ='f',
+#           -----------------------------------
+                typ = ('Fichier','All Files (*)','Sauvegarde'),
+                defaut = '',
+                fr = """Fichier de resultats formate 2 mis a la disposition de
+l''utilisateur.""",
+                ang = """Formatted file of results 2 available to the user.""",
+            ),
+#           -----------------------------------
+            FORMATTED_RESULTS_FILE_3 = SIMP(statut ='f',
+#           -----------------------------------
+                typ = ('Fichier','All Files (*)','Sauvegarde'),
+                defaut = '',
+                fr = """Fichier de resultats formate 3 mis a la disposition de
+l''utilisateur.""",
+                ang = """Formatted file of results 3 available to the user.""",
+            ),
+#           -----------------------------------
+            FORMATTED_RESULTS_FILE_4 = SIMP(statut ='f',
+#           -----------------------------------
+                typ = ('Fichier','All Files (*)','Sauvegarde'),
+                defaut = '',
+                fr = """Fichier de resultats formate 4 mis a la disposition de
+l''utilisateur.""",
+                ang = """Formatted file of results 4 available to the user.""",
+            ),
+#           -----------------------------------
+            FORMATTED_RESULTS_FILE_5 = SIMP(statut ='f',
+#           -----------------------------------
+                typ = ('Fichier','All Files (*)','Sauvegarde'),
+                defaut = '',
+                fr = """Fichier de resultats formate 5 mis a la disposition de
+l''utilisateur.""",
+                ang = """Formatted file of results 5 available to the user.""",
+            ),
+#           -----------------------------------
+            FORMATTED_RESULTS_FILE_6 = SIMP(statut ='f',
+#           -----------------------------------
+                typ = ('Fichier','All Files (*)','Sauvegarde'),
+                defaut = '',
+                fr = """Fichier de resultats formate 6 mis a la disposition de
+l''utilisateur.""",
+                ang = """Formatted file of results 6 available to the user.""",
             ),
         ),
 #       -----------------------------------
@@ -1376,6 +1430,97 @@ point number   zone number.""",
             ),
         ),
 #       -----------------------------------
+        NON_NEWTONIAN = FACT(statut='o',
+#       -----------------------------------
+#           -----------------------------------
+            NON_NEWTONIAN_MODEL = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'I',
+                defaut = 0,
+                fr = """Choix du modele non-newtonien :
+\begin{itemize}
+\item 0 : Newtonien ;
+\item 1 : Bingham ;
+\item 2 : Herschel-Bulkley.
+\end{itemize}""",
+                ang = """Choice of the non-newtonian model:
+\begin{itemize}
+\item 0: Newtonian,
+\item 1: Bingham,
+\item 2: Herschel-Bulkley.
+\end{itemize}""",
+            ),
+#           -----------------------------------
+            BINGHAM_OPTION = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'I',
+                defaut = 1,
+                fr = """Option pour le modele de Bingham :
+\begin{itemize}
+\item 1 : Papanastasiou (1987) exponential regularization ;
+\item 2 : Effective viscosity with cross formulation (Shao \& Lo 2003) ;
+\item 3 : Rickenmann (1990) Cubic equation.
+\end{itemize}""",
+                ang = """Bingham model option:
+\begin{itemize}
+\item 1: Papanastasiou (1987) exponential regularization,
+\item 2: Effective viscosity with cross formulation (Shao \& Lo 2003),
+\item 3: Rickenmann (1990) Cubic equation.
+\end{itemize}""",
+            ),
+#           -----------------------------------
+            NON_NEWTONIAN_VISCOSITY = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'R',
+                defaut = 0.32,
+                fr = """Coefficient caracterisant la viscosite du fluide non-newtonien [Pa.s].""",
+                ang = """Coefficient to compute the fluid viscosity [Pa.s].""",
+            ),
+#           -----------------------------------
+            NON_NEWTONIAN_YIELD_STRESS = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'R',
+                defaut = 18.6,
+                fr = """Coefficient caracterisant la contrainte d elasticite du fluide
+ non-newtonien [Pa].""",
+                ang = """Non-newtonian yield stress [Pa].""",
+            ),
+#           -----------------------------------
+            NON_NEWTONIAN_LAMINAR_RESISTANCE_PARAMETER_K = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'R',
+                defaut = 24.,
+                fr = """Parametre $k$ de resistance laminaire du fluide non-newtonien.""",
+                ang = """Non-newtonian laminar resistance parameter $k$.""",
+            ),
+#           -----------------------------------
+            NON_NEWTONIAN_FLUID_DENSITY = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'R',
+                defaut = 1600.,
+                fr = """Densite du fluide non-newtonien, correspond a la densite des
+sediments si le modele pseudo biphasique est actif [kg/m$^3$].""",
+                ang = """Non-newtonian fluid density, correspond to the sediment density
+if the pseudo-biphasic model is activated [kg/m$^3$].""",
+            ),
+#           -----------------------------------
+            NON_NEWTONIAN_PSEUDO_BIPHASIC_MODEL = SIMP(statut ='o',
+#           -----------------------------------
+                typ = bool,
+                defaut = False,
+                fr = """Modele pseudo-diphasique avec densite variable.""",
+                ang = """Non-newtonian pseudo biphasic model with variable density.""",
+            ),
+#           -----------------------------------
+            HERSCHEL_BULKLEY_POWER_LAW_INDEX = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'R',
+                defaut = 1.,
+                fr = """Indice de la puissance $n$ dans le modele de Herschel-Bulkley.""",
+                ang = """Herschel-Bulkley power law index $n$.""",
+            ),
+        ),
+#       -----------------------------------
         METEOROLOGY = FACT(statut='f',
 #       -----------------------------------
 #           -----------------------------------
@@ -1455,30 +1600,6 @@ ou un fichier binaire SERAFIN.
 a binary SERAFIN file.
 \end{itemize}""",
                 ),
-#               -----------------------------------
-                b_OPTION_FOR_WINDG = BLOC(condition="OPTION_FOR_WIND == 'constant in time and space'",
-#               -----------------------------------
-#                   -----------------------------------
-                    SPEED_AND_DIRECTION_OF_WIND = SIMP(statut ='o',
-#                   -----------------------------------
-                        typ = 'R', min= 2, max= 2,
-                        defaut = [0.,0.],
-                        fr = """Donne la vitesse et la direction (en degres de 0 a 360,
-0 etant $y$ = 0 et $x$ = +inf) du vent lorsqu ils sont constants
-en temps et en espace (mot cle \telkey{OPTION DU VENT} = 1).""",
-                        ang = """Gives the speed and direction (in degrees (from 0 to 360),
-0 given $y$ = 0 anx $x$ = +infinity) when they are constant
-in time and space (keyword \telkey{OPTION FOR WIND} = 1).""",
-                    ),
-                ),
-#               -----------------------------------
-                b_OPTION_FOR_WINDH = BLOC(condition="OPTION_FOR_WIND == 'variable in time given by formated file' or OPTION_FOR_WIND == 'variable in time and space given by formated file'",
-#               -----------------------------------
-#                   -----------------------------------
-                    Consigne = SIMP(statut ="o", homo="information", typ="TXM",
-#                   -----------------------------------
-                        defaut = "Give the formatted file 3"),
-                ),
             ),
 #           -----------------------------------
             COEFFICIENT_OF_WIND_INFLUENCE_VARYING_WITH_WIND_SPEED = SIMP(statut ='o',
@@ -1493,6 +1614,18 @@ Ancienne valeur par defaut = NON jusqu a la version V8P1.""",
 with respect to the wind velocity.
 The value of \telkey{COEFFICIENT OF WIND INFLUENCE} is overwritten.
 Old default value = NO until V8P1.""",
+            ),
+#           -----------------------------------
+            SPEED_AND_DIRECTION_OF_WIND = SIMP(statut ='o',
+#           -----------------------------------
+                typ = 'R', min= 2, max= 2,
+                defaut = [0.,0.],
+                fr = """Donne la vitesse et la direction (en degres de 0 a 360,
+0 etant $y$ = 0 et $x$ = +inf) du vent lorsqu ils sont constants
+en temps et en espace (mot cle \telkey{OPTION DU VENT} = 1).""",
+                ang = """Gives the speed and direction (in degrees (from 0 to 360),
+0 given $y$ = 0 anx $x$ = +infinity) when they are constant
+in time and space (keyword \telkey{OPTION FOR WIND} = 1).""",
             ),
 #           -----------------------------------
             AIR_PRESSURE = SIMP(statut ='o',
@@ -1529,16 +1662,12 @@ Voir le mot-cle \telkey{PLUIE OU EVAPORATION EN MM PAR JOUR}.""",
 See the keyword \telkey{RAIN OR EVAPORATION IN MM PER DAY}.""",
             ),
 #           -----------------------------------
-            b_RAIN_OR_EVAPORATIONG = BLOC(condition="RAIN_OR_EVAPORATION == True",
+            RAIN_OR_EVAPORATION_IN_MM_PER_DAY = SIMP(statut ='o',
 #           -----------------------------------
-#               -----------------------------------
-                RAIN_OR_EVAPORATION_IN_MM_PER_DAY = SIMP(statut ='o',
-#               -----------------------------------
-                    typ = 'R',
-                    defaut = 0.0,
-                    fr = """Pour ajouter un apport ou une perte d''eau en surface.""",
-                    ang = """To add or remove water at the free surface.""",
-                ),
+                typ = 'R',
+                defaut = 0.0,
+                fr = """Pour ajouter un apport ou une perte d''eau en surface.""",
+                ang = """To add or remove water at the free surface.""",
             ),
 #           -----------------------------------
             RAINFALL_RUNOFF_MODEL = SIMP(statut ='f',
@@ -3460,24 +3589,20 @@ The \telkey{LATITUDE OF ORIGIN POINT}, which corresponds to
 ordinate $y$ = 0 in the mesh, must moreover be given.""",
         ),
 #       -----------------------------------
-        b_SPHERICAL_COORDINATESG = BLOC(condition="SPHERICAL_COORDINATES == True",
+        LATITUDE_OF_ORIGIN_POINT = SIMP(statut ='o',
 #       -----------------------------------
-#           -----------------------------------
-            LATITUDE_OF_ORIGIN_POINT = SIMP(statut ='o',
-#           -----------------------------------
-                typ = 'R',
-                defaut = 48.,
-                fr = """Determine l''origine utilisee pour le calcul de latitudes
+            typ = 'R',
+            defaut = 48.,
+            fr = """Determine l''origine utilisee pour le calcul de latitudes
 lorsque l''on effectue un calcul en coordonnees spheriques.
 Egalement utilise pour les echanges thermiques avec l atmosphere,
 le modele d Okada pour les tsunamis, le frazil.""",
-                ang = """Determines the origin used for computing latitudes when
+            ang = """Determines the origin used for computing latitudes when
 a computation is made in spherical coordinates.
 This latitude is in particular used to compute the Coriolis force.
 In cartesian coordinates, Coriolis coefficient is considered constant.
 Also used for heat exchange with atmosphere, Okada model for tsunamis,
 frazil.""",
-            ),
         ),
 #       -----------------------------------
         LONGITUDE_OF_ORIGIN_POINT = SIMP(statut ='o',
@@ -3984,31 +4109,31 @@ franchissement parasite des digues mal discretisees.""",
             ang = """If > 0., will trigger the receeding procedure that avoids overwhelming
 of dykes which are too loosely discretised.""",
         ),
-#       -----------------------------------
-        H_CLIPPING = SIMP(statut ='o',
-#       -----------------------------------
-            typ = bool,
-            defaut = False,
-            fr = """Determine si l''on desire ou non limiter par valeur inferieure
+    ),
+#   -----------------------------------
+    H_CLIPPING = SIMP(statut ='o',
+#   -----------------------------------
+        typ = bool,
+        defaut = False,
+        fr = """Determine si l''on desire ou non limiter par valeur inferieure
 la hauteur d''eau $H$ (dans le cas des bancs decouvrants par exemple).""",
-            ang = """Determines whether limiting the water depth $H$ by a lower value
+        ang = """Determines whether limiting the water depth $H$ by a lower value
 desirable or not (for instance in the case of tidal flats).
 This keyword may have an influence on mass conservation since
 the truncation of depth is equivalent to adding mass.""",
-        ),
+    ),
+#   -----------------------------------
+    b_H_CLIPPINGG = BLOC(condition="H_CLIPPING == True",
+#   -----------------------------------
 #       -----------------------------------
-        b_H_CLIPPINGG = BLOC(condition="H_CLIPPING == True",
+        MINIMUM_VALUE_OF_DEPTH = SIMP(statut ='o',
 #       -----------------------------------
-#           -----------------------------------
-            MINIMUM_VALUE_OF_DEPTH = SIMP(statut ='o',
-#           -----------------------------------
-                typ = 'R',
-                defaut = 0.,
-                fr = """Fixe la valeur minimale de $H$ lorsque l''option \telkey{CLIPPING DE H}
+            typ = 'R',
+            defaut = 0.,
+            fr = """Fixe la valeur minimale de $H$ lorsque l''option \telkey{CLIPPING DE H}
 est activee.""",
-                ang = """Sets the minimum water depth $H$ value when option \telkey{H CLIPPING}
+            ang = """Sets the minimum water depth $H$ value when option \telkey{H CLIPPING}
 is implemented. Not fully implemented.""",
-            ),
         ),
     ),
 )
@@ -4040,14 +4165,14 @@ Read the user manual section dealing with the boundary conditions.""",
             ang = """Defines the number of tracers""",
         ),
 #       -----------------------------------
-        NAMES_OF_TRACERS = SIMP(statut ='o',
+        NAMES_OF_TRACERS = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'TXM', min=0, max='**',
             fr = """Noms des traceurs en 32 caracteres, 16 pour le nom 16 pour l''unite.""",
             ang = """Name of tracers in 32 characters, 16 for the name, 16 for the unit.""",
         ),
 #       -----------------------------------
-        INITIAL_VALUES_OF_TRACERS = SIMP(statut ='o',
+        INITIAL_VALUES_OF_TRACERS = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'R', min=0, max='**',
             defaut = [0.,0.],
@@ -4293,24 +4418,20 @@ If an advection scheme for tracers is a distributive scheme
 or ignored.""",
         ),
 #       -----------------------------------
-        b_DIFFUSION_OF_TRACERSG = BLOC(condition="DIFFUSION_OF_TRACERS == True",
+        COEFFICIENT_FOR_DIFFUSION_OF_TRACERS = SIMP(statut ='o',
 #       -----------------------------------
-#           -----------------------------------
-            COEFFICIENT_FOR_DIFFUSION_OF_TRACERS = SIMP(statut ='o',
-#           -----------------------------------
-                typ = 'R', min=0, max='**',
-                defaut = [1.E-6],
-                fr = """Fixe la valeur du coefficient de diffusion du traceur.
+            typ = 'R', min=0, max='**',
+            defaut = [1.E-6],
+            fr = """Fixe la valeur du coefficient de diffusion du traceur.
 L''influence de ce parametre sur l''evolution des traceurs dans
 le temps est importante.
 C est un tableau depuis la version 8.2, avec une valeur par traceur,
 separation par un point virgule.""",
-                ang = """Sets the value of the tracer diffusivity.
+            ang = """Sets the value of the tracer diffusivity.
 These values may have a significant effect on the evolution of
 tracers in time.
 Since release 8.2, it has been an array, with one value per tracer,
 separated by semicolons.""",
-            ),
         ),
 #       -----------------------------------
         OPTION_FOR_THE_DIFFUSION_OF_TRACERS = SIMP(statut ='o',
@@ -5220,10 +5341,10 @@ coordinates.""",
 COUPLING = PROC(nom= "COUPLING",op = None,
 # -----------------------------------------------------------------------
 #   -----------------------------------
-    COUPLING_WITH = SIMP(statut ='o',
+    COUPLING_WITH = SIMP(statut ='f',
 #   -----------------------------------
-        typ = 'TXM',
-        into = ['SISYPHE','TOMAWAC','TOMAWAC2','WAQTEL','KHIONE','GAIA','DELWAQ'],
+        typ = 'TXM', min=0, max='**',
+        into = ['SISYPHE','TOMAWAC','TOMAWAC2','WAQTEL','KHIONE','GAIA','DELWAQ',''],
         defaut = '',
         fr = """Liste des codes avec lesquels on couple \telemac{2d} :
 \begin{itemize}
@@ -5510,7 +5631,7 @@ Exception is for:
         ),
     ),
 #   -----------------------------------
-    NESTOR = FACT(statut='f',
+    NESTOR_INFO = FACT(statut='f',
 #   -----------------------------------
 #       -----------------------------------
         NESTOR = SIMP(statut ='o',
@@ -5545,7 +5666,7 @@ Exception is for:
             ang = """Name of the \nestor file which contains the reference water surface.""",
         ),
 #       -----------------------------------
-        NESTOR_RESTART_FILE = SIMP(statut ='o',
+        NESTOR_RESTART_FILE = SIMP(statut ='f',
 #       -----------------------------------
             typ = ('Fichier','All Files (*)'),
             defaut = '',

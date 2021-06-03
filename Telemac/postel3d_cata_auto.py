@@ -44,7 +44,7 @@ JdC = JDC_CATA (code = 'POSTEL3D',
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
-VERSION_CATALOGUE="TRUNK_20201028"
+VERSION_CATALOGUE="TRUNK_20210323"
 # -----------------------------------------------------------------------
 COMPUTATION_ENVIRONMENT = PROC(nom= "COMPUTATION_ENVIRONMENT",op = None,
 # -----------------------------------------------------------------------

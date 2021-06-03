@@ -59,12 +59,12 @@ class TELEMACGenerator(PythonGenerator):
 
 #----------------------------------------------------------------------------------------
    def gener(self,obj,format='brut',config=None,appli=None,statut="Leger"):
- 
+
       self.statut        = statut
       self.langue        = appli.langue
       try : self.TelemacdicoEn = appli.readercata.TelemacdicoEn
-      except : 
-        print ('Attention : pas de TelemacdicoEn declare') 
+      except :
+        print ('Attention : pas de TelemacdicoEn declare')
         self.TelemacdicoEn = {}
       self.DicoEnumCasEnInverse = {}
       #from enum_Telemac2d_auto       import self.TelemacdicoEn
@@ -74,7 +74,7 @@ class TELEMACGenerator(PythonGenerator):
              valEficas   = self.TelemacdicoEn[motClef][valTelemac]
              d[valEficas] =valTelemac
           self.DicoEnumCasEnInverse[motClef]=d
-      if self.langue == 'fr' : 
+      if self.langue == 'fr' :
          #from  enum_Telemac2d_auto import DicoEnumCasFrToEnumCasEn
          self.DicoEnumCasFrToEnumCasEn = appli.readercata.DicoEnumCasFrToEnumCasEn
          for motClef in self.DicoEnumCasFrToEnumCasEn:
@@ -94,7 +94,7 @@ class TELEMACGenerator(PythonGenerator):
       except :
         print ('Attention pas de dicoCasToCata declare')
         self.dicoCasToCata={}
-        self.dicoCataToCas={} 
+        self.dicoCataToCas={}
       for motClef in self.dicoCasToCata:
            self.dicoCataToCas[self.dicoCasToCata[motClef]]=motClef
 
@@ -185,7 +185,7 @@ class TELEMACGenerator(PythonGenerator):
         #nomMajuscule=obj.nom.upper()
         #nom=nomMajuscule.replace('_',' ')
         #if nom in listeSupprime or s == "" : return s
-        if s == "None," : s=None 
+        if s == "None," : s=None
         if s == "" or s==None : return s
 
         sTelemac=s[0:-1]
@@ -241,7 +241,7 @@ class TELEMACGenerator(PythonGenerator):
         # cas des Tuples
         if obj.waitTuple()  and s3 != '' and s3  != 'None':
            s3=s
-           if s3[-1] == ',': s3=s3[:-1] 
+           if s3[-1] == ',': s3=s3[:-1]
 
 
         if obj.nom not in self.dicoCataToCas :
@@ -249,12 +249,21 @@ class TELEMACGenerator(PythonGenerator):
            return s
 
         nom=self.dicoCataToCas[obj.nom]
-        if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES", "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER"] :
+        if nom in ["VARIABLES FOR GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES",
+                   "VARIABLES TO BE PRINTED","VARIABLES A IMPRIMER",
+                   "VARIABLES FOR 3D GRAPHIC PRINTOUTS", "VARIABLES POUR LES SORTIES GRAPHIQUES 3D",
+                   "VARIABLES POUR LES SORTIES GRAPHIQUES 2D", "VARIABLES FOR 2D GRAPHIC PRINTOUTS",
+                   "C_VSM_PRINTOUT_SELECTION"]:
               if s3 != '' and s3  != 'None':
                 s3=s3.replace(';',',')
                 s3="'"+ s3 +"'"
               else:
                 s3 = "''"
+        if nom in ["COUPLING WITH", "COUPLAGE AVEC"]:
+            s3 = s3.strip().replace("\n","")\
+                           .replace(" ", "")\
+                           .replace("\t", "")\
+                           .replace("';'", ",")
         if s3 == "" or s3 == " " : s3 = " "
         ligne=nom+ " : " + s3 + "\n"
         if len(ligne) > 72 : ligne=self.redecoupeLigne(nom,s3)

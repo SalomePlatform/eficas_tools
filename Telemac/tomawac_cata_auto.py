@@ -44,7 +44,7 @@ JdC = JDC_CATA (code = 'TOMAWAC',
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
-VERSION_CATALOGUE="TRUNK_20201028"
+VERSION_CATALOGUE="TRUNK_20210323"
 # -----------------------------------------------------------------------
 COMPUTATION_ENVIRONMENT = PROC(nom= "COMPUTATION_ENVIRONMENT",op = None,
 # -----------------------------------------------------------------------
@@ -74,7 +74,7 @@ of the software messages in the listing file.""",
             VARIABLES_FOR_2D_GRAPHIC_PRINTOUTS = SIMP(statut ='o',
 #           -----------------------------------
                 typ = 'TXM', min=0, max='**',
-                into = ["Total variance  (m2)","Spectral significant wave height  (m)","Mean wave direction  (deg)","Mean directional spreading  (deg)","Sea bottom level  (m)","Water depth  (m)","Current along X  (m/s)","Current along Y  (m/s)","Wind along X  (m/s)","Wind along Y  (m/s)","Driving force along X  (m/s2)","Driving force along Y  (m/s2)","Radiation stress along xx  (m3/s2)","Radiation stress along yy  (m3/s2)","Radiation stress along xy  (m3/s2)","Bottom celerity  (m/s)","Wave power (per meter along wave crest)  (kW/m)","Mean frequency FMOY  (Hz)","Mean frequency FM01  (Hz)","Mean frequency FM02  (Hz)","Discrete peak frequency  (Hz)","Peak frequency by Read method of order 5  (Hz)","Peak frequency by Read method of order 8  (Hz)","Surface friction velocity u*  (m/s)","Surface drag coefficient CD  (-)","Surface roughness length Z0  (m)","Surface wave stress  (kg/(m.s2))","Mean period Tmoy  (s)","Mean period Tm01  (s)","Mean period Tm02  (s)","Discrete peak period  (s)","Peak period by Read method of order 5  (s)","Peak period by Read method of order 8  (s)","Private table  (?)","Breaking waves coefficient  (-)"],
+                into = ["Total variance  (m2)","Spectral significant wave height  (m)","Mean wave direction  (deg)","Mean directional spreading  (deg)","Sea bottom level  (m)","Water depth  (m)","Current along X  (m/s)","Current along Y  (m/s)","Wind along X  (m/s)","Wind along Y  (m/s)","Driving force along X  (m/s2)","Driving force along Y  (m/s2)","Radiation stress along xx  (m3/s2)","Radiation stress along yy  (m3/s2)","Radiation stress along xy  (m3/s2)","Bottom celerity  (m/s)","Wave power (per meter along wave crest)  (kW/m)","Mean frequency FMOY  (Hz)","Mean frequency FM01  (Hz)","Mean frequency FM02  (Hz)","Discrete peak frequency  (Hz)","Peak frequency by Read method of order 5  (Hz)","Peak frequency by Read method of order 8  (Hz)","Surface friction velocity u*  (m/s)","Surface drag coefficient CD  (-)","Surface roughness length Z0  (m)","Surface wave stress  (kg/(m.s2))","Mean period Tmoy  (s)","Mean period Tm01  (s)","Mean period Tm02  (s)","Discrete peak period  (s)","Peak period by Read method of order 5  (s)","Peak period by Read method of order 8  (s)","Private table  (?)","Breaking waves rate (-)","White capping rate  (-)"],
                 defaut = ["Spectral significant wave height  (m)","Mean wave direction  (deg)"],
                 fr = """Noms des variables que l''utilisateur veut ecrire dans
 le FICHIER DES RESULTATS 2D. Les variables disponibles sont :
@@ -113,6 +113,7 @@ TPR5 : Periode de pic de Read ordre 5
 TPR8 : Periode de pic de Read ordre 8
 PRI  : tableau prive
 BETA : coefficient de deferlement
+BETAWC : coefficient de moutonnement
 **Mots-cles associes :**
 FICHIER DES RESULTATS 2D
 NUMERO DE LA PREMIERE ITERATION POUR LES SORTIES GRAPHIQUES
@@ -155,6 +156,7 @@ RESULTS FILE. The available variables are as follows
 \item TPR8 : Peak period by Read method of order 8
 \item PRI  : Private table
 \item BETA : Breaking waves coefficient
+\item BETAWC : White Capping coefficient
 \end{itemize}
  \begin{CommentBlock}{Related keywords}
 2D RESULTS FILE\\
@@ -306,7 +308,7 @@ Possible values are:
 #           -----------------------------------
             ABSCISSAE_OF_SPECTRUM_PRINTOUT_POINTS = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """Tableau donnant les abscisses des points de sortie Seraphin du
 spectre et de dimension maximale 99. Les points de sortie du spectre
 sont les points 2D les plus proches des coordonnees specifiees
@@ -325,7 +327,7 @@ PUNCTUAL RESULTS FILE
 #           -----------------------------------
             ORDINATES_OF_SPECTRUM_PRINTOUT_POINTS = SIMP(statut ='f',
 #           -----------------------------------
-                typ = 'R', min= 2, max= 2,
+                typ = 'R', min=0, max='**',
                 fr = """Tableau donnant les ordonnees des points de sortie Seraphin du
 spectre et de dimension max 99.Les points de sortie du spectre
 sont les points 2D les plus proches des coordonnees specifiees
@@ -834,7 +836,7 @@ Possible values are:
 #           -----------------------------------
             FORTRAN_FILE = SIMP(statut ='f',
 #           -----------------------------------
-                typ = ('Fichier','All Files (*)'), max='**',
+                typ = 'FichierOuRepertoire',
                 defaut = '',
                 fr = """Nom du fichier FORTRAN a soumettre.""",
                 ang = """Name of FORTRAN file to be submitted.""",

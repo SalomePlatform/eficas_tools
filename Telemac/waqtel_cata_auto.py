@@ -44,7 +44,7 @@ JdC = JDC_CATA (code = 'WAQTEL',
 # Catalog entry for the MAP function : c_pre_interfaceBody_mesh
 # =======================================================================
 
-VERSION_CATALOGUE="TRUNK_20201028"
+VERSION_CATALOGUE="TRUNK_20210323"
 # -----------------------------------------------------------------------
 COMPUTATION_ENVIRONMENT = PROC(nom= "COMPUTATION_ENVIRONMENT",op = None,
 # -----------------------------------------------------------------------
@@ -1072,12 +1072,10 @@ For THERMIC only.""",
             defaut = [0.002,0.0012],
             fr = """Couple de coefficients de calage pour la fonction de vent
 dans les modeles d echanges eau-atmosphere.
-Leurs valeurs tres proches valent environ 0.0025.
-Seulement pour le THERMIC en 2D.""",
+Leurs valeurs tres proches valent environ 0.0025.""",
             ang = """Couple of calibration coefficients for the wind function
 of the atmosphere-water exchange models.
-Their close values are around 0.0025.
-Only for THERMIC in 2D.""",
+Their close values are around 0.0025.""",
         ),
 #       -----------------------------------
         ATMOSPHERE_WATER_EXCHANGE_MODEL = SIMP(statut ='f',
@@ -1222,7 +1220,7 @@ degradation in d$^{-1}$,
 \end{itemize}""",
         ),
 #       -----------------------------------
-        COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION = SIMP(statut ='o',
+        COEFFICIENT_1_FOR_LAW_OF_TRACERS_DEGRADATION = SIMP(statut ='f',
 #       -----------------------------------
             typ = 'R', min=0, max='**',
             fr = """Coefficient 1 de la loi de decroissance des traceurs. Voir aussi la
