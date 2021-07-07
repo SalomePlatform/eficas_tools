@@ -106,12 +106,14 @@ class ReaderCataCommun(object):
       if self.ssCode is None: liste_cata_possibles = all_cata_list
       else:
           for catalogue in all_cata_list:
-              if catalogue.code == self.code and catalogue.file_format == self.ssCode: liste_cata_possibles.append(catalogue)
+              if catalogue.code == self.code and catalogue.ssCode == self.ssCode:
+                  liste_cata_possibles.append(catalogue)
 
       if len(liste_cata_possibles)==0:
-          QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
-                               tr("Pas de catalogue defini pour le code ") + self.code)
-          self.appliEficas.close()
+          print("Pas de catalogue defini pour le code " + self.code)
+          #QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+          #                     tr("Pas de catalogue defini pour le code ") + self.code)
+          #self.appliEficas.close()
           if self.appliEficas.salome == 0 : sys.exit(1)
           return
 
@@ -131,9 +133,10 @@ class ReaderCataCommun(object):
                   else            : cata_choice_list.append(cata)
 
           if len(cata_choice_list) == 0:
-              QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
-                                   tr("Aucun catalogue trouve"))
-              self.appliEficas.close()
+              print("Aucun catalogue trouve")
+              #QMessageBox.critical(self.QWParent, tr("Import du catalogue"),
+              #                     tr("Aucun catalogue trouve"))
+              #self.appliEficas.close()
               if self.appliEficas.salome == 0 : sys.exit(1)
 
           elif len(cata_choice_list) == 1:
@@ -153,7 +156,7 @@ class ReaderCataCommun(object):
              print(("Pas de catalogue pour code %s, version %s" %(self.code,self.versionCode)))
              sys.exit(1)
           else :
-             self.appliEficas.close()
+             #self.appliEficas.close()
              return
 
 
@@ -204,7 +207,8 @@ class ReaderCata (ReaderCataCommun):
       self.cata = self.importCata(self.fic_cata)
       self.cata.modeleMetier = modeleMetier
       if not self.cata :
-          QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
+          print("Impossible d'importer le catalogue "+ self.fic_cata)
+          #QMessageBox.critical( self.QWParent, tr("Import du catalogue"),tr("Impossible d'importer le catalogue ")+ self.fic_cata)
           self.appliEficas.close()
           if self.appliEficas.salome == 0 :
              sys.exit(1)

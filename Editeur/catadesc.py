@@ -65,6 +65,7 @@ class CatalogDescription(object):
         self.file_format = file_format
         self.default = default
         self.code = code
+        self.ssCode = ss_code
         if user_name is None:
             self.user_name = identifier
         else:
@@ -76,14 +77,22 @@ class CatalogDescription(object):
     def create_from_tuple(cata_tuple):
         #print "Warning: Describing a catalog with a tuple is deprecated. " \
         #      "Please create a CatalogDescription instance directly."
-        desc = CatalogDescription(code = cata_tuple[0],
-                                  identifier = cata_tuple[1],
-                                  cata_file_path = cata_tuple[2],
-                                  file_format = cata_tuple[3])
-        
-        if len(cata_tuple) == 5:
-            if cata_tuple[4] == "defaut":
-                desc.default = True
-            else:
-                desc.file_format_in = cata_tuple[4]
+        if cata_tuple[0] == 'TELEMAC':
+            desc = CatalogDescription(code = cata_tuple[0],
+                                      ss_code = cata_tuple[1],
+                                      identifier = cata_tuple[0]+cata_tuple[1],
+                                      cata_file_path = cata_tuple[2],
+                                      file_format = cata_tuple[3],
+                                      file_format_in = cata_tuple[4])
+        else:
+            desc = CatalogDescription(code = cata_tuple[0],
+                                      identifier = cata_tuple[1],
+                                      cata_file_path = cata_tuple[2],
+                                      file_format = cata_tuple[3])
+
+            if len(cata_tuple) == 5:
+                if cata_tuple[4] == "defaut":
+                    desc.default = True
+                else:
+                    desc.file_format_in = cata_tuple[4]
         return desc

@@ -636,9 +636,10 @@ class JDCEditorSsIhm :
         except :
           ok=0
         if not ok :
-           QMessageBox.information( self,
-                      tr("Import texte"),
-                      tr("Impossible d importer le texte"))
+           self.afficheInfos("Impossible d importer le texte")
+           #QMessageBox.information( self,
+           #           tr("Import texte"),
+           #           tr("Impossible d importer le texte"))
         self.tree.racine.build_children()
         return ok
 
