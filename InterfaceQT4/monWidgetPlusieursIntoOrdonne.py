@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -64,6 +64,7 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.prepareListeResultat()
         if len(self.listeAAfficher) < 20 : self.frameRecherche2.close()
         if len(self.listeAAfficher) < 20 : self.frameRecherche.close()
+        self.adjustSize()
         if sys.platform[0:5]!="linux":
           repIcon=self.node.editor.appliEficas.repIcon
           fichier=os.path.join(repIcon, 'arrow_up.png')
@@ -107,12 +108,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
           self.ajoutLE(0)
           return
        self.filtreListe()
-       if len(self.listeAAfficher)*30 > 400 : self.setMinimumHeight(400)
-       else : 
-         if self.monSimpDef.min > len(self.listeAAfficher) : self.setMinimumHeight(self.monSimpDef.min*30+30)
-         if self.monSimpDef.max > len(self.listeAAfficher) : self.setMinimumHeight(180)
-         else :  self.setMinimumHeight(len(self.listeAAfficher)*30+30)
-       self.adjustSize()
+       if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
+       else : self.setMinimumHeight(len(self.listeAAfficher)*30)
 
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        for i in range(1,len(self.listeAAfficher)+1): self.ajoutLE(i)
@@ -259,7 +256,8 @@ class MonWidgetPlusieursIntoOrdonne (Ui_WidgetPlusieursIntoOrdonne, Feuille,Gere
         self.changeValeur()
         self.setValeurs(first=False)
 
-  def changeValeur(self,changeDePlace=False,oblige=False, numero=None):
+  def changeValeur(self,changeDePlace=False,oblige=False):
+#def changeValeur(self,changeDePlace=False,oblige=False, numero=None):
 #PN les 2 arg sont pour que la signature de ma fonction soit identique a monWidgetPlusieursBase
         listeVal=[]
         for i in range(1,self.indexDernierLabel+1):

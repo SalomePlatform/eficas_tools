@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -23,8 +23,8 @@ from Validation import V_UN_PARMI
 from Ihm import I_UN_PARMI
 
 class UN_PARMI(I_UN_PARMI.UN_PARMI,V_UN_PARMI.UN_PARMI,N_REGLE.REGLE):
-   """
-       La classe utilise l'initialiseur de REGLE. Il n'est pas 
-       necessaire d'expliciter son initialiseur car 
-       V_UN_PARMI.UN_PARMI n'en a pas 
-   """
+    """
+        La classe utilise l'initialiseur de REGLE. Il n'est pas
+        necessaire d'expliciter son initialiseur car
+        V_UN_PARMI.UN_PARMI n'en a pas
+    """

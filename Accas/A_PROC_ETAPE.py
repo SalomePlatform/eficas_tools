@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,6 +27,6 @@ class PROC_ETAPE(I_PROC_ETAPE.PROC_ETAPE,
                  V_PROC_ETAPE.PROC_ETAPE,
                  X_MCCOMPO,
                  N_PROC_ETAPE.PROC_ETAPE):
-   def __init__(self,oper=None,args={}):
-      N_PROC_ETAPE.PROC_ETAPE.__init__(self,oper=oper,args=args)
-      V_PROC_ETAPE.PROC_ETAPE.__init__(self)
+    def __init__(self,oper=None,args={}):
+        N_PROC_ETAPE.PROC_ETAPE.__init__(self,oper=oper,args=args)
+        V_PROC_ETAPE.PROC_ETAPE.__init__(self)

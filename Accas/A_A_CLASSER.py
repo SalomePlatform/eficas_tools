@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@ from Validation import V_A_CLASSER
 from Ihm import I_A_CLASSER
 
 class A_CLASSER(V_A_CLASSER.A_CLASSER,N_REGLE.REGLE,I_A_CLASSER.A_CLASSER):
-   """
-       La classe utilise l'initialiseur  du module V_. 
-       Il faut absolument que V_A_CLASSER soit en premier dans l'heritage
-   """
+    """
+        La classe utilise l'initialiseur  du module V_.
+        Il faut absolument que V_A_CLASSER soit en premier dans l'heritage
+    """

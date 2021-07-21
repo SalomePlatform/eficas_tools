@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,8 @@ class MACRO_ETAPE(I_MACRO_ETAPE.MACRO_ETAPE,
                   X_MCCOMPO,
                   V_MACRO_ETAPE.MACRO_ETAPE,
                   N_MACRO_ETAPE.MACRO_ETAPE):
-   typeCO=CO
-   def __init__(self,oper=None,reuse=None,args={}):
-      N_MACRO_ETAPE.MACRO_ETAPE.__init__(self,oper,reuse,args)
-      V_MACRO_ETAPE.MACRO_ETAPE.__init__(self)
-      I_MACRO_ETAPE.MACRO_ETAPE.__init__(self)
+    typeCO=CO
+    def __init__(self,oper=None,reuse=None,args={}):
+        N_MACRO_ETAPE.MACRO_ETAPE.__init__(self,oper,reuse,args)
+        V_MACRO_ETAPE.MACRO_ETAPE.__init__(self)
+        I_MACRO_ETAPE.MACRO_ETAPE.__init__(self)

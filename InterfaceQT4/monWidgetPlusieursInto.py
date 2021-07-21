@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -175,7 +175,7 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
       self.listeCB.append(nouveauCB)
       nouveauCB.setText("")
       if index % 2 == 1 : nouveauCB.setStyleSheet("background:rgb(210,210,210)")
-      else :              nouveauCB.setStyleSheet("background:rgb(240,240,240)")
+      else :	                    nouveauCB.setStyleSheet("background:rgb(240,240,240)")
       self.vScrollBar.triggerAction(QScrollBar.SliderToMaximum)
       nouveauCB.setFocus()
       setattr(self,nomCB,nouveauCB)
@@ -200,7 +200,8 @@ class MonWidgetPlusieursInto (Ui_WidgetPlusieursInto,Feuille,GerePlie,GereListe)
 
 
 
-  def changeValeur(self,changeDePlace=False,oblige=True, numero=None):
+  def changeValeur(self):
+ #def changeValeur(self,changeDePlace=False,oblige=True, numero=None):
       #print ('changeValeur')
       if self.inhibe == True: return
       if hasattr(self,'LEFiltre') :self.noircirResultatFiltre()

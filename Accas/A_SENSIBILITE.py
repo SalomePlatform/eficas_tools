@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,8 @@
 
 from __future__ import absolute_import
 from Ihm import I_REGLE
-from Noyau import N_SENSIBILITE 
+from Noyau import N_SENSIBILITE
 
 class REUSE_SENSIBLE(I_REGLE.REGLE,N_SENSIBILITE.REUSE_SENSIBLE):pass
 class CONCEPT_SENSIBLE(I_REGLE.REGLE,N_SENSIBILITE.CONCEPT_SENSIBLE):pass
 class DERIVABLE(I_REGLE.REGLE,N_SENSIBILITE.DERIVABLE):pass
-

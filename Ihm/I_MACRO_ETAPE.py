@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -77,7 +77,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          ou leve une exception
          --> utilisee par ops.POURSUITE et INCLUDE
     """
-    print ("getContexteJdc",self,self.nom, text)
+    #print ("getContexteJdc",self,self.nom, text)
     # On recupere l'etape courante
     step=CONTEXT.getCurrentStep()
     self.text_included_converted=0
@@ -226,24 +226,15 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             if callable(v):continue
             self.g_context[k]=param2.Variable(k,v)
 
-    print (j)
-    print (dir(j))
-    print (j.currentContext)
     # On recupere le contexte courant
     self.currentContext=j.currentContext
-    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     self.index_etape_courante=j.index_etape_courante
-    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     self.jdc_aux=j
-    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
 
     # On retablit l'etape courante step
     CONTEXT.unsetCurrentStep()
-    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     CONTEXT.setCurrentStep(step)
-    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
 
-    print ('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkmmmmmmmmmmmmmmmmmmmmmm')
     return j_context
 
   def reevalueSdJdc(self):
@@ -330,7 +321,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       """
          Supprime le concept produit sd s'il est produit par l'etape
       """
-      print ('supprimeSdprod de MACRO_ETAPE')
+      #print ('supprimeSdprod de MACRO_ETAPE')
       if sd in self.sdprods:
          self.initModif()
          self.parent.delSdprod(sd)
@@ -626,10 +617,10 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
     """
         Cette methode sert a craer un contexte en interpratant un texte source Python.
     """
-    print ("makeContexteInclude",fichier)
+    #print ("makeContexteInclude",fichier)
     # on recupere le contexte d'un nouveau jdc dans lequel on interprete text
     contexte = self.getContexteJdc(fichier,text)
-    print (contexte)
+    #print (contexte)
     if contexte == None :
       raise EficasException("Impossible de construire le jeu de commandes correspondant au fichier")
     else:
@@ -641,7 +632,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
       # g_context est utilise pour avoir les concepts produits par la macro
       # contexte_fichier_init est utilise pour avoir les concepts supprimes par la macro
       self.contexte_fichier_init = contexte
-    print ("fin makeContexteInclude",fichier)
+    #print ("fin makeContexteInclude",fichier)
 
   def reevalueFichierInitObsolete(self):
       """Recalcule les concepts produits par le fichier enregistre"""
@@ -806,7 +797,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
             return
 
       if type(self.definition.op_init) == types.FunctionType:
-        print ('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm dans updateContext')
         self.definition.op_init(*(self,d))
       if self.sd != None :d[self.sd.nom]=self.sd
       for co in self.sdprods:
@@ -985,7 +975,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          raise EficasException(" ")
 
       if nbVariableOut != 1 :
-         print((nbVariableOut ,"nbVariableOut"))
          self.makeIncl2Except(mess=tr("le fichier doit contenir une unique variable de sortie"))
          raise EficasException(" ")
 
@@ -998,7 +987,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          raise EficasException(" ")
       
       try:
-         print((self.fichier_ini ,self.fichier_text))
          self.makeContexteInclude(self.fichier_ini ,self.fichier_text)
          self.old_context_fichier_init=self.contexte_fichier_init
          self.parent.recordUnit(unite,self)
@@ -1065,7 +1053,6 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
           Sinon on retourne None. Les concepts produits par l'INCLUDE sont
           pris en compte par le JDC parent lors du calcul du contexte (appel de ???)
       """
-      print ("makeInclude",fname)
       # On supprime l'attribut unite qui bloque l'evaluation du source de l'INCLUDE
       # car on ne s'appuie pas sur lui dans EFICAS mais sur l'attribut fichier_ini
       # Si unite n'a pas de valeur, l'etape est forcement invalide. On peut retourner None
@@ -1099,11 +1086,8 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
              raise EficasException(self.fichier_err)
 
          try:
-           print ('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
            self.makeContexteInclude(self.fichier_ini ,self.fichier_text)
-           print ('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
            self.parent.recordUnit(unite,self)
-           print ('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
          except:
            l=traceback.format_exception_only(tr("Fichier invalide %s",sys.exc_info()[1]))
            if self.jdc.editor:
@@ -1123,7 +1107,7 @@ class MACRO_ETAPE(I_ETAPE.ETAPE):
          self.updateFichierInit(unite)
          self.fichier_unite=unite
          if self.fichier_err is not None: raise EficasException(self.fichier_err)
-      print ('self.g_context', self.g_context)
+      #print ('self.g_context', self.g_context)
         
 
 #ATTENTION SURCHARGE : cette methode surcharge celle de Noyau (a garder en synchro)

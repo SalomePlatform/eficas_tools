@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,11 +20,10 @@
 from __future__ import absolute_import
 from Noyau import N_MACRO
 from Ihm import I_ENTITE
-from . import A_MACRO_ETAPE 
+from . import A_MACRO_ETAPE
 
 class MACRO(N_MACRO.MACRO,I_ENTITE.ENTITE):
-   class_instance=A_MACRO_ETAPE.MACRO_ETAPE
-   def __init__(self,*tup,**args):
-      I_ENTITE.ENTITE.__init__(self)
-      N_MACRO.MACRO.__init__(self,*tup,**args)
-
+    class_instance=A_MACRO_ETAPE.MACRO_ETAPE
+    def __init__(self,*tup,**args):
+        I_ENTITE.ENTITE.__init__(self)
+        N_MACRO.MACRO.__init__(self,*tup,**args)

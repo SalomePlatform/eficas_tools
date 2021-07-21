@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,8 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 from __future__ import absolute_import
-from Ihm import I_EVAL 
+from Ihm import I_EVAL
 
 class EVAL(I_EVAL.EVAL):
-   def __init__(self,str):
-      I_EVAL.EVAL.__init__(self,str)
+    def __init__(self,str):
+        I_EVAL.EVAL.__init__(self,str)

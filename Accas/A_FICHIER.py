@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,5 @@ from __future__ import absolute_import
 from Ihm import I_FICHIER
 
 class Fichier (I_FICHIER.Fichier):
-   def __init__(self,*tup,**args):
-      I_FICHIER.FICHIER.__init__(self,*tup,**args)
-
-
+    def __init__(self,*tup,**args):
+        I_FICHIER.FICHIER.__init__(self,*tup,**args)

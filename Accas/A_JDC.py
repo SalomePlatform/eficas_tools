@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,12 +25,12 @@ from Ihm import I_JDC
 from Efi2Xsd.MCAccasXML  import X_JDC
 
 class JDC(jdc.JDC,I_JDC.JDC,X_JDC,V_JDC.JDC,N_JDC.JDC):
-   from .A_ASSD import CO,assd
+    from .A_ASSD import CO,assd
 
-   def __init__(self,*pos,**args):
-      N_JDC.JDC.__init__(self,*pos,**args)
-      X_JDC.__init__(self)
-      V_JDC.JDC.__init__(self)
-      I_JDC.JDC.__init__(self)
-      jdc.JDC.__init__(self)
-      self.icmd=0
+    def __init__(self,*pos,**args):
+        N_JDC.JDC.__init__(self,*pos,**args)
+        X_JDC.__init__(self)
+        V_JDC.JDC.__init__(self)
+        I_JDC.JDC.__init__(self)
+        jdc.JDC.__init__(self)
+        self.icmd=0

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,6 @@
 from __future__ import absolute_import
 try :
    from builtins import str
-   from builtins import range
    from builtins import object
 except : pass
 
@@ -30,7 +29,7 @@ import types,os
 import traceback
 
 
-from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog
+from PyQt5.QtWidgets import QLineEdit, QLabel, QFileDialog, QMessageBox
 from PyQt5.QtCore    import QEvent, Qt, QTimer
 from PyQt5.QtGui     import QIcon, QPalette
 
@@ -101,6 +100,7 @@ class LECustom(QLineEdit):
 
  def getValeur(self):
      #return self.text()
+     self.litValeur()
      return self.valeur
 
  def setValeur(self,valeur):

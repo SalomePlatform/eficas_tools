@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -24,9 +24,9 @@ from Ihm import I_JDC_CATA
 from Efi2Xsd.AccasXsd  import X_JDC_CATA
 
 class JDC_CATA(I_JDC_CATA.JDC_CATA,N_JDC_CATA.JDC_CATA,X_JDC_CATA):
-   class_instance=A_JDC.JDC
-   def __init__(self,*pos,**kw):
-      #print pos
-      #print kw
-      N_JDC_CATA.JDC_CATA.__init__(self,*pos,**kw)
-      I_JDC_CATA.JDC_CATA.__init__(self)
+    class_instance=A_JDC.JDC
+    def __init__(self,*pos,**kw):
+        #print pos
+        #print kw
+        N_JDC_CATA.JDC_CATA.__init__(self,*pos,**kw)
+        I_JDC_CATA.JDC_CATA.__init__(self)

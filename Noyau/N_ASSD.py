@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -105,11 +105,6 @@ class ASSD(object):
     def setName(self, nom):
         """Positionne le nom de self 
         """
-        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
-        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
-        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
-        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
-        print ('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
         self.nom = nom
 
     def isTypCO(self):
@@ -238,10 +233,8 @@ class ASSD(object):
         aTraiter=(self.etape,)
         while len(listeAttributs) > 0 : 
           attribut=listeAttributs.pop(0)
-          print ("attribut", attribut)
           nvListe=[]
           for mc in aTraiter :
-             print (mc)
              try : 
                resultat=mc.getMocle(attribut)
                if isinstance(resultat,MCList): 

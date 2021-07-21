@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -61,11 +61,11 @@ class configBase(object):
       self.repIni  = repIni
      
       if self.code == None : self.code=''
-      if sys.platform[0:5]=="linux" :
+      #if sys.platform[0:5]=="linux" :
               #self.rep_user   = os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
-              self.rep_user   = os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
-      else :
-              self.rep_user   = os.path.join('C:/','.config/Eficas',self.code)
+      self.rep_user   = os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
+      #else :
+      #        self.rep_user   = os.path.join('C:/','.config/Eficas',self.code)
 
 
       self.setValeursParDefaut()
@@ -102,11 +102,11 @@ class configBase(object):
       self.path_doc     = os.path.abspath(os.path.join(self.repIni,'..','Doc'))
       self.exec_acrobat = 'acroread'
       nomDir="Eficas_"+self.code
-      if sys.platform[0:5]=="linux" :
+      #if sys.platform[0:5]=="linux" :
         #self.savedir   = os.path.abspath(os.path.join(os.environ['HOME'],nomDir))
-        rep=os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
-      else:
-        self.savedir = os.path.abspath('C:/')
+      self.savedir=os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
+      #else:
+      #  self.savedir = os.path.abspath('C:/')
       self.modeNouvCommande='initial'
       self.affiche="alpha"
       self.closeAutreCommande = False

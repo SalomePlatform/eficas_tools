@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,8 +25,7 @@ from Efi2Xsd.AccasXsd  import X_BLOC
 
 
 class BLOC(N_BLOC.BLOC,X_BLOC,I_ENTITE.ENTITE):
-   class_instance=A_MCBLOC.MCBLOC
-   def __init__(self,*tup,**args):
-      I_ENTITE.ENTITE.__init__(self)
-      N_BLOC.BLOC.__init__(self,*tup,**args)
-
+    class_instance=A_MCBLOC.MCBLOC
+    def __init__(self,*tup,**args):
+        I_ENTITE.ENTITE.__init__(self)
+        N_BLOC.BLOC.__init__(self,*tup,**args)

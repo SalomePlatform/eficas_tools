@@ -33,4 +33,3 @@ closeArbre = True
 translatorFichier = os.path.join(repIni,'Adao')
 nombreDeBoutonParLigne=1
 #dumpXSD=True
-

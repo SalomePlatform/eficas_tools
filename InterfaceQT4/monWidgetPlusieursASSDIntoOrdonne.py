@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,6 @@
 from __future__ import absolute_import
 try :
    from builtins import str
-   from builtins import range
 except : pass
 
 import types,os,sys
@@ -31,6 +30,7 @@ from Extensions.i18n import tr
 from .monWidgetPlusieursIntoOrdonne import MonWidgetPlusieursIntoOrdonne 
 from .politiquesValidation          import PolitiquePlusieurs
 
+from six.moves import range
 from PyQt5.QtWidgets  import  QScrollBar
 
 
@@ -52,14 +52,10 @@ class MonWidgetPlusieursASSDIntoOrdonne (MonWidgetPlusieursIntoOrdonne):
        if len(self.listeAAfficher) == 0 :
           self.ajoutLE(0)
           return
+           
          
-       if len(self.listeAAfficher)*30 > 400 : self.setMinimumHeight(400)
-       else :
-         if self.monSimpDef.min > len(self.listeAAfficher)   : self.setMinimumHeight(self.monSimpDef.min*30+30)
-         if self.monSimpDef.max > len(self.listeAAfficher)   : self.setMinimumHeight(180)
-         else :  self.setMinimumHeight(len(self.listeAAfficher)*30+30)
-       self.adjustSize()
-
+       if len(self.listeAAfficher)*20 > 400 : self.setMinimumHeight(400)
+       else : self.setMinimumHeight(len(self.listeAAfficher)*30)
        self.politique=PolitiquePlusieurs(self.node,self.editor)
        for i in range(1,len(self.listeAAfficher)+1): self.ajoutLE(i)
        for i in range(len(self.listeAAfficher)):

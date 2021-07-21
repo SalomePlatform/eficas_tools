@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,5 +25,5 @@ from Efi2Xsd.MCAccasXML  import X_MCLIST
 
 
 class MCList(I_MCLIST.MCList,N_MCLIST.MCList,X_MCLIST,V_MCLIST.MCList):
-   def __init__(self):
-      N_MCLIST.MCList.__init__(self)
+    def __init__(self):
+        N_MCLIST.MCList.__init__(self)

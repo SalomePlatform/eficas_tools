@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2019   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -94,7 +94,7 @@ from .A_VALIDATOR import RangeVal, EnumVal, TypeVal, PairVal
 from .A_VALIDATOR import CardVal, InstanceVal
 from .A_VALIDATOR import VerifTypeTuple, VerifExiste
 from .A_VALIDATOR import FileExtVal, FunctionVal
-from .A_VALIDATOR import CreeMotClef 
+from .A_VALIDATOR import CreeMotClef
 
 # On remplace la factory des validateurs initialement dans Noyau par celle
 # de A_VALIDATOR
@@ -107,9 +107,9 @@ from .A_SENSIBILITE import CONCEPT_SENSIBLE, REUSE_SENSIBLE, DERIVABLE
 from Extensions.niveau import NIVEAU
 from Extensions.etape_niveau import ETAPE_NIVEAU
 from Extensions.commentaire import COMMENTAIRE
-from Extensions.parametre import PARAMETRE  
+from Extensions.parametre import PARAMETRE
 from Extensions.parametre_eval import PARAMETRE_EVAL
-from Extensions.commande_comm import COMMANDE_COMM 
+from Extensions.commande_comm import COMMANDE_COMM
 from Extensions.mcnuplet import MCNUPLET
 
 from .A_SALOME_ENTRY import SalomeEntry

@@ -23,7 +23,7 @@ from Accas import A_ASSD
 class X_OBJECT:
 # -------------
 
-  def delObjPyxb(self, debug=True):
+  def delObjPyxb(self, debug=False):
       if not self.cata or not self.cata.modeleMetier : return
       if self.nom == 'Consigne' : return None
       trouve = False
@@ -151,7 +151,7 @@ class X_MCSIMP(X_OBJECT):
       if debug : print ('fin X_MCSIMP', self.objPyxb, self.nom, self, self.maClasseModeleMetier,self.valeur)
 
 
-   def setValeurObjPyxb(self,newVal, debug=True):
+   def setValeurObjPyxb(self,newVal, debug=False):
        if not self.cata or not self.cata.modeleMetier : return
        if debug : print (' ___________________________ dans setValeurObjPyxb MCSIMP ', self.nom, newVal)
        if debug : print (' self.perePyxb = ', self.perePyxb.nom)
@@ -188,7 +188,7 @@ class X_MCSIMP(X_OBJECT):
 class X_MCCOMPO(X_OBJECT) :
 # -------------------------
 # 
-   def buildObjPyxb(self,mc_list, debug=True) :
+   def buildObjPyxb(self,mc_list, debug=False) :
       if not self.cata or not self.cata.modeleMetier : return
       print ('X_MCCOMPO', self.nom)
       self.listArg=[]

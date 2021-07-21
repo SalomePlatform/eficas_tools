@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,6 @@ from Efi2Xsd.MCAccasXML  import X_MCBLOC
 
 
 class MCBLOC(I_MCBLOC.MCBLOC,N_MCBLOC.MCBLOC,X_MCBLOC,V_MCBLOC.MCBLOC):
-   def __init__(self,val,definition,nom,parent,dicoPyxbDeConstruction=None):
-      N_MCBLOC.MCBLOC.__init__(self,val,definition,nom,parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
-      V_MCBLOC.MCBLOC.__init__(self)
+    def __init__(self,val,definition,nom,parent,dicoPyxbDeConstruction=None):
+        N_MCBLOC.MCBLOC.__init__(self,val,definition,nom,parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
+        V_MCBLOC.MCBLOC.__init__(self)

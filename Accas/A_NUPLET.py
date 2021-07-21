@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -23,5 +23,5 @@ from . import A_MCLIST
 from . import A_MCNUPLET
 
 class NUPL(nuplet.NUPL):
-   class_instance=A_MCNUPLET.MCNUPLET
-   list_instance=A_MCLIST.MCList
+    class_instance=A_MCNUPLET.MCNUPLET
+    list_instance=A_MCLIST.MCList

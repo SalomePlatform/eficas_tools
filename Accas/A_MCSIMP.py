@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@ from Ihm import I_MCSIMP
 from Efi2Xsd.MCAccasXML  import X_MCSIMP
 
 class MCSIMP(I_MCSIMP.MCSIMP,N_MCSIMP.MCSIMP,X_MCSIMP,V_MCSIMP.MCSIMP):
-   def __init__(self,val,definition,nom,parent,objPyxbDeConstruction=None):
-   #def __init__(self,val,definition,nom,parent,objPyxbDeConstruction) quand cela sera correct dans les update_etape. pour l instant on laisse le defaut a None : 9 Aout 18:
-      N_MCSIMP.MCSIMP.__init__(self,val,definition,nom,parent,objPyxbDeConstruction)
-      V_MCSIMP.MCSIMP.__init__(self)
+    def __init__(self,val,definition,nom,parent,objPyxbDeConstruction=None):
+    #def __init__(self,val,definition,nom,parent,objPyxbDeConstruction) quand cela sera correct dans les update_etape. pour l instant on laisse le defaut a None : 9 Aout 18:
+        N_MCSIMP.MCSIMP.__init__(self,val,definition,nom,parent,objPyxbDeConstruction)
+        V_MCSIMP.MCSIMP.__init__(self)

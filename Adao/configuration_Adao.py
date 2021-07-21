@@ -38,27 +38,26 @@ from InterfaceQT4 import configuration
 # et sauvegarder les fichiers utilisateurs
 class CONFIG(configuration.configBase):
 
-  def __init__(self,appli,repIni):
+    def __init__(self,appli,repIni):
 
-    self.labels_eficas=['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
-    configuration.configBase.__init__(self,appli,repIni)
+        self.labels_eficas=['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
+        configuration.configBase.__init__(self,appli,repIni)
 
-    #self.rep_user = os.environ["HOME"]
-    self.rep_user = os.path.expanduser("~")
-    self.appli   = appli
-    self.code    = appli.code
-    # self.lang    = "fr"
-    self.rep_ini = repIni
-    self.rep_mat=" " # Compatbilite Aster
-    self.savedir      = self.rep_user
-    self.generator_module = "generator_adao"
-    self.convert_module = "convert_adao"
+        #self.rep_user = os.environ["HOME"]
+        self.rep_user = os.path.expanduser("~")
+        self.appli   = appli
+        self.code    = appli.code
+        # self.lang    = "fr"
+        self.rep_ini = repIni
+        self.rep_mat=" " # Compatbilite Aster
+        self.savedir      = self.rep_user
+        self.generator_module = "generator_adao"
+        self.convert_module = "convert_adao"
 
-    # Format des catalogues...
-    # (code, version, catalogue, formatIn, formatOut)
-    # Il faut les mettre dans un tuple
-    #self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"),)
+        # Format des catalogues...
+        # (code, version, catalogue, formatIn, formatOut)
+        # Il faut les mettre dans un tuple
+        #self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"),)
 
 def make_config(appli,rep):
     return CONFIG(appli,rep)
-

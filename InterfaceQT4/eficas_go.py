@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2017   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -192,7 +192,7 @@ def lanceEficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=Fals
     print ('deprecated')
     from Editeur  import session
     options=session.parse(sys.argv)
-    if version!=None and options.version == None : options.version=version
+    if version!=None and options.version == None : options.version=version 
     if fichier == None : fichier=options.comm[0]
     if code    == None : code=options.code
 
