@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2012   EDF R&D
+# Copyright (C) 2007-2021   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,6 @@
 import sys,os
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..'))
 
-from PyQt4.QtCore import *
 import prefs
 from InterfaceQT4 import eficas_go
 eficas_go.lance_eficas(code=prefs.code)
