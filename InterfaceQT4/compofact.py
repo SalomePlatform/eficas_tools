@@ -38,17 +38,17 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         maCommande=commande
         if hasattr(parentQt,'niveau'): self.niveau=parentQt.niveau+1
         else : self.niveau=1
-        if  hasattr(self,'plie') and self.plie==True : 
-           from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
-           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
-        elif self.editor.maConfiguration.afficheFirstPlies and self.firstAffiche: 
-           self.firstAffiche = False
-           self.setPlie()
-           from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
-           widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+        if  hasattr(self,'plie') and self.plie==True :
+            from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
+            widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+        elif self.editor.maConfiguration.afficheFirstPlies and self.firstAffiche:
+            self.firstAffiche = False
+            self.setPlie()
+            from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
+            widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         else:
-           from InterfaceQT4.monWidgetFact import MonWidgetFact
-           widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+            from InterfaceQT4.monWidgetFact import MonWidgetFact
+            widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         return widget
 
 
@@ -58,95 +58,95 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
 
 
 class FACTTreeItem(Objecttreeitem.ObjectTreeItem):
-  itemNode=Node
-  
-  def isExpandable(self):
-  # ----------------------
-    return 1
+    itemNode=Node
 
-  def getText(self):
-  # ----------------
-      return  ''
+    def isExpandable(self):
+    # ----------------------
+        return 1
 
-  def getLabelText(self):
-  # ----------------------
-      """ Retourne 3 valeurs :
-        - le texte à afficher dans le noeud representant l'item
-        - la fonte dans laquelle afficher ce texte
-        - la couleur du texte
-      """
-      # None --> fonte et couleur par defaut
-      if not(hasattr(self.object,'getLabelText')): return self.object.nom,None,None
-      return self.object.getLabelText(),None,None
+    def getText(self):
+    # ----------------
+        return  ''
 
-  def isValid(self):
-  # ----------------
-    return self.object.isValid()
+    def getLabelText(self):
+    # ----------------------
+        """ Retourne 3 valeurs :
+          - le texte à afficher dans le noeud representant l'item
+          - la fonte dans laquelle afficher ce texte
+          - la couleur du texte
+        """
+        # None --> fonte et couleur par defaut
+        if not(hasattr(self.object,'getLabelText')): return self.object.nom,None,None
+        return self.object.getLabelText(),None,None
 
-  def isCopiable(self):
-  # ----------------
-    return 1
+    def isValid(self):
+    # ----------------
+        return self.object.isValid()
 
-  def getIconName(self):
-  # ----------------
-    if self.object.isValid()  : return "ast-green-los"
-    elif self.object.isOblig(): return "ast-red-los"
-    else                      : return "ast-yel-los"
+    def isCopiable(self):
+    # ----------------
+        return 1
 
-  #PNPN ????
-  #def keys(self):
-  #  keys=self.object.mc_dict
-  #  return keys
+    def getIconName(self):
+    # ----------------
+        if self.object.isValid()  : return "ast-green-los"
+        elif self.object.isOblig(): return "ast-red-los"
+        else                      : return "ast-yel-los"
 
-  def getSubList(self):
-  # ----------------
-      """
-         Reactualise la liste des items fils stockes dans self.sublist
-      """
-      liste=self.object.mcListe
-      sublist=[None]*len(liste)
-      # suppression des items lies aux objets disparus
-      for item in self.sublist:
-         old_obj=item.getObject()
-         if old_obj in liste:
-            pos=liste.index(old_obj)
-            sublist[pos]=item
-         else:
-            pass # objets supprimes ignores
-      # ajout des items lies aux nouveaux objets
-      pos=0
-      for obj in liste:
-         if sublist[pos] is None:
-            # nouvel objet : on cree un nouvel item
-            def setFunction(value, object=obj):
-                object.setval(value)
-            item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
-            sublist[pos]=item
-         pos=pos+1
+    #PNPN ????
+    #def keys(self):
+    #  keys=self.object.mc_dict
+    #  return keys
 
-      self.sublist=sublist
-      return self.sublist
+    def getSubList(self):
+    # ----------------
+        """
+           Reactualise la liste des items fils stockes dans self.sublist
+        """
+        liste=self.object.mcListe
+        sublist=[None]*len(liste)
+        # suppression des items lies aux objets disparus
+        for item in self.sublist:
+            old_obj=item.getObject()
+            if old_obj in liste:
+                pos=liste.index(old_obj)
+                sublist[pos]=item
+            else:
+                pass # objets supprimes ignores
+        # ajout des items lies aux nouveaux objets
+        pos=0
+        for obj in liste:
+            if sublist[pos] is None:
+                # nouvel objet : on cree un nouvel item
+                def setFunction(value, object=obj):
+                    object.setval(value)
+                item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
+                sublist[pos]=item
+            pos=pos+1
 
-  def addItem(self,name,pos):
-    objet = self.object.addEntite(name,pos)
-    return objet
+        self.sublist=sublist
+        return self.sublist
 
-  def suppItem(self,item) :
-      """ 
-         Cette methode a pour fonction de supprimer l'item passee en argument
-         des fils de l'item FACT qui est son pere
-           - item = item du MOCLE a supprimer du MOCLE pere
-           - item.getObject() = MCSIMP ou MCBLOC 
-      """
-      itemobject=item.getObject()
-      if itemobject.isOblig() :
-         return (0, tr('Impossible de supprimer un mot-cle obligatoire '))
+    def addItem(self,name,pos):
+        objet = self.object.addEntite(name,pos)
+        return objet
 
-      if self.object.suppEntite(itemobject):
-         message = tr("Mot-cle %s supprime")+ itemobject.nom
-         return (1, message)
-      else:
-         return (0,tr('Pb interne : impossible de supprimer ce mot-cle'))
+    def suppItem(self,item) :
+        """
+           Cette methode a pour fonction de supprimer l'item passee en argument
+           des fils de l'item FACT qui est son pere
+             - item = item du MOCLE a supprimer du MOCLE pere
+             - item.getObject() = MCSIMP ou MCBLOC
+        """
+        itemobject=item.getObject()
+        if itemobject.isOblig() :
+            return (0, tr('Impossible de supprimer un mot-cle obligatoire '))
+
+        if self.object.suppEntite(itemobject):
+            message = tr("Mot-cle %s supprime")+ itemobject.nom
+            return (1, message)
+        else:
+            return (0,tr('Pb interne : impossible de supprimer ce mot-cle'))
 
 import Accas
 objet = Accas.MCFACT

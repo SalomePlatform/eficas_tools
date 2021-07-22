@@ -27,7 +27,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 import types
 import sys

@@ -29,25 +29,23 @@
    classes et leur implementation.
 """
 
-# permet de se proteger de l'oubli de carte coding
-# ce warning deviendra fatal en python 2.4
+
 from __future__ import absolute_import
 import warnings
 warnings.filterwarnings('error','Non-ASCII character.*pep-0263',DeprecationWarning)
 
 from .A_JDC_CATA import JDC_CATA
-from .A_OPER import OPER
-from .A_PROC import PROC
-from .A_MACRO import MACRO
-from .A_FORM import FORM
-from .A_BLOC import BLOC
-#from .A_BLOC import BLOC_EXCLUS_ABC
-#from .A_BLOC import BLOC_FICHIER
-from .A_FACT import FACT
-from .A_SIMP import SIMP
-from .A_EVAL import EVAL
-from .A_NUPLET import NUPL
-from .A_TUPLE import Tuple
+from .A_OPER     import OPER
+from .A_PROC     import PROC
+from .A_MACRO    import MACRO
+from .A_FORM     import FORM
+from .A_BLOC     import BLOC
+from .A_FACT     import FACT
+from .A_SIMP     import SIMP
+from .A_EVAL     import EVAL
+from .A_NUPLET   import NUPL
+from .A_TUPLE    import Tuple
+from .A_TUPLE    import Matrice
 
 
 from .A_JDC import JDC
@@ -72,7 +70,7 @@ from .A_ENSEMBLE import ENSEMBLE
 from .A_A_CLASSER import A_CLASSER
 from .A_AVANT import AVANT
 
-from .A_ASSD import ASSD,assd, UserASSD
+from .A_ASSD import ASSD,assd, UserASSD, UserASSDMultiple
 from .A_ASSD import GEOM,geom
 # Pour le moment on laisse fonction (ceinture et bretelles)
 from .A_ASSD import FONCTION, fonction

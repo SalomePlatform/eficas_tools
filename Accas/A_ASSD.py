@@ -27,6 +27,7 @@ from Noyau import N_GEOM
 from Noyau import N_FONCTION
 from Noyau import N_CO
 from Noyau import N_UserASSD
+from Noyau import N_UserASSDMultiple
 
 # On ajoute la classe ASSD dans l'heritage multiple pour recreer
 # une hierarchie d'heritage identique a celle de Noyau
@@ -37,6 +38,7 @@ class ASSD(I_ASSD.ASSD,N_ASSD.ASSD):pass
 #class LASSD(I_LASSD.LASSD,N_LASSD.LASSD):pass
 class LASSD(I_LASSD.LASSD):pass
 class UserASSD(N_UserASSD.UserASSD,ASSD): pass
+class UserASSDMultiple(N_UserASSDMultiple.UserASSDMultiple,UserASSD): pass
 
 class assd(N_ASSD.assd,I_ASSD.assd,ASSD):pass
 

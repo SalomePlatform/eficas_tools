@@ -24,7 +24,7 @@ de chaines de caractères
 
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import locale

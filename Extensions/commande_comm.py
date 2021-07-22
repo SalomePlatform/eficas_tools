@@ -20,7 +20,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-  from builtins import str
+    from builtins import str
 except : pass
 import os,traceback
 import re
@@ -37,7 +37,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
     """
     nature = "COMMANDE_COMMENTARISEE"
     idracine='_comm'
-    
+
     def __init__(self,texte='',parent=None,reg='oui'):
         self.valeur = texte
         if not parent :
@@ -45,9 +45,9 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         else:
             self.jdc = self.parent = parent
         if hasattr(self.parent,'etape'):
-          self.etape = self.parent.etape
+            self.etape = self.parent.etape
         else :
-          self.etape = None
+            self.etape = None
         self.definition=self
         self.nom = ''
         self.niveau = self.parent.niveau
@@ -55,7 +55,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         self.state="unchanged"
         #self.appel = N_utils.calleeWhere(niveau=2)
         if reg=='oui' : self.register()
-            
+
     def isValid(self):
         return 1
 
@@ -76,7 +76,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
 
     def initModif(self):
         self.state = 'modified'
-        self.parent.initModif()    
+        self.parent.initModif()
 
     def setValeur(self,new_valeur):
         """
@@ -115,16 +115,16 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         """
         Indique si self est repetable ou non : retourne toujours 1
         """
-        return 1        
+        return 1
 
     def getAttribut(self,nom_attribut) :
         """
         Retourne l'attribut de nom nom_attribut de self (ou herite)
         """
         if hasattr(self,nom_attribut) :
-          return getattr(self,nom_attribut)
+            return getattr(self,nom_attribut)
         else :
-          return None
+            return None
 
     def getFr(self):
         """
@@ -132,17 +132,17 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         """
         if self.jdc.code=='ASTER' : return self.definition.fr
         try :
-          return getattr(self.definition,self.jdc.lang)
+            return getattr(self.definition,self.jdc.lang)
         except:
-          return ''
+            return ''
 
     def listeMcPresents(self):
         return []
 
     def supprime(self):
-        """ 
+        """
         Methode qui supprime toutes les boucles de references afin que l'objet puisse
-        etre correctement detruit par le garbage collector 
+        etre correctement detruit par le garbage collector
         """
         self.parent = None
         self.etape = None
@@ -185,7 +185,7 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
             # on essaie de creer un objet JDC...
             CONTEXT.unsetCurrentStep()
             if re.search('Fin Commentaire',self.valeur) :
-               self.valeur=self.valeur.replace('Fin Commentaire','')
+                self.valeur=self.valeur.replace('Fin Commentaire','')
             J=self.jdc.__class__(procedure=self.valeur,
                                  definition=self.jdc.definition,
                                  cata=self.jdc.cata,
@@ -238,47 +238,46 @@ class COMMANDE_COMM(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
         Booleenne qui retourne 1 si self est valide, 0 sinon
         """
         return self.actif
-    
+
     def verifConditionBloc(self):
-      """
-          Evalue les conditions de tous les blocs fils possibles
-          (en fonction du catalogue donc de la definition) de self et
-          retourne deux listes :
-            - la premiere contient les noms des blocs a rajouter
-            - la seconde contient les noms des blocs a supprimer
-      """
-      return [],[]
+        """
+            Evalue les conditions de tous les blocs fils possibles
+            (en fonction du catalogue donc de la definition) de self et
+            retourne deux listes :
+              - la premiere contient les noms des blocs a rajouter
+              - la seconde contient les noms des blocs a supprimer
+        """
+        return [],[]
 
     def verifConditionRegles(self,liste_presents):
-      """
-          Retourne la liste des mots-cles a rajouter pour satisfaire les regles
-          en fonction de la liste des mots-cles presents
-      """
-      return []
+        """
+            Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+            en fonction de la liste des mots-cles presents
+        """
+        return []
 
     def reparent(self,parent):
-      """
-          Cette methode sert a reinitialiser la parente de l'objet
-      """
-      self.parent=parent
-      self.jdc=parent.getJdcRoot()
-      self.etape=self
+        """
+            Cette methode sert a reinitialiser la parente de l'objet
+        """
+        self.parent=parent
+        self.jdc=parent.getJdcRoot()
+        self.etape=self
 
     def verifExistenceSd(self):
-      """
-         Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
-         avant etape, sinon enleve la reference a ces concepts
-         --> sans objet pour les commandes commentarisees
-      """
-      pass
-        
+        """
+           Verifie que les structures de donnees utilisees dans self existent bien dans le contexte
+           avant etape, sinon enleve la reference a ces concepts
+           --> sans objet pour les commandes commentarisees
+        """
+        pass
+
     def controlSdprods(self,d):
-      """sans objet pour les commandes commentarisees"""
-      pass
+        """sans objet pour les commandes commentarisees"""
+        pass
 
     def close(self):
-      pass
+        pass
 
     def resetContext(self):
-      pass
-
+        pass

@@ -524,10 +524,8 @@ ask eficas team
     </message>
     <message>
         <location filename="Ihm/I_MACRO_ETAPE.py" line="1195"/>
-        <source>Ce fichier ne sera pas pris en compte
- %s</source>
-        <translation>the file is ignored
-%s</translation>
+        <source>Ce fichier ne sera pas pris en compte</source>
+        <translation>the file is ignored</translation>
     </message>
     <message>
         <location filename="Ihm/I_MACRO_ETAPE.py" line="735"/>

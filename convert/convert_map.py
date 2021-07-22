@@ -24,15 +24,13 @@ from __future__ import absolute_import
 from .convert_python import Pythonparser
 
 def entryPoint():
-   """
-       Retourne les informations necessaires pour le chargeur de plugins
-       Ces informations sont retournees dans un dictionnaire
-   """
-   return {
-        # Le nom du plugin
-          'name' : 'MAP',
-        # La factory pour creer une instance du plugin
-          'factory' : Pythonparser,
-          }
-
-
+    """
+        Retourne les informations necessaires pour le chargeur de plugins
+        Ces informations sont retournees dans un dictionnaire
+    """
+    return {
+         # Le nom du plugin
+           'name' : 'MAP',
+         # La factory pour creer une instance du plugin
+           'factory' : Pythonparser,
+           }

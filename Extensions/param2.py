@@ -20,8 +20,8 @@
 from __future__ import division
 from __future__ import absolute_import
 try :
-  from builtins import str
-  from builtins import object
+    from builtins import str
+    from builtins import object
 except : pass
 import math
 import types
@@ -29,13 +29,13 @@ import types
 import six
 
 try:
-  import Numeric
+    import Numeric
 except:
-  try:
-    import numpy
-    Numeric = numpy
-  except ImportError:
-    Numeric = None
+    try:
+        import numpy
+        Numeric = numpy
+    except ImportError:
+        Numeric = None
 
 
 def mkf(value):
@@ -55,9 +55,9 @@ class Formula(object):
         val=self.eval()
         if val is None:return 0
         try:
-           return len(val)
+            return len(val)
         except:
-           return 1
+            return 1
     def __complex__(self): return complex(self.eval())
     def __int__(self): return int(self.eval())
     def __long__(self): return int(self.eval())
@@ -79,7 +79,7 @@ class Formula(object):
     def __rfloordiv__(self, other): return Binop('//', other, self)
     def __pow__(self, other): return Binop('**', self, other)
     def __rpow__(self, other): return Binop('**', other, self)
-    def __getitem__(self,i): 
+    def __getitem__(self,i):
         if i > len(self) : raise StopIteration
         return Binop('[]',self,i)
     def __cmp__( self, other ): return self.eval().__cmp__(other)
@@ -92,13 +92,13 @@ class Formula(object):
     def __hash__(self):return id(self)
 
 def _div(a,b):
-  if isinstance(a,six.integer_types) and isinstance(b,six.integer_types):
-    if a%b:
-      return a/b
+    if isinstance(a,six.integer_types) and isinstance(b,six.integer_types):
+        if a%b:
+            return a/b
+        else:
+            return a//b
     else:
-      return a//b
-  else:
-    return a/b
+        return a/b
 
 
 class Binop(Formula):
@@ -116,19 +116,19 @@ class Binop(Formula):
 
     def __str__(self):
         if self.op == '[]':
-           return "%s[%s]" % (self.values[0], self.values[1])
+            return "%s[%s]" % (self.values[0], self.values[1])
         else:
-           return "(%s %s %s)" % (self.values[0], self.op, self.values[1])
+            return "(%s %s %s)" % (self.values[0], self.op, self.values[1])
     def __repr__(self):
         if self.op == '[]':
-           return "%s[%s]" % (self.values[0], self.values[1])
+            return "%s[%s]" % (self.values[0], self.values[1])
         else:
-           return "(%s %s %s)" % (self.values[0], self.op, self.values[1])
+            return "(%s %s %s)" % (self.values[0], self.op, self.values[1])
     def eval(self):
         result= self.opmap[self.op](self.values[0].eval(),
                                    self.values[1].eval())
         while isinstance(result,Formula):
-              result=result.eval()
+            result=result.eval()
         return result
     def __adapt__(self,validator):
         return validator.adapt(self.eval())
@@ -156,23 +156,23 @@ class Unop2(Unop):
         self._op = op
         self._arg=[]
         for a in arg:
-           self._arg.append(mkf(a))
+            self._arg.append(mkf(a))
     def __str__(self):
         s="%s(" % self._nom
         for a in self._arg:
-           s=s+str(a)+','
+            s=s+str(a)+','
         s=s+")"
         return s
     def __repr__(self):
         s="%s(" % self._nom
         for a in self._arg:
-           s=s+str(a)+','
+            s=s+str(a)+','
         s=s+")"
         return s
     def eval(self):
         l=[]
         for a in self._arg:
-          l.append(a.eval())
+            l.append(a.eval())
         return self._op(*l)
 
 class Constant(Formula):
@@ -203,7 +203,7 @@ def Eval(f):
 
 def cos(f): return Unop('ncos', f)
 def sin(f): return Unop('nsin', f)
-def array(f,*tup,**args): 
+def array(f,*tup,**args):
     """array de Numeric met en defaut la mecanique des parametres
        on la supprime dans ce cas. Il faut que la valeur du parametre soit bien definie
     """
@@ -229,8 +229,8 @@ class  OriginalMath(object):
     def __init__(self):
         if hasattr(self,'pi') :return
         import math
-        try : 
-          self.toSurcharge()
+        try :
+            self.toSurcharge()
         except : pass
 
     def toSurcharge(self):
@@ -286,15 +286,15 @@ class  OriginalMath(object):
     def toOriginal(self):
         import math
         try:
-          import Numeric
+            import Numeric
         except:
-          import numpy
-          Numeric = numpy
+            import numpy
+            Numeric = numpy
 
-        try : 
-          Numeric.cos=originalMath.numeric_ncos
-          Numeric.sin=originalMath.numeric_nsin
-          Numeric.array=originalMath.numeric_narray
+        try :
+            Numeric.cos=originalMath.numeric_ncos
+            Numeric.sin=originalMath.numeric_nsin
+            Numeric.array=originalMath.numeric_narray
         except : pass
         math.sin=originalMath.sin
         math.cos=originalMath.cos

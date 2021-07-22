@@ -120,15 +120,24 @@ class OPER(N_ENTITE.ENTITE):
         self.affecter_parente()
         self.checkDefinition(self.nom)
         self.txtNomComplet=""
+        self.dejaPrepareDump=False
 
-    def __call__(self, reuse=None, **args):
+    def __call__(self, reuse=None, nomXML=None,**args):
         """
             Construit l'objet ETAPE a partir de sa definition (self),
             puis demande la construction de ses sous-objets et du concept produit.
         """
-        nomsd = self.nommage.getNomConceptResultat(self.nom)
+        if nomXML == None : nomsd = self.nommage.getNomConceptResultat(self.nom)
+        else : nomsd = nomXML
         etape = self.class_instance(oper=self, reuse=reuse, args=args)
         etape.MCBuild()
+        while etape.doitEtreRecalculee == True :
+            etape.doitEtreRecalculee = False
+            etape.deepUpdateConditionBlocApresCreation()
+            etape.reConstruitResteVal()
+            etape.state='modified'
+            #print ('on recalcule la validite depuis N_OPER')
+        #   etape.isValid(cr='oui')
         etape.metAJourNomASSD(nomsd)
         return etape.buildSd(nomsd)
 

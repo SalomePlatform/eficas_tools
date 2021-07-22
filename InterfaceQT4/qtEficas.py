@@ -22,7 +22,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import os, sys
@@ -47,13 +47,13 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=1,parent=None, multi=False,langue='fr',ssIhm=False, labelCode=None):
+    def __init__(self,code=None,salome=1,parent=None, multi=False,langue='en',ssIhm=False, labelCode=None):
         """
         Constructor
         """
-        if ssIhm == True : 
-           print ('mauvaise utilisation de la classe Appli. Utiliser AppliSsIm SVP')
-           exit()
+        if ssIhm == True :
+            print ('mauvaise utilisation de la classe Appli. Utiliser AppliSsIm SVP')
+            exit()
 
         AppliSsIhm.__init__(self,code,salome,parent,multi=multi,langue=langue,ssIhm=True, labelCode=labelCode)
         QMainWindow.__init__(self,parent)
@@ -65,21 +65,21 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
 
 
         if self.multi == False :
-             self.definitCode(code,None)
-             if code==None: return
+            self.definitCode(code,None)
+            if code==None: return
         else :
-             self.definitCode(code,None)
-             if code==None: return
-             print ('il faut trouver le chemin du code')
-             return 
+            self.definitCode(code,None)
+            if code==None: return
+            print ('il faut trouver le chemin du code')
+            return
 
         self.suiteTelemac=False
         if hasattr (self, 'maConfiguration') :
-           if self.maConfiguration.demandeLangue :
-              from InterfaceQT4.monChoixLangue import MonChoixLangue
-              widgetLangue = MonChoixLangue(self)
-              ret=widgetLangue.exec_()
-           self.suiteTelemac=self.maConfiguration.suiteTelemac
+            if self.maConfiguration.demandeLangue :
+                from InterfaceQT4.monChoixLangue import MonChoixLangue
+                widgetLangue = MonChoixLangue(self)
+                ret=widgetLangue.exec_()
+            self.suiteTelemac=self.maConfiguration.suiteTelemac
 
 
         if not self.salome and hasattr (self, 'maConfiguration') and hasattr(self.maConfiguration,'lang') : self.langue=self.maConfiguration.lang
@@ -92,22 +92,22 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         #else              : self.parentCentralWidget = None
 
         if not self.salome :
-           if  hasattr (self, 'maConfiguration') and hasattr(self.maConfiguration,'taille') : self.taille=self.maConfiguration.taille
-           else : self.taille=1700
+            if  hasattr (self, 'maConfiguration') and hasattr(self.maConfiguration,'taille') : self.taille=self.maConfiguration.taille
+            else : self.taille=1700
 
-           self.resize(self.taille,self.height())
+            self.resize(self.taille,self.height())
 
 
         icon = QIcon(self.repIcon+"/parametres.png")
         self.actionParametres.setIcon(icon)
-        if  hasattr (self, 'maConfiguration') and self.maConfiguration.boutonDsMenuBar  : 
-           self.frameEntete.setMaximumSize(QSize(16777215,100))
-           self.frameEntete.setMinimumSize(QSize(0,100))
-        if  hasattr (self, 'maConfiguration') and self.maConfiguration.enleverActionStructures  : 
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.boutonDsMenuBar  :
+            self.frameEntete.setMaximumSize(QSize(16777215,100))
+            self.frameEntete.setMinimumSize(QSize(0,100))
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.enleverActionStructures  :
             self.enleverActionsStructures()
-        if  hasattr (self, 'maConfiguration') and self.maConfiguration.enleverParametres  : 
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.enleverParametres  :
             self.enleverParametres()
-        if  hasattr (self, 'maConfiguration') and self.maConfiguration.enleverSupprimer : 
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.enleverSupprimer :
             self.enleverSupprimer()
 
 
@@ -122,15 +122,15 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.blEnteteGlob.insertLayout(0,self.blEntete)
 
 
-        
-        if  hasattr (self, 'maConfiguration') and self.maConfiguration.boutonDsMenuBar  : 
+
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.boutonDsMenuBar  :
             self.blEnteteCommmande = QBoxLayout(0)
             self.blEnteteCommmande.insertWidget(0,self.toolBarCommande)
             self.toolBarCommande.setIconSize(QSize(96,96))
             self.blEnteteGlob.insertLayout(-1,self.blEnteteCommmande)
         else :
             self.toolBarCommande.close()
-         
+
 
         if hasattr (self, 'maConfiguration') and self.maConfiguration.closeEntete==True and self.salome: self.closeEntete()
 
@@ -153,11 +153,11 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         try :
         #if 1 :
          #print ('attention try devient if 1')
-          self.ouvreFichiers()
+            self.ouvreFichiers()
         except EficasException as exc:
         #except:
-          print ("je suis dans le except")
-          if self.salome == 0 : exit()
+            print ("je suis dans le except")
+            if self.salome == 0 : exit()
 
         #self.adjustSize()
 
@@ -170,11 +170,11 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.code=code
         self.ssCode=ssCode
         if self.code==None :
-           self.cleanPath()
-           from InterfaceQT4.monChoixCode import MonChoixCode
-           widgetChoix = MonChoixCode(self)
-           ret=widgetChoix.exec_()
-           #widgetChoix.show()
+            self.cleanPath()
+            from InterfaceQT4.monChoixCode import MonChoixCode
+            widgetChoix = MonChoixCode(self)
+            ret=widgetChoix.exec_()
+            #widgetChoix.show()
         if self.code == None:return # pour le cancel de la fenetre choix code
         AppliSsIhm.definitCode(self,self.code,ssCode)
 
@@ -191,20 +191,20 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.initRecents()
         self.initAides()
         for intituleMenu in ("menuTraduction","menuOptions","menuMesh","menuExecution","menuN1"):
-              if hasattr(self,intituleMenu):
-                 menu=getattr(self,intituleMenu)
-                 menu.setAttribute(Qt.WA_DeleteOnClose)
-                 menu.close()
-                 delattr(self,intituleMenu)
+            if hasattr(self,intituleMenu):
+                menu=getattr(self,intituleMenu)
+                menu.setAttribute(Qt.WA_DeleteOnClose)
+                menu.close()
+                delattr(self,intituleMenu)
         for intituleAction in ("actionExecution","actionSaveRun"):
             if hasattr(self,intituleAction):
-              action=getattr(self,intituleAction)
-              self.toolBar.removeAction(action)
+                action=getattr(self,intituleAction)
+                self.toolBar.removeAction(action)
         if self.code.upper() in Appli.__dict__:
-          Appli.__dict__[self.code.upper()](self,)
+            Appli.__dict__[self.code.upper()](self,)
         if self.suiteTelemac : self.lookSuiteTelemac()
         self.metMenuAJourUtilisateurs()
-        if  hasattr (self, 'maConfiguration') and self.maConfiguration.ajoutExecution : 
+        if  hasattr (self, 'maConfiguration') and self.maConfiguration.ajoutExecution :
             self.ajoutExecution()
 
     def initAides(self):
@@ -217,10 +217,10 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.fileDoc=os.path.join(self.docPath,fileName)
         self.actionCode.setText(tr("Aide specifique ")+str(self.code))
         if not os.path.isfile(self.fileDoc) :
-               self.fileDoc=""
-               self.docPath=""
-               self.actionCode.setEnabled(False)
-               return
+            self.fileDoc=""
+            self.docPath=""
+            self.actionCode.setEnabled(False)
+            return
 
         self.actionCode.setEnabled(True)
         self.menuAide.addAction(self.actionCode)
@@ -270,14 +270,14 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.menuExecution = self.menubar.addMenu(tr("&Run"))
         self.actionExecution = QAction(self)
         if sys.platform[0:5]=="linux":
-          icon6 = QIcon(self.repIcon+"/roue.png")
-          self.actionExecution.setIcon(icon6)
+            icon6 = QIcon(self.repIcon+"/roue.png")
+            self.actionExecution.setIcon(icon6)
         else :
-          self.actionExecution.setText(tr("Run"))
+            self.actionExecution.setText(tr("Run"))
         self.actionExecution.setObjectName("actionExecution")
         self.menuExecution.addAction(self.actionExecution)
         if not(self.actionExecution in self.toolBar.actions()):
-           self.toolBar.addAction(self.actionExecution)
+            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(tr("Run"))
         self.actionExecution.triggered.connect(self.run)
 
@@ -288,7 +288,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.actionSaveRun.setObjectName("actionSaveRun")
         self.menuExecution.addAction(self.actionSaveRun)
         if not(self.actionSaveRun in self.toolBar.actions()):
-           self.toolBar.addAction(self.actionSaveRun)
+            self.toolBar.addAction(self.actionSaveRun)
         self.actionSaveRun.setText(tr("Save Run"))
         self.actionSaveRun.triggered.connect(self.saveRun)
 
@@ -443,9 +443,9 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()
         if Msg == None :
-           self.viewmanager.handleAjoutGroup(listeGroup)
+            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
-           print ("il faut gerer les erreurs")
+            print ("il faut gerer les erreurs")
 
     def ChercheGrpMaille(self):
         # Normalement la variable self.salome permet de savoir si on est ou non dans Salome
@@ -455,9 +455,9 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         except:
             raise ValueError('Salome non ouvert')
         if Msg == None :
-           self.viewmanager.handleAjoutGroup(listeGroup)
+            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
-           print ("il faut gerer les erreurs")
+            print ("il faut gerer les erreurs")
 
 
     def ChercheGrp(self):
@@ -647,57 +647,57 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
     # Mise a jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
         if not(self.code in listePatrons.sous_menus) :
-           if hasattr(self,"menuPatrons"):
-              self.menuPatrons.setAttribute(Qt.WA_DeleteOnClose)
-              self.menuPatrons.close()
-              delattr(self,"menuPatrons")
-           return
+            if hasattr(self,"menuPatrons"):
+                self.menuPatrons.setAttribute(Qt.WA_DeleteOnClose)
+                self.menuPatrons.close()
+                delattr(self,"menuPatrons")
+            return
         if (not hasattr(self,"menuPatrons")):
-           self.menuPatrons = QMenu(self.menubar)
-           self.menuPatrons.setObjectName("menuPatrons")
-           self.menubar.addAction(self.menuPatrons.menuAction())
-           self.menuPatrons.setTitle(tr("Patrons"))
+            self.menuPatrons = QMenu(self.menubar)
+            self.menuPatrons.setObjectName("menuPatrons")
+            self.menubar.addAction(self.menuPatrons.menuAction())
+            self.menuPatrons.setTitle(tr("Patrons"))
         else :
-           self.menuPatrons.clear()
+            self.menuPatrons.clear()
         self.listePatrons = listePatrons.listePatrons(self.code)
         idx = 0
         for nomSsMenu in self.listePatrons.liste:
             ssmenu=self.menuPatrons.addMenu(nomSsMenu)
             for fichier in self.listePatrons.liste[nomSsMenu]:
-               id = ssmenu.addAction(fichier)
-               self.ficPatrons[id]=fichier
-               self.id.triggered.connect(self.handleOpenPatrons)
+                id = ssmenu.addAction(fichier)
+                self.ficPatrons[id]=fichier
+                self.id.triggered.connect(self.handleOpenPatrons)
             #   self.Patrons.setItemParameter(id,idx)
-               idx=idx+1
+                idx=idx+1
 
     def initRecents(self):
-       self.recent =  []
-       try :
-           #if sys.platform[0:5]=="linux" :
-              #rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
-           rep=os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
-           #else :
-           #   rep=os.path.join('C:/','.config/Eficas',self.code)
-           monFichier=rep+"/listefichiers_"+self.code
-           index=0
-           f=open(monFichier)
-           while ( index < 9) :
-              ligne=f.readline()
-              if ligne != "" :
-                 l=(ligne.split("\n"))[0]
-                 self.recent.append(l)
-              index=index+1
-       except :
-           pass
+        self.recent =  []
+        try :
+            #if sys.platform[0:5]=="linux" :
+                #rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+            rep=os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
+            #else :
+            #   rep=os.path.join('C:/','.config/Eficas',self.code)
+            monFichier=rep+"/listefichiers_"+self.code
+            index=0
+            f=open(monFichier)
+            while ( index < 9) :
+                ligne=f.readline()
+                if ligne != "" :
+                    l=(ligne.split("\n"))[0]
+                    self.recent.append(l)
+                index=index+1
+        except :
+            pass
 
-       try    : f.close()
-       except : pass
+        try    : f.close()
+        except : pass
 
     def addToRecentList(self, fn):
-      while fn in self.recent: self.recent.remove(fn)
-      self.recent.insert(0,fn)
-      if len(self.recent) > 9:
-         self.recent = self.recent[:9]
+        while fn in self.recent: self.recent.remove(fn)
+        self.recent.insert(0,fn)
+        if len(self.recent) > 9:
+            self.recent = self.recent[:9]
 
 
     def addToRecentListQT4(self, fn):
@@ -714,24 +714,24 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.sauveRecents()
 
     def sauveRecents(self) :
-       try :
-         rep=self.maConfiguration.rep_user
-         monFichier=rep+"/listefichiers_"+self.code
-       except :
-         return
-       try :
+        try :
+            rep=self.maConfiguration.rep_user
+            monFichier=rep+"/listefichiers_"+self.code
+        except :
+            return
+        try :
             f=open(monFichier,'w')
             if len(self.recent) == 0 : return
             index=0
             while ( index <  len(self.recent)):
-              ligne=str(self.recent[index])+"\n"
-              f.write(ligne)
-              index=index+1
-       except :
+                ligne=str(self.recent[index])+"\n"
+                f.write(ligne)
+                index=index+1
+        except :
             pass
-       try :
+        try :
             f.close()
-       except :
+        except :
             pass
 
 
@@ -762,49 +762,49 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         repAide=os.path.dirname(os.path.abspath(__file__))
         maD=os.path.join( repAide,'..','Doc')
         try :
-          indexAide=os.path.join(maD,'index.html')
-          if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
-          else                          : cmd="start "+indexAide
-          os.system(cmd)
+            indexAide=os.path.join(maD,'index.html')
+            if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
+            else                          : cmd="start "+indexAide
+            os.system(cmd)
         except:
-          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
+            QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
     def aidePSEN(self) :
         repAide=os.path.dirname(os.path.abspath(__file__))
         maD=os.path.join( repAide,'..','Doc')
         try :
-          indexAide=os.path.join(maD,'index.html')
-          if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
-          else                          : cmd="start "+indexAide
-          os.system(cmd)
+            indexAide=os.path.join(maD,'index.html')
+            if sys.platform[0:5]=="linux" : cmd="xdg-open "+indexAide
+            else                          : cmd="start "+indexAide
+            os.system(cmd)
         except:
-          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
+            QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
     def aideCode(self) :
         if self.code==None : return
         try :
         #if 1 :
-          if sys.platform[0:5]=="linux" : cmd="xdg-open "+self.fileDoc
-          else                          : cmd="start "+self.fileDoc
-          os.system(cmd)
+            if sys.platform[0:5]=="linux" : cmd="xdg-open "+self.fileDoc
+            else                          : cmd="start "+self.fileDoc
+            os.system(cmd)
         except:
         #else:
-          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
+            QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
 
     def optionEditeur(self) :
         try :
-           name='monOptions_'+self.code
+            name='monOptions_'+self.code
         except :
-           QMessageBox.critical( self,tr( "Parametrage"),tr( "Veuillez d abord choisir un code"))
-           return
+            QMessageBox.critical( self,tr( "Parametrage"),tr( "Veuillez d abord choisir un code"))
+            return
         try :
         #if 1:
-           optionCode=__import__(name)
+            optionCode=__import__(name)
         except :
         #else :
-           QMessageBox.critical( self, tr("Parametrage"), tr("Pas de possibilite de personnalisation de la configuration "))
-           return
+            QMessageBox.critical( self, tr("Parametrage"), tr("Pas de possibilite de personnalisation de la configuration "))
+            return
         monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.maConfiguration)
         monOption.show()
 
@@ -947,32 +947,32 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
     def cleanPath(self):
         for pathCode in self.ListePathCode:
             try:
-              aEnlever=os.path.abspath(os.path.join(os.path.dirname(__file__),'..',pathCode))
-              sys.path.remove(aEnlever)
+                aEnlever=os.path.abspath(os.path.join(os.path.dirname(__file__),'..',pathCode))
+                sys.path.remove(aEnlever)
             except :
-              pass
+                pass
         for pathCode in self.listeAEnlever:
             try:
-              sys.path.remove(aEnlever)
+                sys.path.remove(aEnlever)
             except :
-              pass
+                pass
 
 
     def closeEvent(self,event):
-      res=self.fileExit()
-      if res==2 : event.ignore()
+        res=self.fileExit()
+        if res==2 : event.ignore()
 
- 
+
     def remplitIconesCommandes(self):
         if self.maConfiguration.boutonDsMenuBar == False : return
         if not hasattr(self, 'readercata') : return
         from monLayoutBouton import MonLayoutBouton
         if hasattr(self,'monLayoutBoutonRempli') : return
         self.monLayoutBoutonRempli=MonLayoutBouton(self)
-        
+
     def handleAjoutEtape(self,nomEtape):
         self.viewmanager.handleAjoutEtape(nomEtape)
-     
+
     def metMenuAJourUtilisateurs(self):
         self.lesFonctionsUtilisateurs={}
         if self.code not in self.mesScripts : return
@@ -982,12 +982,12 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
             self.menuOptions = self.menubar.addMenu("menuOptions")
             self.menuOptions.setTitle(tr(titre))
             for elt in lesFonctions :
-               laFonctionUtilisateur, label, lesArguments = elt
-               action = QAction(self)
-               action.setText(label)
+                laFonctionUtilisateur, label, lesArguments = elt
+                action = QAction(self)
+                action.setText(label)
             #action.triggered.connect(self.appelleFonctionUtilisateur)
-               self.menuOptions.addAction(action)
-               self.lesFonctionsUtilisateurs[action]=(laFonctionUtilisateur, lesArguments)
+                self.menuOptions.addAction(action)
+                self.lesFonctionsUtilisateurs[action]=(laFonctionUtilisateur, lesArguments)
             self.menuOptions.triggered.connect(self.handleFonctionUtilisateur)
 
 

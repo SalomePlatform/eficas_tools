@@ -18,7 +18,7 @@
 #
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 from PyQt5.QtWidgets import  QFileDialog, QApplication
@@ -28,20 +28,20 @@ from Extensions.i18n import tr
 
 
 def traduction(directPath,editor,version):
-    if version == "V9V10" : 
-       from Traducteur import traduitV9V10 
-       suffixe="v10.comm"
+    if version == "V9V10" :
+        from Traducteur import traduitV9V10
+        suffixe="v10.comm"
     if version == "V10V11" :
-       from Traducteur import traduitV10V11
-       suffixe="v11.comm"
+        from Traducteur import traduitV10V11
+        suffixe="v11.comm"
     if version == "V11V12" :
-       from Traducteur import traduitV11V12
-       suffixe="v12.comm"
+        from Traducteur import traduitV11V12
+        suffixe="v12.comm"
 
-    fn = QFileDialog.getOpenFileName( 
-   			editor.appliEficas,
+    fn = QFileDialog.getOpenFileName(
+                        editor.appliEficas,
                         tr('Traduire Fichier'),
-			directPath ,
+                        directPath ,
                         tr('Fichiers JDC  (*.comm);;''Tous les Fichiers (*)'))
 
 
@@ -70,13 +70,13 @@ def traduction(directPath,editor,version):
         texte= f.read()
         f.close()
     else :
-       texte = Entete  
-       commande="diff "+FichieraTraduire+" "+FichierTraduit+" >/dev/null"
-       try :
-         if os.system(commande) == 0 :
-            texte = texte + tr("Pas de difference entre le fichier origine et le fichier traduit")
-       except :
-         pass
+        texte = Entete
+        commande="diff "+FichieraTraduire+" "+FichierTraduit+" >/dev/null"
+        try :
+            if os.system(commande) == 0 :
+                texte = texte + tr("Pas de difference entre le fichier origine et le fichier traduit")
+        except :
+            pass
 
     from .monVisu import DVisu
     titre = "conversion de "+ FichieraTraduire
@@ -84,4 +84,3 @@ def traduction(directPath,editor,version):
     monVisuDialg.setWindowTitle(titre)
     monVisuDialg.TB.setText(texte)
     monVisuDialg.show()
-

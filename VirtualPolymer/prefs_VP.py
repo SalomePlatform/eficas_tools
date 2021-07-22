@@ -39,7 +39,6 @@ catalogues=(
 )
 nombreDeBoutonParLigne=2
 closeFrameRechercheCommande = True
-closeEntete = True 
+closeEntete = True
 #closeArbre = True
 afficheOptionnelVide=False
-

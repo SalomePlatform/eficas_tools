@@ -20,8 +20,8 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
-   from builtins import range
+    from builtins import str
+    from builtins import range
 except : pass
 
 import types,os
@@ -38,63 +38,61 @@ from InterfaceQT4.qtSaisie              import SaisieValeur
 
 class MonWidgetSimpTuple(Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.parentQt.commandesLayout.insertWidget(-1,self)
         self.setFocusPolicy(Qt.StrongFocus)
 
-  def setValeurs(self):
-       valeur=self.node.item.getValeur()
-       for i in range(self.nbValeurs) :
-           nomLineEdit="lineEditVal"+str(i+1)
-           courant=getattr(self,nomLineEdit)
-           if valeur !=None: courant.setText(str(valeur[i]))
-           setattr(self,nomLineEdit,courant)
-           courant.returnPressed.connect(self.valeursPressed)
+    def setValeurs(self):
+        valeur=self.node.item.getValeur()
+        for i in range(self.nbValeurs) :
+            nomLineEdit="lineEditVal"+str(i+1)
+            courant=getattr(self,nomLineEdit)
+            if valeur !=None: courant.setText(str(valeur[i]))
+            setattr(self,nomLineEdit,courant)
+            courant.returnPressed.connect(self.valeursPressed)
 
-  def valeursPressed(self):
-      aLeFocus=self.focusWidget()
-      self.editor.afficheInfos("")
-      texteValeur=""
-      for i in range(self.nbValeurs) :
-          nomLineEdit="lineEditVal"+str(i+1)
-          courant=getattr(self,nomLineEdit)
-          if courant.text()=="" or courant.text()==None :
-             courant.setFocus(True)
-             return 
-          s=str(courant.text())
-          if hasattr(self.objSimp.definition.validators, 'typeDesTuples'):
-           if self.objSimp.definition.validators.typeDesTuples[i] == "R" :
-             if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) : 
-                 s=s+'.0'
-                 courant.setText(s)
-           if self.objSimp.definition.validators.typeDesTuples[i] == "TXM" :
-             if s[0]!='"' and s[0] != "'": 
-                if s[-1]=="'": s="'"+s
-                else :         s='"'+s
-             if s[-1]!='"' and s[-1] != "'": 
-                if s[0]=="'": s=s+"'"
-                else :        s=s+'"'
-             courant.setText(s)
-          texteValeur+=str(courant.text())
-          #print (texteValeur)
-          if i+1 != self.nbValeurs : texteValeur+=','
-      validite,commentaire=self.politique.recordValeur(texteValeur)
-      if not validite:self.editor.afficheInfos(commentaire+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
+    def valeursPressed(self):
+        aLeFocus=self.focusWidget()
+        self.editor.afficheInfos("")
+        texteValeur=""
+        for i in range(self.nbValeurs) :
+            nomLineEdit="lineEditVal"+str(i+1)
+            courant=getattr(self,nomLineEdit)
+            if courant.text()=="" or courant.text()==None :
+                courant.setFocus(True)
+                return
+            s=str(courant.text())
+            if hasattr(self.objSimp.definition.validators, 'typeDesTuples'):
+                if self.objSimp.definition.validators.typeDesTuples[i] == "R" :
+                    if (s.find('.')== -1 and s.find('e')== -1 and s.find('E')==-1) :
+                        s=s+'.0'
+                        courant.setText(s)
+                if self.objSimp.definition.validators.typeDesTuples[i] == "TXM" :
+                    if s[0]!='"' and s[0] != "'":
+                        if s[-1]=="'": s="'"+s
+                        else :         s='"'+s
+                    if s[-1]!='"' and s[-1] != "'":
+                        if s[0]=="'": s=s+"'"
+                        else :        s=s+'"'
+                    courant.setText(s)
+            texteValeur+=str(courant.text())
+            #print (texteValeur)
+            if i+1 != self.nbValeurs : texteValeur+=','
+        validite,commentaire=self.politique.recordValeur(texteValeur)
+        if not validite:self.editor.afficheInfos(commentaire+" "+str(self.objSimp.definition.validators.typeDesTuples),Qt.red)
 
-      # Passage au champ suivant
-      nom=aLeFocus.objectName()[11:]
-      try :
-        i=int(nom)+1
-      except :
+        # Passage au champ suivant
+        nom=aLeFocus.objectName()[11:]
         try :
-          i=i+1
+            i=int(nom)+1
         except :
-          return
-      if i == self.nbValeurs +1 : i=1
-      nomLineEdit="lineEditVal"+str(i)
-      courant=getattr(self,nomLineEdit)
-      courant.setFocus(True)
-          
-         
+            try :
+                i=i+1
+            except :
+                return
+        if i == self.nbValeurs +1 : i=1
+        nomLineEdit="lineEditVal"+str(i)
+        courant=getattr(self,nomLineEdit)
+        courant.setFocus(True)

@@ -54,7 +54,7 @@ class FACT(N_ENTITE.ENTITE):
     list_instance = N_MCLIST.MCList
     label = 'FACT'
 
-    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,ang="",fenetreIhm=None, 
+    def __init__(self, fr="", docu="", regles=(), statut='f', defaut=None,ang="",fenetreIhm=None,
                  min=0, max=1, validators=None, **args):
         """
             Un mot-clé facteur est caractérisé par les attributs suivants :
@@ -134,34 +134,36 @@ class FACT(N_ENTITE.ENTITE):
             for v in val:
                 if type(v) == dict or isinstance(v, _F):
                     if dicoPyxbDeConstruction :
-                       objet = self.class_instance(
-                          nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction[indice])
-                    else : 
-                       objet = self.class_instance(
-                          nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=None)
+                        objet = self.class_instance(
+                           nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction[indice])
+                    else :
+                        objet = self.class_instance(
+                           nom=nom, definition=self, val=v, parent=parent,dicoPyxbDeConstruction=None)
                     indice=indice+1
                     l.append(objet)
                 elif isinstance(v, self.class_instance):
-# if faut gerer ici --> on passe la avec une liste de concept ? 
+# if faut gerer ici --> on passe la avec une liste de concept ?
 # PNPN --> si pyxb
                     l.append(v)
                 else:
                     l.append(N_OBJECT.ErrorObj(self, v, parent, nom))
         elif type(val) == dict or isinstance(val, _F):
-             if dicoPyxbDeConstruction :
+            if dicoPyxbDeConstruction :
                 objet = self.class_instance(
                    nom=nom, definition=self, val=val, parent=parent,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
-             else : 
+            else :
                 objet = self.class_instance(
                 nom=nom, definition=self, val=val, parent=parent,dicoPyxbDeConstruction=None)
-             l.append(objet)
+            l.append(objet)
         elif isinstance(val, self.class_instance):
-# idem --> quand passe t on la 
+# idem --> quand passe t on la
             l.append(val)
         else:
             l.append(N_OBJECT.ErrorObj(self, val, parent, nom))
-        l.cata=l.jdc.cata
-        l.buildObjPyxb(l)
+        # pour tenir compte du validateFonction
+        if l.jdc :
+            l.cata=l.jdc.cata
+            l.buildObjPyxb(l)
         return l
 
     def verifCata(self):
@@ -172,5 +174,3 @@ class FACT(N_ENTITE.ENTITE):
         self.checkDocu()
         self.checkValidators()
         self.verifCataRegles()
-
-

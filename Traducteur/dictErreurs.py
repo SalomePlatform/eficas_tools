@@ -19,7 +19,7 @@
 #
 
 import logging
-from Traducteur.load import jdcSet 
+from Traducteur.load import jdcSet
 
 
 def ecritErreur(listeGena,ligne=None) :
@@ -29,23 +29,23 @@ def ecritErreur(listeGena,ligne=None) :
         maCle=maCle+"_"+Mot
     #try :
     if ( 1 == 1) :
-	maClef=maCle[1:]
+        maClef=maCle[1:]
         if maClef in dict_erreurs :
-           if ligne != None :
-	      logging.warning("ligne %d : %s ",ligne,dict_erreurs[maClef])
-           else :
-	      logging.warning("%s",dict_erreurs[maClef])
+            if ligne != None :
+                logging.warning("ligne %d : %s ",ligne,dict_erreurs[maClef])
+            else :
+                logging.warning("%s",dict_erreurs[maClef])
         else :
-           maCle=""
-           for Mot in listeGena[:-1] :
-              maCle=maCle+"_"+Mot
-	   maClef=maCle[1:]
-	   maClef=maCle+"_"+"VALEUR"
-           if maClef in dict_erreurs :
-              if ligne != None :
-	          logging.warning("ligne %d : %s ",ligne,dict_erreurs[maClef])
-              else :
-	          logging.warning("%s",dict_erreurs[maClef])
+            maCle=""
+            for Mot in listeGena[:-1] :
+                maCle=maCle+"_"+Mot
+            maClef=maCle[1:]
+            maClef=maCle+"_"+"VALEUR"
+            if maClef in dict_erreurs :
+                if ligne != None :
+                    logging.warning("ligne %d : %s ",ligne,dict_erreurs[maClef])
+                else :
+                    logging.warning("%s",dict_erreurs[maClef])
     #except :
     #    pass
 
@@ -53,10 +53,10 @@ def genereErreurPourCommande(jdc,listeCommande) :
     commands= jdc.root.childNodes[:]
     commands.reverse()
     for c in commands:
-        if type(listeCommande)==list: 
+        if type(listeCommande)==list:
             for Mot in listeCommande :
-               if c.name != Mot :continue
-               ecritErreur((Mot,),c.lineno)
+                if c.name != Mot :continue
+                ecritErreur((Mot,),c.lineno)
         else:
             if c.name != listeCommande :continue
             ecritErreur((listeCommande,),c.lineno)
@@ -70,9 +70,9 @@ def genereErreurMotCleInFact(jdc,command,fact,mocle):
             for ll in l:
                 for n in ll.childNodes:
                     if n.name != mocle:
-                       continue
- 		    else :
-                       ecritErreur((command,fact,mocle,),c.lineno)
+                        continue
+                    else :
+                        ecritErreur((command,fact,mocle,),c.lineno)
 
 def genereErreurMCF(jdc,command,fact):
     for c in jdc.root.childNodes:
@@ -80,7 +80,7 @@ def genereErreurMCF(jdc,command,fact):
         for mc in c.childNodes:
             if mc.name != fact:
                 continue
-            else : 
+            else :
                 ecritErreur((command,fact,),c.lineno)
 
 def genereErreurValeur(jdc,command,fact,list_valeur):
@@ -90,9 +90,9 @@ def genereErreurValeur(jdc,command,fact,list_valeur):
             if mc.name != fact:continue
             texte=mc.getText(jdc)
             for valeur in list_valeur:
-               trouve=texte.find(valeur)
-               if trouve > -1 :  
-                  logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,mc.lineno)
+                trouve=texte.find(valeur)
+                if trouve > -1 :
+                    logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,mc.lineno)
 
 def genereErreurValeurDsMCF(jdc,command,fact,mocle,list_valeur):
     for c in jdc.root.childNodes:
@@ -106,5 +106,5 @@ def genereErreurValeurDsMCF(jdc,command,fact,mocle,list_valeur):
                     texte=n.getText(jdc)
                     for valeur in list_valeur:
                         trouve=texte.find(valeur)
-                        if trouve > -1 :  
+                        if trouve > -1 :
                             logging.warning("%s doit etre supprimee ou modifiee dans %s : ligne %d",valeur,c.name,n.lineno)

@@ -26,12 +26,10 @@ from basestyle import STYLE,style
 
 inistylefile=os.path.join(prefsCode.repIni,"style.py")
 if os.path.isfile(inistylefile):
-   exec(compile(open(inistylefile).read(), inistylefile, 'exec'))
+    exec(compile(open(inistylefile).read(), inistylefile, 'exec'))
 
 import fontes
 for attr in dir(style):
-   if attr[0]=='_':continue
-   if not hasattr(fontes,attr):continue
-   setattr(fontes,attr,getattr(style,attr))
-
-
+    if attr[0]=='_':continue
+    if not hasattr(fontes,attr):continue
+    setattr(fontes,attr,getattr(style,attr))

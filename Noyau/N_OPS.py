@@ -19,9 +19,9 @@
 
 from __future__ import absolute_import
 try :
-   from builtins import object
+    from builtins import object
 except :
-   pass
+    pass
 from .N_utils import importObject
 
 

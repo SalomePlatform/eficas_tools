@@ -23,7 +23,7 @@
 
 from __future__ import absolute_import
 try:
-   from builtins import object
+    from builtins import object
 except : pass
 
 from .N_types import isInt, isFloat, isSequence
@@ -112,6 +112,17 @@ class UserASSDConversion(TypeConversion):
         #import traceback
         #traceback.print_stack()
         if o == None : return None
+        #print ('je cree UserASSDConversion', o, ' ', self.typeACreer)
+        nouvelObj=self.typeACreer(o)
+        return nouvelObj
+
+class UserASSDMultipleConversion(TypeConversion):
+    def __init__(self, classUser):
+        TypeConversion.__init__(self, classUser)
+
+    def function(self, o):
+        if o == None : return None
+        #print ('je cree dans UserASSDMultipleConversion', o, ' ', self.typeACreer)
         nouvelObj=self.typeACreer(o)
         return nouvelObj
 
@@ -124,6 +135,8 @@ def ConversionFactory(name, typ):
         if 'I' in typ   : return _convertI
         elif 'R' in typ : return _convertR
     if name == 'UserASSD':
-       #print(typ)
-       return (UserASSDConversion(typ))
+        #print(typ)
+        return (UserASSDConversion(typ))
+    if name == 'UserASSDMultiple':
+        return (UserASSDMultipleConversion(typ))
     return None

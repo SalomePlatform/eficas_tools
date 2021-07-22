@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import types,os
@@ -29,7 +29,7 @@ import types,os
 from Extensions.i18n import tr
 
 from .feuille               import Feuille
-from desWidgetCB           import Ui_WidgetCB 
+from desWidgetCB           import Ui_WidgetCB
 from .politiquesValidation  import PolitiqueUnique
 from .qtSaisie              import SaisieValeur
 
@@ -39,7 +39,7 @@ from PyQt5.QtWidgets import QComboBox, QCompleter
 
 class MonWidgetCB (Ui_WidgetCB,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.determineChoix()
@@ -51,27 +51,27 @@ class MonWidgetCB (Ui_WidgetCB,Feuille):
         #print self.objSimp.isOblig()
 
 
-  def setValeursApresBouton(self):
-      if self.objSimp.getValeur()==None : 
-         self.CBChoix.setCurrentIndex(-1)
-         return
-      valeur=self.objSimp.getValeur()
-      if not(type(valeur) == str) : valeur=str(valeur)
-      self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
-      
-  def determineChoix(self):
-      self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
+    def setValeursApresBouton(self):
+        if self.objSimp.getValeur()==None :
+            self.CBChoix.setCurrentIndex(-1)
+            return
+        valeur=self.objSimp.getValeur()
+        if not(type(valeur) == str) : valeur=str(valeur)
+        self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
 
-      for choix in self.monSimpDef.into:
-          if not(type(choix) == str) : choix=str(choix)
-          self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
-          self.CBChoix.addItem(choix)
-      self.CBChoix.setEditable(True)
-      monCompleteur=QCompleter(listeChoix,self) 
-      monCompleteur.setCompletionMode(QCompleter.PopupCompletion) 
-      self.CBChoix.setCompleter(monCompleteur)
+    def determineChoix(self):
+        self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
 
-  def choixSaisi(self):
-      valeur=str(self.CBChoix.currentText())
-      SaisieValeur.LEvaleurPressed(self,valeur)
-      self.reaffiche()
+        for choix in self.monSimpDef.into:
+            if not(type(choix) == str) : choix=str(choix)
+            self.CBChoix.currentIndexChanged.connect(self.choixSaisi)
+            self.CBChoix.addItem(choix)
+        self.CBChoix.setEditable(True)
+        monCompleteur=QCompleter(listeChoix,self)
+        monCompleteur.setCompletionMode(QCompleter.PopupCompletion)
+        self.CBChoix.setCompleter(monCompleteur)
+
+    def choixSaisi(self):
+        valeur=str(self.CBChoix.currentText())
+        SaisieValeur.LEvaleurPressed(self,valeur)
+        self.reaffiche()

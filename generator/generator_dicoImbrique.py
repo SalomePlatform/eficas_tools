@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import traceback
@@ -31,121 +31,120 @@ from Extensions.i18n import tr
 from .generator_python import PythonGenerator
 
 def entryPoint():
-   """
-      Retourne les informations necessaires pour le chargeur de plugins
-      Ces informations sont retournees dans un dictionnaire
-   """
-   return {
-        # Le nom du plugin
-          'name' : 'dicoImbrique',
-        # La factory pour creer une instance du plugin
-          'factory' : DicoImbriqueGenerator,
-          }
+    """
+       Retourne les informations necessaires pour le chargeur de plugins
+       Ces informations sont retournees dans un dictionnaire
+    """
+    return {
+         # Le nom du plugin
+           'name' : 'dicoImbrique',
+         # La factory pour creer une instance du plugin
+           'factory' : DicoImbriqueGenerator,
+           }
 
 
 class DicoImbriqueGenerator(PythonGenerator):
-   """
-      Ce generateur parcourt un objet de type JDC et produit
-      un texte au format eficas et 
-      un texte au format dictionnaire
+    """
+       Ce generateur parcourt un objet de type JDC et produit
+       un texte au format eficas et
+       un texte au format dictionnaire
 
-   """
-   # Les extensions de fichier permis?
-   extensions=('.comm',)
+    """
+    # Les extensions de fichier permis?
+    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None, appliEficas=None):
-       
-      self.initDico()
-      
-      # Cette instruction genere le contenu du fichier de commandes (persistance)
-      self.text=PythonGenerator.gener(self,obj,format)
-      #print (self.text)
-      print (self.Dico)
-      return self.text
+    def gener(self,obj,format='brut',config=None, appliEficas=None):
+
+        self.initDico()
+
+        # Cette instruction genere le contenu du fichier de commandes (persistance)
+        self.text=PythonGenerator.gener(self,obj,format)
+        #print (self.text)
+        print (self.Dico)
+        return self.text
 
 
 
 #----------------------------------------------------------------------------------------
 # initialisations
 #----------------------------------------------------------------------------------------
-   
-   def initDico(self) :
- 
-      self.Dico={}
-      self.DicoDejaLa={}
-      self.Entete = ''
+
+    def initDico(self) :
+
+        self.Dico={}
+        self.DicoDejaLa={}
+        self.Entete = ''
 
 
 #----------------------------------------------------------------------------------------
 # ecriture
 #----------------------------------------------------------------------------------------
 
-   def writeDefault(self,fn) :
-       fileDico = fn[:fn.rfind(".")] + '.py'
-       f = open( str(fileDico), 'wb')
+    def writeDefault(self,fn) :
+        fileDico = fn[:fn.rfind(".")] + '.py'
+        f = open( str(fileDico), 'w')
 
-       f.write( self.Entete + "Dico =" + str(self.Dico) )
-       f.close()
+        f.write( "Dico =" + str(self.Dico) )
+        #f.write( self.Entete + "Dico =" + str(self.Dico) )
+        f.close()
 
 #----------------------------------------------------------------------------------------
-#  analyse de chaque noeud de l'arbre 
+#  analyse de chaque noeud de l'arbre
 #----------------------------------------------------------------------------------------
 
-   def generMCSIMP(self,obj) :
+    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
 
         s=PythonGenerator.generMCSIMP(self,obj)
         if obj.isInformation() : return s
-        if not obj.isValid() :  return s 
+        if not obj.isValid() :  return s
 
-        liste=obj.getGenealogiePrecise() 
+        liste=obj.getGenealogiePrecise()
 
         if obj.etape.nom=='MODIFICATION_CATALOGUE' : return s
         nom = obj.etape.nom
-        
-        if hasattr(obj.etape,'sdnom') and obj.etape.sdnom != None and obj.etape.sdnom != "" : 
-           nom = nom+ obj.etape.sdnom
+
+        if hasattr(obj.etape,'sdnom') and obj.etape.sdnom != None and obj.etape.sdnom != "" :
+            nom = nom+ obj.etape.sdnom
 
         if not(nom in self.Dico) : dicoCourant={}
         else : dicoCourant=self.Dico [nom]
 
         nomFeuille=liste[-1]
         if nomFeuille in dicoCourant or nomFeuille in self.DicoDejaLa:
-           if nomFeuille in self.DicoDejaLa:
-              nomTravail= nomFeuille +'_'+str(self.DicoDejaLa[nomFeuille])
-              self.DicoDejaLa[nomFeuille]=self.DicoDejaLa[nomFeuille]+1
-              nomFeuille=nomTravail
-           else :
-              self.DicoDejaLa[nomFeuille]=3
-              nom1=nomFeuille +'_1'
-              dicoCourant[nom1]= dicoCourant[nomFeuille]
-              del dicoCourant[nomFeuille]
-              nomFeuille=nomFeuille +'_2'
+            if nomFeuille in self.DicoDejaLa:
+                nomTravail= nomFeuille +'_'+str(self.DicoDejaLa[nomFeuille])
+                self.DicoDejaLa[nomFeuille]=self.DicoDejaLa[nomFeuille]+1
+                nomFeuille=nomTravail
+            else :
+                self.DicoDejaLa[nomFeuille]=3
+                nom1=nomFeuille +'_1'
+                dicoCourant[nom1]= dicoCourant[nomFeuille]
+                del dicoCourant[nomFeuille]
+                nomFeuille=nomFeuille +'_2'
 
 
         if hasattr(obj.valeur,'nom'): dicoCourant[nomFeuille]=obj.valeur.nom
-        else : 
-           if type(obj.valeur)  in (list,tuple):
-              try :
+        else :
+            if type(obj.valeur)  in (list,tuple):
+                try :
 #PNPNPN a remplacer par plus propre
-                 if obj.definition.validators.typeDesTuples[0] !='R' :
-                    val=[]
-                    elt=[]
-                    for tupleElt in obj.valeur :
-                        elt=(str(tupleElt[0]),tupleElt[1])
-                        val.append(elt)
-                    dicoCourant[nomFeuille]=val
-                 else :
-                    dicoCourant[nomFeuille]=obj.valeur
-              except :
-                 dicoCourant[nomFeuille]=obj.valeurFormatee
-           #else :dicoCourant[nomFeuille]=obj.valeurFormatee
-           else :
-              dicoCourant[nomFeuille]=obj.valeurFormatee
-              #print nomFeuille, obj.valeurFormatee
+                    if obj.definition.validators.typeDesTuples[0] !='R' :
+                        val=[]
+                        elt=[]
+                        for tupleElt in obj.valeur :
+                            elt=(str(tupleElt[0]),tupleElt[1])
+                            val.append(elt)
+                        dicoCourant[nomFeuille]=val
+                    else :
+                        dicoCourant[nomFeuille]=obj.valeur
+                except :
+                    dicoCourant[nomFeuille]=obj.valeurFormatee
+            #else :dicoCourant[nomFeuille]=obj.valeurFormatee
+            else :
+                dicoCourant[nomFeuille]=obj.valeurFormatee
+                #print nomFeuille, obj.valeurFormatee
         self.Dico[nom]=dicoCourant
 
         return s
-
-  

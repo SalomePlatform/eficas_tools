@@ -26,10 +26,10 @@ from Extensions.i18n import tr
 
 from .feuille               import Feuille
 from .monWidgetSimpBase     import MonWidgetSimpBase
-from desWidgetHeure       import Ui_WidgetHeure 
+from desWidgetHeure       import Ui_WidgetHeure
 
 
 class MonWidgetHeure (Ui_WidgetHeure,MonWidgetSimpBase):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         MonWidgetSimpBase.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)

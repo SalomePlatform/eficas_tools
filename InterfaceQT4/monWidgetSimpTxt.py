@@ -24,14 +24,12 @@ import types,os
 # Modules Eficas
 from Extensions.i18n import tr
 
-from desWidgetSimpTxt  import Ui_WidgetSimpTxt 
+from desWidgetSimpTxt  import Ui_WidgetSimpTxt
 from .monWidgetSimpBase     import MonWidgetSimpBase
 
 
 class MonWidgetSimpTxt (Ui_WidgetSimpTxt,MonWidgetSimpBase):
 # c est juste la taille des differents widgets de base qui change
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         MonWidgetSimpBase.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-
-

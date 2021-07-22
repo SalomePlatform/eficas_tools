@@ -26,8 +26,8 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
-   from builtins import range
+    from builtins import str
+    from builtins import range
 except : pass
 import os
 import traceback
@@ -183,7 +183,7 @@ Causes possibles :
            Cette methode execute le jeu de commandes compile dans le contexte
            self.g_context de l'objet JDC
         """
-      
+
         CONTEXT.setCurrentStep(self)
         # Le module nommage utilise le module linecache pour acceder
         # au source des commandes du jeu de commandes.
@@ -199,10 +199,10 @@ Causes possibles :
                     init2 = "from " + obj_cata.__name__ + " import *"
                     exec(init2, self.g_context)
                 else :
-                   # ici on a un catalogue en grammaire Eficas XML
-                   # il faut ajouter ce qu on a construit au contexte
-                   for (k,v) in obj_cata.contexteXML.items() :
-                       self.g_context[k]=v
+                    # ici on a un catalogue en grammaire Eficas XML
+                    # il faut ajouter ce qu on a construit au contexte
+                    for (k,v) in obj_cata.contexteXML.items() :
+                        self.g_context[k]=v
             # Initialisation du contexte global pour l'evaluation des conditions de BLOC
             # On utilise une copie de l'initialisation du contexte du jdc
             self.condition_context = self.g_context.copy()
@@ -259,7 +259,7 @@ Causes possibles :
         except NameError as e:
             etype, value, tb = sys.exc_info()
             l = traceback.extract_tb(tb)
-            s = traceback.format_exception_only(NameError, e)
+            s = traceback.format_exception_only("Erreur de nom", e)[0][:-1]
             msg = "erreur de syntaxe,  %s ligne %d" % (s, l[-1][1])
             if CONTEXT.debug:
                 traceback.print_exc()
@@ -396,9 +396,9 @@ Causes possibles :
     def regUserSD(self,sd):
     # utilisee pour creer les references
     # se contente d appeler la methode equivalente sur le jdc
-      id=self.regSD(sd)
-      self.nommerSDProd(sd,sd.nom)
-      return id
+        id=self.regSD(sd)
+        self.nommerSDProd(sd,sd.nom)
+        return id
 
 
     def regSD(self, sd):
@@ -451,9 +451,9 @@ Causes possibles :
         #        if os.path.exists("fort." + str(unite)):
         #            fname = "fort." + str(unite)
         if fname == None:
-           raise AsException("Impossible de trouver le fichier correspondant")
+            raise AsException("Impossible de trouver le fichier correspondant")
         if not os.path.exists(fname):
-                raise AsException(fname + " n'est pas un fichier existant" )
+            raise AsException(fname + " n'est pas un fichier existant" )
         fproc = open(fname, 'r')
         text = fproc.read()
         fproc.close()
@@ -646,6 +646,17 @@ Causes possibles :
             print((' `- JDC sdAccessible : PAR_LOT =', self.parLot))
         return self.parLot == 'NON'
 
+    def getEtapesByName(self,name):
+        listeDEtapes=[]
+        for e in self.etapes :
+            if e.nom  == name : listeDEtapes.append(e) 
+        return listeDEtapes
+
+    def getEtapeByConceptName(self,conceptName):
+        for e in self.etapes :
+            if e.sdnom  == conceptName :  return e 
+
+
     def _build_reserved_kw_list(self):
         """Construit la liste des mots-cles reserves (interdits pour le
         nommage des concepts)."""
@@ -658,5 +669,4 @@ Causes possibles :
         self._reserved_kw.difference_update(
             ['OPER', 'MACRO', 'BLOC', 'SIMP', 'FACT', 'FORM',
              'GEOM', 'MCSIMP', 'MCFACT'])
-
 

@@ -1,19 +1,19 @@
 class Tuple:
-  def __init__(self,ntuple):
-    self.ntuple=ntuple
+    def __init__(self,ntuple):
+        self.ntuple=ntuple
 
-  def __convert__(self,valeur):
-    if type(valeur) == types.StringType:
-      return None
-    if len(valeur) != self.ntuple:
-      return None
-    return valeur
+    def __convert__(self,valeur):
+        if type(valeur) == types.StringType:
+            return None
+        if len(valeur) != self.ntuple:
+            return None
+        return valeur
 
-  def info(self):
-    return "Tuple de %s elements" % self.ntuple
+    def info(self):
+        return "Tuple de %s elements" % self.ntuple
 
-  __repr__=info
-  __str__=info
+    __repr__=info
+    __str__=info
 
 
 
@@ -22,38 +22,38 @@ def inverseDico(dicoSource) :
     dicoInverse = {}
     for (clef,valeur) in dicoSource.items():
         if not(type(valeur) is tuple):
-           dicoInverse[valeur]=clef
-           continue
+            dicoInverse[valeur]=clef
+            continue
         (elt,att)=valeur
         if elt not in dicoInverse : dicoInverse[elt]={}
         dicoInverse[elt][att]=clef
     return dicoInverse
-     
+
 dictSIMPEficasXML= { 'typ'        : 'nomTypeAttendu',
-                     'statut'     : 'statut', 
+                     'statut'     : 'statut',
                      'min'        : 'minOccurences',
-                     'max'        : 'maxOccurences', 
-                     'homo'       : 'homo'       , 
-                     'position'   : 'portee', 
-                     'validators' : 'validators' , 
+                     'max'        : 'maxOccurences',
+                     'homo'       : 'homo'       ,
+                     'position'   : 'portee',
+                     'validators' : 'validators' ,
                      'sug'        : 'valeurSugg',
-                     'defaut'     : 'valeurDef' , 
-                     'into'       : ('plageValeur','into'), 
-                     'val_min'    : ('plageValeur','borneInf'), 
+                     'defaut'     : 'valeurDef' ,
+                     'into'       : ('plageValeur','into'),
+                     'val_min'    : ('plageValeur','borneInf'),
                      'val_max'    : ('plageValeur','borneSup'),
-                     'ang'        : ('doc','ang'), 
+                     'ang'        : ('doc','ang'),
                      'fr'         : ('doc','fr',),
                      'docu'       : ('doc','docu'),
                    }
 
 dictSIMPXMLEficas= inverseDico(dictSIMPEficasXML)
 
- 
 
-dictFACTEficasXML = { 'statut'     : 'statut', 
+
+dictFACTEficasXML = { 'statut'     : 'statut',
                       'min'        : 'minOccurences',
-                      'max'        : 'maxOccurences', 
-                      'ang'        : ('doc','ang'), 
+                      'max'        : 'maxOccurences',
+                      'ang'        : ('doc','ang'),
                       'fr'         : ('doc','fr',),
                       'docu'       : ('doc','docu'),
                       'regles'     : 'regles',
@@ -62,8 +62,8 @@ dictFACTEficasXML = { 'statut'     : 'statut',
 
 dictFACTXMLEficas =  inverseDico(dictFACTEficasXML)
 
-dictBLOCEficasXML = { 'statut'     : 'statut', 
-                      'ang'        : ('doc','ang'), 
+dictBLOCEficasXML = { 'statut'     : 'statut',
+                      'ang'        : ('doc','ang'),
                       'fr'         : ('doc','fr',),
                       'regles'     : 'regles',
                       'condition'  : 'condition' ,
@@ -73,7 +73,7 @@ dictBLOCXMLEficas =  inverseDico(dictBLOCEficasXML)
 
 dictPROCEficasXML =  { 'nom'        : 'nom',
                        'regles'     : 'regles',
-                       'ang'        : ('doc','ang'), 
+                       'ang'        : ('doc','ang'),
                        'fr'         : ('doc','fr',),
                        'docu'       : ('doc','docu'),
                       }
@@ -90,28 +90,28 @@ listeParamDeTypeTypeAttendu = ( 'defaut', 'sug', 'val_min', 'val_max', 'into', '
 listeParamDeTypeStr         = ('fr', 'docu', 'ang', 'nom' )
 
 listeParamTjsSequence        = ('into' , 'intoSug')
-listeParamSelonType           = ('defaut', 'sug', 'into', 'intoSug') 
+listeParamSelonType           = ('defaut', 'sug', 'into', 'intoSug')
 
 if __name__ == "__main__":
-   import pprint
-   pp=pprint.PrettyPrinter(indent=4)
-   print ('dictSIMPEficasXML')
-   pp.pprint(dictSIMPEficasXML)
-   print ('\n\n')
-   print ('dictSIMPXMLEficas')
-   pp.pprint(dictSIMPXMLEficas)
-   print ('\n\n')
-   print ('dictFACTEficasXML')
-   pp.pprint(dictFACTEficasXML)
-   print ('\n\n')
-   print ('dictFACTXMLEficas')
-   pp.pprint(dictFACTXMLEficas)
-   print ('\n\n')
-   print ('dictPROCEficasXML')
-   pp.pprint(dictPROCEficasXML)
-   print ('\n\n')
-   print ('dictPROCXMLEficas')
-   pp.pprint(dictPROCXMLEficas)
-   print ('\n\n')
-   print ('dictNomsDesTypes')
-   pp.pprint(dictNomsDesTypes )
+    import pprint
+    pp=pprint.PrettyPrinter(indent=4)
+    print ('dictSIMPEficasXML')
+    pp.pprint(dictSIMPEficasXML)
+    print ('\n\n')
+    print ('dictSIMPXMLEficas')
+    pp.pprint(dictSIMPXMLEficas)
+    print ('\n\n')
+    print ('dictFACTEficasXML')
+    pp.pprint(dictFACTEficasXML)
+    print ('\n\n')
+    print ('dictFACTXMLEficas')
+    pp.pprint(dictFACTXMLEficas)
+    print ('\n\n')
+    print ('dictPROCEficasXML')
+    pp.pprint(dictPROCEficasXML)
+    print ('\n\n')
+    print ('dictPROCXMLEficas')
+    pp.pprint(dictPROCXMLEficas)
+    print ('\n\n')
+    print ('dictNomsDesTypes')
+    pp.pprint(dictNomsDesTypes )

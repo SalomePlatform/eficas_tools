@@ -22,12 +22,12 @@ tuples, or atoms.
 
 """
 from __future__ import absolute_import
-try : 
-  from builtins import zip
-  from builtins import map
-  from builtins import range
-except : 
-  pass
+try :
+    from builtins import zip
+    from builtins import map
+    from builtins import range
+except :
+    pass
 from .eficas_exception import EficasException
 
 import re
@@ -137,7 +137,7 @@ def _reformat_qstring_from_atom(qstring, params):
 
     Module-internal method.
     Returns a formatted string from an unformatted string
-    and an integer or a float specifying the parameter of 
+    and an integer or a float specifying the parameter of
     the string.
     """
     from PyQt5.QtCore import QRegExp
@@ -186,7 +186,7 @@ def _reformat_qstring_from_list(qstring, params):
 
     Module-internal method.
     Returns a formatted string from an unformatted string
-    and a list whose concatenation specifies the parameter 
+    and a list whose concatenation specifies the parameter
     of the string.
     """
     # XXX to add further functionality, e.g. list processing
@@ -208,9 +208,9 @@ def _reformat_qstring_from_list(qstring, params):
 def _preprocess_atom(string):
     """
     _preprocess_atom(string-or-number-or-unicode) -> unicode
-    Test if input is a Unicode object or a number; if so, then return it; 
-    otherwise, test if the input is a string; if so, then try to create 
-    a Unicode object out of it. To this end, assume the string is encoded 
+    Test if input is a Unicode object or a number; if so, then return it;
+    otherwise, test if the input is a string; if so, then try to create
+    a Unicode object out of it. To this end, assume the string is encoded
     in utf-8; if this fails, then assume the string is encoded in Latin-9.
     """
     if isinstance(string, (six.text_type, int, float, complex)):
@@ -224,8 +224,8 @@ def _preprocess_atom(string):
 def _str_toUnicode(string):
     """
     _str_toUnicode(string) -> unicode
-    Tries to create a Unicode object out of the input string; assumes 
-    the string is UTF-8 encoded; if not, then assume the string is 
+    Tries to create a Unicode object out of the input string; assumes
+    the string is UTF-8 encoded; if not, then assume the string is
     Latin-9 encoded.
     """
     try:
@@ -241,15 +241,15 @@ def _str_toUnicode(string):
 def tr(string, *args):
     """tr(string-or-unicode, iterable-or-float-or-int) -> unicode
        tr(string-or-unicode) -> unicode
-       
-       Returns a formatted Unicode object from an unformatted 
-       string or Unicode object with formatting specifications, and, 
+
+       Returns a formatted Unicode object from an unformatted
+       string or Unicode object with formatting specifications, and,
        optionally, an iterable or an int or float.
        Lets Python do the string formatting."""
     try :
-      from PyQt5.QtWidgets import QApplication
+        from PyQt5.QtWidgets import QApplication
     except :
-      return string
+        return string
 
     string = _preprocess_atom(string)
     if len(args) == 0:
@@ -293,9 +293,9 @@ def tr(string, *args):
 def tr_qt(string, *args):
     """tr_qt(string, iterable-or-float-or-int) -> unicode
        t_qtr(string) -> unicode
-       
-       Returns a formatted string from an unformatted 
-       Unicode string with formatting specifications, and, 
+
+       Returns a formatted string from an unformatted
+       Unicode string with formatting specifications, and,
        optionally, an iterable or an int or float.
        Lets PyQt4 do the string formatting. To this end,
        a conversion from Python to Qt string formatting
@@ -312,7 +312,7 @@ def tr_qt(string, *args):
                     r = _reformat_qstring_from_dict(r, args[0])
                 elif isinstance(args[0], tuple):
                     r = _reformat_qstring_from_tuple(r, args[0])
-            # XXX Pay attention to this: distinguish between tuple, 
+            # XXX Pay attention to this: distinguish between tuple,
             # dict and dict with key given in string.
             elif r.count("%") in range(2) and r.count("%(") == 0:
                 r = _reformat_qstring_from_atom(r, _preproces_atom(repr(args[0])))

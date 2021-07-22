@@ -21,8 +21,8 @@
   La classe CONNECTOR sert a enregistrer les observateurs d'objets et a delivrer
   les messages emis a ces objets.
 
-  Le principe general est le suivant : un objet (subscriber) s'enregistre aupres du 
-  connecteur global (theconnector) pour observer un objet emetteur de messages (publisher) 
+  Le principe general est le suivant : un objet (subscriber) s'enregistre aupres du
+  connecteur global (theconnector) pour observer un objet emetteur de messages (publisher)
   sur un canal donne (channel). Il demande a etre notifie par appel d'une fonction (listener).
   La sequence est donc :
 
@@ -46,147 +46,145 @@ class ConnectorError(Exception):
 
 class CONNECTOR:
 
-  def __init__(self):
-    self.connections={}
+    def __init__(self):
+        self.connections={}
 
-  def Connect(self, object, channel, function, args):
-    #print ("Connect",object, channel, function, args)
-    idx = id(object)
-    #if self.connections.has_key(idx):
-    if idx in self.connections :
-       channels = self.connections[idx]
-    else:
-       channels = self.connections[idx] = {}
+    def Connect(self, object, channel, function, args):
+        #print ("Connect",object, channel, function, args)
+        idx = id(object)
+        #if self.connections.has_key(idx):
+        if idx in self.connections :
+            channels = self.connections[idx]
+        else:
+            channels = self.connections[idx] = {}
 
-    #if channels.has_key(channel):
-    if channel in channels :
-       receivers = channels[channel]
-    else:
-       receivers = channels[channel] = []
+        #if channels.has_key(channel):
+        if channel in channels :
+            receivers = channels[channel]
+        else:
+            receivers = channels[channel] = []
 
-    for funct,fargs in receivers[:]:
-        if funct() is None:
-           receivers.remove((funct,fargs))
-        elif (function,args) == (funct(),fargs):
-           receivers.remove((funct,fargs))
+        for funct,fargs in receivers[:]:
+            if funct() is None:
+                receivers.remove((funct,fargs))
+            elif (function,args) == (funct(),fargs):
+                receivers.remove((funct,fargs))
 
-    receivers.append((ref(function),args))
-    
-
-  def Disconnect(self, object, channel, function, args):
-    try:
-       receivers = self.connections[id(object)][channel]
-    except KeyError:
-       raise ConnectorError (
-            'no receivers for channel %s of %s' % (channel, object))
-
-    for funct,fargs in receivers[:]:
-        if funct() is None:
-           receivers.remove((funct,fargs))
-
-    for funct,fargs in receivers:
-        if (function,args) == (funct(),fargs):
-           receivers.remove((funct,fargs))
-           if not receivers:
-              # the list of receivers is empty now, remove the channel
-              channels = self.connections[id(object)]
-              del channels[channel]
-              if not channels:
-                 # the object has no more channels
-                 del self.connections[id(object)]
-           return
-
-    raise ConnectorError(
-          'receiver %s%s is not connected to channel %s of %s' \
-          % (function, args, channel, object))
+        receivers.append((ref(function),args))
 
 
+    def Disconnect(self, object, channel, function, args):
+        try:
+            receivers = self.connections[id(object)][channel]
+        except KeyError:
+            raise ConnectorError (
+                 'no receivers for channel %s of %s' % (channel, object))
 
-  def Emit(self, object, channel, *args):
-    #print "Emit",object, channel, args
-    try:
-       receivers = self.connections[id(object)][channel]
-    except KeyError:
-       return
-    #print "Emit",object, channel, receivers
-    # Attention : copie pour eviter les pbs lies aux deconnexion reconnexion
-    # pendant l'execution des emit
-    for rfunc, fargs in copy(receivers):
-       try:
-          func=rfunc()
-          if func:
-             #print (func,args,fargs)
-             #rint args + fargs
-             #apply(func, args + fargs)
-             if args + fargs == () : func()
-             else : func ( args + fargs)
-          else:
-             # Le receveur a disparu
-             if (rfunc,fargs) in receivers:receivers.remove((rfunc,fargs))
-       except:
-          traceback.print_exc()
+        for funct,fargs in receivers[:]:
+            if funct() is None:
+                receivers.remove((funct,fargs))
+
+        for funct,fargs in receivers:
+            if (function,args) == (funct(),fargs):
+                receivers.remove((funct,fargs))
+                if not receivers:
+                    # the list of receivers is empty now, remove the channel
+                    channels = self.connections[id(object)]
+                    del channels[channel]
+                    if not channels:
+                        # the object has no more channels
+                        del self.connections[id(object)]
+                return
+
+        raise ConnectorError(
+              'receiver %s%s is not connected to channel %s of %s' \
+              % (function, args, channel, object))
+
+
+
+    def Emit(self, object, channel, *args):
+        #print "Emit",object, channel, args
+        try:
+            receivers = self.connections[id(object)][channel]
+        except KeyError:
+            return
+        #print "Emit",object, channel, receivers
+        # Attention : copie pour eviter les pbs lies aux deconnexion reconnexion
+        # pendant l'execution des emit
+        for rfunc, fargs in copy(receivers):
+            try:
+                func=rfunc()
+                if func:
+                    #print (func,args,fargs)
+                    #rint args + fargs
+                    #apply(func, args + fargs)
+                    if args + fargs == () : func()
+                    else : func ( args + fargs)
+                else:
+                    # Le receveur a disparu
+                    if (rfunc,fargs) in receivers:receivers.remove((rfunc,fargs))
+            except:
+                traceback.print_exc()
 
 def ref(target,callback=None):
-   #if hasattr(target,"im_self"):
-   #   return BoundMethodWeakref(target)
-   if hasattr(target,"__self__"):
-      return BoundMethodWeakref(target)
-   else:
-      return weakref.ref(target,callback)
+    #if hasattr(target,"im_self"):
+    #   return BoundMethodWeakref(target)
+    if hasattr(target,"__self__"):
+        return BoundMethodWeakref(target)
+    else:
+        return weakref.ref(target,callback)
 
 class BoundMethodWeakref(object):
-   def __init__(self,callable):
-       #self.Self=weakref.ref(callable.im_self)
-       #self.Func=weakref.ref(callable.im_func)
-       self.Self=weakref.ref(callable.__self__)
-       self.Func=weakref.ref(callable.__func__)
+    def __init__(self,callable):
+            #self.Self=weakref.ref(callable.im_self)
+            #self.Func=weakref.ref(callable.im_func)
+        self.Self=weakref.ref(callable.__self__)
+        self.Func=weakref.ref(callable.__func__)
 
-   def __call__(self):
-       target=self.Self()
-       if not target:return None
-       func=self.Func()
-       if func:
-          return func.__get__(self.Self())
+    def __call__(self):
+        target=self.Self()
+        if not target:return None
+        func=self.Func()
+        if func:
+            return func.__get__(self.Self())
 
 _the_connector =CONNECTOR()
 Connect = _the_connector.Connect
-Emit = _the_connector.Emit 
+Emit = _the_connector.Emit
 Disconnect = _the_connector.Disconnect
 
 if __name__ == "__main__":
-   class A:
-     pass
+    class A:
+        pass
 
-   class B:
-     def add(self,a):
-       print(("--------------------------------add ", self , a))
+    class B:
+        def add(self,a):
+            print(("--------------------------------add ", self , a))
 
-     def __del__(self):
-       print(("__del__", self))
+        def __del__(self):
+            print(("__del__", self))
 
-   def f(a):
-     print((f, a))
+    def f(a):
+        print((f, a))
 
-   a=A()
-   b=B()
-   c=B()
+    a=A()
+    b=B()
+    c=B()
 
-   Connect(a,"add",b.add,())
-   Connect(a,"add",b.add,())
-   Connect(a,"add",c.add,())
-   Connect(a,"add",f,())
+    Connect(a,"add",b.add,())
+    Connect(a,"add",b.add,())
+    Connect(a,"add",c.add,())
+    Connect(a,"add",f,())
 
-   Emit(a,"add",1)
+    Emit(a,"add",1)
 
-   print ("del b")
-   del b
+    print ("del b")
+    del b
 
-   Emit(a,"add",1)
-   print ("del f")
-   del f
+    Emit(a,"add",1)
+    print ("del f")
+    del f
 
-   Emit(a,"add",1)
-   Disconnect(a,"add",c.add,())
-   Emit(a,"add",1)
-
-
+    Emit(a,"add",1)
+    Disconnect(a,"add",c.add,())
+    Emit(a,"add",1)

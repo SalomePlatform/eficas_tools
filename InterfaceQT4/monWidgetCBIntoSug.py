@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import types,os
@@ -39,21 +39,19 @@ from PyQt5.QtCore import Qt
 from monWidgetCB            import MonWidgetCBCommun
 from monWidgetIntoSug       import GereAjoutDsPossible
 
-      
+
 class MonWidgetCBIntoSug (MonWidgetCBCommun, Ui_WidgetCBIntoSug,GereAjoutDsPossible):
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-      self.maListeDeValeur=monSimpDef.into
-      if node.item.hasIntoSug()          : self.maListeDeValeur  = node.item.getListePossibleAvecSug([])
-      if hasattr(node.item,'suggestion') : self.maListeDeValeur +=  node.item.suggestion
-      MonWidgetCBCommun. __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
-      self.lineEditVal.returnPressed.connect(self.LEValeurAjouteDsPossible)
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        self.maListeDeValeur=monSimpDef.into
+        if node.item.hasIntoSug()          : self.maListeDeValeur  = node.item.getListePossibleAvecSug([])
+        if hasattr(node.item,'suggestion') : self.maListeDeValeur +=  node.item.suggestion
+        MonWidgetCBCommun. __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+        self.lineEditVal.returnPressed.connect(self.LEValeurAjouteDsPossible)
 
-  def ajouteValeurPossible(self,valeur):
-      self.CBChoix.addItem(valeur)
-      # on ne sait pas si on a deja ajouté une valeur
-      try    : self.node.item.suggestion.append(valeur)
-      except : self.node.item.suggestion = (valeur,)
-      self.lineEditVal.setText('')
-      self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur));
-      
-
+    def ajouteValeurPossible(self,valeur):
+        self.CBChoix.addItem(valeur)
+        # on ne sait pas si on a deja ajouté une valeur
+        try    : self.node.item.suggestion.append(valeur)
+        except : self.node.item.suggestion = (valeur,)
+        self.lineEditVal.setText('')
+        self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur));

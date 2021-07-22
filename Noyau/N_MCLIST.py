@@ -26,17 +26,17 @@
 
 from __future__ import absolute_import
 try :
-   from future import standard_library
-   standard_library.install_aliases()
-except : 
-   pass
+    from future import standard_library
+    standard_library.install_aliases()
+except :
+    pass
 from copy import copy
 import types
 
 try:
-   from UserList import UserList
+    from UserList import UserList
 except ImportError:
-   from collections import UserList
+    from collections import UserList
 
 
 
@@ -116,6 +116,15 @@ class MCList(UserList):
         # si on passe ici, c'est que l'on demande un fils qui n'est pas possible --> erreur
         # print "Erreur : %s ne peut etre un descendant de %s" %(name,self.nom)
         return None
+
+    def getAllChild(self, name):
+    # A utiliser uniquement dans un filtre
+        maListeRetour= MCList()
+        for obj in self.data:
+            for objFils in obj.getChild(name) :
+                maListeRetour.append(objFils)
+        return maListeRetour
+
 
     def isBLOC(self):
         """
@@ -242,7 +251,7 @@ class MCList(UserList):
                     del dico[i]
             dresu.append(dico)
         return dresu
-    
+
     def longueurDsArbre(self):
     # pour Pyxb : longueur  dans le orderedcontent de pyxb
         return len(self)

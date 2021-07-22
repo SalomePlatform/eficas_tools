@@ -22,21 +22,20 @@
    pour traiter les niveaux au sein d'un JDC
 """
 from __future__ import absolute_import
-try : 
-   from builtins import object
+try :
+    from builtins import object
 except : pass
 
 from . import etape_niveau
 
 class JDC(object):
-  def __init__(self):
-    self.dict_niveaux={}
-    self.buildNiveaux()
+    def __init__(self):
+        self.dict_niveaux={}
+        self.buildNiveaux()
 
-  def buildNiveaux(self):
-    for niveau in self.definition.l_niveaux:
-      etape_niv = etape_niveau.ETAPE_NIVEAU(niveau,self)
-      self.etapes_niveaux.append(etape_niv)
-      self.dict_niveaux[niveau.nom]=etape_niv
-      self.dict_niveaux.update(etape_niv.dict_niveaux)
-
+    def buildNiveaux(self):
+        for niveau in self.definition.l_niveaux:
+            etape_niv = etape_niveau.ETAPE_NIVEAU(niveau,self)
+            self.etapes_niveaux.append(etape_niv)
+            self.dict_niveaux[niveau.nom]=etape_niv
+            self.dict_niveaux.update(etape_niv.dict_niveaux)

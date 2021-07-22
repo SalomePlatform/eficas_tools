@@ -18,39 +18,38 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce module contient la classe 3Dpilote qui va creer les ordres 
+   Ce module contient la classe 3Dpilote qui va creer les ordres
    de pilotage de l idl PAL pour un element de structure
 """
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import object
+    from builtins import object
 except :
-   pass
+    pass
 import generator
 from Extensions.i18n import tr
 
 class TroisDPilote(object):
 
-   def __init__(self,node,appliEficas):
-      self.node=node
-      self.appliEficas=appliEficas
+    def __init__(self,node,appliEficas):
+        self.node=node
+        self.appliEficas=appliEficas
 
-   def envoievisu(self):
-      """ 
-      """
-      format="vers3DSalome"
-      if format in generator.plugins :
-         # Le generateur existe on l'utilise
-         g=generator.plugins[format]()
-         g.initJdc(self.node.getJdc())
-         texte=g.gener(self.node)
-      else:
-         print ("Le generateur n'a pas ete trouve")
-         print ("Erreur ! Erreur!")
-         return ""
-      from Extensions.param2 import originalMath
-      originalMath.toOriginal()
-      self.appliEficas.envoievisu(texte)
-      originalMath.toSurcharge()
-  
+    def envoievisu(self):
+        """
+        """
+        format="vers3DSalome"
+        if format in generator.plugins :
+            # Le generateur existe on l'utilise
+            g=generator.plugins[format]()
+            g.initJdc(self.node.getJdc())
+            texte=g.gener(self.node)
+        else:
+            print ("Le generateur n'a pas ete trouve")
+            print ("Erreur ! Erreur!")
+            return ""
+        from Extensions.param2 import originalMath
+        originalMath.toOriginal()
+        self.appliEficas.envoievisu(texte)
+        originalMath.toSurcharge()

@@ -26,55 +26,55 @@ import types,re
 
 from .generator_python import PythonGenerator
 def entryPoint():
-   """
-       Retourne les informations necessaires pour le chargeur de plugins
+    """
+        Retourne les informations necessaires pour le chargeur de plugins
 
-       Ces informations sont retournees dans un dictionnaire
-   """
-   return {
-        # Le nom du plugin
-          'name' : 'GroupMA',
-        # La factory pour creer une instance du plugin
-          'factory' : GroupMAGenerator,
-          }
+        Ces informations sont retournees dans un dictionnaire
+    """
+    return {
+         # Le nom du plugin
+           'name' : 'GroupMA',
+         # La factory pour creer une instance du plugin
+           'factory' : GroupMAGenerator,
+           }
 
 
 class GroupMAGenerator(PythonGenerator):
-   """
-       Ce generateur parcourt un objet de type JDC et produit
-       un texte au format eficas et 
-       un texte au format homard 
+    """
+        Ce generateur parcourt un objet de type JDC et produit
+        un texte au format eficas et
+        un texte au format homard
 
-   """
-   # Les extensions de fichier preconisees
-   extensions=('.comm',)
+    """
+    # Les extensions de fichier preconisees
+    extensions=('.comm',)
 
-   def __init__(self):
-      PythonGenerator.__init__(self)
-      self.listeMA=[]
-      self.listeNO=[]
+    def __init__(self):
+        PythonGenerator.__init__(self)
+        self.listeMA=[]
+        self.listeNO=[]
 
-   def gener(self,obj,format='brut',config=None):
-      self.liste=[]
-      self.text=PythonGenerator.gener(self,obj,'brut',config=None)
-      return self.listeMA,self.listeNO
+    def gener(self,obj,format='brut',config=None):
+        self.liste=[]
+        self.text=PythonGenerator.gener(self,obj,'brut',config=None)
+        return self.listeMA,self.listeNO
 
-   def generMCSIMP(self,obj) :
-       if 'grma' in repr(obj.definition.type) :
-          if not type(obj.valeur) in (list, tuple):
-             aTraiter=(obj.valeur,)
-          else :
-             aTraiter=obj.valeur
-          for group in aTraiter :
-             if group not in self.listeMA :
-                self.listeMA.append(group)
-       if 'grno' in repr(obj.definition.type) :
-          if not type(obj.valeur) in (list, tuple):
-             aTraiter=(obj.valeur,)
-          else :
-             aTraiter=obj.valeur
-          for group in aTraiter :
-             if group not in self.listeNO :
-                self.listeNO.append(group)
-       s=PythonGenerator.generMCSIMP(self,obj)
-       return s
+    def generMCSIMP(self,obj) :
+        if 'grma' in repr(obj.definition.type) :
+            if not type(obj.valeur) in (list, tuple):
+                aTraiter=(obj.valeur,)
+            else :
+                aTraiter=obj.valeur
+            for group in aTraiter :
+                if group not in self.listeMA :
+                    self.listeMA.append(group)
+        if 'grno' in repr(obj.definition.type) :
+            if not type(obj.valeur) in (list, tuple):
+                aTraiter=(obj.valeur,)
+            else :
+                aTraiter=obj.valeur
+            for group in aTraiter :
+                if group not in self.listeNO :
+                    self.listeNO.append(group)
+        s=PythonGenerator.generMCSIMP(self,obj)
+        return s

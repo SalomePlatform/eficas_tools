@@ -1,6 +1,6 @@
 # coding=utf-8
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2017  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 2007-2021  EDF R&D                  
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -35,11 +35,11 @@ from __future__ import absolute_import
 from . import context
 
 try :
-   import __builtin__
-   __builtin__.CONTEXT = context
-except : 
-   import builtins
-   builtins.CONTEXT = context
+    import __builtin__
+    __builtin__.CONTEXT = context
+except :
+    import builtins
+    builtins.CONTEXT = context
 
 
 # Classes de base

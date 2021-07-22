@@ -27,166 +27,174 @@ import re
 conceptRE=re.compile(r'[a-zA-Z_]\w*$')
 
 class OBJECT:
-  from Noyau.N_CO import CO
-  from Noyau.N_ASSD import assd
+    from Noyau.N_CO import CO
+    from Noyau.N_ASSD import assd
 
-  def isMCList(self):
-    """ 
-        Retourne 1 si self est une MCList (liste de mots-cles), 0 sinon (defaut) 
-    """
-    return 0
+    def isMCList(self):
+        """
+            Retourne 1 si self est une MCList (liste de mots-cles), 0 sinon (defaut)
+        """
+        return 0
 
-  def getRegles(self):
-    """ 
-       Retourne les regles de self 
-    """
-    if hasattr(self,'definition'):
-      return self.definition.regles
-    elif hasattr(self,'regles'):
-      return self.regles
-    else :
-      return []
+    def getRegles(self):
+        """
+           Retourne les regles de self
+        """
+        if hasattr(self,'definition'):
+            return self.definition.regles
+        elif hasattr(self,'regles'):
+            return self.regles
+        else :
+            return []
 
-  def initModif(self):
-    """
-       Met l'etat de l'objet a modified et propage au parent
-       qui vaut None s'il n'existe pas
-    """
-    self.state = 'modified'
-    if self.parent:
-      self.parent.initModif()
+    def initModif(self):
+        """
+           Met l'etat de l'objet a modified et propage au parent
+           qui vaut None s'il n'existe pas
+        """
+        self.state = 'modified'
+        if self.parent:
+            self.parent.initModif()
 
-  def finModif(self):
-      """
-      Methode appelee apres qu'une modification a ete faite afin de declencher
-      d'eventuels traitements post-modification
-      """
-      #print "finModif",self
-      # pour les objets autres que les commandes, aucun traitement specifique 
-      # on remonte l'info de fin de modif au parent
-      CONNECTOR.Emit(self,"valid")
-      if self.parent:
-        self.parent.finModif()
+    def finModif(self):
+        """
+        Methode appelee apres qu'une modification a ete faite afin de declencher
+        d'eventuels traitements post-modification
+        """
+        #print "finModif",self
+        # pour les objets autres que les commandes, aucun traitement specifique
+        # on remonte l'info de fin de modif au parent
+        CONNECTOR.Emit(self,"valid")
+        if self.parent:
+            self.parent.finModif()
 
-  def isRepetable(self):
-    """
-         Indique si l'objet est repetable
-    """
-    return 0
+    def isRepetable(self):
+        """
+             Indique si l'objet est repetable
+        """
+        return 0
 
-  def listeMcPresents(self):
-    """
-         Retourne la liste des noms des mots cles presents
-    """
-    return []
+    def listeMcPresents(self):
+        """
+             Retourne la liste des noms des mots cles presents
+        """
+        return []
 
-  def getDocu(self):
-    return self.definition.getDocu()
+    def getDocu(self):
+        return self.definition.getDocu()
 
-  def getListeMcInconnus(self):
-     """
-     Retourne la liste des mots-cles inconnus dans self
-     """
-     return []
+    def getListeMcInconnus(self):
+        """
+        Retourne la liste des mots-cles inconnus dans self
+        """
+        return []
 
-  def verifConditionRegles(self,liste_presents):
-    """ 
-        Retourne la liste des mots-cles a rajouter pour satisfaire les regles
-        en fonction de la liste des mots-cles presents 
-    """
-    liste=[]
-    for regle in self.definition.regles:
-        liste=regle.verifConditionRegle(liste,liste_presents)
-    return liste
+    def verifConditionRegles(self,liste_presents):
+        """
+            Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+            en fonction de la liste des mots-cles presents
+        """
+        liste=[]
+        for regle in self.definition.regles:
+            liste=regle.verifConditionRegle(liste,liste_presents)
+        return liste
 
-  def verifConditionBloc(self):
-    """ 
-        Evalue les conditions de tous les blocs fils possibles 
-        (en fonction du catalogue donc de la definition) de self et
-        retourne deux listes :
-          - la premiere contient les noms des blocs a rajouter
-          - la seconde contient les noms des blocs a supprimer
-    """
-    return [],[]
+    def verifConditionBloc(self):
+        """
+            Evalue les conditions de tous les blocs fils possibles
+            (en fonction du catalogue donc de la definition) de self et
+            retourne deux listes :
+              - la premiere contient les noms des blocs a rajouter
+              - la seconde contient les noms des blocs a supprimer
+        """
+        return [],[]
 
-  def getGenealogiePrecise(self):
-    if self.parent:
-       l=self.parent.getGenealogiePrecise()
-       l.append(self.nom.strip())
-       return l
-    else:
-       return [self.nom.strip()]
+    def getGenealogiePrecise(self):
+        if self.parent:
+            l=self.parent.getGenealogiePrecise()
+            l.append(self.nom.strip())
+            return l
+        else:
+            return [self.nom.strip()]
 
 
-  def getGenealogie(self):
-    """ 
-        Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
-        ou ETAPE) de self jusqu'au premier objet etape rencontre
-    """
-    if self.parent:
-       l=self.parent.getGenealogie()
-       l.append(self.nom.strip())
-       return l
-    else:
-       return [self.nom.strip()]
+    def getGenealogie(self):
+        """
+            Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC
+            ou ETAPE) de self jusqu'au premier objet etape rencontre
+        """
+        if self.parent:
+            l=self.parent.getGenealogie()
+            l.append(self.nom.strip())
+            return l
+        else:
+            return [self.nom.strip()]
 
-  def getFr(self):
-     """
-         Retourne la chaine d'aide contenue dans le catalogue
-         en tenant compte de la langue
-     """
-     try:
-     #if 1 :
-        c=getattr(self.definition,self.jdc.lang)
-        return c
-     except:
-     #else:
-        try :
-            c=getattr(self.definition,"fr")
+    def getFr(self):
+        """
+            Retourne la chaine d'aide contenue dans le catalogue
+            en tenant compte de la langue
+        """
+        try:
+        #if 1 :
+            c=getattr(self.definition,self.jdc.lang)
             return c
-        except :
-            return ''
+        except:
+        #else:
+            try :
+                c=getattr(self.definition,"fr")
+                return c
+            except :
+                return ''
 
-  def updateConcept(self,sd):
-     pass
+    def updateConcept(self,sd):
+        pass
 
-  def normalize(self):
-     """ Retourne l'objet normalise. En general self sauf si
-         pour etre insere dans l'objet pere il doit etre 
-         wrappe dans un autre objet (voir mot cle facteur).
-     """
-     return self
+    def normalize(self):
+        """ Retourne l'objet normalise. En general self sauf si
+            pour etre insere dans l'objet pere il doit etre
+            wrappe dans un autre objet (voir mot cle facteur).
+        """
+        return self
 
-  def deleteMcGlobal(self):
-     return
+    def deleteMcGlobal(self):
+        return
 
-  def updateMcGlobal(self):
-     return
+    def updateMcGlobal(self):
+        return
 
-  #def __del__(self):
-  #   print "__del__",self
+    #def __del__(self):
+    #   print "__del__",self
 
-  def nommeSd(self):
-  # surcharge dans I_ETAPE.py
-      if ( nom in dir(self.jdc.cata)) : return (0, nom + tr("mot reserve"))
-      if not conceptRE.match(nom):
-         return 0, tr("Un nom de concept doit etre un identificateur Python")
-      self.initModif()
-      #self.getSdProd()
-      #self.sd.nom = nom
-      #self.sdnom=nom
-      #self.parent.updateConceptAfterEtape(self,self.sd)
-      #self.finModif()
-      #return 1, tr("Nommage du concept effectue")
+    def nommeSd(self):
+    # surcharge dans I_ETAPE.py
+        if ( nom in dir(self.jdc.cata)) : return (0, nom + tr("mot reserve"))
+        if not conceptRE.match(nom):
+            return 0, tr("Un nom de concept doit etre un identificateur Python")
+        self.initModif()
+        #self.getSdProd()
+        #self.sd.nom = nom
+        #self.sdnom=nom
+        #self.parent.updateConceptAfterEtape(self,self.sd)
+        #self.finModif()
+        #return 1, tr("Nommage du concept effectue")
 
-  def deleteRef(self):
-  # doit etre surcharge dans MC_COMPO et MC_SIMP 
-      pass
+    def deleteRef(self):
+    # est surcharge dans  MC_SIMP et dans MC_List
+        #print ('je suis dans deleteRef pour', self.nom)
+        for obj in (self.mcListe):
+            obj.deleteRef()
 
-  def demandeRedessine(self):
-      CONNECTOR.Emit(self,"redessine")
+    def supprimeUserAssd(self):
+        pass
 
+    def demandeRedessine(self):
+        #print ('demandeRedessine pour', self.nom, self, tout)
+        CONNECTOR.Emit(self,"redessine")
+
+    def isUQActivate(self):
+        # valide uniquement pour les MCSIMP
+        return True
 
 
 class ErrorObj(OBJECT):pass
-

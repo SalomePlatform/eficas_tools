@@ -28,15 +28,15 @@ from PyQt5.QtWidgets import QDialog
 # Import des panels
 
 class DVisu(Ui_DVisu, QDialog):
-  """
-  """
-  def __init__(self,parent = None , name = None,fl = 0):
-      QDialog.__init__(self,parent)
-      self.setModal(True)
-      self.setupUi(self)
+    """
+    """
+    def __init__(self,parent = None , name = None,fl = 0):
+        QDialog.__init__(self,parent)
+        self.setModal(True)
+        self.setupUi(self)
 
-  def on_buttonCancel_clicked(self):
-      QDialog.reject(self)
+    def on_buttonCancel_clicked(self):
+        QDialog.reject(self)
 
-  def on_buttonOk_clicked(self):
-      QDialog.accept(self)
+    def on_buttonOk_clicked(self):
+        QDialog.accept(self)

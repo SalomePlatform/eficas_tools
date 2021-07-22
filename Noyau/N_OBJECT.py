@@ -24,9 +24,9 @@
 """
 from __future__ import absolute_import
 try :
-   from builtins import object
+    from builtins import object
 except :
-   pass 
+    pass
 from .N_CR import CR
 
 
@@ -109,7 +109,9 @@ class OBJECT(object):
         return 0
 
     def longueurDsArbre(self):
-      return 1
+        if self.nom == "Consigne" : return 0
+        if self.nom == "blocConsigne" : return 0
+        return 1
 
 
 
@@ -147,3 +149,29 @@ class ErrorObj(OBJECT):
         return self.cr
 
 
+def newGetattr(self,name):
+    try :
+       fils=self.getChildOrChildInBloc(name,restreint='non')
+       if fils : 
+          if fils.nature == 'MCSIMP' : return fils.valeur
+          if fils.nature == 'MCList' : 
+             if fils[0].definition.max == 1 : return fils[0]
+          return fils
+    except :
+       raise AttributeError("%r object has no attribute %r" % (self.__class__.__name__, name))
+    raise AttributeError("%r object has no attribute %r" % (self.__class__.__name__, name))
+
+def newGetattrForEtape(self,name):
+    try :
+       lesFils=self.getEtapesByName(name)
+       if lesFils != [] : return lesFils
+    except :
+       raise AttributeError("%r object has no attribute %r" % (self.__class__.__name__, name))
+    raise AttributeError("%r object has no attribute %r" % (self.__class__.__name__, name))
+
+def activeSurcharge():
+    from .N_MCCOMPO import MCCOMPO
+    MCCOMPO.__getattr__ = newGetattr
+    from .N_JDC import JDC
+    JDC.__getattr__ = newGetattrForEtape
+        

@@ -27,9 +27,9 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
+    from builtins import str
 except :
-   pass
+    pass
 import types
 import sys
 import os
@@ -71,10 +71,10 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         # faut il le faire ds MC_Build ?
         # traitement de Pyxb si Pyxb
         self.dicoPyxbDeConstruction = args.get('dicoPyxbDeConstruction', None)
-        if self.dicoPyxbDeConstruction : 
+        if self.dicoPyxbDeConstruction :
             del args['dicoPyxbDeConstruction']
             self.objPyxbDeConstruction=self.dicoPyxbDeConstruction['objEnPyxb']
-        else : 
+        else :
             self.objPyxbDeConstruction=None
         self.definition = oper
         self.reuse = reuse
@@ -86,10 +86,12 @@ class ETAPE(N_MCCOMPO.MCCOMPO):
         self.idracine = oper.label
         self.appel = N_utils.calleeWhere(niveau)
         self.mc_globaux = {}
+        self.doitEtreRecalculee = False
         self.sd = None
         self.actif = 1
         self.makeRegister()
         self.icmd = None
+        self.userASSDCrees=[]
 
     def makeRegister(self):
         """
@@ -463,4 +465,3 @@ Causes possibles :
         # pourrait etre appelee par une commande fortran faisant appel a des fonctions python
         # on passe la main au parent
         return self.parent.getConcept(nomsd)
- 

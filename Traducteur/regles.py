@@ -60,7 +60,7 @@ class pasDeRegle(ensembleRegles):
         Vérification
         """
         return 1
- 
+
 
 #------------
 class regle :
@@ -79,7 +79,7 @@ class regle :
         """
         f = self.fonction(self.list_args)
         return f.verif(commande)
-        
+
 #---------------------
 class existeMCFParmi :
 #---------------------
@@ -95,7 +95,7 @@ class existeMCFParmi :
         """
         bool = 0
         for c in commande.childNodes :
-            if c.name in self.listeMCF : 
+            if c.name in self.listeMCF :
                 bool = 1
                 break
         return bool
@@ -116,7 +116,7 @@ class nexistepasMCFParmi(existeMCFParmi) :
         bool = existeMCFParmi.verif(self, commande)
         if bool : return 0
         return 1
-        
+
 #----------------------
 class existeMCsousMCF :
 #----------------------
@@ -134,7 +134,7 @@ class existeMCsousMCF :
         """
         bool = 0
         for mcf in commande.childNodes :
-            if mcf.name != self.MCF : continue 
+            if mcf.name != self.MCF : continue
             l = mcf.childNodes[:]
             l.reverse()
             for ll in l:
@@ -173,7 +173,7 @@ class nexistepasMCsousMCF(existeMCsousMCF):
     """
     def __init__(self, list_arg):
         existeMCsousMCF.__init__(self, list_arg)
-        
+
 
     def verif(self, commande):
         """
@@ -191,7 +191,7 @@ class nexistepasMCsousMCFcourant(existeMCsousMCFcourant):
     """
     def __init__(self, list_arg):
         existeMCsousMCFcourant.__init__(self, list_arg)
-        
+
 
     def verif(self, commande):
         """
@@ -218,7 +218,7 @@ class existe :
         if niveau == len(self.genea) : return 1
         texte = self.genea[niveau]
         for c in commande.childNodes :
-            if c.name == texte : 
+            if c.name == texte :
                 niveau = niveau+1
                 return self.chercheMot(niveau, c)
         return None
@@ -248,7 +248,7 @@ class nexistepas :
         if niveau    == len(self.genea) : return 1
         texte = self.genea[niveau]
         for c in commande.childNodes :
-            if c.name == texte : 
+            if c.name == texte :
                 niveau = niveau+1
                 return self.chercheMot(niveau, c)
         return None
@@ -281,7 +281,7 @@ class MCsousMCFaPourValeur :
         """
         bool = 0
         for mcf in commande.childNodes :
-            if mcf.name != self.MCF : continue 
+            if mcf.name != self.MCF : continue
             l = mcf.childNodes[:]
             l.reverse()
             for ll in l:
@@ -324,7 +324,7 @@ class MCsousMCFcourantaPourValeur :
 class MCsousMCFaPourValeurDansListe :
 #----------------------------
     """
-    Égalité du mot-clé simple à une valeur dans une liste 
+    Égalité du mot-clé simple à une valeur dans une liste
     sous le mot-clé facteur
     """
     def __init__(self, list_arg):
@@ -341,7 +341,7 @@ class MCsousMCFaPourValeurDansListe :
         """
         bool = 0
         for mcf in commande.childNodes :
-            if mcf.name != self.MCF : continue 
+            if mcf.name != self.MCF : continue
             l = mcf.childNodes[:]
             l.reverse()
             for ll in l:
@@ -351,13 +351,13 @@ class MCsousMCFaPourValeurDansListe :
                     for Val in self.LVal:
                         if (TexteMC.find(Val) < 0 ): continue
                         bool = 1
-        return bool        
+        return bool
 
 #-----------------------------
 class MCsousMCFcourantaPourValeurDansListe :
 #----------------------------
     """
-    Égalité du mot-clé simple à une valeur dans une liste 
+    Égalité du mot-clé simple à une valeur dans une liste
     sous le mot-clé facteur
     """
     def __init__(self, list_arg):
@@ -371,7 +371,7 @@ class MCsousMCFcourantaPourValeurDansListe :
         """
         Vérification
         """
-        bool = 0        
+        bool = 0
         l = mcf.childNodes[:]
         l.reverse()
         for mc in l:
@@ -380,40 +380,40 @@ class MCsousMCFcourantaPourValeurDansListe :
             for Val in self.LVal:
                 if (TexteMC.find(Val) < 0 ): continue
                 bool = 1
-        return bool    
+        return bool
 
 #-----------------------------------------
 class MCsousMCFcourantnaPasPourValeurDansListe(MCsousMCFcourantaPourValeurDansListe) :
 #-----------------------------------------
     """
-    Non égalité du mot-clé simple à une valeur dans une liste 
+    Non égalité du mot-clé simple à une valeur dans une liste
     sous le mot-clé facteur
     """
     def __init__(self, list_arg):
         MCsousMCFcourantaPourValeurDansListe.__init__(self, list_arg)
-        
+
 
     def verif(self, commande):
         bool = MCsousMCFcourantaPourValeurDansListe.verif(self, commande)
         if bool : return 0
         return 1
-  
+
 #-----------------------------------------
 class MCsousMCFnaPasPourValeurDansListe(MCsousMCFaPourValeurDansListe) :
 #-----------------------------------------
     """
-    Non égalité du mot-clé simple à une valeur dans une liste 
+    Non égalité du mot-clé simple à une valeur dans une liste
     sous le mot-clé facteur
     """
     def __init__(self, list_arg):
         MCsousMCFaPourValeurDansListe.__init__(self, list_arg)
-        
+
 
     def verif(self, commande):
         bool = MCsousMCFaPourValeurDansListe.verif(self, commande)
         if bool : return 0
         return 1
-  
+
 #------------------------------
 class MCaPourValeur :
 #------------------------------
@@ -432,7 +432,7 @@ class MCaPourValeur :
         """
         bool = 0
         for mc in commande.childNodes :
-            if mc.name != self.MC : continue 
+            if mc.name != self.MC : continue
             TexteMC = mc.getText(self.Jdc)
             if (TexteMC.find(self.Val) < 0 ): continue
             bool = 1
@@ -442,7 +442,7 @@ class MCaPourValeur :
 class MCnaPasPourValeur(MCaPourValeur) :
 #-----------------------------------------
     """
-	Non égalité du mot-clé à une valeur 
+        Non égalité du mot-clé à une valeur
     """
     def __init__(self, list_arg):
         MCaPourValeur.__init__(self, list_arg)
@@ -473,7 +473,7 @@ class MCaPourValeurDansListe :
         """
         bool = 0
         for mc in commande.childNodes :
-            if mc.name != self.MC : continue 
+            if mc.name != self.MC : continue
             TexteMC = mc.getText(self.Jdc)
             #print "TexteMC=",type(TexteMC),TexteMC
             #print "LVal=",type(self.LVal),self.LVal
@@ -488,7 +488,7 @@ class MCaPourValeurDansListe :
 class MCnaPasPourValeurDansListe(MCaPourValeurDansListe) :
 #-----------------------------------------
     """
-	Non égalité du mot-clé à une valeur dans une liste
+        Non égalité du mot-clé à une valeur dans une liste
     """
     def __init__(self, list_arg):
         MCaPourValeurDansListe.__init__(self, list_arg)

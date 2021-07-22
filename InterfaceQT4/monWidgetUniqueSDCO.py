@@ -27,7 +27,7 @@ from PyQt4.QtCore import *
 from Extensions.i18n import tr
 
 from .feuille               import Feuille
-from desWidgetUniqueSDCO   import Ui_WidgetUniqueSDCO 
+from desWidgetUniqueSDCO   import Ui_WidgetUniqueSDCO
 from .politiquesValidation  import PolitiqueUnique
 from .qtSaisie              import SaisieSDCO
 
@@ -36,7 +36,7 @@ from .qtSaisie              import SaisieSDCO
 
 class MonWidgetUniqueSDCO (Ui_WidgetUniqueSDCO,Feuille,SaisieSDCO):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "dans MonWidgetSDCO"
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
@@ -47,4 +47,3 @@ class MonWidgetUniqueSDCO (Ui_WidgetUniqueSDCO,Feuille,SaisieSDCO):
         valeur = self.node.item.getValeur()
         if valeur  != "" and valeur != None : self.LESDCO.setText(valeur.nom)
         self.connect(self.LESDCO,SIGNAL("returnPressed()"),self.LESDCOReturnPressed)
-

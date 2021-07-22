@@ -21,8 +21,8 @@
 
 
 from __future__ import absolute_import
-try : 
-   from builtins import object
+try :
+    from builtins import object
 except : pass
 
 class ENSEMBLE(object):

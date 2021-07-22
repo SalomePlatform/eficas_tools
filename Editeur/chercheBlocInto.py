@@ -30,48 +30,44 @@ import Accas
 
 
 class ChercheInto:
-        def __init__(self,cata,cataName):
-                self.cata=cata
-                self.dictInto={}
-                mesCommandes=self.cata.JdC.commandes
-                for maCommande in mesCommandes:
-                    self.construitListeInto(maCommande)
+    def __init__(self,cata,cataName):
+        self.cata=cata
+        self.dictInto={}
+        mesCommandes=self.cata.JdC.commandes
+        for maCommande in mesCommandes:
+            self.construitListeInto(maCommande)
 
 
-        def construitListeInto(self,e):
-            if isinstance(e,Accas.A_BLOC.BLOC) :
-               print (e.condition)
-            for nomFils, fils in e.entites.items():
-                self.construitListeInto(fils)
+    def construitListeInto(self,e):
+        if isinstance(e,Accas.A_BLOC.BLOC) :
+            print (e.condition)
+        for nomFils, fils in e.entites.items():
+            self.construitListeInto(fils)
 
 
 if __name__ == "__main__" :
-	#monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
-	#monCata="/local/noyret/Install_Eficas/Aster/Cata/cataSTA11/cata.py"
-	#monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
-	#monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
-        code="Aster"
-        version=None
+    #monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
+    #monCata="/local/noyret/Install_Eficas/Aster/Cata/cataSTA11/cata.py"
+    #monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
+    #monCata="/local/noyret/Install_Eficas/MAP/mapcata.py"
+    code="Aster"
+    version=None
 
-        from Editeur  import session
-        options=session.parse(sys.argv)
-        if options.code!= None :    code=options.code
-        if options.cata!= None : monCata=options.cata
-        if options.ssCode!= None :  ssCode=options.ssCode
+    from Editeur  import session
+    options=session.parse(sys.argv)
+    if options.code!= None :    code=options.code
+    if options.cata!= None : monCata=options.cata
+    if options.ssCode!= None :  ssCode=options.ssCode
 
-        sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..',code))
+    sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)),'..',code))
 
-        from InterfaceQT4.ssIhm  import QWParentSSIhm, appliEficasSSIhm
-        Eficas=appliEficasSSIhm(code=code)
-        parent=QWParentSSIhm(code,Eficas,version)
+    from InterfaceQT4.ssIhm  import QWParentSSIhm, appliEficasSSIhm
+    Eficas=appliEficasSSIhm(code=code)
+    parent=QWParentSSIhm(code,Eficas,version)
 
-        import readercata
-        monreadercata  = readercata.READERCATA( parent, parent )
-        Eficas.readercata=monreadercata
-        monCata=monreadercata.cata
+    import readercata
+    monreadercata  = readercata.READERCATA( parent, parent )
+    Eficas.readercata=monreadercata
+    monCata=monreadercata.cata
 
-        monConstruitInto=ChercheInto(monCata,code)
-
-
-
-
+    monConstruitInto=ChercheInto(monCata,code)

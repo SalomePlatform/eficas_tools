@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 texte_debut="int main() \n{ \n   init_var();\n"
@@ -33,78 +33,78 @@ from Extensions.i18n import tr
 from .generator_dicoImbrique import DicoImbriqueGenerator
 
 def entryPoint():
-   """
-      Retourne les informations necessaires pour le chargeur de plugins
-      Ces informations sont retournees dans un dictionnaire
-   """
-   return {
-        # Le nom du plugin
-          'name' : 'PSEN',
-        # La factory pour creer une instance du plugin
-          'factory' : PSENGenerator,
-          }
+    """
+       Retourne les informations necessaires pour le chargeur de plugins
+       Ces informations sont retournees dans un dictionnaire
+    """
+    return {
+         # Le nom du plugin
+           'name' : 'PSEN',
+         # La factory pour creer une instance du plugin
+           'factory' : PSENGenerator,
+           }
 
 
 class PSENGenerator(DicoImbriqueGenerator):
-   """
-      Ce generateur parcourt un objet de type JDC et produit
-      un texte au format eficas et 
-      un texte au format dictionnaire
+    """
+       Ce generateur parcourt un objet de type JDC et produit
+       un texte au format eficas et
+       un texte au format dictionnaire
 
-   """
-   # Les extensions de fichier permis?
-   extensions=('.comm',)
+    """
+    # Les extensions de fichier permis?
+    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None, appliEficas=None):
+    def gener(self,obj,format='brut',config=None, appliEficas=None):
 
-      try :
-         self.MachineDico = obj.MachineDico
-         self.LoadDico = obj.LoadDico
-         self.LineDico = obj.LineDico
-         self.TransfoDico = obj.TransfoDico
-         self.MotorDico = obj.MotorDico
-      except :
-         self.MachineDico = None
-         self.LoadDico = None
-         self.LineDico = None
-         self.TransfoDico = None
-         self.MotorDico = None
-      
-      self.initDico()
-      # Cette instruction genere le contenu du fichier de commandes (persistance)
-      self.text=DicoImbriqueGenerator.gener(self,obj,format)
-      return self.text
+        try :
+            self.MachineDico = obj.MachineDico
+            self.LoadDico = obj.LoadDico
+            self.LineDico = obj.LineDico
+            self.TransfoDico = obj.TransfoDico
+            self.MotorDico = obj.MotorDico
+        except :
+            self.MachineDico = None
+            self.LoadDico = None
+            self.LineDico = None
+            self.TransfoDico = None
+            self.MotorDico = None
+
+        self.initDico()
+        # Cette instruction genere le contenu du fichier de commandes (persistance)
+        self.text=DicoImbriqueGenerator.gener(self,obj,format)
+        return self.text
 
 
 #----------------------------------------------------------------------------------------
 # initialisations
 #----------------------------------------------------------------------------------------
-   
-   def initDico(self) :
-      DicoImbriqueGenerator.initDico(self)
-      self.Entete = 'MachineDico = ' + str(self.MachineDico) +'\n'
-      self.Entete += 'LoadDico = ' + str(self.LoadDico) +'\n'
-      self.Entete += 'LineDico = ' + str(self.LineDico) +'\n'
-      self.Entete += 'TransfoDico = ' + str(self.TransfoDico) +'\n'
-      self.Entete += 'MotorDico = ' + str(self.MotorDico) + '\n'
-      self.Entete +='\n'
+
+    def initDico(self) :
+        DicoImbriqueGenerator.initDico(self)
+        self.Entete = 'MachineDico = ' + str(self.MachineDico) +'\n'
+        self.Entete += 'LoadDico = ' + str(self.LoadDico) +'\n'
+        self.Entete += 'LineDico = ' + str(self.LineDico) +'\n'
+        self.Entete += 'TransfoDico = ' + str(self.TransfoDico) +'\n'
+        self.Entete += 'MotorDico = ' + str(self.MotorDico) + '\n'
+        self.Entete +='\n'
 
 
 #----------------------------------------------------------------------------------------
 # ecriture
 #----------------------------------------------------------------------------------------
 
-   def writeDefault(self,fn) :
-       fileDico=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','PSEN_Eficas','PSEN','PSENconfig.py'))
-       f = open( str(fileDico), 'wb')
-       f.write( self.Entete + "Dico =" + str(self.Dico) )
-       f.close()
+    def writeDefault(self,fn) :
+        fileDico=os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','PSEN_Eficas','PSEN','PSENconfig.py'))
+        f = open( str(fileDico), 'wb')
+        f.write( self.Entete + "Dico =" + str(self.Dico) )
+        f.close()
 
-   
+
 
 #----------------------------------------------------------------------------------------
-#  analyse de chaque noeud de l'arbre 
+#  analyse de chaque noeud de l'arbre
 #----------------------------------------------------------------------------------------
 
 ##   def generMCSIMP(self,obj) :
@@ -122,5 +122,5 @@ class PSENGenerator(DicoImbriqueGenerator):
 ##        self.dicoTemp={}
 ##        return s
 
-  
+
 # si repertoire on change tous les noms de fichier

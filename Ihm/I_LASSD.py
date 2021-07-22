@@ -19,5 +19,5 @@
 #
 
 class LASSD:
-   def __repr__(self):
-       return self.getName()
+    def __repr__(self):
+        return self.getName()

@@ -21,7 +21,7 @@
 
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 from PyQt5.QtWidgets import  QButtonGroup, QToolButton
@@ -34,34 +34,32 @@ class MonLayoutBouton :
 #----------------------
 
 #  -------------------------------
-   def __init__(self,appliEficas):
+    def __init__(self,appliEficas):
 #  -------------------------------
 
-      self.appliEficas = appliEficas
-      self.buttonGroup = QButtonGroup()
-    
-      for etape in self.appliEficas.readercata.cata.JdC.commandes :
-        nomEtape = etape.nom
-        toolButton = QToolButton(self.appliEficas.toolBarCommande)
-        icon = QIcon()
-        if nomEtape in self.appliEficas.maConfiguration.dicoIcones:
-             fichier = self.appliEficas.maConfiguration.dicoIcones[nomEtape]
-             icon.addPixmap(QPixmap(fichier), QIcon.Normal, QIcon.Off)
-             toolButton.setIcon(icon)
-        else :
-             try :    label = nomEtape[0:3]
-             except : label = nomEtape
-             toolButton.setText(label)
+        self.appliEficas = appliEficas
+        self.buttonGroup = QButtonGroup()
 
-        action = self.appliEficas.toolBarCommande.addWidget(toolButton)
-        action.setVisible(True)
-        toolButton.setObjectName(nomEtape)
-        toolButton.setToolTip(tr(nomEtape))
-        self.buttonGroup.addButton(toolButton)
+        for etape in self.appliEficas.readercata.cata.JdC.commandes :
+            nomEtape = etape.nom
+            toolButton = QToolButton(self.appliEficas.toolBarCommande)
+            icon = QIcon()
+            if nomEtape in self.appliEficas.maConfiguration.dicoIcones:
+                fichier = self.appliEficas.maConfiguration.dicoIcones[nomEtape]
+                icon.addPixmap(QPixmap(fichier), QIcon.Normal, QIcon.Off)
+                toolButton.setIcon(icon)
+            else :
+                try :    label = nomEtape[0:3]
+                except : label = nomEtape
+                toolButton.setText(label)
 
-      self.buttonGroup.buttonClicked.connect(self.rbCliqueEtInsere)
+            action = self.appliEficas.toolBarCommande.addWidget(toolButton)
+            action.setVisible(True)
+            toolButton.setObjectName(nomEtape)
+            toolButton.setToolTip(tr(nomEtape))
+            self.buttonGroup.addButton(toolButton)
 
-   def rbCliqueEtInsere(self,id):
-        self.appliEficas.handleAjoutEtape(id.objectName()) 
+        self.buttonGroup.buttonClicked.connect(self.rbCliqueEtInsere)
 
-
+    def rbCliqueEtInsere(self,id):
+        self.appliEficas.handleAjoutEtape(id.objectName())

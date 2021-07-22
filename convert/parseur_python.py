@@ -20,10 +20,10 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-  from builtins import str
-  from builtins import object
+    from builtins import str
+    from builtins import object
 except :
-  pass
+    pass
 import sys,string,re
 import traceback
 from Extensions.i18n import tr
@@ -34,11 +34,11 @@ stringsAndCommentsRE =  \
 #stringsAndCommentsRE =  \
 #      re.compile(u"(\"\"\".*\"\"\"|'''.*'''|\"[^\"]*\"|\'[^\']*\'|#.*\n)", re.DOTALL)
 import six
-if six.PY2 : 
+if six.PY2 :
     allchars = string.maketrans(u"", "")
     allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
     allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
-else : 
+else :
     allchars=bytes.maketrans(b"",b"")
     allcharsExceptNewline = allchars[: allchars.index(b'\n')]+allchars[allchars.index(b'\n')+1:]
     allcharsExceptNewlineTranstable = bytes.maketrans(allcharsExceptNewline, b'*'*len(allcharsExceptNewline))
@@ -53,12 +53,12 @@ else :
 def maskStringsAndComments(src):
     """Masque tous les caracteres de src contenus dans des commentaires ou des strings multilignes (triples
        quotes et guillemets.
-       Le masquage est realise en remplacant les caracteres par des * 
+       Le masquage est realise en remplacant les caracteres par des *
        Attention : cette fonction doit etre utilisee sur un texte complet et pas ligne par ligne
     """
 # remplace les \\, les \" les \'  par **
 # supprime toutes les chaines ou commentaires ,y compris multiligne i
-# entre 3 ou 1 simples ou doubles quotes (ouvrantes fermantes) ou # 
+# entre 3 ou 1 simples ou doubles quotes (ouvrantes fermantes) ou #
 # laisse les non fermantes ou non ouvrantes
 # on prend 1 sur 2 en raison du split qui donne python, commentaire, python, commentaire...
 
@@ -192,7 +192,7 @@ class COMMENTAIRE(ENTITE_JDC):
             # le diese n'est pas sur le premier caractere
             amont,aval = texte.split('#',1) # on decoupe suivant la premiere occurrence de #
             self.texte = self.texte +amont + aval
-        
+
 class COMMANDE(ENTITE_JDC):
 
     def __str__(self):
@@ -200,7 +200,7 @@ class COMMANDE(ENTITE_JDC):
         Retourne self.texte
         """
         return self.texte+'\n'
-        
+
     def getNbPar(self):
         """
         Retourne la difference entre le nombre de parentheses ouvrantes
@@ -228,7 +228,7 @@ class AFFECTATION(ENTITE_JDC):
         if texte[-1] == '\n' : texte = texte[0:-1].rstrip()
         if texte[-1] == ';'  : texte = texte[0:-1].rstrip()
         self.texte = self.texte+texte+'\n'
-        
+
     def __str__(self):
         """
         Retourne une expression de l'affectation comprehensible par ACCAS
@@ -266,7 +266,7 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         """
         if texte[-1] == '\n' : texte = texte[1:-1]
         self.texte = self.texte+texte
-        
+
     def __str__(self):
         """
         Retourne une expression du parametre EVAL comprehensible par ACCAS
@@ -277,10 +277,10 @@ class AFFECTATION_EVAL(ENTITE_JDC):
         if valeur[-1] == '\n': valeur = valeur[:-1]
         valeur = valeur.strip()
         return nom+' = PARAMETRE_EVAL(nom=\''+nom+'\',valeur=\''+valeur+'\')\n\n'
-        
+
 class PARSEUR_PYTHON(object):
     """
-    Cette classe sert a generer un objet PARSEUR_PYTHON qui realise l'analyse d'un texte 
+    Cette classe sert a generer un objet PARSEUR_PYTHON qui realise l'analyse d'un texte
     representant un JDC Python en distinguant :
       - les commentaires inter commandes
       - les affectations
@@ -290,7 +290,7 @@ class PARSEUR_PYTHON(object):
     pattern_eval       = re.compile(r'^(EVAL)([ \t\r\f\v]*)\(([\w\W]*)')
     pattern_ligne_vide = re.compile(r'^[\t\r\f\v\n]+')
     pattern_name       = re.compile(r'[a-zA-Z_]\w*')
-    
+
     def __init__(self,texte):
         self.texte = texte
         self.l_objets=None
@@ -335,7 +335,7 @@ class PARSEUR_PYTHON(object):
             return 1
         else:
             return 0
-            
+
     def isCommande(self,texte):
         """
         Methode booleenne qui retourne 1 si le texte est celui d'une commande dans un jeu de commandes
@@ -357,7 +357,7 @@ class PARSEUR_PYTHON(object):
 
     def isModificationCatalogue(self,texte) :
         if self.pattern_commande.match(texte):
-           return 1
+            return 1
 
     def analyse(self):
         """
@@ -397,7 +397,7 @@ class PARSEUR_PYTHON(object):
             hangingComments ^= line.count('"""') % 2
             hangingComments ^= line.count(u"'''") % 2
             #print (hangingComments,hangingBraces)
-            if hangingBraces[0] < 0 or hangingBraces[1] < 0 or hangingBraces[2] < 0: 
+            if hangingBraces[0] < 0 or hangingBraces[1] < 0 or hangingBraces[2] < 0:
                 raise parserException()
 
             if ligne.strip() == '':
@@ -421,7 +421,7 @@ class PARSEUR_PYTHON(object):
                     commande_commentarisee_courante.appendText(ligne)
                     # on a 2 commandes commentarisees de suite
                     if pattern_finComments.match(ligne) :
-                       commande_commentarisee_courante = None
+                        commande_commentarisee_courante = None
                 else:
                     # debut de commande commentarisee : on cree un objet commande_commentarisee_courante
                     commande_commentarisee_courante = COMMANDE_COMMENTARISEE(self)
@@ -438,7 +438,7 @@ class PARSEUR_PYTHON(object):
 
                 if commande_courante :
                     # il s'agit d'un commentaire a l'interieur d'une commande --> on ne fait rien de special
-                    #on l'ajoute au texte de la commande 
+                    #on l'ajoute au texte de la commande
                     commande_courante.appendText(ligne)
                 elif commentaire_courant :
                     # il s'agit de la nieme ligne d'un commentaire entre deux commandes
@@ -468,7 +468,7 @@ class PARSEUR_PYTHON(object):
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #la commande est terminee 
+                    #la commande est terminee
                     self.analyseReel(commande_courante.texte)
                     commande_courante = None
 
@@ -536,13 +536,13 @@ class PARSEUR_PYTHON(object):
                 if not linecontinueRE.search(line) \
                    and (hangingBraces == emptyHangingBraces) \
                    and not hangingComments:
-                    #la commande est terminee 
+                    #la commande est terminee
                     self.analyseReel(commande_courante.texte)
                     commande_courante = None
                 #on passe a la ligne suivante
                 continue
 
- 
+
     def enleve (self,texte) :
         """Supprime de texte tous les caracteres blancs, fins de ligne, tabulations
            Le nouveau texte est retourne
@@ -550,87 +550,87 @@ class PARSEUR_PYTHON(object):
         i=0
         chaine=""
         while (i<len(texte)):
-          if (texte[i] == " " or texte[i] == "\n" or texte[i] == "\t") :
-             i=i+1
-          else :
-             chaine=chaine+texte[i]
-             i=i+1
-        return chaine 
-            
+            if (texte[i] == " " or texte[i] == "\n" or texte[i] == "\t") :
+                i=i+1
+            else :
+                chaine=chaine+texte[i]
+                i=i+1
+        return chaine
+
     def construitGenea(self,texte):
         indiceC=0
         mot=""
         dict_reel_concept={}
 
         # traitement pour chaque caractere
-        while (indiceC < len(texte)): 
-           c=texte[indiceC]
-           if ( c == "," or c == "(u" or c == ")"):
-              mot=""
-           elif ( c== "="):
-              #on doit trouver derriere soit une valeur soit une parenthese
-              valeur=""
-              nouvelindice=indiceC+1
-              if texte[nouvelindice] != "(u":
-                 #pas de parenthese ouvrante derriere un signe =, on a une valeur.
-                 while ( texte[nouvelindice] != "," and texte[nouvelindice] != ")"):
-                    valeur=valeur+texte[nouvelindice]
-                    nouvelindice=nouvelindice+1
-                    if nouvelindice == len(texte) :
-                        nouvelindice=nouvelindice -1
-                        break
-                 if mot in self.appliEficas.liste_simp_reel:
-                    if valeur[0] != "'":
-                       try :
-                         clef=eval(valeur)
-                         if str(clef) != str(valeur) :
-                            dict_reel_concept[clef]=valeur
-                       except :
-                         pass
-                 mot=""
-                 indiceC=nouvelindice
-              else:
-                 #parenthese ouvrante derriere un signe =, on a un tuple de valeur ou de mots cles facteurs.
-                 # s agit -il d un tuple 
-                 if texte[nouvelindice+1] != "(u":
-                    #le suivant n'est pas une parenthese ouvrante : on a un tuple de valeurs ou un mot cle facteur
-                    tuple=False
-                    #on avance jusqu'a la fin du tuple de valeurs ou jusqu'a la fin du premier mot cle simple
-                    #contenu dans le mot cle facteur
-                    while ( texte[nouvelindice] != "="):
-                       if texte[nouvelindice] == ")" :
-                          tuple=True
-                          break
-                       else :
-                          nouvelindice=nouvelindice+1
-                          if nouvelindice == len(texte) :
-                             nouvelindice=nouvelindice -1
-                             break
-                    if tuple :
-                       #cas du tuple de valeurs
-                       valeur=texte[indiceC+1:nouvelindice+1]
-                       indiceC=nouvelindice+1 
-                       if mot in self.appliEficas.liste_simp_reel:
-                          valeur=valeur[1:-1]
-                          for val in valeur.split(',') :
-                          # Attention la derniere valeur est""
-                             try :
-                                if val[0] != "'":
-                                  clef=eval(val)
-                                  if str(clef) != str(val) :
-                                     dict_reel_concept[clef]=val
-                             except :
-                                  pass
-                       mot=""
-               # ou de ( imbriquees
-                 else :
-                    #cas du mocle facteur simple ou 
+        while (indiceC < len(texte)):
+            c=texte[indiceC]
+            if ( c == "," or c == "(u" or c == ")"):
+                mot=""
+            elif ( c== "="):
+                #on doit trouver derriere soit une valeur soit une parenthese
+                valeur=""
+                nouvelindice=indiceC+1
+                if texte[nouvelindice] != "(u":
+                    #pas de parenthese ouvrante derriere un signe =, on a une valeur.
+                    while ( texte[nouvelindice] != "," and texte[nouvelindice] != ")"):
+                        valeur=valeur+texte[nouvelindice]
+                        nouvelindice=nouvelindice+1
+                        if nouvelindice == len(texte) :
+                            nouvelindice=nouvelindice -1
+                            break
+                    if mot in self.appliEficas.liste_simp_reel:
+                        if valeur[0] != "'":
+                            try :
+                                clef=eval(valeur)
+                                if str(clef) != str(valeur) :
+                                    dict_reel_concept[clef]=valeur
+                            except :
+                                pass
                     mot=""
-           else :
-              mot=mot+texte[indiceC]
-           indiceC=indiceC+1
+                    indiceC=nouvelindice
+                else:
+                    #parenthese ouvrante derriere un signe =, on a un tuple de valeur ou de mots cles facteurs.
+                    # s agit -il d un tuple
+                    if texte[nouvelindice+1] != "(u":
+                        #le suivant n'est pas une parenthese ouvrante : on a un tuple de valeurs ou un mot cle facteur
+                        tuple=False
+                        #on avance jusqu'a la fin du tuple de valeurs ou jusqu'a la fin du premier mot cle simple
+                        #contenu dans le mot cle facteur
+                        while ( texte[nouvelindice] != "="):
+                            if texte[nouvelindice] == ")" :
+                                tuple=True
+                                break
+                            else :
+                                nouvelindice=nouvelindice+1
+                                if nouvelindice == len(texte) :
+                                    nouvelindice=nouvelindice -1
+                                    break
+                        if tuple :
+                            #cas du tuple de valeurs
+                            valeur=texte[indiceC+1:nouvelindice+1]
+                            indiceC=nouvelindice+1
+                            if mot in self.appliEficas.liste_simp_reel:
+                                valeur=valeur[1:-1]
+                                for val in valeur.split(',') :
+                                # Attention la derniere valeur est""
+                                    try :
+                                        if val[0] != "'":
+                                            clef=eval(val)
+                                            if str(clef) != str(val) :
+                                                dict_reel_concept[clef]=val
+                                    except :
+                                        pass
+                            mot=""
+                    # ou de ( imbriquees
+                    else :
+                        #cas du mocle facteur simple ou
+                        mot=""
+            else :
+                mot=mot+texte[indiceC]
+            indiceC=indiceC+1
         # traitement du dernier inutile
-        # c est un ; 
+        # c est un ;
         return dict_reel_concept
 
     def analyseReel(self,commande) :
@@ -638,25 +638,25 @@ class PARSEUR_PYTHON(object):
         # On verifie qu on a bien un OPER
         # et pas une MACRO
         if commande.find(u"=") > commande.find(u"(u") :
-           return
+            return
         if commande.find(u"=") > 0:
-           #epure1=self.enleve(commande)
-           epure1=pattern_blancs.sub(u"",commande)
-           nomConcept,corps=epure1.split(u"=",1)
-           epure2=corps.replace(u"_F(u","(u")
-           #nomConcept=epure1.split(u"=")[0]
-           #index=epure1.find(u"=")
-           #epure2=epure1[index+1:len(epure1)].replace(u"_F(u","(u")
-           #dict_reel_concept=self.construitGenea(epure2)
-           if self.appliEficas:
-             dict_reel_concept=construitGenea(epure2,self.appliEficas.liste_simp_reel)
-           else:
-             dict_reel_concept={}
+            #epure1=self.enleve(commande)
+            epure1=pattern_blancs.sub(u"",commande)
+            nomConcept,corps=epure1.split(u"=",1)
+            epure2=corps.replace(u"_F(u","(u")
+            #nomConcept=epure1.split(u"=")[0]
+            #index=epure1.find(u"=")
+            #epure2=epure1[index+1:len(epure1)].replace(u"_F(u","(u")
+            #dict_reel_concept=self.construitGenea(epure2)
+            if self.appliEficas:
+                dict_reel_concept=construitGenea(epure2,self.appliEficas.liste_simp_reel)
+            else:
+                dict_reel_concept={}
         if nomConcept == "sansnom" :
-           nomConcept = ""
+            nomConcept = ""
         if nomConcept !=None :
-           if len(dict_reel_concept) != 0:
-              self.appliEficas.dict_reels[nomConcept]=dict_reel_concept
+            if len(dict_reel_concept) != 0:
+                self.appliEficas.dict_reels[nomConcept]=dict_reel_concept
 
     def getTexte(self,appliEficas=None):
         """
@@ -676,19 +676,20 @@ class PARSEUR_PYTHON(object):
         return txt
 
 def test():
-  #import parseur_python
-  import doctest
-  doctest.testmod(parseur_python)
+    #import parseur_python
+    import doctest
+    doctest.testmod(parseur_python)
 
 
 if __name__ == "__main__" :
     import time
     #fichier = 'D:/Eficas_dev/Tests/zzzz100a.comm'
     #fichier = 'U:/Eficas_dev/Tests/test_eval.comm'
-    texte = open(fichier,'r').read()
+    with open(fichier) as fd:
+        texte = fd.read()
     class appliEficas(object):
-       dict_reels={}
-       liste_simp_reel=["VALE","VALE_C","GROUP_MA","RAYON"]
+        dict_reels={}
+        liste_simp_reel=["VALE","VALE_C","GROUP_MA","RAYON"]
     a=appliEficas()
 
     compile(txt, '<string>', 'exec')

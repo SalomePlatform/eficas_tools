@@ -22,20 +22,19 @@ from __future__ import absolute_import
 from Noyau.N_VALIDATOR import *
 
 class Compulsory(Compulsory):
-      def hasInto(self):
-          return 0
-      def valideListePartielle(self,liste_courante=None):
-          return 1
+    def hasInto(self):
+        return 0
+    def valideListePartielle(self,liste_courante=None):
+        return 1
 
 class OrdList(OrdList):
-      def valideListePartielle(self,liste_courante=None):
-          """
-           Methode de validation de liste partielle pour le validateur OrdList
-          """
-          try:
-             self.convert(liste_courante)
-             valid=1
-          except :
-             valid=0
-          return valid
-
+    def valideListePartielle(self,liste_courante=None):
+        """
+         Methode de validation de liste partielle pour le validateur OrdList
+        """
+        try:
+            self.convert(liste_courante)
+            valid=1
+        except :
+            valid=0
+        return valid

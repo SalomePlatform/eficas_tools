@@ -27,10 +27,10 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
 try :
-   from builtins import str
-   from builtins import object
+    from builtins import str
+    from builtins import object
 except :
-   pass
+    pass
 import sys
 
 # Modules EFICAS
@@ -41,9 +41,9 @@ from .strfunc import getEncoding
 SEP = '_'
 
 try :
-  cur_frame = sys._getframe
+    cur_frame = sys._getframe
 except :
-  print ('pb avec la version de python pour cur_frame = sys._getframe')
+    print ('pb avec la version de python pour cur_frame = sys._getframe')
 
 def calleeWhere(niveau=4):
     """

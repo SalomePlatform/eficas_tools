@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import types,os
@@ -29,13 +29,13 @@ import types,os
 from PyQt5.QtWidgets import QWidget
 from Extensions.i18n import tr
 
-from desWidgetInformation  import Ui_WidgetInformative 
+from desWidgetInformation  import Ui_WidgetInformative
 
 
 class MonWidgetInfo (Ui_WidgetInformative,QWidget):
 # c est juste la taille des differents widgets de base qui change
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         QWidget.__init__(self,None)
         self.setupUi(self)
         valeur=node.item.getValeur()

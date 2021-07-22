@@ -23,10 +23,10 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
-   from builtins import object
+    from builtins import str
+    from builtins import object
 except :
-   pass
+    pass
 import types,os,glob,imp,sys
 from copy import copy,deepcopy
 
@@ -37,9 +37,9 @@ from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
 try :
-   from repr import Repr
+    from repr import Repr
 except :
-   from reprlib import Repr
+    from reprlib import Repr
 myrepr = Repr()
 myrepr.maxstring = 100
 myrepr.maxother = 100
@@ -169,7 +169,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         return self._object
 
     def connect(self,channel,callable,args):
-        """ Connecte la fonction callable (avec arguments args) a l'item self sur le 
+        """ Connecte la fonction callable (avec arguments args) a l'item self sur le
             canal channel
         """
         #print self,channel,callable,args
@@ -186,13 +186,13 @@ class ObjectTreeItem(TreeItem,Delegate):
         fonction = deepcopy(self.setFunction)
         item = makeObjecttreeitem(appliEficas,labeltext,object,fonction)
         return item
-    
+
     def isActif(self):
         if hasattr(self.object,'actif'):
             return self.object.actif
         else:
             return 1
-    
+
     def update(self,item):
         """
           Met a jour l'item courant a partir d'un autre item passe en argument
@@ -210,27 +210,27 @@ class ObjectTreeItem(TreeItem,Delegate):
         return tr(self.labeltext),None,None
 
     def getNature(self) :
-        """ 
+        """
             Retourne la nature de l'item et de l'objet
-        """ 
+        """
         return self.object.nature
 
     def getRegles(self):
         """ retourne les regles de l'objet pointe par self """
         return self.object.getRegles()
-    
+
     def getListeMcPresents(self):
         """ Retourne la liste des mots-cles fils de l'objet pointe par self """
         return self.object.listeMcPresents()
-    
+
     def getVal(self):
         """ Retourne le nom de la valeur de l'objet pointe par self dans le cas
             ou celle-ci est un objet (ASSD) """
         return self.object.getVal()
-    
+
     def get_definition(self):
-        """ 
-           Retourne l'objet definition de l'objet pointe par self 
+        """
+           Retourne l'objet definition de l'objet pointe par self
         """
         return self.object.definition
 
@@ -249,7 +249,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         d'une liste du type :ETAPE + MCFACT ou MCBLOC + ...
         """
         return self.object.getListeMcOrdonneeBrute(liste,dico)
-   
+
     def getGenealogie(self):
         """
         Retourne la liste des noms des ascendants (noms de MCSIMP,MCFACT,MCBLOC ou ETAPE)
@@ -279,7 +279,7 @@ class ObjectTreeItem(TreeItem,Delegate):
                 l.append(nom)
         # l contient les anciens mots-cles + le nouveau dans l'ordre
         return l.index(nom_fils)
-        
+
     def appendChild(self,name,pos=None):
         """
           Permet d'ajouter un item fils a self
@@ -289,7 +289,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         elif pos == 'last':
             index = len(self.listeMcPresents())
         elif type(pos) == int :
-            # la position est fixee 
+            # la position est fixee
             index = pos
         #elif type(pos) == types.InstanceType:
         elif type(pos) == object :
@@ -320,7 +320,7 @@ class ObjectTreeItem(TreeItem,Delegate):
     def getCopieObjet(self):
         """ Retourne une copie de l'objet pointe par self """
         return self.object.copy()
-    
+
     def getPosition(self):
         """ Retourne la valeur de l'attribut position de l'objet pointe par self """
         definition = self.get_definition()
@@ -328,7 +328,7 @@ class ObjectTreeItem(TreeItem,Delegate):
             return getattr(definition,'position')
         except AttributeError:
             return 'local'
-        
+
     def getNom(self):
         """ Retourne le nom de l'objet pointe par self """
         return self.object.nom
@@ -336,7 +336,7 @@ class ObjectTreeItem(TreeItem,Delegate):
     def getJdc(self):
         """ Retourne le jdc auquel appartient l'objet pointe par self """
         return self.object.jdc
-    
+
     def getValeur(self):
         """ Retourne la valeur de l'objet pointe par self """
         return self.object.valeur
@@ -354,7 +354,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         raise EficasException("MESSAGE AU DEVELOPPEUR : il faut \
                                  surcharger la methode getObjetCommentarise() \
                                  pour la classe %s", self.__class__.__name__)
-        
+
     def isValid(self):
         """ Retourne 1 si l'objet pointe par self est valide, 0 sinon"""
         return self.object.isValid()
@@ -365,7 +365,7 @@ class ObjectTreeItem(TreeItem,Delegate):
         Par defaut retourne 0
         """
         return 0
-    
+
     def getMcPresents(self):
         """ Retourne le dictionnaire des mots-cles presents de l'objet pointe par self """
         return self.object.dictMcPresents()
@@ -387,10 +387,10 @@ class ObjectTreeItem(TreeItem,Delegate):
     def setValeur(self,new_valeur):
         """ Remplace la valeur de l'objet pointe par self par new_valeur """
         return self.object.setValeur(new_valeur)
-        
+
     def getText(self):
         return myrepr.repr(self.object)
-    
+
     def getIconName(self):
         if not self.isExpandable():
             return "python"
@@ -407,7 +407,7 @@ class ObjectTreeItem(TreeItem,Delegate):
 
     def isExpandable(self):
         return 1
-        
+
     def getSubList(self):
         keys = dir(self.object)
         sublist = []
@@ -451,17 +451,17 @@ class SequenceTreeItem(ObjectTreeItem):
 
     def __len__(self) :
         return len(self._object)
-   
+
     def keys(self):
         return list(range(len(self._object)))
 
     def getIconName(self):
         if self._object.isValid():
-          return "ast-green-los"
+            return "ast-green-los"
         elif self._object.isOblig():
-          return "ast-red-los"
+            return "ast-red-los"
         else:
-          return "ast-yel-los"
+            return "ast-yel-los"
 
     def ajoutPossible(self):
         return self._object.ajoutPossible()
@@ -471,7 +471,7 @@ class SequenceTreeItem(ObjectTreeItem):
         return self._object.getIndex(child.getObject())
 
     def getText(self):
-      return  "    "
+        return  "    "
 
     def addItem(self,obj,pos):
         self._object.insert(pos,obj)
@@ -495,18 +495,18 @@ class SequenceTreeItem(ObjectTreeItem):
         self.sublist=[]
 
         while(1):
-           old_obj=obj=None
-           for item in isublist:
-              old_obj=item.getObject()
-              if old_obj in liste:break
+            old_obj=obj=None
+            for item in isublist:
+                old_obj=item.getObject()
+                if old_obj in liste:break
 
-           for obj in iliste:
-              if obj is old_obj:break
-              # nouvel objet : on cree un nouvel item
-              def setFunction(value, object=obj):
-                  object=value
-              it = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
-              self.sublist.append(it)
-           if old_obj is None and obj is None:break
-           if old_obj is obj: self.sublist.append(item)
+            for obj in iliste:
+                if obj is old_obj:break
+                # nouvel objet : on cree un nouvel item
+                def setFunction(value, object=obj):
+                    object=value
+                it = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
+                self.sublist.append(it)
+            if old_obj is None and obj is None:break
+            if old_obj is obj: self.sublist.append(item)
         return self.sublist

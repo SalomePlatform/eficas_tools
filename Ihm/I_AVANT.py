@@ -24,55 +24,54 @@ import types
 
 
 class I_AVANT:
-   """
-      La regle I_AVANT verifie que l'on trouve l ordre  des mots-cles
-      de la regle parmi les arguments d'un JDC.
+    """
+       La regle I_AVANT verifie que l'on trouve l ordre  des mots-cles
+       de la regle parmi les arguments d'un JDC.
 
-      Ces arguments sont transmis a la regle pour validation sous la forme 
-      d'une liste de noms de mots-cles ou d'un dictionnaire dont 
-      les cles sont des noms de mots-cles.
-   """
+       Ces arguments sont transmis a la regle pour validation sous la forme
+       d'une liste de noms de mots-cles ou d'un dictionnaire dont
+       les cles sont des noms de mots-cles.
+    """
 
-   def __init__(self,*args):
-      if len(args) > 2 :
-        print(("Erreur a la creation de la regle A_CLASSER(",args,")"))
-        return
-      if type(args[0]) == tuple:
-        self.listeAvant=args[0]
-      else :
-        self.listeAvant=(args[0],)
-      if type(args[1]) == tuple:
-        self.listeApres=args[1]
-      else :
-        self.listeApres=(args[1],)
+    def __init__(self,*args):
+        if len(args) > 2 :
+            print(("Erreur a la creation de la regle A_CLASSER(",args,")"))
+            return
+        if type(args[0]) == tuple:
+            self.listeAvant=args[0]
+        else :
+            self.listeAvant=(args[0],)
+        if type(args[1]) == tuple:
+            self.listeApres=args[1]
+        else :
+            self.listeApres=(args[1],)
 
-   def verif(self,args):
-      """
-          args peut etre un dictionnaire ou une liste. Les elements de args
-          sont soit les elements de la liste soit les cles du dictionnaire.
-      """
-      #  on compte le nombre de mots cles presents
-      text =''
-      boolListeAvant=0
-      boolListeApres=0
-      boolOK=1
-      for nom in args:
-          if nom in self.listeAvant :
-             boolListeAvant=1
-             if boolListeApres == 1 :
-                boolOK = 0
-          if nom in self.listeApres :
-             boolListeApres=1
-      if boolListeAvant == 0 and boolListeApres == 1 : boolOK = 0
-      return text,boolOK
+    def verif(self,args):
+        """
+            args peut etre un dictionnaire ou une liste. Les elements de args
+            sont soit les elements de la liste soit les cles du dictionnaire.
+        """
+        #  on compte le nombre de mots cles presents
+        text =''
+        boolListeAvant=0
+        boolListeApres=0
+        boolOK=1
+        for nom in args:
+            if nom in self.listeAvant :
+                boolListeAvant=1
+                if boolListeApres == 1 :
+                    boolOK = 0
+            if nom in self.listeApres :
+                boolListeApres=1
+        if boolListeAvant == 0 and boolListeApres == 1 : boolOK = 0
+        return text,boolOK
 
 
-   def getText(self):
-       text = "Regle de classement "' :\n'
-       for mc in self.listeAvant : 
-           text = text + mc + ', '
-       text = text  + " \nAvant : \n" 
-       for mc in self.listeApres : 
-           text = text + mc + ','
-       return text
-
+    def getText(self):
+        text = "Regle de classement "' :\n'
+        for mc in self.listeAvant :
+            text = text + mc + ', '
+        text = text  + " \nAvant : \n"
+        for mc in self.listeApres :
+            text = text + mc + ','
+        return text

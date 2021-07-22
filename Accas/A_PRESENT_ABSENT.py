@@ -27,5 +27,5 @@ class PRESENT_ABSENT(I_PRESENT_ABSENT.PRESENT_ABSENT,V_PRESENT_ABSENT.PRESENT_AB
     """
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
-        V_PRESENT_ABSENT.PRESENT_ABSENT n'en a pas
+        seule N_REGLE.REGLE.py en a un
     """

@@ -115,6 +115,8 @@ class PROC(N_ENTITE.ENTITE):
         self.UIinfo = UIinfo
         self.affecter_parente()
         self.checkDefinition(self.nom)
+        self.dejaPrepareDump=False
+        self.txtNomComplet=''
 
     def __call__(self, **args):
         """
@@ -123,6 +125,10 @@ class PROC(N_ENTITE.ENTITE):
         """
         etape = self.class_instance(oper=self, args=args)
         etape.MCBuild()
+        while etape.doitEtreRecalculee == True :
+            etape.doitEtreRecalculee = False
+            etape.deepUpdateConditionBlocApresCreation()
+            etape.reConstruitResteVal()
         return etape.buildSd()
 
     def make_objet(self, mc_list='oui'):

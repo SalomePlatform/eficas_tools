@@ -31,7 +31,7 @@ from Extensions.i18n import tr
 from Extensions.eficas_exception import EficasException
 
 from Editeur import session
-import Accas 
+import Accas
 
 
 class Appli(Ui_Eficas,QMainWindow):
@@ -68,8 +68,8 @@ class Appli(Ui_Eficas,QMainWindow):
         if langue=='fr': self.langue=langue
         else           : self.langue="ang"
         if self.multi == False :
-             self.definitCode(code,ssCode)
-             if code==None: return
+            self.definitCode(code,ssCode)
+            if code==None: return
 
         eficas_root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self.ajoutIcones()
@@ -92,10 +92,10 @@ class Appli(Ui_Eficas,QMainWindow):
         self.code=code
         self.ssCode=ssCode
         if self.code==None :
-           self.cleanPath()
-           from monChoixCode import MonChoixCode
-           widgetChoix = MonChoixCode(self)
-           ret=widgetChoix.exec_()
+            self.cleanPath()
+            from monChoixCode import MonChoixCode
+            widgetChoix = MonChoixCode(self)
+            ret=widgetChoix.exec_()
         import sys
         if self.code == None:return # pour le cancel de la fenetre choix code
         name='prefs_'+self.code
@@ -103,38 +103,38 @@ class Appli(Ui_Eficas,QMainWindow):
 
         self.repIni=prefsCode.repIni
         if ssCode != None :
-           self.format_fichier= ssCode  #par defaut
-           prefsCode.NAME_SCHEME=ssCode
+            self.format_fichier= ssCode  #par defaut
+            prefsCode.NAME_SCHEME=ssCode
         else :
-           self.format_fichier="python" #par defaut
+            self.format_fichier="python" #par defaut
 
         nameConf='configuration_'+self.code
         configuration=__import__(nameConf)
         self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
         self.CONFIGStyle = None
         if hasattr(configuration,'make_config_style'):
-           self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
+            self.CONFIGStyle = configuration.make_config_style(self,prefsCode.repIni)
         if hasattr(prefsCode,'encoding'):
-           import sys
-           reload(sys)
-           sys.setdefaultencoding(prefsCode.encoding)
+            import sys
+            reload(sys)
+            sys.setdefaultencoding(prefsCode.encoding)
 
     def construitMenu(self):
         self.initPatrons()
         self.initRecents()
         self.initAides()
         for intituleMenu in ("menuTraduction","menuOptions","menuMesh","menuExecution"):
-              if hasattr(self,intituleMenu):
-                 menu=getattr(self,intituleMenu)
-                 menu.setAttribute(Qt.WA_DeleteOnClose)
-                 menu.close()
-                 delattr(self,intituleMenu)
+            if hasattr(self,intituleMenu):
+                menu=getattr(self,intituleMenu)
+                menu.setAttribute(Qt.WA_DeleteOnClose)
+                menu.close()
+                delattr(self,intituleMenu)
         for intituleAction in ("actionExecution","actionSaveRun",):
             if hasattr(self,intituleAction):
-              action=getattr(self,intituleAction)
-              self.toolBar.removeAction(action)
+                action=getattr(self,intituleAction)
+                self.toolBar.removeAction(action)
         if self.code in Appli.__dict__.keys():
-          listeTexte=apply(Appli.__dict__[self.code],(self,))
+            listeTexte=apply(Appli.__dict__[self.code],(self,))
 
     def initAides(self):
         #print "je passe la"
@@ -146,10 +146,10 @@ class Appli(Ui_Eficas,QMainWindow):
         self.fileDoc=os.path.join(self.docPath,fileName)
         self.actionCode.setText(tr("Aide specifique ")+str(self.code))
         if not os.path.isfile(self.fileDoc) :
-               self.fileDoc=""
-               self.docPath=""
-               self.actionCode.setEnabled(False)
-               return
+            self.fileDoc=""
+            self.docPath=""
+            self.actionCode.setEnabled(False)
+            return
 
         self.actionCode.setEnabled(True)
         self.menuAide.addAction(self.actionCode)
@@ -162,7 +162,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionExecution.setObjectName("actionExecution")
         self.menuExecution.addAction(self.actionExecution)
         if not(self.actionExecution in self.toolBar.actions()):
-           self.toolBar.addAction(self.actionExecution)
+            self.toolBar.addAction(self.actionExecution)
         self.actionExecution.setText(QApplication.translate("Eficas", "Execution ", None, QApplication.UnicodeUTF8))
         self.connect(self.actionExecution,SIGNAL("activated()"),self.run)
 
@@ -172,7 +172,7 @@ class Appli(Ui_Eficas,QMainWindow):
         self.actionSaveRun.setObjectName("actionSaveRun")
         self.menuExecution.addAction(self.actionSaveRun)
         if not(self.actionSaveRun in self.toolBar.actions()):
-           self.toolBar.addAction(self.actionSaveRun)
+            self.toolBar.addAction(self.actionSaveRun)
         self.actionSaveRun.setText(QApplication.translate("Eficas", "Save Run", None, QApplication.UnicodeUTF8))
         self.connect(self.actionSaveRun,SIGNAL("activated()"),self.saveRun)
 
@@ -202,16 +202,16 @@ class Appli(Ui_Eficas,QMainWindow):
     def ChercheGrpMesh(self):
         Msg,listeGroup=self.ChercheGrpMeshInSalome()
         if Msg == None :
-           self.viewmanager.handleAjoutGroup(listeGroup)
+            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
-           print "il faut gerer les erreurs"
+            print "il faut gerer les erreurs"
 
     def ChercheGrpMaille(self):
         Msg,listeGroup=self.ChercheGrpMailleInSalome()
         if Msg == None :
-           self.viewmanager.handleAjoutGroup(listeGroup)
+            self.viewmanager.handleAjoutGroup(listeGroup)
         else :
-           print "il faut gerer les erreurs"
+            print "il faut gerer les erreurs"
 
 
     def ajoutIcones(self) :
@@ -314,49 +314,49 @@ class Appli(Ui_Eficas,QMainWindow):
     # Mise a jour du menu des fichiers recemment ouverts
         from Editeur import listePatrons
         if not(self.code in listePatrons.sous_menus.keys()) :
-           if hasattr(self,"menuPatrons"):
-              self.menuPatrons.setAttribute(Qt.WA_DeleteOnClose)
-              self.menuPatrons.close()
-              delattr(self,"menuPatrons")
-           return
+            if hasattr(self,"menuPatrons"):
+                self.menuPatrons.setAttribute(Qt.WA_DeleteOnClose)
+                self.menuPatrons.close()
+                delattr(self,"menuPatrons")
+            return
         if (not hasattr(self,"menuPatrons")):
-           self.menuPatrons = QMenu(self.menubar)
-           self.menuPatrons.setObjectName("menuPatrons")
-           self.menubar.addAction(self.menuPatrons.menuAction())
-           self.menuPatrons.setTitle(QApplication.translate("Eficas", "Patrons", None, QApplication.UnicodeUTF8))
+            self.menuPatrons = QMenu(self.menubar)
+            self.menuPatrons.setObjectName("menuPatrons")
+            self.menubar.addAction(self.menuPatrons.menuAction())
+            self.menuPatrons.setTitle(QApplication.translate("Eficas", "Patrons", None, QApplication.UnicodeUTF8))
         else :
-           self.menuPatrons.clear()
+            self.menuPatrons.clear()
         self.listePatrons = listePatrons.listePatrons(self.code)
         idx = 0
         for nomSsMenu in self.listePatrons.liste.keys():
             ssmenu=self.menuPatrons.addMenu(nomSsMenu)
             for fichier in self.listePatrons.liste[nomSsMenu]:
-               id = ssmenu.addAction(fichier)
-               self.ficPatrons[id]=fichier
-               self.connect(id, SIGNAL('triggered()'),self.handleOpenPatrons)
+                id = ssmenu.addAction(fichier)
+                self.ficPatrons[id]=fichier
+                self.connect(id, SIGNAL('triggered()'),self.handleOpenPatrons)
             #   self.Patrons.setItemParameter(id,idx)
-               idx=idx+1
+                idx=idx+1
 
     def initRecents(self):
-       self.recent =  QStringList()
-       try :
-       #if 1 :
-           rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
-           monFichier=rep+"/listefichiers_"+self.code
-           index=0
-           f=open(monFichier)
-           while ( index < 9) :
-              ligne=f.readline()
-              if ligne != "" :
-                 l=(ligne.split("\n"))[0]
-                 self.recent.append(l)
-              index=index+1
-       except :
-       #else :
-           pass
+        self.recent =  QStringList()
+        try :
+        #if 1 :
+            rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
+            monFichier=rep+"/listefichiers_"+self.code
+            index=0
+            f=open(monFichier)
+            while ( index < 9) :
+                ligne=f.readline()
+                if ligne != "" :
+                    l=(ligne.split("\n"))[0]
+                    self.recent.append(l)
+                index=index+1
+        except :
+        #else :
+            pass
 
-       try    : f.close()
-       except : pass
+        try    : f.close()
+        except : pass
 
     def addToRecentList(self, fn):
         """
@@ -370,24 +370,24 @@ class Appli(Ui_Eficas,QMainWindow):
             self.recent = self.recent[:9]
 
     def sauveRecents(self) :
-       try :
-         rep=self.CONFIGURATION.rep_user
-         monFichier=rep+"/listefichiers_"+self.code
-       except :
-         return
-       try :
+        try :
+            rep=self.CONFIGURATION.rep_user
+            monFichier=rep+"/listefichiers_"+self.code
+        except :
+            return
+        try :
             f=open(monFichier,'w')
             if len(self.recent) == 0 : return
             index=0
             while ( index <  len(self.recent)):
-              ligne=str(self.recent[index])+"\n"
-              f.write(ligne)
-              index=index+1
-       except :
+                ligne=str(self.recent[index])+"\n"
+                f.write(ligne)
+                index=index+1
+        except :
             pass
-       try :
+        try :
             f.close()
-       except :
+        except :
             pass
 
 
@@ -418,37 +418,37 @@ class Appli(Ui_Eficas,QMainWindow):
         repAide=os.path.dirname(os.path.abspath(__file__))
         maD=repAide+"/../Aide"
         try :
-          indexAide=maD+"/fichiers_EFICAS/index.html"
-          cmd="xdg-open "+indexAide
-          os.system(cmd)
+            indexAide=maD+"/fichiers_EFICAS/index.html"
+            cmd="xdg-open "+indexAide
+            os.system(cmd)
         except:
-          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
+            QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
 
     def aideCode(self) :
         if self.code==None : return
         try :
         #if 1 :
-          cmd="xdg-open "+self.fileDoc
-          os.system(cmd)
+            cmd="xdg-open "+self.fileDoc
+            os.system(cmd)
         except:
         #else:
-          QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
+            QMessageBox.warning( self,tr( "Aide Indisponible"),tr( "l'aide n est pas installee "))
 
 
     def optionEditeur(self) :
         try :
-           name='monOptions_'+self.code
+            name='monOptions_'+self.code
         except :
-           QMessageBox.critical( self,tr( "Parametrage"),tr( "Veuillez d abord choisir un code"))
-           return
+            QMessageBox.critical( self,tr( "Parametrage"),tr( "Veuillez d abord choisir un code"))
+            return
         try :
         #if 1:
-           optionCode=__import__(name)
+            optionCode=__import__(name)
         except :
         #else :
-           QMessageBox.critical( self, tr("Parametrage"), tr("Pas de possibilite de personnalisation de la configuration "))
-           return
+            QMessageBox.critical( self, tr("Parametrage"), tr("Pas de possibilite de personnalisation de la configuration "))
+            return
         monOption=optionCode.Options(parent=self,modal = 0 ,configuration=self.CONFIGURATION)
         monOption.show()
 
@@ -562,20 +562,20 @@ class Appli(Ui_Eficas,QMainWindow):
     def cleanPath(self):
         for pathCode in self.ListeCode:
             try:
-              aEnlever=os.path.abspath(os.path.join(os.path.dirname(__file__),'..',pathCode))
-              sys.path.remove(aEnlever)
+                aEnlever=os.path.abspath(os.path.join(os.path.dirname(__file__),'..',pathCode))
+                sys.path.remove(aEnlever)
             except :
-              pass
+                pass
         for pathCode in self.listeAEnlever:
             try:
-              sys.path.remove(aEnlever)
+                sys.path.remove(aEnlever)
             except :
-              pass
+                pass
 
 
     def closeEvent(self,event):
-      res=self.fileExit()
-      if res==2 : event.ignore()
+        res=self.fileExit()
+        if res==2 : event.ignore()
 
 if __name__=='__main__':
 
@@ -584,12 +584,12 @@ if __name__=='__main__':
     sys.path.append(rep)
     from Aster import prefsCode
     if hasattr(prefsCode,'encoding'):
-       # Hack pour changer le codage par defaut des strings
-       import sys
-       reload(sys)
-       sys.setdefaultencoding(prefsCode.encoding)
-       del sys.setdefaultencoding
-       # Fin hack
+        # Hack pour changer le codage par defaut des strings
+        import sys
+        reload(sys)
+        sys.setdefaultencoding(prefsCode.encoding)
+        del sys.setdefaultencoding
+        # Fin hack
 
     from Editeur import import_code
     from Editeur import session

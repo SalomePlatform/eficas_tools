@@ -27,10 +27,10 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
-   from builtins import object
+    from builtins import str
+    from builtins import object
 except : pass
-   
+
 import types
 import traceback
 import re
@@ -158,19 +158,19 @@ class TypeProtocol(PProtocol):
                 if self.isComplexe(obj):
                     return obj
             elif type_permis == 'TXM':
-                if isStr(obj): 
-                   return obj
+                if isStr(obj):
+                    return obj
             elif type_permis == 'shell':
                 if isStr(obj):
                     return obj
             elif type_permis == 'Fichier':
                 import os
                 try :
-                   if (len(typ) > 2 and typ[2] == "Sauvegarde") or os.path.isfile(obj):
-                      return obj
-                   else:
-                    raise ValError( "%s n'est pas un fichier valide" % repr(obj))
-                except : 
+                    if (len(typ) > 2 and typ[2] == "Sauvegarde") or os.path.isfile(obj):
+                        return obj
+                    else:
+                        raise ValError( "%s n'est pas un fichier valide" % repr(obj))
+                except :
                     raise ValError( "%s n'est pas un fichier valide" % repr(obj))
 
             elif type_permis == 'FichierNoAbs':
@@ -182,18 +182,18 @@ class TypeProtocol(PProtocol):
 
             elif type_permis == 'Repertoire':
                 import os
-                try : 
-                  if os.path.isdir(obj): return obj
-                  else: raise ValError( "%s n'est pas un repertoire valide" % repr(obj))
+                try :
+                    if os.path.isdir(obj): return obj
+                    else: raise ValError( "%s n'est pas un repertoire valide" % repr(obj))
                 except :
-                  raise ValError( "%s n'est pas un repertoire valide" % repr(obj))
+                    raise ValError( "%s n'est pas un repertoire valide" % repr(obj))
             elif type_permis == 'FichierOuRepertoire':
                 import os
-                try : 
-                  if os.path.isdir(obj) or os.path.isfile(obj): return obj
-                  else: raise ValError( "%s n'est pas un fichier ou un repertoire valide" % repr(obj))
+                try :
+                    if os.path.isdir(obj) or os.path.isfile(obj): return obj
+                    else: raise ValError( "%s n'est pas un fichier ou un repertoire valide" % repr(obj))
                 except :
-                  raise ValError( "%s n'est pas un fichier ou un repertoire valide" % repr(obj))
+                    raise ValError( "%s n'est pas un fichier ou un repertoire valide" % repr(obj))
             elif type(type_permis) == type or isinstance(type_permis, type):
                 try:
                     if self.isObjectFrom(obj, type_permis):
@@ -286,16 +286,16 @@ class IntoProtocol(PProtocol):
     registry = {}
 
     def __init__(self, name, into=None, val_min=float('-inf'), val_max=float('inf')):
-     
+
         PProtocol.__init__(
             self, name, into=into, val_min=val_min, val_max=val_max)
         self.val_min = val_min
         self.val_max = val_max
 
     def default(self, obj, into, val_min, val_max):
-        if type(into)  ==types.FunctionType : 
-               maListeDeValeur=into()
-               into=maListeDeValeur
+        if type(into)  ==types.FunctionType :
+            maListeDeValeur=into()
+            into=maListeDeValeur
         if into:
             if obj not in into:
                 raise ValError(
@@ -1622,7 +1622,7 @@ class VerifTypeTuple(ListVal):
             if type(valeur) == bytes or type(valeur) == str:
                 return 1
         elif isinstance(valeur, type_permis):
-                return 1
+            return 1
         return 0
 
     def verif(self, valeur):
@@ -1747,7 +1747,7 @@ class CreeMotClef(object):
     def __init__(self,MotClef ):
         self.MotClef=MotClef
         self.MCSimp=None
-         
+
     def convert(self, lval):
         try : valeur=lval[0]
         except  : return lval
@@ -1760,20 +1760,20 @@ class CreeMotClef(object):
         else : longueur=len(parent.getChild(self.MotClef))
 
         pos=parent.getIndexChild(self.MCSimp.nom)+1
-        while longueur < valeur : 
-           parent.inhibeValidator=1
-           parent.addEntite(self.MotClef,pos)
-           pos=pos+1
-           parent.inhibeValidator=0
-           longueur=len(parent.getChild(self.MotClef))
+        while longueur < valeur :
+            parent.inhibeValidator=1
+            parent.addEntite(self.MotClef,pos)
+            pos=pos+1
+            parent.inhibeValidator=0
+            longueur=len(parent.getChild(self.MotClef))
 
-        if longueur > valeur : 
-           parent.inhibeValide=1
-           parentObj=parent.getChild(self.MotClef)
-           obj=parent.getChild(self.MotClef)[-1]
-           parentObj.suppEntite(obj)
-           longueur=len(parent.getChild(self.MotClef))
-           parent.inhibeValide=0
+        if longueur > valeur :
+            parent.inhibeValide=1
+            parentObj=parent.getChild(self.MotClef)
+            obj=parent.getChild(self.MotClef)[-1]
+            parentObj.suppEntite(obj)
+            longueur=len(parent.getChild(self.MotClef))
+            parent.inhibeValide=0
         return lval
 
     def info(self):

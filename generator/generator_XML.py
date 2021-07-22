@@ -23,7 +23,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import traceback
@@ -32,83 +32,85 @@ from Extensions.i18n import tr
 from .generator_python import PythonGenerator
 
 def entryPoint():
-   """
-      Retourne les informations necessaires pour le chargeur de plugins
-      Ces informations sont retournees dans un dictionnaire
-   """
-   return {
-        # Le nom du plugin
-          'name' : 'xml',
-        # La factory pour creer une instance du plugin
-          'factory' : XMLGenerator,
-          }
+    """
+       Retourne les informations necessaires pour le chargeur de plugins
+       Ces informations sont retournees dans un dictionnaire
+    """
+    return {
+         # Le nom du plugin
+           'name' : 'xml',
+         # La factory pour creer une instance du plugin
+           'factory' : XMLGenerator,
+           }
 
 
 class XMLGenerator(PythonGenerator):
-   """
-      Ce generateur parcourt un objet de type JDC et produit
-      un texte au format eficas et 
+    """
+       Ce generateur parcourt un objet de type JDC et produit
+       un texte au format eficas et
 
-   """
-   # Les extensions de fichier permis?
-   extensions=('.comm',)
+    """
+    # Les extensions de fichier permis?
+    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appliEficas=None):
-       
-      print ('dans gener XMLGenerator Attention if 1 a la place de try ')
-      #try :
-      if 1 :
-        self.texteXML=obj.toXml()
-      #except : 
-      #  self.texteXML='erreur generation'
-      #  pass
-      
-      print (self.texteXML)
-      self.textePourAide =""
-      self.dictNbNomObj={}
-      # Cette instruction genere le contenu du fichier de commandes (persistance)
-      self.text=PythonGenerator.gener(self,obj,format)
-      return self.text
+    def gener(self,obj,format='brut',config=None,appliEficas=None):
+
+        try :
+        #if 1 :
+            self.texteXML=obj.toXml()
+        except :
+            self.texteXML='erreur generation'
+            #print (self.texteXML)
+        #  pass
+
+        self.textePourAide =""
+        self.dictNbNomObj={}
+        # Cette instruction genere le contenu du fichier de commandes (persistance)
+        self.text=PythonGenerator.gener(self,obj,format)
+        return self.text
 
 
 #----------------------------------------------------------------------------------------
 # initialisations
 #----------------------------------------------------------------------------------------
-   
+
 # ecriture
 #----------------------------------------------------------------------------------------
 
-   def writeDefault(self,fn) :
-       fileXML  = fn[:fn.rfind(".")] + '.xml'
-       #filePyxb = fn[:fn.rfind(".")] + '.py'
-       fileBase = os.path.basename(fileXML)
-       fileBase = fileBase[:fileBase.rfind(".")] + '.py'
-       filePyxb = '/tmp/' + fileBase
-       print (filePyxb)
-       #fileDico='/tmp/toto.xml'
-       #print (self.texteXML)
-       f = open( str(fileXML), 'w')
-       f.write(str(self.texteXML))
-       f.close()
+    def writeDefault(self,fn) :
+        fileXML  = fn[:fn.rfind(".")] + '.xml'
+        #filePyxb = fn[:fn.rfind(".")] + '.py'
+        fileBase = os.path.basename(fileXML)
+        fileBase = fileBase[:fileBase.rfind(".")] + '.py'
+        filePyxb = '/tmp/example_' + fileBase
+        #print (filePyxb)
+        #fileDico='/tmp/toto.xml'
+        #print (self.texteXML)
+        f = open( str(fileXML), 'w')
+        f.write(str(self.texteXML))
+        f.close()
 
-       f = open( str(filePyxb), 'w')
-       f.write(str(self.textePourAide))
-       f.close()
-
-
-   def generMCSIMP(self,obj) :
-       if obj.nom in self.dictNbNomObj.keys():
-          nomUtil = obj.nom + "_" + str(self.dictNbNomObj[obj.nom])
-          self.dictNbNomObj[obj.nom] += 1
-       else :
-          nomUtil = obj.nom 
-          self.dictNbNomObj[obj.nom] = 1
-       self.textePourAide +=  nomUtil + " = vimmpCase." + obj.getNomDsXML() + "\n"
-       #self.textePourAide +=  "print  '"+ nomUtil+ " ='  , " + str(nomUtil) + "\n"
-       #self.textePourAide +='txt += "' + nomUtil + '" + " = " +str( ' + nomUtil + ') ' + "\n"
+        f = open( str(filePyxb), 'w')
+        self.textePourAide='txt=""'+'\n'+self.textePourAide
+        self.textePourAide=self.textePourAide+'print (txt)'+'\n'
+        f.write(str(self.textePourAide))
+        f.close()
 
 
+    def generMCSIMP(self,obj) :
+        if obj.nom != 'Consigne' :
+            if obj.nom in self.dictNbNomObj.keys():
+                nomUtil = obj.nom + "_" + str(self.dictNbNomObj[obj.nom])
+                self.dictNbNomObj[obj.nom] += 1
+            else :
+                nomUtil = obj.nom
+                self.dictNbNomObj[obj.nom] = 1
+            if obj.definition.avecBlancs : self.textePourAide +=  nomUtil + " = vimmpCase." + obj.getNomDsXML() + ".s\n"
+            else : self.textePourAide +=  nomUtil + " = vimmpCase." + obj.getNomDsXML() + "\n"
+            self.textePourAide +='txt += "' + nomUtil + '" + " = " +str( ' + nomUtil + ')+"\\n"'+ "\n"
 
-       s=PythonGenerator.generMCSIMP(self,obj)
-       return s
+
+
+        s=PythonGenerator.generMCSIMP(self,obj)
+        return s

@@ -19,41 +19,40 @@
 #
 #    permet de lancer  EFICAS en n affichant rien
 try :
-   from builtins import object
+    from builtins import object
 except : pass
 
 class appliEficasSSIhm(object):
-   def __init__ (self,code):
-       self.VERSION_EFICAS="Sans Ihm"
-       self.code=code
-       self.ssCode=None
-       self.salome=None
-       self.top=None
-       self.indice=0
-       self.dict_reels={}
-       self.listeAEnlever=[]
+    def __init__ (self,code):
+        self.VERSION_EFICAS="Sans Ihm"
+        self.code=code
+        self.ssCode=None
+        self.salome=None
+        self.top=None
+        self.indice=0
+        self.dict_reels={}
+        self.listeAEnlever=[]
 
 
-       name='prefs_'+self.code
-       try :
-         prefsCode=__import__(name)
-       except :
-         name='prefs_'+self.code.upper()
-         self.code=self.code.upper()
-         prefsCode=__import__(name)
-       
+        name='prefs_'+self.code
+        try :
+            prefsCode=__import__(name)
+        except :
+            name='prefs_'+self.code.upper()
+            self.code=self.code.upper()
+            prefsCode=__import__(name)
 
-       self.repIni=prefsCode.repIni
-       self.format_fichier="python" #par defaut
 
-       nameConf='configuration_'+self.code
-       configuration=__import__(nameConf)
-       self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
-        
+        self.repIni=prefsCode.repIni
+        self.format_fichier="python" #par defaut
+
+        nameConf='configuration_'+self.code
+        configuration=__import__(nameConf)
+        self.CONFIGURATION = configuration.make_config(self,prefsCode.repIni)
+
 class QWParentSSIhm(object):
-   def __init__(self,code,version_code):
+    def __init__(self,code,version_code):
         self.ihm="QT"
         self.code=code
         self.version_code=version_code
         self.format_fichier="python" #par defaut
-

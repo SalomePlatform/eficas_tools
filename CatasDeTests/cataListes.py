@@ -30,7 +30,7 @@ VERSION_CATALOGUE='V_0'
 # tout est Facultatif car sinon, on ne peut pas supprimer et c 'est ce qu on veut tester
 
 
-DefinitionListe = PROC( nom='DefinitionListe', 
+DefinitionListe = PROC( nom='DefinitionListe',
         listeTexte = SIMP( statut='f', typ = 'TXM',max='**'),
         listeIntInto = SIMP( statut='f', typ = 'I',homo="SansOrdreNiDoublon",max='**', into=(1,2,3,4)),
         listeIntIntoOrdre = SIMP( statut='f', typ = 'I',max='**', into=(1,2,3,4)),

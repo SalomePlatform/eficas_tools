@@ -27,74 +27,74 @@ from .convert_python import Pythonparser
 from Noyau import N_CR
 
 try:
-  basestring
+    basestring
 except NameError:
-  basestring = str
+    basestring = str
 
 
 
 def entryPoint():
-   """
-   Return a dictionary containing the description needed to load the plugin
-   """
-   return {
-          'name' : 'dico',
-          'factory' : Dicoparser
-          }
+    """
+    Return a dictionary containing the description needed to load the plugin
+    """
+    return {
+           'name' : 'dico',
+           'factory' : Dicoparser
+           }
 
 class Dicoparser(Pythonparser):
-  """
-   This converter initializes model variable from a python dictionnary
-  """
+    """
+     This converter initializes model variable from a python dictionnary
+    """
 
-  def __init__(self,cr=None):
-      # Si l'objet compte-rendu n'est pas fourni, on utilise le
-      # compte-rendu standard
-      self.text=''
-      self.textePy=''
-      if cr :
-         self.cr=cr
-      else:
-         self.cr=N_CR.CR(debut='CR convertisseur format dico',
-                         fin='fin CR format dico')
+    def __init__(self,cr=None):
+        # Si l'objet compte-rendu n'est pas fourni, on utilise le
+        # compte-rendu standard
+        self.text=''
+        self.textePy=''
+        if cr :
+            self.cr=cr
+        else:
+            self.cr=N_CR.CR(debut='CR convertisseur format dico',
+                            fin='fin CR format dico')
 
-  def readfile(self,filename):
-     self.filename=filename
-     try:
-        self.text=open(filename).read()
-     except:
-        self.cr.exception(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
-        self.cr.fatal(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
-        return
+    def readfile(self,filename):
+        self.filename=filename
+        try:
+            with open(filename) as fd :
+                self.text=fd.read()
+        except:
+            self.cr.exception(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
+            self.cr.fatal(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
+            return
 
-  def convert(self,outformat,appli=None):
-     monTexteDico={}
-     exec (self.text,globals(),monTexteDico)
-     if len(monTexteDico.keys()) != 1 : 
-        self.cr.exception(tr("Impossible de traiter le fichier %s" ,str(filename)))
-        self.cr.fatal(tr("Impossible de traiter le fichier %s" ,str(filename)))
-        return
-     self.textePy=""
-     monDico=monTexteDico[monTexteDico.keys()[0]]
-     for commande in monDico :
-         valeurs=monDico[commande]
-         if valeurs.has_key('NomDeLaSdCommande') :
-            # cas d un oper 
-              self.textePy+=valeurs['NomDeLaSdCommande']+' = '+commande+'('
-              del valeurs['NomDeLaSdCommande']
-         else :
-              self.textePy+=commande+'('
-         for mot in valeurs :
-             if isinstance(valeurs[mot],dict) : self.traiteMCFact(mot,valeurs[mot])
-             else : self.textePy += mot+' = ' +str(valeurs[mot])+','
-         self.textePy+=');\n' # fin de la commande
-     #print (self.textePy)
-     return self.textePy
+    def convert(self,outformat,appli=None):
+        monTexteDico={}
+        exec (self.text,globals(),monTexteDico)
+        if len(monTexteDico.keys()) != 1 :
+            self.cr.exception(tr("Impossible de traiter le fichier %s" ,str(filename)))
+            self.cr.fatal(tr("Impossible de traiter le fichier %s" ,str(filename)))
+            return
+        self.textePy=""
+        monDico=monTexteDico[monTexteDico.keys()[0]]
+        for commande in monDico :
+            valeurs=monDico[commande]
+            if valeurs.has_key('NomDeLaSdCommande') :
+               # cas d un oper
+                self.textePy+=valeurs['NomDeLaSdCommande']+' = '+commande+'('
+                del valeurs['NomDeLaSdCommande']
+            else :
+                self.textePy+=commande+'('
+            for mot in valeurs :
+                if isinstance(valeurs[mot],dict) : self.traiteMCFact(mot,valeurs[mot])
+                else : self.textePy += mot+' = ' +str(valeurs[mot])+','
+            self.textePy+=');\n' # fin de la commande
+        #print (self.textePy)
+        return self.textePy
 
-  def traiteMCFact(self,mot,valeurs):
-      self.textePy += mot + '=_F('
-      for mot in valeurs :
-          if isinstance(valeurs[mot],dict) : self.traiteMCFact(mot,valeurs[mot])
-          else : self.textePy +=mot+' = ' +str(valeurs[mot])+','
-      self.textePy +='),'
-
+    def traiteMCFact(self,mot,valeurs):
+        self.textePy += mot + '=_F('
+        for mot in valeurs :
+            if isinstance(valeurs[mot],dict) : self.traiteMCFact(mot,valeurs[mot])
+            else : self.textePy +=mot+' = ' +str(valeurs[mot])+','
+        self.textePy +='),'

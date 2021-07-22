@@ -26,5 +26,6 @@ class ENSEMBLE(I_REGLE.REGLE,V_ENSEMBLE.ENSEMBLE,N_REGLE.REGLE):
     """
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
-        V_ENSEMBLE.ENSEMBLE n'en a pas
+        seule N_REGLE.REGLE en a un
+    
     """

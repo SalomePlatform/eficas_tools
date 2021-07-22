@@ -26,33 +26,32 @@ from Extensions.eficas_exception import EficasException
 from Noyau.N_VALIDATOR import ValError
 
 class ASSD:
-   def __repr__(self):
-      return "concept " + self.getName() + " type " + self.__class__.__name__
+    def __repr__(self):
+        return "concept " + self.getName() + " type " + self.__class__.__name__
 
-   def __str__(self):
-      return self.getName() or "<None>"
+    def __str__(self):
+        return self.getName() or "<None>"
 
 
 class assd(ASSD):
-   def __convert__(cls,valeur):
-      return valeur
-   __convert__=classmethod(__convert__)
+    def __convert__(cls,valeur):
+        return valeur
+    __convert__=classmethod(__convert__)
 
 class GEOM(ASSD):
-   def __convert__(cls,valeur):
-      return valeur
-   __convert__= classmethod(__convert__)
+    def __convert__(cls,valeur):
+        return valeur
+    __convert__= classmethod(__convert__)
 
 class geom(GEOM):
-   pass
+    pass
 
 class CO(ASSD):
-   def __convert__(cls,valeur):
-      if hasattr(valeur,'_etape') :
-         # valeur est un concept CO qui a ete transforme par typeSDProd
-         if valeur.etape == valeur._etape:
-             # le concept est bien produit par l'etape
-             return valeur
-      raise ValError(u"Pas un concept CO")
-   __convert__=classmethod(__convert__)
-
+    def __convert__(cls,valeur):
+        if hasattr(valeur,'_etape') :
+            # valeur est un concept CO qui a ete transforme par typeSDProd
+            if valeur.etape == valeur._etape:
+                # le concept est bien produit par l'etape
+                return valeur
+        raise ValError(u"Pas un concept CO")
+    __convert__=classmethod(__convert__)

@@ -25,7 +25,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-  from builtins import object
+    from builtins import object
 except : pass
 
 class ASSD(object):
@@ -103,7 +103,7 @@ class ASSD(object):
         return self.etape[key]
 
     def setName(self, nom):
-        """Positionne le nom de self 
+        """Positionne le nom de self
         """
         self.nom = nom
 
@@ -217,13 +217,13 @@ class ASSD(object):
         return val == 'OUI'
 
 
-    def getEficasAttribut(self, attribut): 
+    def getEficasAttribut(self, attribut):
         #print ('getEficasAttribut : ', self, attribut)
         valeur=self.etape.getMocle(attribut)
         try :
-          valeur=self.etape.getMocle(attribut)
+            valeur=self.etape.getMocle(attribut)
         except :
-          valeur = None
+            valeur = None
         #print (valeur)
         return valeur
 
@@ -231,19 +231,23 @@ class ASSD(object):
         from .N_MCLIST import MCList
         #print ('getEficasListOfAttributs pour', self,listeAttributs)
         aTraiter=(self.etape,)
-        while len(listeAttributs) > 0 : 
-          attribut=listeAttributs.pop(0)
-          nvListe=[]
-          for mc in aTraiter :
-             try : 
-               resultat=mc.getMocle(attribut)
-               if isinstance(resultat,MCList): 
-                  for rmc in resultat : nvListe.append(rmc) 
-               else : nvListe.append(resultat)
-             except : pass
-          aTraiter=nvListe
+        while len(listeAttributs) > 0 :
+            attribut=listeAttributs.pop(0)
+            nvListe=[]
+            for mc in aTraiter :
+                try :
+                    resultat=mc.getMocle(attribut)
+                    if isinstance(resultat,MCList):
+                        for rmc in resultat : nvListe.append(rmc)
+                    else : nvListe.append(resultat)
+                except : pass
+            aTraiter=nvListe
         #print ('fin getEficasListOfAttributs ', nvListe)
         return nvListe
+
+    def ajouteUnPere(self,pere):
+        # ne fait rien mais est appeler pour tous les types de ASSD
+        pass
 
 class assd(ASSD):
 

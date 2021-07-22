@@ -1,7 +1,7 @@
 # coding=utf-8
 # person_in_charge: mathieu.courtois at edf.fr
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2017  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 2007-2021  EDF R&D                  
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -65,7 +65,10 @@ class PROC_ETAPE(V_ETAPE.ETAPE):
             valid = self.validChild()
             valid = valid * self.validRegles(cr)
             if self.reste_val != {}:
-                if cr == 'oui':
+                if not hasattr(self,'cr') :
+                    from Noyau.N_CR import CR
+                    self.cr=CR()
+                if  cr == 'oui':
                     self.cr.fatal(
                         tr("unknown keywords : %s") % ','.join(list(self.reste_val.keys())))
                 valid = 0

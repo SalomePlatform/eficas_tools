@@ -71,7 +71,7 @@ class KeywordFinder(MatchFinder):
             self._matches = []
             self.visit(child)
             if self._matches:
-                # Pour eviter les tuples et listes ordinaires, 
+                # Pour eviter les tuples et listes ordinaires,
                 # on ne garde que les visites fructueuses
                 matchlist.append(self._matches)
         self._matches=matchlist

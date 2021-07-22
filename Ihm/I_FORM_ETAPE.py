@@ -59,15 +59,15 @@ class FORM_ETAPE(MACRO_ETAPE):
             return None,None,None
         type_retourne="REEL"
         if len(self.mcListe) > 0:
-           child = self.mcListe[0] # child est un MCSIMP 
-           corps = child.getVal()
+            child = self.mcListe[0] # child est un MCSIMP
+            corps = child.getVal()
         else:
-           corps = None
+            corps = None
         if len(self.mcListe) > 1:
-           child = self.mcListe[1]
-           l_args= child.getVal()
+            child = self.mcListe[1]
+            l_args= child.getVal()
         else :
-           l_args=None
+            l_args=None
         return type_retourne,l_args,corps
 
     def getNom(self):
@@ -258,8 +258,8 @@ class FORM_ETAPE(MACRO_ETAPE):
         if sd:
             sd.nom = formule[0]
 
-    # bidouille PN 
-    # Il faut que formule soit constituee de 
+    # bidouille PN
+    # Il faut que formule soit constituee de
     # nom de la formule
     # type retourne
     # parametres
@@ -269,19 +269,19 @@ class FORM_ETAPE(MACRO_ETAPE):
         self.buildMc()
         self.mcListe=[]
         if len(formule) < 4 :
-           return 0
+            return 0
         arguments=formule[3]
         if arguments[0] == '(' :
-           arguments=arguments[1:]
+            arguments=arguments[1:]
         if arguments[-1] == ')' :
-           arguments=arguments[:-1]
+            arguments=arguments[:-1]
         self.arguments=tuple(arguments.split(','))
 
         mocles={"NOM_PARA":self.arguments}
         if formule[1] == "REEL":
-          mocles["VALE"]=formule[2]
+            mocles["VALE"]=formule[2]
         if formule[1] == "COMPLEXE":
-          mocles["VALE_C"]=formule[2]
+            mocles["VALE_C"]=formule[2]
 
         for k,v in self.definition.entites.items():
             if not k in  mocles : continue
@@ -289,7 +289,7 @@ class FORM_ETAPE(MACRO_ETAPE):
             child.valeur=mocles[k]
             child.state = 'modified'
             self.mcListe.append(child)
-           
+
         self.corps = formule[2]
         self.type_retourne = formule[1]
         sd = self.getSdProd()
@@ -326,18 +326,18 @@ class FORM_ETAPE(MACRO_ETAPE):
         return
 
     def deleteConcept(self,sd):
-        """ 
+        """
          Inputs :
            - sd=concept detruit
          Fonction :
          Mettre a jour les mots cles de l etape et eventuellement le concept produit si reuse
          suite a la disparition du concept sd
          Seuls les mots cles simples MCSIMP font un traitement autre que de transmettre aux fils,
-         sauf les objets FORM_ETAPE qui doivent verifier que le concept detruit n'est pas 
+         sauf les objets FORM_ETAPE qui doivent verifier que le concept detruit n'est pas
          utilise dans le corps de la fonction
         """
         self.initModif()
-         
+
     def replaceConcept(self,old_sd,sd):
         """
          Inputs :
@@ -348,4 +348,3 @@ class FORM_ETAPE(MACRO_ETAPE):
          utilise dans le corps de la fonction
         """
         self.initModif()
-

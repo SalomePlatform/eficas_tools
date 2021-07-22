@@ -21,7 +21,5 @@ from __future__ import absolute_import
 from . import I_MCCOMPO
 class MCBLOC(I_MCCOMPO.MCCOMPO):
 
-   def getNomDsXML(self):
-     return self.parent.getNomDsXML()
-
-
+    def getNomDsXML(self):
+        return self.parent.getNomDsXML()

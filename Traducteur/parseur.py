@@ -110,14 +110,14 @@ class Keyword(Node):
             debut=jdc.getLines()[self.lineno-1][self.colno:]
             fin  = jdc.getLines()[self.endline-1][:self.endcol]
             texte=debut
-            lignecourante=self.lineno  
+            lignecourante=self.lineno
             while  lignecourante < self.endline -1  :
                 texte = texte + jdc.getLines()[lignecourante]
                 lignecourante = lignecourante + 1
-            if chaineBlanche(fin) == 0 :  
-               texte=texte + fin
+            if chaineBlanche(fin) == 0 :
+                texte=texte + fin
             if texte[-1] == "\n" :
-               texte=texte[0:-1]
+                texte=texte[0:-1]
         else:
             texte = jdc.getLines()[self.lineno-1][self.colno:self.endcol]
         return texte
@@ -147,7 +147,7 @@ def parser(src,atraiter):
 #------------------------
     """Parse le texte src et retourne un arbre syntaxique (root).
 
-       Cet arbre syntaxique a comme noeuds (childNodes) les commandes à traiter (liste atraiter)
+       Cet arbre syntaxique a comme noeuds (childNodes) les commandes a traiter (liste atraiter)
     """
     lines=src.splitlines(1)
     maskedSrc=maskStringsAndComments(src)
@@ -155,8 +155,8 @@ def parser(src,atraiter):
 
     root=JDCNode(src)
 
-    # (a) dans un premier temps on extrait les commandes et on les insère 
-    #     dans un arbre (root)  les noeuds fils sont stockés dans 
+    # (a) dans un premier temps on extrait les commandes et on les insere
+    #     dans un arbre (root)  les noeuds fils sont stockes dans
     #     root.childNodes (liste)
     lineno=0
     for line in maskedLines:
@@ -171,16 +171,16 @@ def parser(src,atraiter):
             if m and (m.group(2) in atraiter):
                 root.addChild(Command(m.group(2),lineno,m.start(2),m.end(4)))
 
-    #(b) dans un deuxième temps , on récupère le texte complet de la commande 
-    #    jusqu'à la  dernière parenthèse fermante
+    #(b) dans un deuxieme temps , on recupere le texte complet de la commande
+    #    jusqu'a la  derniere parenthese fermante
 
-    # iterateur sur les lignes physiques masquées
+    # iterateur sur les lignes physiques masquees
     iterlines=iter(maskedLines)
 
     linenum=0
     for c in root.childNodes:
         lineno=c.lineno
-        colno=c.colno                       # début de la commande
+        colno=c.colno                       # debut de la commande
         while linenum < lineno:
             line=iterlines.next()
             linenum=linenum+1
@@ -200,7 +200,7 @@ def parser(src,atraiter):
 
             hangingComments ^= line.count('"""') % 2
             hangingComments ^= line.count("'''") % 2
-    
+
             if hangingBraces[0] < 0 or hangingBraces[1] < 0 or hangingBraces[2] < 0:
                 raise UnbalancedBracesException()
 
@@ -271,4 +271,3 @@ def lastParen2(src):
             if level == 0:
                 #derniere parenthese fermante
                 return i
-

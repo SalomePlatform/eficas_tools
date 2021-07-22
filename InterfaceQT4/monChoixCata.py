@@ -28,23 +28,22 @@ from Extensions.i18n import tr
 # Import des panels
 
 class MonChoixCata(Ui_DChoixCata,QDialog):
-  """
-  """
-  def __init__(self, QWparent, listeCata, title = None):
-      QDialog.__init__(self, QWparent)
-      self.setModal(True)
-      self.setupUi(self)
-      self.CBChoixCata.addItems(listeCata)
-      self.TLNb.setText(tr("%d versions du catalogue sont disponibles", len(listeCata)))
-      if title is not None:
-          self.setWindowTitle(tr(title))
-      self.buttonOk.clicked.connect(self.cataChoisi)
-      self.buttonCancel.clicked.connect(self.sortSansChoix)
+    """
+    """
+    def __init__(self, QWparent, listeCata, title = None):
+        QDialog.__init__(self, QWparent)
+        self.setModal(True)
+        self.setupUi(self)
+        self.CBChoixCata.addItems(listeCata)
+        self.TLNb.setText(tr("%d versions du catalogue sont disponibles", len(listeCata)))
+        if title is not None:
+            self.setWindowTitle(tr(title))
+        self.buttonOk.clicked.connect(self.cataChoisi)
+        self.buttonCancel.clicked.connect(self.sortSansChoix)
 
 
-  def sortSansChoix(self):
-      QDialog.reject(self)
+    def sortSansChoix(self):
+        QDialog.reject(self)
 
-  def cataChoisi(self):
-      QDialog.accept(self)
-
+    def cataChoisi(self):
+        QDialog.accept(self)

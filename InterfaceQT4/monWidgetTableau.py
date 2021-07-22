@@ -27,7 +27,7 @@ from PyQt5.QtWidgets import QLabel, QSizePolicy, QSpacerItem
 from PyQt5.QtCore    import QSize
 
 from InterfaceQT4.feuille                  import Feuille
-from InterfaceQT4.monWidgetPlusieursTuple  import MonWidgetPlusieursTuple 
+from InterfaceQT4.monWidgetPlusieursTuple  import MonWidgetPlusieursTuple
 from desWidgetPlusieursTuple               import Ui_WidgetPlusieursTuple
 from desWidgetTableau                      import Ui_WidgetTableau
 
@@ -35,7 +35,7 @@ maxLen=3
 
 
 class MonWidgetTableau (Ui_WidgetTableau,MonWidgetPlusieursTuple):
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         self.nbValeurs=len(monSimpDef.homo)
         MonWidgetPlusieursTuple.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 
@@ -43,7 +43,7 @@ class MonWidgetTableau (Ui_WidgetTableau,MonWidgetPlusieursTuple):
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
 
- 
+
         for i in range(len(monSimpDef.homo)):
             nomCol='LECol'+str(i+1)
             objCol=QLabel(self)
@@ -58,16 +58,15 @@ class MonWidgetTableau (Ui_WidgetTableau,MonWidgetPlusieursTuple):
 
 #            monObjTitreCol=getattr(self,nomCol)
 #            monObjTitreCol.setText(monSimpDef.homo[i])
-            
+
 #        for i in range(maxLen-len(monSimpDef.homo)):
 #            index=i+len(monSimpDef.homo)+1
 #            nomCol='LECol'+str(index)
 #            monObjTitreCol=getattr(self,nomCol)
 #            monObjTitreCol.close()
-            
+
         self.resize(self.width(),1800)
 
-  def ajoutLineEdit(self,valeur=None,inInit=False):
-      hauteurAvant=(self.frame.height())
-      MonWidgetPlusieursTuple.ajoutLineEdit(self,valeur,inInit)
-
+    def ajoutLineEdit(self,valeur=None,inInit=False):
+        hauteurAvant=(self.frame.height())
+        MonWidgetPlusieursTuple.ajoutLineEdit(self,valeur,inInit)

@@ -19,7 +19,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce module sert a lancer EFICAS configure pour Meteo 
+   Ce module sert a lancer EFICAS configure pour Meteo
 """
 # Modules Python
 # Modules Eficas

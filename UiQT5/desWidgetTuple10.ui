@@ -161,6 +161,12 @@
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -276,7 +282,7 @@ border:0px;</string>
         </widget>
        </item>
        <item>
-        <widget class="LECustomTuple" name="lineEditVal_4">
+        <widget class="QLineEdit" name="lineEditVal4">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -312,7 +318,7 @@ border:0px;</string>
         </widget>
        </item>
        <item>
-        <widget class="LECustomTuple" name="lineEditVal_5">
+        <widget class="QLineEdit" name="lineEditVal5">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -348,7 +354,7 @@ border:0px;</string>
         </widget>
        </item>
        <item>
-        <widget class="LECustomTuple" name="lineEditVal_6">
+        <widget class="QLineEdit" name="lineEditVal6">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -384,7 +390,7 @@ border:0px;</string>
         </widget>
        </item>
        <item>
-        <widget class="LECustomTuple" name="lineEditVal_8">
+        <widget class="QLineEdit" name="lineEditVal8">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -420,7 +426,7 @@ border:0px;</string>
         </widget>
        </item>
        <item>
-        <widget class="LECustomTuple" name="lineEditVal_7">
+        <widget class="QLineEdit" name="lineEditVal7">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -456,7 +462,7 @@ border:0px;</string>
         </widget>
        </item>
        <item>
-        <widget class="LECustomTuple" name="lineEditVal_9">
+        <widget class="QLineEdit" name="lineEditVal9">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -497,6 +503,45 @@ border:0px;</string>
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>10</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="lineEditUnite">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>10</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <spacer name="horizontalSpacer">
@@ -578,11 +623,6 @@ border:0px;</string>
    <class>MonLabelClic</class>
    <extends>QLabel</extends>
    <header>monLabelClic.h</header>
-  </customwidget>
-  <customwidget>
-   <class>LECustomTuple</class>
-   <extends>QLineEdit</extends>
-   <header>gereListe.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

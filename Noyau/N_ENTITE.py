@@ -1,6 +1,6 @@
 # coding=utf-8
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2017  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 2007-2021  EDF R&D                  
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -27,10 +27,10 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
-   from builtins import object
+    from builtins import str
+    from builtins import object
 except :
-   pass
+    pass
 import re
 from . import N_CR
 from . import N_OPS
@@ -70,6 +70,7 @@ class ENTITE(object):
         #self.doitSenregistrerComme = None
         self.txtNomComplet=''
         self.redefinit=False
+        self.dejaPrepareDump=False
 
     def affecter_parente(self):
         """
@@ -94,7 +95,7 @@ class ENTITE(object):
         """
             Cette methode doit retourner un objet dérivé de la classe OBJECT
         """
-     
+
         raise NotImplementedError("La méthode __call__ de la classe %s doit être implémentée"
                                   % self.__class__.__name__)
 
@@ -262,58 +263,80 @@ class ENTITE(object):
 
     def checkPosition(self):
         """Vérifie l'attribut position."""
-        if self.position not in ('local', 'global', 'global_jdc'):
-            self.cr.fatal(_(u"L'attribut 'position' doit valoir 'local', 'global' "
+        if self.position not in ('local', 'global', 'global_jdc', 'inGetAttribut', 'reCalculeEtape'):
+            self.cr.fatal(_(u"L'attribut 'position' doit valoir 'local', 'global' ,'global_jdc', 'inGetAttribut', 'reCalculeEtape' "
                             u"ou 'global_jdc' : %r"), self.position)
 
     def nomComplet(self):
         if self.txtNomComplet  != '' : return self.txtNomComplet
         qui=self
         while hasattr(qui, 'pere' ):
-              self.txtNomComplet+='_'+qui.nom
-              qui=qui.pere
+            self.txtNomComplet+='_'+qui.nom
+            qui=qui.pere
         self.txtNomComplet+='_'+qui.nom
         return self.txtNomComplet
+
+    def geneaCompleteSousFormeDeListe(self):
+        geneaCompleteSousFormeDeListe=[]
+        qui=self
+        while hasattr(qui, 'pere' ):
+            geneaCompleteSousFormeDeListe.append(qui)
+            qui=qui.pere
+        geneaCompleteSousFormeDeListe.append(qui)
+        return geneaCompleteSousFormeDeListe
 
     def addDefinitionMC(self,listeMCAvant,**args):
         ouChercher=self
         for mot in listeMCAvant:
             try :
-              ouChercher=ouChercher.entites[mot]
+                ouChercher=ouChercher.entites[mot]
             except :
-              print ('impossible de trouver : ',mot,' ',listeMCAvant)
+                print ('impossible de trouver : ',mot,' ',listeMCAvant)
         (nomMC,defMC)=args.items()[0]
         defMC.pere = ouChercher
         defMC.pere.propageRedefinit()
         defMC.nom = nomMC
         cata = CONTEXT.getCurrentCata()
-        print (cata)
+        #print (cata)
         ouChercher.entites[nomMC]=defMC
 
     def changeDefinitionMC(self,listeMCAvant,**args):
         ouChercher=self
         for mot in listeMCAvant:
             try :
-              ouChercher=ouChercher.entites[mot]
+                ouChercher=ouChercher.entites[mot]
             except :
-              print ('impossible de trouver : ',mot,' ',listeMCAvant)
+                print ('impossible de trouver : ',mot,' ',listeMCAvant)
         monSIMP=ouChercher
         for (nomAttributDef,valeurAttributDef) in args.items():
-             if hasattr(monSIMP, nomAttributDef) :
-               setattr(monSIMP, nomAttributDef, valeurAttributDef) 
-             else :
-               print ('pb avec ', nomAttributdef,valeurAttributMC)
+            if hasattr(monSIMP, nomAttributDef) :
+                setattr(monSIMP, nomAttributDef, valeurAttributDef)
+            else :
+                print ('pb avec ', nomAttributdef,valeurAttributMC)
         monSIMP.propageRedefinit()
 
     def propageRedefinit(self):
-   # a reflechir
-       self.redefinit=True
-       # PNPN il faut remonter a l etape
-   
+    # a reflechir
+        self.redefinit=True
+        # PNPN il faut remonter a l etape
 
 
-    def makeObjetPourVerifSignature(self,**args):
-        etape = self.class_instance(oper=self, args=args)
+
+    def makeObjetPourVerifSignature(self,*args,**kwargs):
+        etape = self.class_instance(oper=self, args=kwargs)
         etape.MCBuild()
         return etape
 
+
+    def dumpStructure(self,decal=0):
+        if self.label == 'SIMP':
+            texte = decal * '   ' + self.nom + ' \n'
+            return texte
+        texte = decal * '   ' + self.nom
+        if self.label == 'BLOC' : texte+= " " + self.condition
+        if self.label == 'OPER' : texte+ " " + str(self.sd_prod) + "\n"
+        texte+=' \n'
+        for c in self.entites.values():
+            texte+=c.dumpStructure(decal+1)
+        texte += decal * '   ' + 'fin pour   ' + self.nom + ' \n'
+        return texte

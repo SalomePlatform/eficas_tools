@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import object
+    from builtins import object
 except : pass
 
 import types,os,re
@@ -35,46 +35,46 @@ from desWidgetCreeParam import Ui_desWidgetCreeParam
 
 
 class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
-  """
-  """
-  def __init__(self,editor, name = None,fl = 0):
-       self.editor=editor
-       self.editor.afficheInfos("")
-       QDialog.__init__(self,editor)
-       self.setupUi(self)
-       self.connecterSignaux()
-       self.dejaExistant=0
-       self.listeTousParam=self.editor.jdc.params
-       self.dictListe={}
-       self.initToutesVal()
+    """
+    """
+    def __init__(self,editor, name = None,fl = 0):
+        self.editor=editor
+        self.editor.afficheInfos("")
+        QDialog.__init__(self,editor)
+        self.setupUi(self)
+        self.connecterSignaux()
+        self.dejaExistant=0
+        self.listeTousParam=self.editor.jdc.params
+        self.dictListe={}
+        self.initToutesVal()
 
-  def connecterSignauxQT4(self) :
+    def connecterSignauxQT4(self) :
         self.connect(self.lineEditVal,SIGNAL("returnPressed()"),self.lineEditValReturnPressed)
         self.connect(self.lineEditNom,SIGNAL("returnPressed()"),self.lineEditNomReturnPressed)
 
-  def connecterSignaux(self) :
+    def connecterSignaux(self) :
         self.lineEditVal.returnPressed.connect(self.lineEditValReturnPressed)
         self.lineEditNom.returnPressed.connect(self.lineEditNomReturnPressed)
         self.LBParam.itemDoubleClicked.connect(self.paramClicked)
 
-  def paramClicked(self,item):
-        if self.editor.nodeEnCours == None : 
+    def paramClicked(self,item):
+        if self.editor.nodeEnCours == None :
             QMessageBox.warning( self, tr("Pas de Mot-Clef"),tr("Attention! selectionnez un mot-clef"))
             return
         param= self.dictListe[item.text()]
         self.editor.nodeEnCours.lineEditVal.setText(param)
         self.editor.nodeEnCours.LEvaleurPressed()
-       
 
-  def creeParametre(self):
+
+    def creeParametre(self):
         nom=str(self.lineEditNom.text())
         val=str(self.lineEditVal.text())
         if val == "" or None : return
         if nom == "" or None : return
-        if len(self.editor.tree.selectedItems()) == 0 : 
-           itemAvant=self.editor.tree.racine 
-        else :                                     
-           itemAvant=self.editor.tree.selectedItems()[0]
+        if len(self.editor.tree.selectedItems()) == 0 :
+            itemAvant=self.editor.tree.racine
+        else :
+            itemAvant=self.editor.tree.selectedItems()[0]
         param=itemAvant.addParameters(True)
         param.item.setNom(nom)
         #PN self.val permet d entrer du texte
@@ -89,62 +89,62 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
 
 
 
-  def lineEditValReturnPressed(self):
+    def lineEditValReturnPressed(self):
         qtVal=self.lineEditVal.text()
         valString=str(self.lineEditVal.text())
         self.val=""
         contexte={}
         exec("from math import *", contexte)
         jdc=self.editor.jdc
-        if jdc == None : 
-          self.editor.afficheInfos(tr(u"La Creation de parametre n est possible que dans un jeu de donnees"),Qt.red)
-          return
+        if jdc == None :
+            self.editor.afficheInfos(tr(u"La Creation de parametre n est possible que dans un jeu de donnees"),Qt.red)
+            return
 
         for p in jdc.params :
-           try:
-              tp=p.nom+'='+str(repr(p.valeur))
-              exec(tp, contexte)
-           except :
-              pass
+            try:
+                tp=p.nom+'='+str(repr(p.valeur))
+                exec(tp, contexte)
+            except :
+                pass
         monTexte="monParam="+valString
         try :
-          exec(monTexte, contexte)
-          self.val=valString
+            exec(monTexte, contexte)
+            self.val=valString
         except :
-          try :
-            monTexte="monParam='"+valString+"'"
-            self.val="'"+valString+"'"
-          except :
-            self.editor.afficheInfos(tr("Valeur incorrecte"),Qt.red)
+            try :
+                monTexte="monParam='"+valString+"'"
+                self.val="'"+valString+"'"
+            except :
+                self.editor.afficheInfos(tr("Valeur incorrecte"),Qt.red)
         if self.lineEditNom.text()!="" and self.dejaExistant==False : self.creeParametre()
 
 
-  def lineEditNomReturnPressed(self):
+    def lineEditNomReturnPressed(self):
         qtNom=self.lineEditNom.text()
         nom=str(qtNom)
         if not pattern_name.match(nom) :
-           self.lineEditNom.setText("")
-           commentaire=nom + tr(" n est pas un identifiant correct\n ")
-           self.editor.afficheInfos(commentaire,Qt.red)
+            self.lineEditNom.setText("")
+            commentaire=nom + tr(" n est pas un identifiant correct\n ")
+            self.editor.afficheInfos(commentaire,Qt.red)
         for p in self.editor.jdc.params :
-           if p.nom==nom :
-             commentaire=nom + tr(" existe deja\n ")
-             self.editor.afficheInfos(commentaire,Qt.red)
-             return
+            if p.nom==nom :
+                commentaire=nom + tr(" existe deja\n ")
+                self.editor.afficheInfos(commentaire,Qt.red)
+                return
 
         if self.lineEditVal.text()!="" : self.creeParametre()
         self.lineEditVal.setFocus(Qt.OtherFocusReason)
 
 
-  def initToutesVal(self):
+    def initToutesVal(self):
         self.LBParam.clear()
         for param in self.listeTousParam :
             self.LBParam.addItem((repr(param)))
             self.dictListe[repr(param)] = param.nom
-         
-         
-  
-  def valideParam(self):
+
+
+
+    def valideParam(self):
         if self.LBParam.selectedItems()== None : return
         lParam=[]
         for indice in range(len(self.LBParam.selectedItems())):
@@ -153,9 +153,8 @@ class MonWidgetCreeParam(Ui_desWidgetCreeParam,QDialog):
             lParam.append(param)
 
         try :
-          self.panel.ajoutNValeur(lParam)
+            self.panel.ajoutNValeur(lParam)
         except :
-          for p in lParam :
-             self.panel.ajout1Valeur(p)
+            for p in lParam :
+                self.panel.ajout1Valeur(p)
         self.close()
-

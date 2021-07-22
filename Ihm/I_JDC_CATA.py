@@ -21,22 +21,22 @@ from __future__ import absolute_import
 from Noyau import N_JDC_CATA
 
 class JDC_CATA:
-  def __init__(self):
-    self.l_noms_entites=[]
+    def __init__(self):
+        self.l_noms_entites=[]
 
-  def getListeCmd(self):
-    self.l_noms_entites.sort()
-    return self.l_noms_entites
+    def getListeCmd(self):
+        self.l_noms_entites.sort()
+        return self.l_noms_entites
 
-  def getDocu(self):
-    return
+    def getDocu(self):
+        return
 
 
 #ATTENTION SURCHARGE: cette methode doit etre synchronisee avec celle du Noyau
-  def enregistre(self,commande):
-    """ 
-        Cette methode surcharge la methode de la classe du Noyau
-        Marche avec Noyau 
-    """
-    N_JDC_CATA.JDC_CATA.enregistre(self,commande)
-    self.l_noms_entites.append(commande.nom)
+    def enregistre(self,commande):
+        """
+            Cette methode surcharge la methode de la classe du Noyau
+            Marche avec Noyau
+        """
+        N_JDC_CATA.JDC_CATA.enregistre(self,commande)
+        self.l_noms_entites.append(commande.nom)

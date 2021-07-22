@@ -40,45 +40,45 @@ from readercata import ReaderCataCommun
 
 class ReaderCata (ReaderCataCommun):
 
-   def __init__(self,QWParent, appliEficas):
-      self.QWParent=QWParent
-      self.appliEficas=appliEficas
-      self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
-      self.code=self.appliEficas.code
-      self.ssCode=self.appliEficas.ssCode
-      # PN ?? bizarre le 22/04/20
-      self.appliEficas.formatfichierOut='python'
-      self.appliEficas.formatfichierIn ='xml'
-      self.modeNouvCommande=self.appliEficas.maConfiguration.modeNouvCommande
-      self.labelCode=self.appliEficas.labelCode
-      self.version_cata=None
-      self.ficCata=None
-      self.OpenCata()
-      self.cataitem=None
-      self.titre='Eficas XML'
-      self.Ordre_Des_Commandes=None
-      self.Classement_Commandes_Ds_Arbre=()
-      self.demandeCatalogue=False
+    def __init__(self,QWParent, appliEficas):
+        self.QWParent=QWParent
+        self.appliEficas=appliEficas
+        self.VERSION_EFICAS=self.appliEficas.VERSION_EFICAS
+        self.code=self.appliEficas.code
+        self.ssCode=self.appliEficas.ssCode
+        # PN ?? bizarre le 22/04/20
+        self.appliEficas.formatfichierOut='python'
+        self.appliEficas.formatfichierIn ='xml'
+        self.modeNouvCommande=self.appliEficas.maConfiguration.modeNouvCommande
+        self.labelCode=self.appliEficas.labelCode
+        self.version_cata=None
+        self.ficCata=None
+        self.OpenCata()
+        self.cataitem=None
+        self.titre='Eficas XML'
+        self.Ordre_Des_Commandes=None
+        self.Classement_Commandes_Ds_Arbre=()
+        self.demandeCatalogue=False
 
-      #self.traiteIcones()
-      #self.creeDicoInverse()
+        #self.traiteIcones()
+        #self.creeDicoInverse()
 
 
-   def OpenCata(self):
+    def OpenCata(self):
 
-      #self.ficCata = 'Cata_MED_FAM.xml'
-      #xml = open('/home/A96028/QT5GitEficasTravail/eficas/Med/Cata_MED_FAM.xml').read()
-      #xml = open('/home/A96028/QT5GitEficasTravail/eficas/CataTestXSD/cata_test1.xml').read()
-      self.choisitCata()
-      xml=open(self.ficCata).read()
-      SchemaMed = readerEfiXsd.efficas.CreateFromDocument(xml)
-      SchemaMed.exploreCata() 
-      self.cata=SchemaMed
-      uiinfo.traite_UIinfo(self.cata)
-      self.Commandes_Ordre_Catalogue=[]
-      self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
-      self.liste_groupes=None
+        #self.ficCata = 'Cata_MED_FAM.xml'
+        #xml = open('/home/A96028/QT5GitEficasTravail/eficas/Med/Cata_MED_FAM.xml').read()
+        #xml = open('/home/A96028/QT5GitEficasTravail/eficas/CataTestXSD/cata_test1.xml').read()
+        self.choisitCata()
+        xml=open(self.ficCata).read()
+        SchemaMed = readerEfiXsd.efficas.CreateFromDocument(xml)
+        SchemaMed.exploreCata()
+        self.cata=SchemaMed
+        uiinfo.traite_UIinfo(self.cata)
+        self.Commandes_Ordre_Catalogue=[]
+        self.cata_ordonne_dico,self.appliEficas.liste_simp_reel=autre_analyse_cata.analyseCatalogue(self.cata)
+        self.liste_groupes=None
 
-   def dumpToXml(self):
-      # pour compatibilite
-       pass
+    def dumpToXml(self):
+        # pour compatibilite
+        pass

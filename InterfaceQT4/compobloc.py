@@ -28,7 +28,7 @@ from . import typeNode
 
 
 class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
-        
+
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuNodeMinimal.createPopUpMenu(self)
@@ -46,12 +46,12 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
 
 
 class BLOCTreeItem(compofact.FACTTreeItem):
-  itemNode=Node
+    itemNode=Node
 
-  def isCopiable(self):
-    return 0
+    def isCopiable(self):
+        return 0
 
 
 import Accas
 treeitem = BLOCTreeItem
-objet = Accas.MCBLOC   
+objet = Accas.MCBLOC

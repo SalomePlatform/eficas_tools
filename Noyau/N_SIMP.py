@@ -48,9 +48,10 @@ class SIMP(N_ENTITE.ENTITE):
     label = 'SIMP'
 
     def __init__(self, typ,ang="", fr="", statut='f', into=None, intoSug = None,siValide = None, defaut=None,
-                 min=1, max=1, homo=1, position='local',
+                 min=1, max=1, homo=1, position='local',filtre=None,
                  val_min=float('-inf'), val_max=float('inf'), docu="", validators=None, nomXML=None,
-                 sug=None,fenetreIhm=None, attribut=False,  sortie='n', intoXML=None):
+                 sug=None,fenetreIhm=None, attribut=False,  sortie='n', intoXML=None, metAJour=None,
+                 avecBlancs=False, unite=None):
         """
             Un mot-clé simple est caractérisé par les attributs suivants :
             - type : cet attribut est obligatoire et indique le type de valeur attendue
@@ -89,17 +90,20 @@ class SIMP(N_ENTITE.ENTITE):
         else:
             self.type = (typ,)
         for t in (self.type) :
-            try :   
-              if issubclass(t,Accas.UserASSD) : 
-                 creeDesObjetsDeType = t 
-                 self.utiliseUneReference = True
+            try :
+                if issubclass(t,Accas.UserASSDMultiple) :
+                    creeDesObjetsDeType = t
+                    self.utiliseUneReference = True
+                elif issubclass(t,Accas.UserASSD) :
+                    creeDesObjetsDeType = t
+                    self.utiliseUneReference = True
             except : pass
             if t == 'createObject' : self.creeDesObjets=True
-        if self.utiliseUneReference : 
-           if self.creeDesObjets : 
-                  self.utiliseUneReference = False
-                  self.creeDesObjetsDeType = creeDesObjetsDeType
-           else : self.utiliseDesObjetsDeType = creeDesObjetsDeType
+        if self.utiliseUneReference :
+            if self.creeDesObjets :
+                self.utiliseUneReference = False
+                self.creeDesObjetsDeType = creeDesObjetsDeType
+            else : self.utiliseDesObjetsDeType = creeDesObjetsDeType
         self.fr       = fr
         self.statut   = statut
         self.into     = into
@@ -124,6 +128,29 @@ class SIMP(N_ENTITE.ENTITE):
         self.nomXML     = nomXML
         self.intoXML    = intoXML
         self.sortie     = sortie
+        self.filtre     = filtre
+        self.avecBlancs = avecBlancs
+        self.unite      = unite
+        if not(self.avecBlancs) and self.max > 1 and 'TXM' in self.type and self.into != None :
+            for val in self.into :
+                if val.find(' ')  > -1: 
+                   self.avecBlancs = True  
+                   break
+        if not(self.avecBlancs) and self.max > 1 and 'TXM' in self.type and self.intoXML != None :
+            for val in self.intoXML :
+                if val.find(' ')  > -1: 
+                   self.avecBlancs = True  
+                   break
+        if self.avecBlancs and not ('TXM' in self.type) : 
+            print ('definition incoherente avecBlanc et non texte pour ', self) 
+            exit()
+        if self.filtre  :
+            self.filtreExpression = self.filtre[0]
+            self.filtreVariables = self.filtre[1]
+        else :
+            self.filtreExpression = []
+            self.filtreVariables = []
+        self.metAJour=metAJour
 
     def verifCata(self):
         """
@@ -137,7 +164,7 @@ class SIMP(N_ENTITE.ENTITE):
         self.checkInto()
         self.checkPosition()
         self.checkValidators()
-   
+
 
     def __call__(self, val, nom, parent=None, objPyxbDeConstruction = None):
         """
@@ -145,5 +172,3 @@ class SIMP(N_ENTITE.ENTITE):
             de sa valeur (val), de son nom (nom) et de son parent dans l arboresence (parent)
         """
         return self.class_instance(nom=nom, definition=self, val=val, parent=parent, objPyxbDeConstruction=objPyxbDeConstruction)
-
-           

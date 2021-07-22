@@ -108,9 +108,7 @@ class BLOC(N_ENTITE.ENTITE):
            Cette méthode vérifie si le dictionnaire passé en argument (dict)
            est susceptible de contenir un bloc de mots-clés conforme à la
            définition qu'il porte.
-
            Si la réponse est oui, la méthode retourne 1
-
            Si la réponse est non, la méthode retourne 0
 
            Le dictionnaire dict a pour clés les noms des mots-clés et pour valeurs
@@ -153,12 +151,12 @@ class BLOC(N_ENTITE.ENTITE):
 
 
 
-    
+
     def longueurDsArbre(self):
-      longueur=0
-      for mc in self.mcListe : 
-         longueur = longueur + mc.longueurDsArbre()
-      return longueur
+        longueur=0
+        for mc in self.mcListe :
+            longueur = longueur + mc.longueurDsArbre()
+        return longueur
 
 def blocUtils():
     """Définit un ensemble de fonctions utilisables pour écrire les

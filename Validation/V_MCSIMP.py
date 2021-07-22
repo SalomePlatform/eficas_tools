@@ -1,7 +1,7 @@
 # coding=utf-8
 # person_in_charge: mathieu.courtois at edf.fr
 # ======================================================================
-# COPYRIGHT (C) 1991 - 2017  EDF R&D                  WWW.CODE-ASTER.ORG
+# COPYRIGHT (C) 2007-2021  EDF R&D                  
 # THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY
 # IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY
 # THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR
@@ -30,8 +30,8 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
-   from builtins import object
+    from builtins import str
+    from builtins import object
 except : pass
 import traceback
 
@@ -57,6 +57,7 @@ class MCSIMP(object):
 
            - Est il indispensable de faire l'evaluation de la valeur dans le contexte
              du jdc dans cette classe.
+             oui surtout pour les filtres et les validateurs
 
            - Ne pourrait on pas doter les objets en presence des methodes suffisantes
              pour eviter les tests un peu particuliers sur GEOM, PARAMETRE et autres. J'ai
@@ -113,10 +114,10 @@ class MCSIMP(object):
             # Ajout PN
             # Pour tenir compte des Tuples
             if hasattr(self.definition.type[0],'ntuple') :
-               try :
-                  if (not (type(lval[0]) is tuple)) and (not (type(lval[0]) is list)) : lval=(lval,)
-               except :
-                  pass
+                try :
+                    if (not (type(lval[0]) is tuple)) and (not (type(lval[0]) is list)) : lval=(lval,)
+                except :
+                    pass
             if lval is None:
                 valid = 0
                 if cr == 'oui':

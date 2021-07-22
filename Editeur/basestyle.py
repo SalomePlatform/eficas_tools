@@ -17,7 +17,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 try :
-  from builtins import object
+    from builtins import object
 except : pass
 
 class STYLE(object):

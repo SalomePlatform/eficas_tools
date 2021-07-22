@@ -28,6 +28,7 @@ from __future__ import absolute_import
 from copy import copy
 
 from Noyau.N_ASSD import ASSD
+from Noyau.N_UserASSDMultiple import UserASSDMultiple
 from Noyau.N_CO import CO
 from . import N_OBJECT
 from .N_CONVERT import ConversionFactory
@@ -70,24 +71,28 @@ class MCSIMP(N_OBJECT.OBJECT):
             # Le mot cle simple a été créé sans parent
             # est-ce possible ?
             print ('je suis dans le else sans parent du build')
-            print (poum)
             self.jdc    = None
             self.cata   = None
             self.niveau = None
             self.etape  = None
-        if self.definition.creeDesObjets : 
-           self.convProto = ConversionFactory('UserASSD', self.definition.creeDesObjetsDeType)
-        else : 
-           self.convProto = ConversionFactory('type', typ=self.definition.type)
+        if self.definition.creeDesObjets :
+            if issubclass(self.definition.creeDesObjetsDeType, UserASSDMultiple) :
+                self.convProto = ConversionFactory('UserASSDMultiple', self.definition.creeDesObjetsDeType)
+            else :
+                self.convProto = ConversionFactory('UserASSD', self.definition.creeDesObjetsDeType)
+        else :
+            self.convProto = ConversionFactory('type', typ=self.definition.type)
         self.valeur = self.getValeurEffective(self.val)
         if self.definition.utiliseUneReference :
-          if self.valeur != None: 
-             if not type(self.valeur) in (list, tuple): self.valeur.ajoutUtilisePar(self)
-             else : 
-               #PNPN --> chgt pour Vimmp
-               for v in self.valeur : 
-                   try : v.ajoutUtilisePar(self)
-                   except : print ('il y a un souci ici', self.nom, self.valeur)
+            if self.valeur != None:
+                if not type(self.valeur) in (list, tuple): self.valeur.ajoutUtilisePar(self)
+                else :
+                    #PNPN --> chgt pour Vimmp
+                    for v in self.valeur :
+                        print (v, type(v))
+                        v.ajoutUtilisePar(self)
+                        #try : v.ajoutUtilisePar(self)
+                        #except : print ('il y a un souci ici', self.nom, self.valeur)
         self.buildObjPyxb()
         self.listeNomsObjsCrees = []
 
@@ -95,65 +100,101 @@ class MCSIMP(N_OBJECT.OBJECT):
         """
             Retourne la valeur effective du mot-clé en fonction
             de la valeur donnée. Defaut si val == None
+            Attention aux UserASSD et aux into (exple Wall gp de maille et 'Wall')
         """
+        #print ('getValeurEffective ________________', val)
         if (val is None and hasattr(self.definition, 'defaut')): val = self.definition.defaut
-        if self.jdc != None and val in list(self.jdc.sdsDict.keys()): return self.jdc.sdsDict[val]
-         # dans le cas de lecture de .comm, il est possible que l objet est deja ete cree
-         # peut-etre devrait on aussi verifier que val est de type string ?
-        if self.definition.creeDesObjets : 
-           # isinstance(val, self.definition.creeDesObjetsDeType) ne fonctionne pas car il y a un avec cata devant et l autre non
-           if val != None :
-             if  (not(val.__class__.__name__ == self.definition.creeDesObjetsDeType.__name__)) : 
-                 val=self.convProto.convert(val)
-             else :
-                 if val.nom=='sansNom' : 
-                    for leNom,laVariable in self.jdc.g_context.items():
-                      if id(laVariable)== id(val) and (leNom != 'sansNom'):
-                         val.initialiseNom(leNom)
-                 if val.parent== None : val.initialiseParent(self) 
-           return val
+        if self.definition.type[0] == 'TXM' and isinstance(val,str) : return val
+        if self.definition.creeDesObjets :
+            # isinstance(val, self.definition.creeDesObjetsDeType) ne fonctionne pas car il y a un avec cata devant et l autre non
+            if val == None : return val
+            if not isinstance(val,(list,tuple)) : valATraiter=[val,]
+            else : valATraiter=val
+            listeRetour=[]
+            for v in valATraiter:
+                #print (v.__class__.__name__, self.definition.creeDesObjetsDeType.__name__)
+                if  (not(v.__class__.__name__ == self.definition.creeDesObjetsDeType.__name__)) :
+                    if self.jdc != None and v in list(self.jdc.sdsDict.keys()): v=self.jdc.sdsDict[v]
+                    else : v=self.convProto.convert(v)
+                    if v.parent== None : v.initialiseParent(self)
+                    if issubclass(self.definition.creeDesObjetsDeType, UserASSDMultiple) :
+                        v.ajouteUnPere(self)
+                else :
+                    if v.nom=='sansNom' :
+                        for leNom,laVariable in self.jdc.g_context.items():
+                            #print (leNom,laVariable)
+                            if id(laVariable) == id(v) and (leNom != 'sansNom'):
+                                v.initialiseNom(leNom)
+                    if v.parent== None : v.initialiseParent(self)
+                    if issubclass(self.definition.creeDesObjetsDeType, UserASSDMultiple) :
+                        v.ajouteUnPere(self)
+                listeRetour.append(v)
+            if isinstance(val,(list,tuple)) :newVal=listeRetour
+            else : newVal=listeRetour[0]
+            return newVal
         if self.convProto:
-           val = self.convProto.convert(val)
+            val = self.convProto.convert(val)
         return val
 
     def creeUserASSDetSetValeur(self, val):
         self.state='changed'
         nomVal=val
         if nomVal in self.jdc.sdsDict.keys():
-           if isinstance(self.jdc.sdsDict[nomVal],self.definition.creeDesObjetsDeType): return (0, 'concept deja reference')
-           else : return (0, 'concept d un autre type existe deja')
+            if isinstance(self.jdc.sdsDict[nomVal],self.definition.creeDesObjetsDeType):
+                if issubclass(self.definition.creeDesObjetsDeType, UserASSDMultiple) :
+                    p=self.parent
+                    while p in self.parent :
+                        if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(self.jdc.sdsDict[nomVal])
+                        else : p.listeDesReferencesCrees=[self.jdc.sdsDict[nomVal],]
+                        p=p.parent
+                        self.jdc.sdsDict[nomVal].ajouteUnPere(self)
+                        #return (1, 'reference ajoutee')
+                else :
+                    return (0, 'concept non multiple deja reference')
+            else : return (0, 'concept d un autre type existe deja')
         if self.convProto:
             objVal = self.convProto.convert(nomVal)
             objVal.initialiseNom(nomVal)
-            if objVal.parent== None : objVal.initialiseParent(self) 
+            if objVal.parent== None : objVal.initialiseParent(self)
+            objVal.ajouteUnPere(self)
             p=self.parent
             while p in self.parent :
-                  print ('mise a jour de ',p)
-                  if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(objVal)
-                  else : p.listeDesReferencesCrees=(objVal,)
-                  p=p.parent
+                print ('mise a jour de ',p)
+                if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(objVal)
+                else : p.listeDesReferencesCrees=[objVal,]
+                p=p.parent
         return (self.setValeur(objVal), 'reference creee')
 
     def creeUserASSD(self, val):
         self.state='changed'
         nomVal=val
         if nomVal in self.jdc.sdsDict.keys():
-           if isinstance(self.jdc.sdsDict[nomVal],self.definition.creeDesObjetsDeType): return (0,None, 'concept deja reference')
-           else : return (0, None, 'concept d un autre type existe deja')
+            if isinstance(self.jdc.sdsDict[nomVal],self.definition.creeDesObjetsDeType):
+                if issubclass(self.definition.creeDesObjetsDeType, UserASSDMultiple) :
+                    p=self.parent
+                    while p in self.parent :
+                        if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(self.jdc.sdsDict[nomVal])
+                        else : p.listeDesReferencesCrees=[self.jdc.sdsDict[nomVal],]
+                        p=p.parent
+                        self.jdc.sdsDict[nomVal].ajouteUnPere(self)
+                        return (1,self.jdc.sdsDict[nomVal], 'reference ajoutee')
+                else : return (0, None, 'concept d un autre type existe deja')
+            else : return (0, None, 'concept d un autre type existe deja')
         if self.convProto:
             objVal = self.convProto.convert(nomVal)
             objVal.initialiseNom(nomVal)
+            objVal.ajouteUnPere(self)
         return (1, objVal, 'reference creee')
 
     def rattacheUserASSD(self, objASSD):
-        if objASSD.parent== None : objASSD.initialiseParent(self) 
+        if objASSD.parent== None : objASSD.initialiseParent(self)
         p=self.parent
         while p in self.parent :
-           if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(objASSD)
-           else : p.listeDesReferencesCrees=(objASSD,)
-           p=p.parent
+            if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(objASSD)
+            else : p.listeDesReferencesCrees=[objASSD,]
+            p=p.parent
 
-      
+
     def getValeur(self):
         """
             Retourne la "valeur" d'un mot-clé simple.
@@ -264,5 +305,64 @@ class MCSIMP(N_OBJECT.OBJECT):
                 if isinstance(co, CO) and co.isTypCO()]
 
     def supprime(self):
-        if hasattr(self, 'val') and hasattr(self.val, 'supprime') :self.val.supprime()
+        if not type(self.valeur) in (list, tuple): lesValeurs=(self.valeur,)
+        else : lesValeurs=self.valeur
+        if self.valeur == None or self.valeur == [] : lesValeurs=[]
+        for val in lesValeurs:
+            if self.definition.creeDesObjets : val.deleteReference(self)
+            else :
+                if (hasattr (val, 'enleveUtilisePar')) : val.enleveUtilisePar(self)
         N_OBJECT.OBJECT.supprime(self)
+
+    def getUserAssdPossible(self):
+        debug=False
+        if self.nom == 'ApplyOn' : debug = True
+        if debug : print ('____________', self, self.nom)
+        classeAChercher = self.definition.type
+        if debug : print ('____________', classeAChercher)
+        l=[]
+        dicoValeurs={}
+        d={}
+        if debug : print ('____________', self.definition.filtreVariables)
+        if self.definition.filtreVariables != None :
+            for (nomMC, Xpath) in self.definition.filtreVariables :
+                if debug : print (nomMC, Xpath)
+                if Xpath == None : dicoValeurs[nomMC] = getattr(self,nomMC)
+                else :
+                    try: #if 1 :
+                        pereMC=eval(Xpath)
+                        if debug : print ('pereMC :',pereMC)
+                        if pereMC :
+                            exp=Xpath+'.getChild("'+nomMC+'")'
+                            leMotCle=eval(exp)
+                        else : leMotCle=None
+                        if debug : print ('leMotCle', leMotCle)
+                        if leMotCle :
+                            if leMotCle.val : dicoValeurs[nomMC]=leMotCle.val
+                            elif leMotCle.definition.max != 1 : dicoValeurs[nomMC] = []
+                            else : dicoValeurs[nomMC] = None
+                            if debug : print ('dicoValeurs', dicoValeurs)
+                        else :
+                        #PN PN est-ce sur ? sinon quoi None ou []
+                        # je pense que les 2 valeurs doivent être renseignees si le filtre depend de 2 valeurs
+                            return l
+                    except:
+                        return l
+
+
+        for k,v in self.parent.jdc.sdsDict.items():
+            if (isinstance(v, classeAChercher)) :
+                if debug : print ('je traite', v)
+                if self.definition.filtreExpression :
+                    if debug : print ('expression', self.definition.filtreExpression)
+                    if debug : 
+                       print (v.executeExpression(self.definition.filtreExpression ,dicoValeurs) )
+                    try :
+                        if v.executeExpression(self.definition.filtreExpression ,dicoValeurs) : l.append(v)
+                    except :
+                        print ('il faut comprendre except pour', self.nom)
+                        #print (self.nom)
+                        #print (self.parent.nom)
+                        #print (k,v)
+                else : l.append(v)
+        return l

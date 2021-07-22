@@ -1,15 +1,12 @@
-import types
-class Tuple:
-    def __init__(self,ntuple):
-        self.ntuple=ntuple
+#
+from __future__ import absolute_import
+from Noyau import N_TUPLE
+from Ihm  import I_TUPLE
 
-    def __convert__(self,valeur):
-        try:
-            if isinstance(valeur, basestring) : return None
-        except NameError:
-            if isinstance(valeur, str): return None
-        if len(valeur) != self.ntuple: return None
-        return valeur
-
-    def info(self):
-        return "Tuple de %s elements" % self.ntuple
+class Tuple (N_TUPLE.N_Tuple): pass
+class Matrice (I_TUPLE.I_Matrice,N_TUPLE.N_Matrice):pass
+#      def __init__(self,*tup,**args):
+#          I_TUPLE.I_Matrice.__init__(self)
+#          N_TUPLE.N_Matrice(self,*tup,**args)
+#          print (tup)
+#          print (args)

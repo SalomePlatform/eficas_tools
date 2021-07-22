@@ -33,20 +33,19 @@ from Extensions.i18n import tr
 
 class MonLabelClic(QLabel) :
 
-     def __init__(self,parent):
+    def __init__(self,parent):
         QLabel.__init__(self,parent)
-        # Pas propre mais impossible de faire fonctionner isinstance sur Groupe, MonWidgetCommande 
+        # Pas propre mais impossible de faire fonctionner isinstance sur Groupe, MonWidgetCommande
         # PNPNPN ? a ameliorer
         if isinstance (parent,QFrame): parent=parent.parent()
         while not( hasattr(parent,'traiteClicSurLabel')) :
-             try : parent=parent.parent()
-             except : print ("pb avec MonLabelClic"); break
+            try : parent=parent.parent()
+            except : print ("pb avec MonLabelClic"); break
         self.parent=parent
 
 
-     def event(self,event) :
-         if event.type() == QEvent.MouseButtonRelease:
+    def event(self,event) :
+        if event.type() == QEvent.MouseButtonRelease:
             self.texte=self.text()
             self.parent.traiteClicSurLabel(self.texte)
-         return QLabel.event(self,event)
-
+        return QLabel.event(self,event)

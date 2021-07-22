@@ -19,7 +19,7 @@
 #
 from __future__ import absolute_import
 try :
-   from builtins import object
+    from builtins import object
 except : pass
 
 from PyQt5.QtWidgets import QAction, QMenu, QMessageBox
@@ -61,16 +61,16 @@ class PopUpMenuNodeMinimal(object) :
         self.menu.addAction(self.Supprime)
         if hasattr(self.appliEficas, 'mesScripts'):
             if self.editor.code in  self.editor.appliEficas.mesScripts :
-               self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
-               if self.tree.currentItem().item.getNom() in self.dict_commandes_mesScripts : 
-                   self.ajoutScript()
-    
+                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
+                if self.tree.currentItem().item.getNom() in self.dict_commandes_mesScripts :
+                    self.ajoutScript()
+
     def ajoutScript(self):
     # cochon mais je n arrive pas a faire mieux avec le mecanisme de plugin
     # a revoir avec un menu et un connect sur le triggered sur le menu ?
         if hasattr(self.appliEficas, 'mesScripts'):
             if self.editor.code in  self.editor.appliEficas.mesScripts :
-               self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
+                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
             else : return
 
         from Extensions import jdc_include
@@ -80,18 +80,18 @@ class PopUpMenuNodeMinimal(object) :
         if type(listeCommandes) != tuple: listeCommandes=(listeCommandes,)
         numero=0
         for commande in listeCommandes :
-           conditionSalome=commande[3]
-           if (self.appliEficas.salome == 0 and conditionSalome == True): return
-           label=commande[1]
-           tip=commande[5]
-           self.action=QAction(label,self.tree)
-           self.action.setStatusTip(tip)
-           if numero==4: self.action.triggered.connect(self.appelleFonction4)
-           if numero==3: self.action.triggered.connect(self.appelleFonction3); numero=4
-           if numero==2: self.action.triggered.connect(self.appelleFonction2); numero=3
-           if numero==1: self.action.triggered.connect(self.appelleFonction1); numero=2
-           if numero==0: self.action.triggered.connect(self.appelleFonction0); numero=1
-           self.menu.addAction(self.action)
+            conditionSalome=commande[3]
+            if (self.appliEficas.salome == 0 and conditionSalome == True): return
+            label=commande[1]
+            tip=commande[5]
+            self.action=QAction(label,self.tree)
+            self.action.setStatusTip(tip)
+            if numero==4: self.action.triggered.connect(self.appelleFonction4)
+            if numero==3: self.action.triggered.connect(self.appelleFonction3); numero=4
+            if numero==2: self.action.triggered.connect(self.appelleFonction2); numero=3
+            if numero==1: self.action.triggered.connect(self.appelleFonction1); numero=2
+            if numero==0: self.action.triggered.connect(self.appelleFonction0); numero=1
+            self.menu.addAction(self.action)
 
 
     def appelleFonction0(self):
@@ -114,7 +114,7 @@ class PopUpMenuNodeMinimal(object) :
         nomCmd=nodeTraite.item.getNom()
         if hasattr(self.appliEficas, 'mesScripts'):
             if self.editor.code in  self.editor.appliEficas.mesScripts :
-               self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
+                self.dict_commandes_mesScripts=self.appliEficas.mesScripts[self.editor.code].dict_commandes
             else : return
         listeCommandes=self.dict_commandes_mesScripts[nomCmd]
         commande=listeCommandes[numero]
@@ -122,28 +122,28 @@ class PopUpMenuNodeMinimal(object) :
 
 
         if (nodeTraite.item.isValid() == 0 and conditionValid == True):
-                 QMessageBox.warning( None, 
-                             tr("item invalide"),
-                             tr("l item doit etre valide"),)
-                 return
+            QMessageBox.warning( None,
+                        tr("item invalide"),
+                        tr("l item doit etre valide"),)
+            return
         fonction=commande[0]
         listenomparam=commande[2]
         listeparam=[]
         for p in listenomparam:
             if hasattr(nodeTraite,p):
-               listeparam.append(getattr(nodeTraite,p))
+                listeparam.append(getattr(nodeTraite,p))
             if p=="self" : listeparam.append(self)
-           
+
         try :
-           res, commentaire= fonction(listeparam)
-           if not res :
-                 QMessageBox.warning( None, 
-                             tr("echec de la fonction"),
-                             tr(commentaire),)
-                 return
+            res, commentaire= fonction(listeparam)
+            if not res :
+                QMessageBox.warning( None,
+                            tr("echec de la fonction"),
+                            tr(commentaire),)
+                return
         except :
-           pass
-        
+            pass
+
 
 
 
@@ -184,25 +184,25 @@ class PopUpMenuNodeMinimal(object) :
         try :
             f=open(commande,"rb")
         except :
-             texte=tr("impossible de trouver la commande  ") + commande
-             QMessageBox.information( self.editor, tr("Lecteur PDF"), texte)
-             return
+            texte=tr("impossible de trouver la commande  ") + commande
+            QMessageBox.information( self.editor, tr("Lecteur PDF"), texte)
+            return
         import os
         if cle_doc.startswith('http:'):
-           fichier = cle_doc
+            fichier = cle_doc
         else :
             fichier = os.path.abspath(os.path.join(self.editor.maConfiguration.path_doc,
                                        cle_doc))
             try :
-               f=open(fichier,"rb")
+                f=open(fichier,"rb")
             except :
-               texte=tr("impossible d'ouvrir ") + fichier
-               QMessageBox.information( self.editor, tr("Documentation Vide"), texte)
-               return
+                texte=tr("impossible d'ouvrir ") + fichier
+                QMessageBox.information( self.editor, tr("Documentation Vide"), texte)
+                return
 
-       
+
         if os.name == 'nt':
-           os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
+            os.spawnv(os.P_NOWAIT,commande,(commande,fichier,))
         elif os.name == 'posix':
             script ="#!/usr/bin/sh \n%s %s&" %(commande,fichier)
             pid = os.system(script)
@@ -237,7 +237,7 @@ class PopUpMenuNodePartiel (PopUpMenuNodeMinimal):
         self.commentMenu.addAction(self.CommApres)
         self.commentMenu.addAction(self.CommAvant)
         #ss-menu Parameters:
-        self.paramMenu =self.menu.addMenu(tr('Parametre')) 
+        self.paramMenu =self.menu.addMenu(tr('Parametre'))
         self.paramMenu.addAction(self.ParamApres)
         self.paramMenu.addAction(self.ParamAvant)
         self.menu.addAction(self.Documentation)

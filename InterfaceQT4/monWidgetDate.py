@@ -25,27 +25,26 @@ import types,os
 from Extensions.i18n import tr
 
 from .feuille               import Feuille
-from .monWidgetSimpTuple    import MonWidgetSimpTuple 
-from desWidgetDate       import Ui_WidgetDate 
+from .monWidgetSimpTuple    import MonWidgetSimpTuple
+from desWidgetDate       import Ui_WidgetDate
 
 
 class MonWidgetDate (Ui_WidgetDate,MonWidgetSimpTuple):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         self.nbValeurs=3
         MonWidgetSimpTuple.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         if self.objSimp.isImmuable() :
-           self.lineEditVal1.setDisabled(True)
-           self.lineEditVal2.setDisabled(True)
-           self.lineEditVal3.setDisabled(True)
-           self.lineEditVal1.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
-           self.lineEditVal2.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
-           self.lineEditVal3.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
-           self.lineEditVal1.setToolTip(tr("Valeur non modifiable"))
-           self.lineEditVal2.setToolTip(tr("Valeur non modifiable"))
-           self.lineEditVal3.setToolTip(tr("Valeur non modifiable"))
+            self.lineEditVal1.setDisabled(True)
+            self.lineEditVal2.setDisabled(True)
+            self.lineEditVal3.setDisabled(True)
+            self.lineEditVal1.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
+            self.lineEditVal2.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
+            self.lineEditVal3.setStyleSheet(QString.fromUtf8("background:rgb(244,244,244);\n" "border:0px;\n"))
+            self.lineEditVal1.setToolTip(tr("Valeur non modifiable"))
+            self.lineEditVal2.setToolTip(tr("Valeur non modifiable"))
+            self.lineEditVal3.setToolTip(tr("Valeur non modifiable"))
         else :
-           self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
+            self.maCommande.listeAffichageWidget.append(self.lineEditVal1)
         #self.maCommande.listeAffichageWidget.append(self.lineEditVal2)
         #self.maCommande.listeAffichageWidget.append(self.lineEditVal3)
-

@@ -30,66 +30,65 @@ from Noyau.N_Exception import AsException
 from Extensions.eficas_exception import EficasException
 
 class PROC_ETAPE(I_ETAPE.ETAPE):
-   def getSdname(self):
-      return ""
+    def getSdname(self):
+        return ""
 
-   def getSdprods(self,nom_sd):
-      """ 
-         Fonction : retourne le concept produit par l etape de nom nom_sd
-         s il existe sinon None
-         Une PROC ne produit aucun concept
-      """
-      return None
+    def getSdprods(self,nom_sd):
+        """
+           Fonction : retourne le concept produit par l etape de nom nom_sd
+           s il existe sinon None
+           Une PROC ne produit aucun concept
+        """
+        return None
 
-   def supprimeSdProds(self):
-      """
-         Fonction: Lors d'une destruction d'etape, detruit tous les concepts produits
-         Une procedure n'en a aucun
-      """
-      return
+    def supprimeSdProds(self):
+        """
+           Fonction: Lors d'une destruction d'etape, detruit tous les concepts produits
+           Une procedure n'en a aucun
+        """
+        return
 
-   def deleteConcept(self,sd):
-      """
-          Fonction : Mettre a jour les mots cles de l etape 
-          suite a la disparition du concept sd
-          Seuls les mots cles simples MCSIMP font un traitement autre
-          que de transmettre aux fils
+    def deleteConcept(self,sd):
+        """
+            Fonction : Mettre a jour les mots cles de l etape
+            suite a la disparition du concept sd
+            Seuls les mots cles simples MCSIMP font un traitement autre
+            que de transmettre aux fils
 
-          Inputs :
-             - sd=concept detruit
-      """
-      for child in self.mcListe :
-        child.deleteConcept(sd)
+            Inputs :
+               - sd=concept detruit
+        """
+        for child in self.mcListe :
+            child.deleteConcept(sd)
 
-   def replaceConcept(self,old_sd,sd):
-      """
-          Fonction : Mettre a jour les mots cles de l etape
-          suite au remplacement du concept old_sd
+    def replaceConcept(self,old_sd,sd):
+        """
+            Fonction : Mettre a jour les mots cles de l etape
+            suite au remplacement du concept old_sd
 
-          Inputs :
-             - old_sd=concept remplace
-             - sd=nouveau concept
-      """
-      for child in self.mcListe :
-        child.replaceConcept(old_sd,sd)
+            Inputs :
+               - old_sd=concept remplace
+               - sd=nouveau concept
+        """
+        for child in self.mcListe :
+            child.replaceConcept(old_sd,sd)
 
 #ATTENTION SURCHARGE: a garder en synchro ou a reintegrer dans le Noyau
-   def buildSd(self):
-      """
-           Methode de Noyau surchargee pour poursuivre malgre tout
-           si une erreur se produit pendant la creation du concept produit
-      """
-      try:
-         sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.buildSd(self)
-      except AsException  :
-         # Une erreur s'est produite lors de la construction du concept
-         # Comme on est dans EFICAS, on essaie de poursuivre quand meme
-         # Si on poursuit, on a le choix entre deux possibilites :
-         # 1. on annule la sd associee a self
-         # 2. on la conserve mais il faut la retourner
-         # En plus il faut rendre coherents sdnom et sd.nom
-         self.sd=None
-         self.sdnom=None
-         self.state="unchanged"
-         self.valid=0
-
+    def buildSd(self):
+        """
+             Methode de Noyau surchargee pour poursuivre malgre tout
+             si une erreur se produit pendant la creation du concept produit
+        """
+        try:
+            sd=Noyau.N_PROC_ETAPE.PROC_ETAPE.buildSd(self)
+        except AsException  :
+            # Une erreur s'est produite lors de la construction du concept
+            # Comme on est dans EFICAS, on essaie de poursuivre quand meme
+            # Si on poursuit, on a le choix entre deux possibilites :
+            # 1. on annule la sd associee a self
+            # 2. on la conserve mais il faut la retourner
+            # En plus il faut rendre coherents sdnom et sd.nom
+            self.sd=None
+            self.sdnom=None
+            self.state="unchanged"
+            self.valid=0

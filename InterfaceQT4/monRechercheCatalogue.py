@@ -22,7 +22,7 @@
 
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 from desRechercheCatalogue import Ui_desRechercheCatalogue
@@ -34,54 +34,53 @@ from Extensions.i18n import tr
 # Import des panels
 
 class DRechercheCatalogue (Ui_desRechercheCatalogue ,QDialog):
-  """
-  """
-  def __init__(self,parent,editor ):
-      QDialog.__init__(self,parent)
-      #self.setModal(True)
-      self.setupUi(self)
-      self.editor=editor
-      self.CBRecherche.setEditable(True)
-      self.CBRecherche.lineEdit().returnPressed.connect(self.rechercheCB)
-      self.CBRecherche.currentIndexChanged.connect(self.rechercheCB)
-      self.CBRecherche.currentTextChanged.connect(self.rechercheCB)
+    """
+    """
+    def __init__(self,parent,editor ):
+        QDialog.__init__(self,parent)
+        #self.setModal(True)
+        self.setupUi(self)
+        self.editor=editor
+        self.CBRecherche.setEditable(True)
+        self.CBRecherche.lineEdit().returnPressed.connect(self.rechercheCB)
+        self.CBRecherche.currentIndexChanged.connect(self.rechercheCB)
+        self.CBRecherche.currentTextChanged.connect(self.rechercheCB)
 
-      self.initRecherche()
+        self.initRecherche()
 
-  def initRecherche(self):
-      listeChoix=list(self.editor.readercata.dicoInverse.keys())
-      self.CBRecherche.addItem("")
-      for choix in listeChoix:
-          self.CBRecherche.addItem(choix)
-      monCompleteur=QCompleter(listeChoix,self)
-      monCompleteur.setCompletionMode(QCompleter.PopupCompletion)
-      self.CBRecherche.setCompleter(monCompleteur)
-
-
-  def rechercheCB(self):
-      motAChercher=self.CBRecherche.lineEdit().text()
-      self.recherche(motAChercher)
+    def initRecherche(self):
+        listeChoix=list(self.editor.readercata.dicoInverse.keys())
+        self.CBRecherche.addItem("")
+        for choix in listeChoix:
+            self.CBRecherche.addItem(choix)
+        monCompleteur=QCompleter(listeChoix,self)
+        monCompleteur.setCompletionMode(QCompleter.PopupCompletion)
+        self.CBRecherche.setCompleter(monCompleteur)
 
 
-  def recherche(self,motAChercher):
-      if str(motAChercher)=="" or str(motAChercher) == None : return
-      if str(motAChercher) not in self.editor.readercata.dicoInverse:return
-      try :
-      #if 1  :
-        genea= self.editor.readercata.dicoInverse[str(motAChercher)]
-        listeGenea=[]
-        for t in genea : listeGenea.append(t[0])
-        listeGenea.reverse()
-        texte=''
-        i=0
-        for mc in listeGenea :
-         ligne = i*'   '+str(mc) + ' / '+tr(str(mc))+'\n' 
-         i=i+1
-         texte += ligne
-        self.teGenea.setText(texte)
-        self.teDoc.setText(getattr(genea[0][1],self.editor.appliEficas.langue))
-        
-        
-      except :
-        pass
+    def rechercheCB(self):
+        motAChercher=self.CBRecherche.lineEdit().text()
+        self.recherche(motAChercher)
 
+
+    def recherche(self,motAChercher):
+        if str(motAChercher)=="" or str(motAChercher) == None : return
+        if str(motAChercher) not in self.editor.readercata.dicoInverse:return
+        try :
+        #if 1  :
+            genea= self.editor.readercata.dicoInverse[str(motAChercher)]
+            listeGenea=[]
+            for t in genea : listeGenea.append(t[0])
+            listeGenea.reverse()
+            texte=''
+            i=0
+            for mc in listeGenea :
+                ligne = i*'   '+str(mc) + ' / '+tr(str(mc))+'\n'
+                i=i+1
+                texte += ligne
+            self.teGenea.setText(texte)
+            self.teDoc.setText(getattr(genea[0][1],self.editor.appliEficas.langue))
+
+
+        except :
+            pass

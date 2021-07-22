@@ -47,14 +47,15 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
         #traceback.print_stack()
         self.dicoPyxbDeConstruction=dicoPyxbDeConstruction
         if self.dicoPyxbDeConstruction :
-           self.objPyxbDeConstruction=self.dicoPyxbDeConstruction['objEnPyxb']
-           del self.dicoPyxbDeConstruction['objEnPyxb']
+            self.objPyxbDeConstruction=self.dicoPyxbDeConstruction['objEnPyxb']
+            del self.dicoPyxbDeConstruction['objEnPyxb']
         else :
-           self.objPyxbDeConstruction=None
+            self.objPyxbDeConstruction=None
         self.definition = definition
         self.nom = nom
         self.val = val
         self.parent = parent
+        self.estIdentifiePar=None
         self.valeur = self.getValeurEffective(self.val)
         if parent:
             self.jdc = self.parent.jdc

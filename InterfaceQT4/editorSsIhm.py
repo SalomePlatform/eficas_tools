@@ -20,15 +20,12 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
-   from builtins import range
+    from builtins import str
+    from builtins import range
 except : pass
 
 import types,sys,os, re
 import  subprocess
-import traceback
-
-
 import traceback
 
 # Modules Eficas
@@ -64,7 +61,7 @@ class JDCEditorSsIhm :
         if fichier != None : self.extensionFichier = os.path.splitext(fichier)[1]
         else : self.extensionFichier = None
         self.jdc         = jdc
-        self.first	 = True
+        self.first       = True
         self.jdc_item    = None
         self.dicoNouveauxMC   = {}
         self.dicoNouveauxFact = {}
@@ -80,22 +77,22 @@ class JDCEditorSsIhm :
 
 
         if not hasattr ( self.appliEficas, 'readercata') or self.appliEficas.readercata.demandeCatalogue==True or self.appliEficas.multi==True:
-           if self.maConfiguration.typeDeCata == 'XML' :
-              from InterfaceQT4   import readercataXML as readercata
-           else :
-              from InterfaceQT4   import readercata
-           self.readercata  = readercata.ReaderCata( self, self.appliEficas )
-           self.appliEficas.readercata=self.readercata
-           self.appliEficas.code=self.code
+            if self.maConfiguration.typeDeCata == 'XML' :
+                from InterfaceQT4   import readercataXML as readercata
+            else :
+                from InterfaceQT4   import readercata
+            self.readercata  = readercata.ReaderCata( self, self.appliEficas )
+            self.appliEficas.readercata=self.readercata
+            self.appliEficas.code=self.code
         else :
-           self.readercata=self.appliEficas.readercata
+            self.readercata=self.appliEficas.readercata
         if self.readercata.fichierCata == None : return    #Sortie Salome
         self.titre=self.readercata.titre
 
         self.formatFichierOut =  self.appliEficas.formatFichierOut
         self.formatFichierIn  =  self.appliEficas.formatFichierIn
 
-        if self.appliEficas.maConfiguration.dumpXSD==True : self.appliEficas.dumpXsd()
+        #if self.appliEficas.maConfiguration.dumpXSD==True : self.appliEficas.dumpXsd()
         self.dict_reels={}
         self.liste_simp_reel=[]
         self.dicoNouveauxMC={}
@@ -103,30 +100,30 @@ class JDCEditorSsIhm :
 
 
         try:
-          self.maConfiguration.generator_module
-          _module = __import__(self.maConfiguration.generator_module)
-          info    = _module.entryPoint()
-          generator.plugins.addEntryPoint(info)
+            self.maConfiguration.generator_module
+            _module = __import__(self.maConfiguration.generator_module)
+            info    = _module.entryPoint()
+            generator.plugins.addEntryPoint(info)
         except:
-          pass
+            pass
 
         try:
-          self.maConfiguration.convert_module
-          #print self.maConfiguration.convert_module
-          _module = __import__(self.maConfiguration.convert_module)
-          info = _module.entryPoint()
-          convert.plugins.addEntryPoint(info)
+            self.maConfiguration.convert_module
+            #print self.maConfiguration.convert_module
+            _module = __import__(self.maConfiguration.convert_module)
+            info = _module.entryPoint()
+            convert.plugins.addEntryPoint(info)
         except :
-          pass
+            pass
 
         self.maConfiguration.mesGenerators     = generator
         self.maConfiguration.mesconvertisseurs = convert
         try    : self.XMLgenerator=generator.plugins['xml']()
         except : self.XMLgenerator=None
-        
+
 
         if self.formatFichierOut in generator.plugins.keys():
-           self.generator = generator.plugins[self.formatFichierOut]()
+            self.generator = generator.plugins[self.formatFichierOut]()
 
 
         self.fileInfo       = None
@@ -141,21 +138,21 @@ class JDCEditorSsIhm :
         self.nouveau=0
         if self.fichier is not None:        #  fichier jdc fourni
             if jdc==None :
-               #print ('PNPN : chgt try en if')
-               try :
-               #if 1 :
-                   self.jdc = self.readFile(self.fichier)
-               except :
-                   print ("mauvaise lecture du fichier")
-               if self.salome :
-                  try    : self.appliEficas.addJdcInSalome( self.fichier)
-                  except : print ("mauvais enregistrement dans Salome")
+                #print ('PNPN : chgt try en if')
+                try :
+                #if 1 :
+                    self.jdc = self.readFile(self.fichier)
+                except :
+                    print ("mauvaise lecture du fichier")
+                if self.salome :
+                    try    : self.appliEficas.addJdcInSalome( self.fichier)
+                    except : print ("mauvais enregistrement dans Salome")
             else :
-               self.jdc=jdc
+                self.jdc=jdc
 
             if self.jdc is not None and units is not None:
-               self.jdc.recorded_units=units
-               self.jdc.old_recorded_units=units
+                self.jdc.recorded_units=units
+                self.jdc.old_recorded_units=units
 
         else:
             if not self.jdc:                   #  nouveau jdc
@@ -168,10 +165,10 @@ class JDCEditorSsIhm :
             self.jdc.lang    = self.appliEficas.langue
             self.jdc.aReafficher=False
             txt_exception  = None
-            if not jdc:            
+            if not jdc:
                 if self.extensionFichier == '.xml' :
-                   if self.appliEficas.maConfiguration.withXSD: self.jdc.analyseXML()
-                   else : print ('run MDM with -x option  (MDM for XML)'); exit()
+                    if self.appliEficas.maConfiguration.withXSD: self.jdc.analyseXML()
+                    else : print ('run MDM with -x option  (MDM for XML)'); exit()
                 else : self.jdc.analyse()
                 txt_exception = self.jdc.cr.getMessException()
             if txt_exception :
@@ -199,14 +196,14 @@ class JDCEditorSsIhm :
         formatIn=self.appliEficas.formatFichierIn
         if self.extensionFichier == '.xml' and self.appliEficas.maConfiguration.withXSD: formatIn='xml'
         if formatIn in convert.plugins:
-             # Le convertisseur existe on l'utilise
-             p=convert.plugins[formatIn]()
-             p.readfile(fn)
+            # Le convertisseur existe on l'utilise
+            p=convert.plugins[formatIn]()
+            p.readfile(fn)
 
-             if p.text=="" : self.nouveau=1
-             #print ('PNPN --> CIST a faire')
+            if p.text=="" : self.nouveau=1
+            #print ('PNPN --> CIST a faire')
 
-             if formatIn != 'xml':
+            if formatIn != 'xml':
                 pareil,texteNew=self.verifieChecksum(p.text)
                 if  not pareil : self.informe(("fichier modifie"),("Attention! fichier change hors EFICAS"),False)
                 p.text=texteNew
@@ -215,7 +212,7 @@ class JDCEditorSsIhm :
                 p.text=texteNew
                 text=p.convert('exec',self.appliEficas)
                 if not p.cr.estvide(): self.afficheInfos("Erreur a la conversion",'red')
-             else:
+            else:
                 text=p.text
         else :
             self.afficheInfos("Type de fichier non reconnu",'red')
@@ -264,15 +261,15 @@ class JDCEditorSsIhm :
 
         jdc.lang    = self.appliEficas.langue
         if units is not None:
-           jdc.recorded_units=units
-           jdc.old_recorded_units=units
-        # chgt le 15/10/19 
+            jdc.recorded_units=units
+            jdc.old_recorded_units=units
+        # chgt le 15/10/19
         # Attention positionne  contexte ?
         # est ce qu on ne doit pas changer le format en Accas si on vient d accas ?
         jdc.editor=self
         return jdc
 
-   #--------------------------------#
+    #--------------------------------#
     def _newJDCInclude( self ,units = None):
     #--------------------------------#
         """
@@ -302,8 +299,8 @@ class JDCEditorSsIhm :
         J.editor=self
         J.analyse()
         if units is not None:
-           J.recorded_units=units
-           J.old_recorded_units=units
+            J.recorded_units=units
+            J.old_recorded_units=units
         return J
 
 
@@ -339,26 +336,26 @@ class JDCEditorSsIhm :
     #-----------------------#
     def generDico(self):
     #-----------------------#
-       if 'dico' in generator.plugins:
-         self.generator=generator.plugins['dico']()
-         #print (self.generator)
-         jdc_formate=self.generator.gener(self.jdc)
-         #print (jdc_formate)
-         dico=self.generator.Dico
-         #print (dico)
-         return dico
+        if 'dico' in generator.plugins:
+            self.generator=generator.plugins['dico']()
+            #print (self.generator)
+            jdc_formate=self.generator.gener(self.jdc)
+            #print (jdc_formate)
+            dico=self.generator.Dico
+            #print (dico)
+            return dico
 
     #-----------------------#
     def viewJdcSource(self):
     #-----------------------#
         if self.fichier == None : return
         if os.path.isfile(self.fichier):
-           f=open(self.fichier,'r')
-           texteSource=f.read()
-           f.close()
-           self._viewText(texteSource, "JDC_SOURCE")
+            f=open(self.fichier,'r')
+            texteSource=f.read()
+            f.close()
+            self._viewText(texteSource, "JDC_SOURCE")
         else :
-           self._viewText("file doesn't exist", "JDC_SOURCE")
+            self._viewText("file doesn't exist", "JDC_SOURCE")
 
 
     #-----------------------#
@@ -378,7 +375,7 @@ class JDCEditorSsIhm :
     def viewJdcRegles(self):
     #-----------------------#
         # on ajoute les regles
-        texte_global, test_global =  self.jdc.verifRegles() 
+        texte_global, test_global =  self.jdc.verifRegles()
         self._viewText(texte_global, "JDC_REGLES")
 
     #-----------------------#
@@ -391,16 +388,16 @@ class JDCEditorSsIhm :
     #---------------------#
     def getFileName(self):
     #---------------------#
-      return self.fichier
+        return self.fichier
 
     #-------------------#
     def initModif(self):
     #-------------------#
-      """
-          Met l'attribut modified a 'o' : utilise par Eficas pour savoir
-          si un JDC doit etre sauvegarde avant destruction ou non
-      """
-      self.modified = True
+        """
+            Met l'attribut modified a 'o' : utilise par Eficas pour savoir
+            si un JDC doit etre sauvegarde avant destruction ou non
+        """
+        self.modified = True
 
 
     #--------------------------------------------------#
@@ -419,8 +416,8 @@ class JDCEditorSsIhm :
             txt = self.getTextJDC(self.formatFichierOut,formatLigne=formatLigne)
             eol = '\n'
             if len(txt) >= len(eol):
-               if txt[-len(eol):] != eol:
-                  txt += eol
+                if txt[-len(eol):] != eol:
+                    txt += eol
             else:
                 txt += eol
             txt=self.ajoutVersionCataDsJDC(txt)
@@ -437,34 +434,34 @@ class JDCEditorSsIhm :
             print('Sauvegarde du Fichier', 'Le fichier'+str(fn) + 'n a pas pu etre sauvegarde :'  , str(why))
             self.afficheInfos('Le fichier'+str(fn) + 'n a pas pu etre sauvegarde '  , 'red')
             return 0
-           
+
 
     #-----------------------------------------------------------#
     def getTextJDC(self,format = None,pourRun=0,formatLigne="beautifie"):
     #-----------------------------------------------------------#
-      if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
-      if format == None : format = self.formatFichierOut
-      if format in generator.plugins:
+        if self.code == "MAP" and not(format in generator.plugins): format = "MAP"
+        if format == None : format = self.formatFichierOut
+        if format in generator.plugins:
 
-         # Le generateur existe on l'utilise
-         self.generator=generator.plugins[format]()
-         try :
-            jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.maConfiguration,appliEficas=self.appliEficas)
-            if pourRun : jdc_formate=self.generator.textePourRun
-            if self.code == 'TELEMAC' : jdc_formate=self.generator.texteDico
-         except ValueError as e:
-            self.informe( "Erreur a la generation",str(e),'red')
-            return
+            # Le generateur existe on l'utilise
+            self.generator=generator.plugins[format]()
+            try :
+                jdc_formate=self.generator.gener(self.jdc,format=formatLigne,config=self.appliEficas.maConfiguration,appliEficas=self.appliEficas)
+                if pourRun : jdc_formate=self.generator.textePourRun
+                if self.code == 'TELEMAC' : jdc_formate=self.generator.texteDico
+            except ValueError as e:
+                self.informe( "Erreur a la generation",str(e),'red')
+                return
 
-         if not self.generator.cr.estvide():
-            self.informe("Erreur a la generation","EFICAS ne sait pas convertir ce JDC",'red')
+            if not self.generator.cr.estvide():
+                self.informe("Erreur a la generation","EFICAS ne sait pas convertir ce JDC",'red')
+                return ""
+            else:
+                return jdc_formate
+        else:
+            # Il n'existe pas c'est une erreur
+            self.informe("Format inconnu", self.format +  " non reconnu" )
             return ""
-         else:
-            return jdc_formate
-      else:
-         # Il n'existe pas c'est une erreur
-         self.informe("Format inconnu", self.format +  " non reconnu" )
-         return ""
 
     #------------------------------#
     def verifieChecksum(self,text):
@@ -477,48 +474,48 @@ class JDCEditorSsIhm :
         checkAvant=text[indexDeb:indexFin+13]
         textJDC=text[0:indexDeb]+text[indexFin+13:-1]
         if self.code != 'PSEN'  and self.code != 'PSEN_N1':
-           checksum=self.getChecksum(textJDC)
-           pareil=(checkAvant==checksum)
+            checksum=self.getChecksum(textJDC)
+            pareil=(checkAvant==checksum)
         else :
-           pareil=1
+            pareil=1
         return pareil, textJDC
 
     #---------------------------#
     def getChecksum(self,texte):
     #---------------------------#
         try :
-           import haslib
-           newtexte=texte.replace('"','\\"')
-           hash_checksum = hashlib.md5()
-           hash_checksum.update(newtexte.encode('utf-8'))
-           checksum = hash_checksum.hexdigest()
-           ligne = ligne="#CHECKSUM:"+checksum+":FIN CHECKSUM"
-        except : 
-           try :
-              newtexte=texte.replace('"','\\"')
-              commande='echo "'+newtexte+'"|md5sum'
-              a=os.popen(commande)
-              checksum=a.read()
-              a.close()
-           except :
-              checksum='Fichier trop long \n'
-           ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
-           return ligne
+            import haslib
+            newtexte=texte.replace('"','\\"')
+            hash_checksum = hashlib.md5()
+            hash_checksum.update(newtexte.encode('utf-8'))
+            checksum = hash_checksum.hexdigest()
+            ligne = ligne="#CHECKSUM:"+checksum+":FIN CHECKSUM"
+        except :
+            try :
+                newtexte=texte.replace('"','\\"')
+                commande='echo "'+newtexte+'"|md5sum'
+                a=os.popen(commande)
+                checksum=a.read()
+                a.close()
+            except :
+                checksum='Fichier trop long \n'
+            ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
+            return ligne
 
     #----------------------#
     def getDico(self):
     #---------------------#
-      if 'dicoImbrique' in generator.plugins:
-         self.generator=generator.plugins['dicoImbrique']()
-         #print (self.generator)
-         jdc_formate=self.generator.gener(self.jdc)
-         dico=self.generator.Dico
-         return dico
-      else :
-         self.afficheInfos(tr("Format %s non reconnu" , 'Dictionnaire Imbrique' ),'red')
-         return ""
+        if 'dicoImbrique' in generator.plugins:
+            self.generator=generator.plugins['dicoImbrique']()
+            #print (self.generator)
+            jdc_formate=self.generator.gener(self.jdc)
+            dico=self.generator.Dico
+            return dico
+        else :
+            self.afficheInfos(tr("Format %s non reconnu" , 'Dictionnaire Imbrique' ),'red')
+            return ""
 
-   #-----------------------------------------#
+    #-----------------------------------------#
     def chercheGroupes(self):
     #-----------------------------------------#
         listeMA,listeNO=self.getTextJDC("GroupMA")
@@ -530,18 +527,18 @@ class JDCEditorSsIhm :
         dicoCourant={}
         format =  self.appliEficas.formatFichierOut
         if format in generator.plugins:
-           # Le generateur existe on l'utilise
-           self.generator=generator.plugins[format]()
-           jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.maConfiguration)
-           dicoCourant=self.generator.dico
+            # Le generateur existe on l'utilise
+            self.generator=generator.plugins[format]()
+            jdc_formate=self.generator.gener(self.jdc,format='beautifie',config=self.appliEficas.maConfiguration)
+            dicoCourant=self.generator.dico
         return dicoCourant
 
     #-----------------------------------------------------------------#
     def saveFileLegerAs(self, fileName = None) :
     #-----------------------------------------------------------------#
         if fileName != None :
-           self.fichier = fileName
-           return self.saveFileLeger(fileName)
+            self.fichier = fileName
+            return self.saveFileLeger(fileName)
         return self.saveFileLeger()
 
     #-----------------------------------------------------------------#
@@ -561,24 +558,24 @@ class JDCEditorSsIhm :
     #--------------------------------#
     def ajoutCommentaire(self):
     #--------------------------------#
-      print ('pas programme sans Ihm')
-      print ('prevenir la maintenance du besoin')
+        print ('pas programme sans Ihm')
+        print ('prevenir la maintenance du besoin')
 
 
     #--------------------------------------#
     def informe(self,titre,txt,critique=True):
     #--------------------------------------#
     # methode differenre avec et sans ihm
-      if critique : print ('!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-      print (titre)
-      print (txt)
-      if critique : print ('!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        if critique : print ('!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print (titre)
+        print (txt)
+        if critique : print ('!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
     #--------------------------------------#
     def afficheInfos(self,txt,couleur=None):
     #--------------------------------------#
     # methode differenre avec et sans ihm
-      print (txt)
+        print (txt)
 
     #-----------------------------------------------------------------------#
     def _viewText(self, txt, caption = "FILE_VIEWER",largeur=1200,hauteur=600):
@@ -604,9 +601,9 @@ class JDCEditorSsIhm :
         if not (self.writeFile(fichier,formatLigne=formatLigne)): return (0, None)
         if  self.jdc.cata.modeleMetier and self.jdc.isValid():
             if self.generator != self.XMLgenerator :
-               self.XMLgenerator.gener(self.jdc)
-               self.XMLgenerator.writeDefault(fichier)
-               return(1,self.fichier)
+                self.XMLgenerator.gener(self.jdc)
+                self.XMLgenerator.writeDefault(fichier)
+                return(1,self.fichier)
         if self.jdc.isValid() and hasattr(self.generator, "writeDefault"):
             self.generator.writeDefault(fichier)
         elif self.code=="TELEMAC" and hasattr(self.generator, "writeDefault"):
@@ -640,13 +637,13 @@ class JDCEditorSsIhm :
         etape=monItem.item.object
         CONTEXT.set_current_step(etape)
         try :
-          ok=etape.build_includeEtape(texte)
+            ok=etape.build_includeEtape(texte)
         except :
-          ok=0
+            ok=0
         if not ok :
-           QMessageBox.information( self,
-                      tr("Import texte"),
-                      tr("Impossible d importer le texte"))
+            QMessageBox.information( self,
+                       tr("Import texte"),
+                       tr("Impossible d importer le texte"))
         self.tree.racine.build_children()
         return ok
 
@@ -664,7 +661,7 @@ class JDCEditorSsIhm :
     # dans le JDC
         ouChercher=etape
         for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
         monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC != None :  ouChercher.suppentite(monMC)
         ouChercher.state='changed'
@@ -679,7 +676,7 @@ class JDCEditorSsIhm :
         ouChercher=etape
         if debug : print (ouChercher)
         for mot in listeAvant :
-           ouChercher=ouChercher.getChild(mot,restreint="oui")
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
         monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC == None : monMC = ouChercher.addEntite(MCFils)
         monMC.valeur=valeurs
@@ -698,7 +695,7 @@ class JDCEditorSsIhm :
         ouChercher=etape
         if debug : print (ouChercher)
         for mot in listeAvant :
-           ouChercher=ouChercher.getChild(mot,restreint="oui")
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
         # Attention si +sieursMCFACT
         ouChercher=ouChercher[0]
         if debug : print (ouChercher)
@@ -716,7 +713,7 @@ class JDCEditorSsIhm :
     # dans le JDC
         ouChercher=etape
         for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
         monMC=etape.getChild(ouChercher,restreint="oui")
         if monMC== None : monMC= ouChercher.addEntite(MCFils)
         monMC.isvalid()
@@ -727,14 +724,14 @@ class JDCEditorSsIhm :
     # pour VP
         monObj=etape
         for mot in listeAvant :
-              monObj=monObj.getChild(mot,restreint="oui")
-              if monObj==None : return False
+            monObj=monObj.getChild(mot,restreint="oui")
+            if monObj==None : return False
         if monObj == None : return False
         if monObj.valeur != valeur :
-           # PNPN le setValeur fait des bugs --> pourquoi
-           #monObj.setValeur(valeur)
-           monObj.valeur=valeur
-           monObj.isValid()
+            # PNPN le setValeur fait des bugs --> pourquoi
+            #monObj.setValeur(valeur)
+            monObj.valeur=valeur
+            monObj.isValid()
         return True
 
     #-------------------------------------------------#
@@ -749,9 +746,9 @@ class JDCEditorSsIhm :
         if debug : print ('etape trouvee', ouChercher)
         if ouChercher==None : return None
         for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
-              if debug : print (mot, ouChercher)
-              if ouChercher==None : return None
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
+            if debug : print (mot, ouChercher)
+            if ouChercher==None : return None
         monMC=ouChercher.getChild(MCFils,restreint="oui")
         if debug : print ('monMC', monMC)
         if monMC== None : return None
@@ -766,9 +763,9 @@ class JDCEditorSsIhm :
         ouChercher=etape
         debug=0
         for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
-              if debug : print (mot, ouChercher)
-              if ouChercher==None : return None
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
+            if debug : print (mot, ouChercher)
+            if ouChercher==None : return None
         monMC=ouChercher.getChild(MCFils,restreint="oui")
         if debug : print ('monMC', monMC)
         return monMC
@@ -783,9 +780,9 @@ class JDCEditorSsIhm :
             if e.nom == nomEtape : ouChercher=e; break
         if ouChercher==None : return None
         for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
-              #print (mot, ouChercher)
-              if ouChercher==None : return None
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
+            #print (mot, ouChercher)
+            if ouChercher==None : return None
         monMC=ouChercher.getChild(MCFils,restreint="oui")
         monMC.set_valeur(valeur)
         monMC.isvalid()
@@ -796,14 +793,14 @@ class JDCEditorSsIhm :
     # dans le JDC
         ouChercher=etape
         if isinstance (etape, str):
-           ouChercher=None
-           for e in self.jdc.etapes:
-              if e.nom == etape : ouChercher=e; break
+            ouChercher=None
+            for e in self.jdc.etapes:
+                if e.nom == etape : ouChercher=e; break
         if ouChercher==None : return
 
         for mot in listeAvant :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
-              if ouChercher==None : return
+            ouChercher=ouChercher.getChild(mot,restreint="oui")
+            if ouChercher==None : return
         monMC=ouChercher.getChild(MCFils,restreint="oui")
         if monMC== None : monMC= ouChercher.addEntite(MCFils)
 
@@ -822,20 +819,20 @@ class JDCEditorSsIhm :
 
         for mot in listeAvant :
             try :
-              ouChercher=ouChercher.getChild(mot,restreint="oui")
+                ouChercher=ouChercher.getChild(mot,restreint="oui")
             # Le mot clef n est pas la
             except : return 0
         try :
-           monMC=ouChercher.getChild(MCFils,restreint="oui")
+            monMC=ouChercher.getChild(MCFils,restreint="oui")
         # Le mot clef n est pas la
         except : return 0
         if monMC == None : return 0
 
         if hasattr(monMC.definition,'into') :
-           if type(monMC.definition.into) ==types.FunctionType : maListeDeValeur=monMC.definition.into()
-           else : maListeDeValeur=monMC.definition.into
+            if type(monMC.definition.into) ==types.FunctionType : maListeDeValeur=monMC.definition.into()
+            else : maListeDeValeur=monMC.definition.into
         else :
-           return 0
+            return 0
 
         monMC.state='changed'
         return 1
@@ -854,9 +851,9 @@ class JDCEditorSsIhm :
         ouChercher=definitionEtape
         if len(listeMC) > 1 :
 
-           for mc in listeMC[0:-1]:
-             mcfact=ouChercher.entites[mc]
-             ouChercher=mcfact
+            for mc in listeMC[0:-1]:
+                mcfact=ouChercher.entites[mc]
+                ouChercher=mcfact
 
         mcAccas=ouChercher.entites[listeMC[-1]]
         mcAccas.defaut=valeurs
@@ -897,8 +894,8 @@ class JDCEditorSsIhm :
     # dans le MDD
         #print 'in deleteDefinitionMC', etape,listeAvant,nomDuMC
         if isinstance (etape, str):
-          for e in self.jdc.etapes:
-            if e.nom == etape : etape=e; break
+            for e in self.jdc.etapes:
+                if e.nom == etape : etape=e; break
         if etape == None : return
         #definitionEtape=getattr(self.jdc.cata[0],etape)
         definitionEtape=getattr(self.jdc.cata,etape)
@@ -974,8 +971,8 @@ class JDCEditorSsIhm :
         self.changeIntoDefMC(etape,listeMC,into)
 
         if isinstance (etape, str):
-          for e in self.jdc.etapes:
-            if e.nom == etape : etape=e; break
+            for e in self.jdc.etapes:
+                if e.nom == etape : etape=e; break
         if etape == None : return
 
         ouChercher = etape
@@ -1008,11 +1005,11 @@ class JDCEditorSsIhm :
         indexDeb=text.find("#VERSION_CATALOGUE:")
         indexFin=text.find(":FIN VERSION_CATALOGUE")
         if indexDeb < 0 :
-           self.versionCataDuJDC="sans"
-           textJDC=text
+            self.versionCataDuJDC="sans"
+            textJDC=text
         else :
-           self.versionCataDuJDC=text[indexDeb+19:indexFin]
-           textJDC=text[0:indexDeb]+text[indexFin+23:-1]
+            self.versionCataDuJDC=text[indexDeb+19:indexFin]
+            textJDC=text[0:indexDeb]+text[indexFin+23:-1]
 
         self.versionCata="sans"
         if hasattr(self.readercata.cata,'VERSION_CATALOGUE'): self.versionCata=self.readercata.cata.VERSION_CATALOGUE
@@ -1069,39 +1066,39 @@ class JDCEditorSsIhm :
     #---------------------------#
     def _newJDCCND(self):
     #---------------------------#
-      extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
+        extensions=tr('Fichiers Med (*.med);;''Tous les Fichiers (*)')
 
-      #if self.salome == 0 :
-      QMessageBox.information( self,
-                      tr("Fichier Med"),
-                      tr("Veuillez selectionner un fichier Med"))
-      QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
-                        caption='Fichier Med',
-                        filter=extensions)
-      QSfichier=QSfichier[0]
-      self.fichierMED=QSfichier
-      from acquiertGroupes import getGroupes
-      erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
-      if erreur != "" : print ("a traiter")
-      texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichierMED +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
-      texteSources=""
-      texteCond=""
-      texteNoCond=""
-      texteVcut=""
-      texteZs=""
-      for groupe in self.listeGroupes :
-          if groupe[0:8]=='CURRENT_':
-             texteSources +=groupe[8:]+"=SOURCE("
-             texteSources +="VecteurDirecteur=(1.0,2.0,3.0,),);\n"
-          if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
-          if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
-          if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
-          if groupe[0:3]=='ZS_':      texteZs      +=groupe[3:]+"=ZS();\n"
-      texte=texteComm+texteSources+texteCond+texteNoCond+texteVcut+texteZs
-      self.newTexteCND=texte
-      self.modified=1
-      return texte
+        #if self.salome == 0 :
+        QMessageBox.information( self,
+                        tr("Fichier Med"),
+                        tr("Veuillez selectionner un fichier Med"))
+        QSfichier = QFileDialog.getOpenFileName(self.appliEficas,
+                          caption='Fichier Med',
+                          filter=extensions)
+        QSfichier=QSfichier[0]
+        self.fichierMED=QSfichier
+        from acquiertGroupes import getGroupes
+        erreur,self.listeGroupes,self.nomMaillage,self.dicoCoord=getGroupes(self.fichierMED)
+        if erreur != "" : print ("a traiter")
+        texteComm="COMMENTAIRE(u'Cree - fichier : "+self.fichierMED +" - Nom Maillage : "+self.nomMaillage+"');\nPARAMETRES()\n"
+        texteSources=""
+        texteCond=""
+        texteNoCond=""
+        texteVcut=""
+        texteZs=""
+        for groupe in self.listeGroupes :
+            if groupe[0:8]=='CURRENT_':
+                texteSources +=groupe[8:]+"=SOURCE("
+                texteSources +="VecteurDirecteur=(1.0,2.0,3.0,),);\n"
+            if groupe[0:5]=='COND_':    texteCond    +=groupe[5:]+"=CONDUCTEUR();\n"
+            if groupe[0:7]=='NOCOND_':  texteNoCond  +=groupe[7:]+"=NOCOND();\n"
+            if groupe[0:5]=='VCUT_':    texteVcut    +='V_'+groupe[5:]+"=VCUT();\n"
+            if groupe[0:3]=='ZS_':      texteZs      +=groupe[3:]+"=ZS();\n"
+        texte=texteComm+texteSources+texteCond+texteNoCond+texteVcut+texteZs
+        self.newTexteCND=texte
+        self.modified=1
+        return texte
 
 
 if __name__ == "__main__":
-   print ('a faire')
+    print ('a faire')

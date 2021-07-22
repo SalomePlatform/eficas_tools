@@ -17,25 +17,25 @@ monPost=listesDB.sModele().monPost
 
 import types
 class Tuple:
-  def __init__(self,ntuple):
-    self.ntuple=ntuple
+    def __init__(self,ntuple):
+        self.ntuple=ntuple
 
-  def __convert__(self,valeur):
-    if type(valeur) == types.StringType:
-      return None
-    if len(valeur) != self.ntuple:
-      return None
-    return valeur
+    def __convert__(self,valeur):
+        if type(valeur) == types.StringType:
+            return None
+        if len(valeur) != self.ntuple:
+            return None
+        return valeur
 
-  def info(self):
-    return "Tuple de %s elements" % self.ntuple
+    def info(self):
+        return "Tuple de %s elements" % self.ntuple
 
 
 JdC = JDC_CATA(code='VP',
                execmodul=None,
                 )
 
-  
+
 #---------------------------------
 Equation = PROC (nom="Equation",
       op=None,
@@ -47,7 +47,7 @@ Equation = PROC (nom="Equation",
       #b_suite_2 = BLOC(condition = "Equation_DB ==  'Approved data base' ",
       #Equation_Type = SIMP(statut= 'o',typ= 'TXM', into=("Show equation database", ),),
       #),
-      
+
 #     ---------------------------------------------------------------------------
        b_type_show = BLOC(condition = " Equation_Type == 'Show equation database'",
 #      ---------------------------------------------------------------------------
@@ -65,7 +65,7 @@ Equation = PROC (nom="Equation",
          #ListeEquation = SIMP(statut='o', typ='TXM',  homo='SansOrdreNiDoublon'),
          b_modification = BLOC(condition = " ListeEquation != None ",
            modification = SIMP(typ = bool, statut = 'o',defaut = False, fr='toto', ang='toto en anglais', siValide=lienDB.instancieChemicalFormulation),
-           
+
            b_modif = BLOC(condition = "modification == True",
             Reaction_Type=SIMP(statut= 'o',typ= 'TXM', min=1,into=monDico['Equation_Liste'],),
             Aging_Type=SIMP(statut= 'o',typ= 'TXM', min=1,max='**', homo='SansOrdreNiDoublon', into=('All', 'thermo', 'radio'),),
@@ -83,7 +83,7 @@ Equation = PROC (nom="Equation",
 
 
            ),# fin b_modif
-         
+
          ), # fin b_modification
        ), # Fin b_type_show
 
@@ -92,7 +92,7 @@ Equation = PROC (nom="Equation",
       b_type_creation = BLOC(condition = " Equation_Type == 'Equation creation'",
 #         ---------------------------------------------------------------------------
          Equation_Modification = FACT ( statut = 'o',
- 
+
             ChemicalFormulation = SIMP(statut='o', typ='TXM', defaut = 'POOH -> 2P'),
 
             Reaction_Type=SIMP(statut= 'o',typ= 'TXM', min=1,into=monDico['Equation_Liste'],),
@@ -129,11 +129,11 @@ Equation = PROC (nom="Equation",
                   ),# fin ConstanteOptionnelle
             ), # fin constante
             Commentaire =  SIMP (statut = 'f', typ = 'TXM', defaut = ' '),
-                  
+
          ), # Fin Equation_Modification
         ),  # fin b_type_creation
-                 
-      
+
+
 ) # Fin Equation
 
 #---------------------------------
@@ -154,10 +154,10 @@ Modele = PROC (nom="Modele",
           # il faudrait que position=global_jdc fonctionne
           model_developed_by_for_EDF = SIMP(typ = bool, statut = 'o',defaut = monModele.dvt_EDF[0]),
           documentation=SIMP(statut='o',typ='TXM',defaut=monModele.reference,),
-        
+
        ), # fin ID
        # ajouter la liste des equations et le remove (il faut garder ceux qu on a enlever)
-      
+
       Chemical_Equation = FACT( statut='o',
        Initial_Equation_List=SIMP(statut='o',typ='TXM',max="**",homo='SansOrdreNiDoublon',into=[],defaut=[], siValide=lienDB.recupereModeleEquation),
 
@@ -168,13 +168,13 @@ Modele = PROC (nom="Modele",
           listeEquation_termination=SIMP(statut='o', typ='TXM',homo='SansOrdreNiDoublon', max='**', min=0, defaut=[],siValide=lienDB.ajoutDUneEquation ),
           listeEquation_stabilization=SIMP(statut='o',typ='TXM', homo='SansOrdreNiDoublon', max='**', min=0, defaut=[],siValide=lienDB.ajoutDUneEquation ),
        ),# fin b_ajout_equation
-       
+
       ), # fin Equation
         # coefficients monModele.coef = liste de dictionnaire mais il faut prendre que le 0
         # on enleve ceux qui commence par D, S et B(casse imprtante)
         # la clef est le coef, puis les valeurs
 
-      
+
       #b_material_thickness =  BLOC(condition = "material_thickness == 'thick'",
       # si position=global fonctionne
         Transport = FACT( statut = 'o',
@@ -182,15 +182,15 @@ Modele = PROC (nom="Modele",
         Diffusion = SIMP(typ = bool, statut = 'o',defaut = False ,siValide = lienDB.prepareDiffusion),
 
         b_diffusion = BLOC(condition = " Diffusion == True",
-           listeProduitPourLaDiffusion=SIMP(statut='o', typ='TXM', max='**', min=1,homo='SansOrdreNiDoublon', into = [],siValide=lienDB.ajouteDiffusion), 
+           listeProduitPourLaDiffusion=SIMP(statut='o', typ='TXM', max='**', min=1,homo='SansOrdreNiDoublon', into = [],siValide=lienDB.ajouteDiffusion),
           ),  # fin b_diffusion
 
         Evaporation = SIMP(typ = bool, statut = 'o',defaut = False ,siValide = lienDB.prepareDiffusion),
         b_evaporation = BLOC(condition = " Evaporation == True",
-           listeProduitPourLEvaporation=SIMP(statut='o', typ='TXM', max='**', min=1,homo='SansOrdreNiDoublon', into = [],siValide=lienDB.ajouteEvaporation), 
+           listeProduitPourLEvaporation=SIMP(statut='o', typ='TXM', max='**', min=1,homo='SansOrdreNiDoublon', into = [],siValide=lienDB.ajouteEvaporation),
          ),  # fin b_evaporation
- 
- 
+
+
          ),  # fin TRANSPORT
        #),  # fin b_material_thickness
 
@@ -235,7 +235,7 @@ Modele = PROC (nom="Modele",
 
 # il faut recopier toute la suite en changeant eventuellement le nom du modele
 # il faut cocher toutes les equations par defaut
-        
+
               ), # fin ID
              ), # fin b_type_modify
 #     ---------------------------------------------------------------------------
@@ -293,10 +293,10 @@ PostTraitement = PROC (nom="PostTraitement",
         results_units=SIMP(statut= 'o',typ= 'TXM', min=0,max='**', intoSug=monPost.results_units,defaut=monPost.results_units),
         #integrate=SIMP(statut= 'o',typ= 'TXM', min=0,max='**', intoSug=monPost.results_units,defaut=monPost.results_units),
         prerequisite=SIMP(statut= 'o',typ= 'TXM', min=0,max='**', intoSug=monPost.prerequisite,defaut=monPost.prerequisite),
-        
+
         ),
-        constituant=SIMP(statut= 'o',typ= 'TXM', min=0,max='**', intoSug=monPost.constituants,defaut=monPost.constituants) 
-        
+        constituant=SIMP(statut= 'o',typ= 'TXM', min=0,max='**', intoSug=monPost.constituants,defaut=monPost.constituants)
+
       )# fin b_post_creation
 #         ---------------------------------------------------------------------------
 #---------------------------------

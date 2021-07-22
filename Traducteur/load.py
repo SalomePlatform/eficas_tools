@@ -28,7 +28,7 @@ jdcSet=sets.Set()
 
 
 class JDCTrad:
-    """Cet objet conserve toutes les informations relatives à un fichier de commandes .comm"""
+    """Cet objet conserve toutes les informations relatives a un fichier de commandes .comm"""
 
     def __init__(self,src,atraiter):
     #----------------------------------------
@@ -52,14 +52,14 @@ class JDCTrad:
 
     def reset(self,src):
     #-----------------------
-    # reconstruction 
+    # reconstruction
         self.init(src,self.atraiter)
         self.parseKeywords()
 
     def getSource(self):
     #-----------------------
     # retourne la concatenation de
-    # toutes les lignes 
+    # toutes les lignes
         return  "".join(self.getLines())
 
     def getLine(self,linenum):
@@ -69,7 +69,7 @@ class JDCTrad:
 
     def getLines(self):
     #----------------------------
-    # retourne toutes les lignes 
+    # retourne toutes les lignes
         return self.lines
 
     def addLine(self,ligne,numero) :
@@ -86,13 +86,13 @@ class JDCTrad:
     #----------------------------------------------
     # coupe la ligne numeroLigne en 2 a numeroColonne
     # ajoute des blancs en debut de 2nde Ligne pour
-    # aligner 
+    # aligner
         numeroLigne = numeroLigne -1
         Ldebut=self.lines[0:numeroLigne]
         if len(self.lines) > numeroLigne :
-           Lfin=self.lines[numeroLigne+1:]
+            Lfin=self.lines[numeroLigne+1:]
         else :
-           Lfin=[]
+            Lfin=[]
         Lsplit=self.lines[numeroLigne]
         LigneSplitDebut=Lsplit[0:numeroColonne]+"\n"
         LigneSplitFin=" "*numeroColonne+Lsplit[numeroColonne:]
@@ -106,17 +106,17 @@ class JDCTrad:
     # enleve les blancs de debut de la ligne (numeroLigne +1)
         Ldebut=self.lines[0:numeroLigne-1]
         if len(self.lines) > numeroLigne :
-           Lfin=self.lines[numeroLigne+1:]
+            Lfin=self.lines[numeroLigne+1:]
         else :
-           Lfin=[]
+            Lfin=[]
 
         ligneMilieuDeb=self.lines[numeroLigne - 1 ]
         ligneMilieuDeb=ligneMilieuDeb[0:-1]
         ligneMilieuFin=self.lines[numeroLigne]
         for i in range(len(ligneMilieuFin)):
             if ligneMilieuFin[i] != " " :
-               ligneMilieuFin=ligneMilieuFin[i:]
-               break
+                ligneMilieuFin=ligneMilieuFin[i:]
+                break
         Lmilieu=[ligneMilieuDeb+ligneMilieuFin,]
 
         self.lines=Ldebut+Lmilieu+Lfin

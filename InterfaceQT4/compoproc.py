@@ -37,8 +37,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNode):
 
 class ProcEtapeTreeItem(compooper.EtapeTreeItem):
     itemNode=Node
-  
+
 import Accas
 treeitem = ProcEtapeTreeItem
-objet = Accas.PROC_ETAPE    
-
+objet = Accas.PROC_ETAPE

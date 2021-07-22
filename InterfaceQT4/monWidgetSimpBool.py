@@ -26,14 +26,14 @@ from PyQt5.QtWidgets import QRadioButton
 from Extensions.i18n import tr
 
 from .feuille               import Feuille
-from desWidgetSimpBool     import Ui_WidgetSimpBool 
+from desWidgetSimpBool     import Ui_WidgetSimpBool
 from .politiquesValidation  import PolitiqueUnique
 from .qtSaisie              import SaisieValeur
 
 
 class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.RBTrue.clicked.connect(self.boutonTrueClic)
@@ -42,20 +42,19 @@ class MonWidgetSimpBool (Ui_WidgetSimpBool,Feuille):
         self.maCommande.listeAffichageWidget.append(self.RBTrue)
         self.AAfficher=self.RBTrue
 
-  def setValeurs(self):
-       valeur=self.node.item.getValeur()
-       if valeur == None  : return
-       if valeur == True  : self.RBTrue.setChecked(True)
-       if valeur == False : self.RBFalse.setChecked(True)
-       if self.monSimpDef.homo == 'constant' :
-          if valeur == True  : self.RBFalse.setDisabled(True)
-          else :               self.RBTrue.setDisabled(True)
+    def setValeurs(self):
+        valeur=self.node.item.getValeur()
+        if valeur == None  : return
+        if valeur == True  : self.RBTrue.setChecked(True)
+        if valeur == False : self.RBFalse.setChecked(True)
+        if self.monSimpDef.homo == 'constant' :
+            if valeur == True  : self.RBFalse.setDisabled(True)
+            else :               self.RBTrue.setDisabled(True)
 
-  def boutonTrueClic(self):
-      SaisieValeur.LEvaleurPressed(self,True)
-      self.reaffiche()
+    def boutonTrueClic(self):
+        SaisieValeur.LEvaleurPressed(self,True)
+        self.reaffiche()
 
-  def boutonFalseClic(self):
-      SaisieValeur.LEvaleurPressed(self,False)
-      self.reaffiche()
-
+    def boutonFalseClic(self):
+        SaisieValeur.LEvaleurPressed(self,False)
+        self.reaffiche()

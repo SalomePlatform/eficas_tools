@@ -18,27 +18,27 @@
 #
 from __future__ import absolute_import
 try :
-   from builtins import object
+    from builtins import object
 except : pass
 import os
 import re
 
 sous_menus={
-#	    "OPENTURNS_STUDY" : {0:{"Essai":"Std.comm"}},
+#           "OPENTURNS_STUDY" : {0:{"Essai":"Std.comm"}},
 #            "OPENTURNS_WRAPPER" : {0:{"Essai":"wrapper_exemple.comm"}},
            }
 
 class listePatrons(object) :
 
     def __init__(self,code = "ASTER"):
-       repIni=os.path.dirname(os.path.abspath(__file__))
-       self.rep_patrons=repIni+"/Patrons/"+code
-       self.sous_menu={}
-       if code in sous_menus  :
-          self.sous_menu=sous_menus[code]
-       self.code=code
-       self.liste={}
-       self.traiteListe()
+        repIni=os.path.dirname(os.path.abspath(__file__))
+        self.rep_patrons=repIni+"/Patrons/"+code
+        self.sous_menu={}
+        if code in sous_menus  :
+            self.sous_menu=sous_menus[code]
+        self.code=code
+        self.liste={}
+        self.traiteListe()
 
     def traiteListe(self):
         if not (self.code in sous_menus) : return
@@ -48,8 +48,8 @@ class listePatrons(object) :
                 clef=list(self.sous_menu[i].keys())[0]
                 chaine=self.sous_menu[i][clef]
                 if re.search(chaine,file) :
-                   if clef in self.liste:
-                      self.liste[clef].append(file)
-                   else :
-                      self.liste[clef]=[file]
-                   break
+                    if clef in self.liste:
+                        self.liste[clef].append(file)
+                    else :
+                        self.liste[clef]=[file]
+                    break

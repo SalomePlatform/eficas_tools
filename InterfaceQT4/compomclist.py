@@ -45,20 +45,20 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodeMinimal):
         else : self.niveau=1
         # attention si l objet est une mclist on utilise bloc
         if not (monObjet.isMCList()) :
-           if  hasattr(self,'plie') and self.plie==True : 
-               from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
-               widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
-           elif self.editor.maConfiguration.afficheFirstPlies and self.firstAffiche:
-               self.firstAffiche = False
-               self.setPlie()
-               from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
-               widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
-           else:
-               from InterfaceQT4.monWidgetFact import MonWidgetFact
-               widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+            if  hasattr(self,'plie') and self.plie==True :
+                from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
+                widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+            elif self.editor.maConfiguration.afficheFirstPlies and self.firstAffiche:
+                self.firstAffiche = False
+                self.setPlie()
+                from InterfaceQT4.monWidgetFactPlie import MonWidgetFactPlie
+                widget=MonWidgetFactPlie(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+            else:
+                from InterfaceQT4.monWidgetFact import MonWidgetFact
+                widget=MonWidgetFact(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         else :
-           from InterfaceQT4.monWidgetBloc import MonWidgetBloc
-           widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
+            from InterfaceQT4.monWidgetBloc import MonWidgetBloc
+            widget=MonWidgetBloc(self,self.editor,parentQt,maDefinition,monObjet,self.niveau,maCommande)
         return widget
 
 
@@ -80,7 +80,7 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
         Elle adapte ces objets pour leur permettre d'etre integres en tant que
         noeuds dans un arbre graphique (voir treewidget.py et ObjectTreeItem.py).
         Cette classe delegue les appels de methode et les acces
-        aux attributs a l'objet du noyau soit manuellement soit 
+        aux attributs a l'objet du noyau soit manuellement soit
         automatiquement (voir classe Delegate et attribut object).
     """
     itemNode=Node
@@ -92,9 +92,9 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def updateDelegate(self):
         if len(self._object) > 1:
-           self.setDelegate(self._object)
+            self.setDelegate(self._object)
         else:
-           self.setDelegate(self._object.data[0])
+            self.setDelegate(self._object.data[0])
 
     def panel(self,jdcdisplay,pane,node):
         """ Retourne une instance de l'objet panneau associe a l'item (self)
@@ -103,49 +103,49 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
             Si la liste est plus longue on utilise le panneau MCLISTPanel.
         """
         if len(self._object) > 1:
-           return MCLISTPanel(jdcdisplay,pane,node)
+            return MCLISTPanel(jdcdisplay,pane,node)
         elif isinstance(self._object.data[0],ErrorObj):
-           return compoerror.ERRORPanel(jdcdisplay,pane,node)
+            return compoerror.ERRORPanel(jdcdisplay,pane,node)
         else:
-           return compofact.FACTPanel(jdcdisplay,pane,node)
+            return compofact.FACTPanel(jdcdisplay,pane,node)
 
     def isExpandable(self):
         if len(self._object) > 1:
-           return Objecttreeitem.SequenceTreeItem.isExpandable(self)
+            return Objecttreeitem.SequenceTreeItem.isExpandable(self)
         else:
-           return compofact.FACTTreeItem.isExpandable(self)
+            return compofact.FACTTreeItem.isExpandable(self)
 
     def getSubList(self):
         self.updateDelegate()
         if len(self._object) <= 1:
-           self._object.data[0].alt_parent=self._object
-           return compofact.FACTTreeItem.getSubList(self)
+            self._object.data[0].alt_parent=self._object
+            return compofact.FACTTreeItem.getSubList(self)
 
         liste=self._object.data
         sublist=[None]*len(liste)
         # suppression des items lies aux objets disparus
         for item in self.sublist:
-           old_obj=item.getObject()
-           if old_obj in liste:
-              pos=liste.index(old_obj)
-              sublist[pos]=item
-           else:
-              pass # objets supprimes ignores
+            old_obj=item.getObject()
+            if old_obj in liste:
+                pos=liste.index(old_obj)
+                sublist[pos]=item
+            else:
+                pass # objets supprimes ignores
         # ajout des items lies aux nouveaux objets
         pos=0
         for obj in liste:
-           if sublist[pos] is None:
-              # nouvel objet : on cree un nouvel item
-              def setFunction(value, object=obj):
-                  object=value
-              item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
-              sublist[pos]=item
-              #Attention : on ajoute une information supplementaire pour l'actualisation de 
-              # la validite. L'attribut parent d'un MCFACT pointe sur le parent de la MCLISTE
-              # et pas sur la MCLISTE elle meme ce qui rompt la chaine de remontee des
-              # informations de validite. alt_parent permet de remedier a ce defaut.
-              obj.alt_parent=self._object
-           pos=pos+1
+            if sublist[pos] is None:
+                # nouvel objet : on cree un nouvel item
+                def setFunction(value, object=obj):
+                    object=value
+                item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj, setFunction)
+                sublist[pos]=item
+                #Attention : on ajoute une information supplementaire pour l'actualisation de
+                # la validite. L'attribut parent d'un MCFACT pointe sur le parent de la MCLISTE
+                # et pas sur la MCLISTE elle meme ce qui rompt la chaine de remontee des
+                # informations de validite. alt_parent permet de remedier a ce defaut.
+                obj.alt_parent=self._object
+            pos=pos+1
 
         self.sublist=sublist
         return self.sublist
@@ -160,13 +160,13 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
 
     def getDocu(self):
         """ Retourne la clef de doc de l'objet pointe par self """
-        return self.object.getDocu()    
+        return self.object.getDocu()
 
     def isCopiable(self):
         if len(self._object) > 1:
-           return Objecttreeitem.SequenceTreeItem.isCopiable(self)
+            return Objecttreeitem.SequenceTreeItem.isCopiable(self)
         else:
-           return compofact.FACTTreeItem.isCopiable(self)
+            return compofact.FACTTreeItem.isCopiable(self)
 
     def isMCFact(self):
         """
@@ -179,40 +179,40 @@ class MCListTreeItem(Objecttreeitem.SequenceTreeItem,compofact.FACTTreeItem):
         Retourne 1 si l'objet pointe par self est une MCList, 0 sinon
         """
         return len(self._object) > 1
-        
+
     def getCopieObjet(self):
         return self._object.data[0].copy()
 
     def addItem(self,obj,pos):
         #print "compomclist.addItem",obj,pos
         if len(self._object) <= 1:
-           return compofact.FACTTreeItem.addItem(self,obj,pos)
+            return compofact.FACTTreeItem.addItem(self,obj,pos)
 
         o= self.object.addEntite(obj,pos)
         return o
 
     def suppItem(self,item):
         """
-        Retire un objet MCFACT de la MCList (self.object) 
+        Retire un objet MCFACT de la MCList (self.object)
         """
         #print "compomclist.suppItem",item
         obj=item.getObject()
         if len(self._object) <= 1:
-           return compofact.FACTTreeItem.suppItem(self,item)
+            return compofact.FACTTreeItem.suppItem(self,item)
 
         if self.object.suppEntite(obj):
-           if len(self._object) == 1: self.updateDelegate()     
-           message = "Mot-clef " + obj.nom + " supprime"
-           return (1,message)
+            if len(self._object) == 1: self.updateDelegate()
+            message = "Mot-clef " + obj.nom + " supprime"
+            return (1,message)
         else:
-           return (0,tr('Impossible de supprimer ce mot-clef'))
+            return (0,tr('Impossible de supprimer ce mot-clef'))
 
-            
+
 import Accas
-objet = Accas.MCList    
+objet = Accas.MCList
 
 def treeitem(appliEficas,labeltext,object,setFunction):
-  """ Factory qui produit un objet treeitem adapte a un objet 
-      Accas.MCList (attribut objet de ce module)
-  """
-  return MCListTreeItem(appliEficas,labeltext,object,setFunction)
+    """ Factory qui produit un objet treeitem adapte a un objet
+        Accas.MCList (attribut objet de ce module)
+    """
+    return MCListTreeItem(appliEficas,labeltext,object,setFunction)

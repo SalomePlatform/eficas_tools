@@ -24,64 +24,62 @@ from PyQt5.QtWidgets import QWidget
 
 from Extensions.i18n import tr
 from desWidgetInactif import Ui_WidgetInactif
-import Accas 
+import Accas
 import os
 
-    
+
 # Import des panels
 
 class MonWidgetInactif(QWidget,Ui_WidgetInactif):
-  """
-  """
-  def __init__(self,node,editor):
-       QWidget.__init__(self,None)
-       self.node=node
-       self.editor=editor
-       self.setupUi(self)
-       from .monWidgetOptionnel import MonWidgetOptionnel
-       if self.editor.widgetOptionnel!= None :
-          self.monOptionnel=self.editor.widgetOptionnel
-       else :
-          self.monOptionnel=MonWidgetOptionnel(self)
-          self.editor.widgetOptionnel=self.monOptionnel
-          self.editor.splitter.addWidget(self.monOptionnel)
-          self.editor.restoreSplitterSizes()
-       self.afficheOptionnel()
-       self.bAvant.clicked.connect(self.afficheAvant)
-       self.bApres.clicked.connect(self.afficheApres)
-       self.bCatalogue.clicked.connect(self.afficheCatalogue)
-       self.labelNomCommande.setText(tr(self.node.item.nom))
-       self.labelNomCommande.setEnabled(False)
+    """
+    """
+    def __init__(self,node,editor):
+        QWidget.__init__(self,None)
+        self.node=node
+        self.editor=editor
+        self.setupUi(self)
+        from .monWidgetOptionnel import MonWidgetOptionnel
+        if self.editor.widgetOptionnel!= None :
+            self.monOptionnel=self.editor.widgetOptionnel
+        else :
+            self.monOptionnel=MonWidgetOptionnel(self)
+            self.editor.widgetOptionnel=self.monOptionnel
+            self.editor.splitter.addWidget(self.monOptionnel)
+            self.editor.restoreSplitterSizes()
+        self.afficheOptionnel()
+        self.bAvant.clicked.connect(self.afficheAvant)
+        self.bApres.clicked.connect(self.afficheApres)
+        self.bCatalogue.clicked.connect(self.afficheCatalogue)
+        self.labelNomCommande.setText(tr(self.node.item.nom))
+        self.labelNomCommande.setEnabled(False)
 
-  def traiteClicSurLabel(self):
-      pass
-  
-  def donnePremier(self):
-      pass
+    def traiteClicSurLabel(self):
+        pass
 
-  def setValide(self):
-      pass 
+    def donnePremier(self):
+        pass
 
-  def afficheOptionnel(self):
-      # N a pas de parentQt. doit donc etre redefini
-      if self.editor.maConfiguration.closeOptionnel : return
-      liste=[]
-      #print "dans afficheOptionnel", self.monOptionnel
-      # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
-      #if self.monOptionnel == None : return
-      self.monOptionnel.parentMC=self
-      self.monOptionnel.afficheOptionnelVide()
+    def setValide(self):
+        pass
 
-
-  def afficheCatalogue(self):
-      if self.editor.widgetOptionnel != None : self.monOptionnel.hide()
-      self.node.tree.racine.affichePanneau()
-      self.node.tree.racine.select()
-
-  def afficheApres(self):
-       self.node.selectApres()
-
-  def afficheAvant(self):
-       self.node.selectAvant()
+    def afficheOptionnel(self):
+        # N a pas de parentQt. doit donc etre redefini
+        if self.editor.maConfiguration.closeOptionnel : return
+        liste=[]
+        #print "dans afficheOptionnel", self.monOptionnel
+        # dans le cas ou l insertion n a pas eu leiu (souci d ordre par exemple)
+        #if self.monOptionnel == None : return
+        self.monOptionnel.parentMC=self
+        self.monOptionnel.afficheOptionnelVide()
 
 
+    def afficheCatalogue(self):
+        if self.editor.widgetOptionnel != None : self.monOptionnel.hide()
+        self.node.tree.racine.affichePanneau()
+        self.node.tree.racine.select()
+
+    def afficheApres(self):
+        self.node.selectApres()
+
+    def afficheAvant(self):
+        self.node.selectAvant()

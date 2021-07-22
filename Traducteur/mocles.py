@@ -32,7 +32,7 @@ def parseFact(match,c,kw):
     submatch=match[2]
     lastpar=match[0]+lastParen(c.src[match[0]:])
     if type(submatch[0][0]) ==types.IntType:
-        #mot cle facteur isolé
+        #mot cle facteur isole
         no=FactNode()
         kw.addChild(no)
         for ii in range(len(submatch)-1):
@@ -84,7 +84,7 @@ def parseFact(match,c,kw):
 #-----------------------
 def parseKeywords(root):
 #-----------------------
-    """A partir d'un arbre contenant des commandes, ajoute les noeuds 
+    """A partir d'un arbre contenant des commandes, ajoute les noeuds
        fils correspondant aux mocles de la commande
     """
     #print "parseKeywords"
@@ -103,9 +103,9 @@ def parseKeywords(root):
         visitor.walk(ast, matchFinder)
         #print matchFinder.matches
         if len(matchFinder.matches) > 1:
-            # plusieurs mocles trouvés : 
-            # un mocle commence au début du keyword (matchFinder.matches[i][0])
-            # et finit juste avant le keyword suivant 
+            # plusieurs mocles trouves :
+            # un mocle commence au debut du keyword (matchFinder.matches[i][0])
+            # et finit juste avant le keyword suivant
             # (matchFinder.matches[i+1][0]])
             for i in range(len(matchFinder.matches)-1):
                 if debug:print "texte:",c.src[matchFinder.matches[i][0]:matchFinder.matches[i+1][0]]
@@ -122,8 +122,8 @@ def parseKeywords(root):
                 if submatch:
                     parseFact(matchFinder.matches[i],c,kw)
 
-            # dernier mocle : 
-            #   il commence au debut du dernier keyword 
+            # dernier mocle :
+            #   il commence au debut du dernier keyword
             #   (matchFinder.matches[i+1][0]) et
             #   finit avant la parenthese fermante de la commande (c.lastParen)
 
@@ -142,9 +142,9 @@ def parseKeywords(root):
                 parseFact(matchFinder.matches[i+1],c,kw)
 
         elif len(matchFinder.matches) == 1:
-            #un seul mocle trouve : 
-            # il commence au début du keyword (matchFinder.matches[0][0]) et 
-            # finit juste avant la parenthese fermante de la 
+            #un seul mocle trouve :
+            # il commence au debut du keyword (matchFinder.matches[0][0]) et
+            # finit juste avant la parenthese fermante de la
             # commande (c.lastParen)
             if debug:print "texte:",c.src[matchFinder.matches[0][0]:c.lastParen]
             x,y=indexToCoordinates(c.src,matchFinder.matches[0][0])
@@ -161,4 +161,3 @@ def parseKeywords(root):
                 parseFact(matchFinder.matches[0],c,kw)
         else:
             pass
-

@@ -23,5 +23,5 @@ from . import A_MCLIST
 from . import A_MCNUPLET
 
 class NUPL(nuplet.NUPL):
-    class_instance=A_MCNUPLET.MCNUPLET
-    list_instance=A_MCLIST.MCList
+    class_instance = A_MCNUPLET.MCNUPLET
+    list_instance  = A_MCLIST.MCList

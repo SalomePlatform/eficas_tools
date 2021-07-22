@@ -30,50 +30,46 @@ from Noyau import N_CR
 
 
 def entryPoint():
-   """
-   Return a dictionary containing the description needed to load the plugin
-   """
-   return {
-          'name' : 'xml',
-          'factory' : XMLparser
-          }
+    """
+    Return a dictionary containing the description needed to load the plugin
+    """
+    return {
+           'name' : 'xml',
+           'factory' : XMLparser
+           }
 
 class XMLparser:
-   """
-   This converter works like Pythonparser, except that it is supposed to read XML
-   """
+    """
+    This converter works like Pythonparser, except that it is supposed to read XML
+    """
 
-   def __init__(self,cr=None):
-      print ('dans XML convert')
-      self.text=''
-      if cr : self.cr=cr
-      else: self.cr=N_CR.CR(debut='CR convertisseur format XML',
-                         fin='fin CR format XML')
+    def __init__(self,cr=None):
+        print ('dans XML convert')
+        self.text=''
+        if cr : self.cr=cr
+        else: self.cr=N_CR.CR(debut='CR convertisseur format XML',
+                           fin='fin CR format XML')
 
-   def readfile(self,filename):
-      self.filename=filename
-      try:
-         self.text=open(filename).read()
-      except:
-         self.cr.exception(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
-         self.cr.fatal(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
-         return
+    def readfile(self,filename):
+        self.filename=filename
+        try:
+            with open(filename) as fd :
+                self.text=fd.read()
+        except:
+            self.cr.exception(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
+            self.cr.fatal(tr("Impossible d'ouvrir le fichier %s" ,str(filename)))
+            return
 
 
 
-   def convert(self, outformat, appliEficas=None):
-   # ici on ne fait rien
-   # on le fera a la creation du JDC
-       try:
+    def convert(self, outformat, appliEficas=None):
+    # ici on ne fait rien
+    # on le fera a la creation du JDC
+        try:
             return self.text
-       except EficasException:
+        except EficasException:
             # Erreur lors de la conversion
             l=traceback.format_exception(sys.exc_info()[0],sys.exc_info()[1],
                                          sys.exc_info()[2])
             self.cr.exception(tr("Impossible de convertir le fichier XML\n %s", ''.join(l)))
             return ""
-         
-
-      
-
-

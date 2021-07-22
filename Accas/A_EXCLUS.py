@@ -26,5 +26,5 @@ class EXCLUS(I_EXCLUS.EXCLUS,V_EXCLUS.EXCLUS,N_REGLE.REGLE):
     """
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
-        V_EXCLUS.EXCLUS n'en a pas
+        I_EXCLUS.EXCLUS V_EXCLUS.EXCLUS n'en ont pas
     """

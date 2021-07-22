@@ -27,67 +27,67 @@ from Extensions.i18n import tr
 from desWidgetOptionnel import Ui_WidgetOptionnel
 from .monGroupeOptionnel import MonGroupeOptionnel
 
-    
+
 # Import des panels
 class  MonWidgetOptionnel (QWidget,Ui_WidgetOptionnel):
-  def __init__(self,parentQt):
-     #print ("dans init de monWidgetOptionnel ", parentQt )
-     QWidget.__init__(self,None)
-     self.setupUi(self)
-     self.dicoMCWidgetOptionnel={}
-     self.parentQt=parentQt
+    def __init__(self,parentQt):
+        #print ("dans init de monWidgetOptionnel ", parentQt )
+        QWidget.__init__(self,None)
+        self.setupUi(self)
+        self.dicoMCWidgetOptionnel={}
+        self.parentQt=parentQt
 
-  def afficheOptionnel(self,liste,liste_rouge,MC):
-     #print ('afficheOptionnel MonWidgetOptionnel',self, liste,MC.node.item.nom)
-     self.vireLesAutres(MC)
-   
-     if MC.node.item.nom in self.dicoMCWidgetOptionnel :
-        #print (MC.node.item.nom)
-        self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
-        self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
-        self.dicoMCWidgetOptionnel[MC.node.item.nom].deleteLater()
-        del self.dicoMCWidgetOptionnel[MC.node.item.nom]
-     if liste==[] : return
-     groupe = MonGroupeOptionnel(liste,liste_rouge,self,MC)
-     self.groupesOptionnelsLayout.insertWidget(0,groupe)
-     self.dicoMCWidgetOptionnel[MC.node.item.nom]=groupe
-     return groupe
+    def afficheOptionnel(self,liste,liste_rouge,MC):
+        #print ('afficheOptionnel MonWidgetOptionnel',self, liste,MC.node.item.nom)
+        self.vireLesAutres(MC)
 
-  def vireLesAutres(self,MC):
-      #print( "je passe dans vireLesAutres")
-      genea =MC.obj.getGenealogie()
-      #print (genea)
-      for k in list(self.dicoMCWidgetOptionnel.keys()):
-          #print (k)
-          #if k not in genea :  print ( k)
-          if k not in genea :  
-             self.dicoMCWidgetOptionnel[k].close()
-             del self.dicoMCWidgetOptionnel[k]
-      #print( "fin vireLesAutres")
-      
-  def vireTous(self):
-      for k in list(self.dicoMCWidgetOptionnel.keys()):
-          self.dicoMCWidgetOptionnel[k].close()
-          del self.dicoMCWidgetOptionnel[k]
+        if MC.node.item.nom in self.dicoMCWidgetOptionnel :
+            #print (MC.node.item.nom)
+            self.dicoMCWidgetOptionnel[MC.node.item.nom].close()
+            self.dicoMCWidgetOptionnel[MC.node.item.nom].setParent(None)
+            self.dicoMCWidgetOptionnel[MC.node.item.nom].deleteLater()
+            del self.dicoMCWidgetOptionnel[MC.node.item.nom]
+        if liste==[] : return
+        groupe = MonGroupeOptionnel(liste,liste_rouge,self,MC)
+        self.groupesOptionnelsLayout.insertWidget(0,groupe)
+        self.dicoMCWidgetOptionnel[MC.node.item.nom]=groupe
+        return groupe
 
-  def afficheOptionnelVide(self):
-      self.GeneaLabel.setText("")
-      for k in list(self.dicoMCWidgetOptionnel.keys()):
+    def vireLesAutres(self,MC):
+        #print( "je passe dans vireLesAutres")
+        genea =MC.obj.getGenealogie()
+        #print (genea)
+        for k in list(self.dicoMCWidgetOptionnel.keys()):
+            #print (k)
+            #if k not in genea :  print ( k)
+            if k not in genea :
+                self.dicoMCWidgetOptionnel[k].close()
+                del self.dicoMCWidgetOptionnel[k]
+        #print( "fin vireLesAutres")
+
+    def vireTous(self):
+        for k in list(self.dicoMCWidgetOptionnel.keys()):
             self.dicoMCWidgetOptionnel[k].close()
             del self.dicoMCWidgetOptionnel[k]
 
-  def titre(self,MC):
-     if self.parentCommande.node.editor.maConfiguration.closeFrameRechercheCommande==True :
-        self.frameLabelCommande.close()
-        return
-     labeltext,fonte,couleur = self.parentCommande.node.item.getLabelText()
-     l=tr(labeltext)
-     li=[]
-     while len(l) > 25:
-         li.append(l[0:24])
-         l=l[24:]
-     li.append(l)
-     texte=""
-     for l in li : texte+=l+"\n"
-     texte=texte[0:-2]
-     self.GeneaLabel.setText(tr("Options pour \n") +texte)
+    def afficheOptionnelVide(self):
+        self.GeneaLabel.setText("")
+        for k in list(self.dicoMCWidgetOptionnel.keys()):
+            self.dicoMCWidgetOptionnel[k].close()
+            del self.dicoMCWidgetOptionnel[k]
+
+    def titre(self,MC):
+        if self.parentCommande.node.editor.maConfiguration.closeFrameRechercheCommande==True :
+            self.frameLabelCommande.close()
+            return
+        labeltext,fonte,couleur = self.parentCommande.node.item.getLabelText()
+        l=tr(labeltext)
+        li=[]
+        while len(l) > 25:
+            li.append(l[0:24])
+            l=l[24:]
+        li.append(l)
+        texte=""
+        for l in li : texte+=l+"\n"
+        texte=texte[0:-2]
+        self.GeneaLabel.setText(tr("Options pour \n") +texte)

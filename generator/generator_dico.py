@@ -23,7 +23,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import traceback
@@ -32,63 +32,63 @@ from Extensions.i18n import tr
 from .generator_python import PythonGenerator
 
 def entryPoint():
-   """
-      Retourne les informations necessaires pour le chargeur de plugins
-      Ces informations sont retournees dans un dictionnaire
-   """
-   return {
-        # Le nom du plugin
-          'name' : 'dico',
-        # La factory pour creer une instance du plugin
-          'factory' : DicoGenerator,
-          }
+    """
+       Retourne les informations necessaires pour le chargeur de plugins
+       Ces informations sont retournees dans un dictionnaire
+    """
+    return {
+         # Le nom du plugin
+           'name' : 'dico',
+         # La factory pour creer une instance du plugin
+           'factory' : DicoGenerator,
+           }
 
 
 class DicoGenerator(PythonGenerator):
-   """
-      Ce generateur parcourt un objet de type JDC et produit
-      un texte au format eficas et 
-      un texte au format dictionnaire
+    """
+       Ce generateur parcourt un objet de type JDC et produit
+       un texte au format eficas et
+       un texte au format dictionnaire
 
-   """
-   # Les extensions de fichier permis?
-   extensions=('.comm',)
+    """
+    # Les extensions de fichier permis?
+    extensions=('.comm',)
 
 #----------------------------------------------------------------------------------------
-   def gener(self,obj,format='brut',config=None,appliEficas=None):
-       
-      self.initDico()
-      
-      # Cette instruction genere le contenu du fichier de commandes (persistance)
-      self.text=PythonGenerator.gener(self,obj,format)
-      return self.text
+    def gener(self,obj,format='brut',config=None,appliEficas=None):
+
+        self.initDico()
+
+        # Cette instruction genere le contenu du fichier de commandes (persistance)
+        self.text=PythonGenerator.gener(self,obj,format)
+        return self.text
 
 
 #----------------------------------------------------------------------------------------
 # initialisations
 #----------------------------------------------------------------------------------------
-   
-   def initDico(self) :
- 
-      self.Dico={}
-      self.texteDico = ""
+
+    def initDico(self) :
+
+        self.Dico={}
+        self.texteDico = ""
 
 
 #----------------------------------------------------------------------------------------
 # ecriture
 #----------------------------------------------------------------------------------------
 
-   def writeDefault(self,fn) :
-       fileDico = fn[:fn.rfind(".")] + '.py'
-       f = open( str(fileDico), 'w')
-       f.write('Dico = '+str(self.Dico))
-       f.close()
+    def writeDefault(self,fn) :
+        fileDico = fn[:fn.rfind(".")] + '.py'
+        f = open( str(fileDico), 'w')
+        f.write('Dico = '+str(self.Dico))
+        f.close()
 
 #----------------------------------------------------------------------------------------
-#  analyse de chaque noeud de l'arbre 
+#  analyse de chaque noeud de l'arbre
 #----------------------------------------------------------------------------------------
 
-   def generMCSIMP(self,obj) :
+    def generMCSIMP(self,obj) :
         """recuperation de l objet MCSIMP"""
         s=PythonGenerator.generMCSIMP(self,obj)
         courant=self.Dico
@@ -98,4 +98,3 @@ class DicoGenerator(PythonGenerator):
         courant[obj.nom]=obj.val
         self.texteDico+=obj.nom+ "=" + s[0:-1]+ "\n"
         return s
-

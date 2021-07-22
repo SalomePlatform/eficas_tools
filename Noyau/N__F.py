@@ -20,13 +20,13 @@
 
 from __future__ import absolute_import
 try :
-   from past.builtins import cmp
+    from past.builtins import cmp
 except :
-   pass
+    pass
 try:
-   from UserDict import UserDict
+    from UserDict import UserDict
 except ImportError:
-   from collections import UserDict
+    from collections import UserDict
 
 
 class _F(UserDict):

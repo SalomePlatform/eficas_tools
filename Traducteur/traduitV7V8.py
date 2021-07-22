@@ -86,11 +86,11 @@ dict_erreurs={
               "CALC_CHAM_ELEM":"reecrire la partie SOUR_ELGA_ELEC",
               "CALC_G_THETA_T_OPTION_VALEUR":"verifier la valeur d OPTION",
               "CALC_G_THETA_T_OPTION_DEFAUT":"verifier la valeur d OPTION donnee a la place du defaut",
-              "CALC_G_MODELE":"Mot Clef MODELE supprimé sous CALC_G",
-              "CALC_G_DEPL":"Mot Clef DEPL supprimé sous CALC_G",
-              "CALC_G_CHAM_MATER":"Mot Clef CHAM_MATER supprimé sous CALC_G",
-              "CALC_G_CARA_ELEM":"Mot Clef CARA_ELEM supprimé sous CALC_G",
-              "CALC_G_RESULTAT=XXX,":"Mot Clef RESULTAT à completer sous CALC_G",
+              "CALC_G_MODELE":"Mot Clef MODELE supprime sous CALC_G",
+              "CALC_G_DEPL":"Mot Clef DEPL supprime sous CALC_G",
+              "CALC_G_CHAM_MATER":"Mot Clef CHAM_MATER supprime sous CALC_G",
+              "CALC_G_CARA_ELEM":"Mot Clef CARA_ELEM supprime sous CALC_G",
+              "CALC_G_RESULTAT=XXX,":"Mot Clef RESULTAT a completer sous CALC_G",
               "AFFE_MODELE_AFFE_MODELISATION_VALEUR":"verifier la valeur de MODELISATION",
               "STAT_NON_LINE_COMP_INCR_RELATION_VALEUR":"verifier la valeur de RELATION",
               "STAT_NON_LINE_COMP_INCR_RELATION_KIT_VALEUR":"verifier la valeur de RELATION_KIT",
@@ -129,7 +129,7 @@ def traduc(infile,outfile,flog=None):
 
     #Parse les mocles des commandes
     parseKeywords(root)
-    
+
     ####################### traitement erreurs ########################
     genereErreurPourCommande(jdc,("DEBUT","POST_RCCM","DIST_LIGN_3D","IMPR_OAR","COMB_CHAM_NO","COMB_CHAM_ELEM"))
 
@@ -256,7 +256,7 @@ def traduc(infile,outfile,flog=None):
     moveMotClefInOperToFact(jdc,"CALC_G_LOCAL_T","LISSAGE_THETA","LISSAGE")
     moveMotClefInOperToFact(jdc,"CALC_G_LOCAL_T","LISSAGE_G","LISSAGE")
     moveMotClefInOperToFact(jdc,"CALC_G_LOCAL_T","DEGRE","LISSAGE")
-    
+
     dlocal={"CALC_G_LGLO":"G_LAGR", "G_BILINEAIRE":"G_BILI", "CALC_G_MAX":"G_MAX"}
     changementValeur(jdc,"CALC_G_LOCAL_T","OPTION",dlocal)
     #
@@ -268,13 +268,13 @@ def traduc(infile,outfile,flog=None):
     renameOper(jdc,"CALC_G_THETA_T","CALC_G")
 
     # Attention cela necessite un traitement particulier et ne peut pas etre generalise tel quel
-    # Attention egalement doit etre fait avant le regroupement dans THETA 
+    # Attention egalement doit etre fait avant le regroupement dans THETA
     calcG.traitementRayon(jdc)
     renameMotCle(jdc,"CALC_G","THETA","THETA_OLD")
     chercheOperInsereFacteur(jdc,"CALC_G","THETA")
     moveMotClefInOperToFact(jdc,"CALC_G","THETA_OLD","THETA")
     renameMotCleInFact(jdc,"CALC_G","THETA","THETA_OLD","THETA")
-    
+
     moveMotClefInOperToFact(jdc,"CALC_G","FOND_FISS","THETA")
     moveMotClefInOperToFact(jdc,"CALC_G","R_INF_FO","THETA")
     moveMotClefInOperToFact(jdc,"CALC_G","R_SUP_FO","THETA")
@@ -297,7 +297,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleSiRegleAvecErreur(jdc,"AFFE_MODELE","AFFE",((("AFFE","MODELISATION","ASSE_GRIL",jdc),"MCsousMCFaPourValeur"),))
     removeMotCleSiRegleAvecErreur(jdc,"AFFE_MODELE","AFFE",((("AFFE","MODELISATION","3D_JOINT_CT",jdc),"MCsousMCFaPourValeur"),))
     renameMotCleInFact(jdc,"AFFE_MODELE","AFFE_SOUS_STRUC","MAILLE","SUPER_MAILLE")
- 
+
     ####################### traitement PROJ_MESU_MODAL #######################
     removeMotCleInFact(jdc,"PROJ_MESU_MODAL","MODELE_MESURE","NOM_PARA")
     removeMotCleInFactSiRegleAvecErreur(jdc,"AFFE_CHAR_MECA","CONTACT","FROTTEMENT",((("CONTACT","METHODE","CONTRAINTE",jdc),"MCsousMCFaPourValeur"),))
@@ -316,7 +316,7 @@ def traduc(infile,outfile,flog=None):
     moveMotClefInOperToFact(jdc,"CALC_ELEM","ANGLE","REPE_COQUE")
     moveMotClefInOperToFact(jdc,"CALC_ELEM","PLAN","REPE_COQUE")
 
-    
+
     ####################### traitement EXTR_MODE #######################
     ajouteMotClefDansFacteurSiRegle(jdc,"EXTR_MODE","FILTRE_MODE","SEUIL=1.E-3", ((("FILTRE_MODE","CRIT_EXTR",),"existeMCsousMCF"),(("FILTRE_MODE","SEUIL",),"nexistepasMCsousMCF")))
 
@@ -508,7 +508,7 @@ def main():
     parser = optparse.Optionparser(usage=usage)
 
     parser.add_option('-i','--infile', dest="infile", default='toto.comm',
-        help="Le fichier à traduire")
+        help="Le fichier a traduire")
     parser.add_option('-o','--outfile', dest="outfile", default='tutu.comm',
         help="Le fichier traduit")
 
@@ -517,4 +517,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

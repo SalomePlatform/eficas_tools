@@ -64,6 +64,7 @@ class MCBLOC(N_MCCOMPO.MCCOMPO):
         self.valeur = val
         self.objPyxbDeConstruction=None
         self.dicoPyxbDeConstruction=dicoPyxbDeConstruction
+        self.estIdentifiePar=None
         if parent:
             self.jdc = self.parent.jdc
             self.niveau = self.parent.niveau

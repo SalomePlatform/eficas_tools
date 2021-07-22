@@ -27,7 +27,7 @@ JdC = JDC_CATA (
     )
 VERSION_CATALOGUE='V_0'
 
-#leProc = PROC(nom = 'leProc', 
+#leProc = PROC(nom = 'leProc',
 #      unSimp = SIMP(statut='o', typ ='I'),
 #      bloc1 = BLOC(condition = "UnSimp == 1",
 #         leFact1 = FACT(statut = 'o',
@@ -41,7 +41,7 @@ VERSION_CATALOGUE='V_0'
 #         ),
 #      )
 #)
-leProcV2 = PROC(nom = 'leProcV2', 
+leProcV2 = PROC(nom = 'leProcV2',
       unSimpV2 = SIMP(statut='o', typ ='I'),
       blocV21 = BLOC(condition = "UnSimpV2 == 1",
          leFactV21 = FACT(statut = 'o',
@@ -59,4 +59,3 @@ leProcV2 = PROC(nom = 'leProcV2',
          ),
       ), # fin bloc2
 )
-

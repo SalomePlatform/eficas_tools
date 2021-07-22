@@ -25,5 +25,5 @@ class AVANT(I_AVANT.I_AVANT,I_REGLE.REGLE,N_REGLE.REGLE):
     """
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
-        I_AVANT.I_AVANT n'en a pas
+        I_AVANT.I_AVANT et I_REGLE.REGLE  n'en ont pas
     """

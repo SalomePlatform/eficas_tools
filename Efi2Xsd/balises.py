@@ -27,27 +27,26 @@ eltCata = '\t<element name="{}" type="{}:{}"/>\n'
 
 
 if __name__ == '__main__' :
-   nomElt='Simple'
-   nomDuType='T_Simple'
-   nomDuTypeBase='int'
-   nomDuComplexe='T_Complexe'
-   nomDuCode='monCode'
-   minOccurs=1
-   maxOccurs=1
+    nomElt='Simple'
+    nomDuType='T_Simple'
+    nomDuTypeBase='int'
+    nomDuComplexe='T_Complexe'
+    nomDuCode='monCode'
+    minOccurs=1
+    maxOccurs=1
 
-   texteSimple=typeSimple.format(nomDuType, nomDuTypeBase)
-   texteElt=eltDsSequence.format(nomElt,nomDuCode,nomDuType,minOccurs,maxOccurs)
+    texteSimple=typeSimple.format(nomDuType, nomDuTypeBase)
+    texteElt=eltDsSequence.format(nomElt,nomDuCode,nomDuType,minOccurs,maxOccurs)
 
-   minOccurs=0
-   texteComplexe=debutTypeComplexe.format(nomDuComplexe)
-   texteComplexe+=texteElt
-   texteComplexe+=finTypeComplexe
-   texteEltComplexe=eltDsSequence.format(nomElt,nomDuCode,nomDuType,minOccurs,maxOccurs)
+    minOccurs=0
+    texteComplexe=debutTypeComplexe.format(nomDuComplexe)
+    texteComplexe+=texteElt
+    texteComplexe+=finTypeComplexe
+    texteEltComplexe=eltDsSequence.format(nomElt,nomDuCode,nomDuType,minOccurs,maxOccurs)
 
-   texteCata=debutTypeCata.format(nomDuCode)
-   texteCata+=texteEltComplexe
-   texteCata+=finTypeCata
+    texteCata=debutTypeCata.format(nomDuCode)
+    texteCata+=texteEltComplexe
+    texteCata+=finTypeCata
 
-   eltRacine=eltCata.format(nomDuCode, 'T_'+nomDuCode)
-   print (texteSimple+texteComplexe+texteCata+eltRacine)
-
+    eltRacine=eltCata.format(nomDuCode, 'T_'+nomDuCode)
+    print (texteSimple+texteComplexe+texteCata+eltRacine)

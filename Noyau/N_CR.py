@@ -23,10 +23,10 @@
 
 from __future__ import absolute_import
 try :
-   from builtins import str
-   from builtins import object
+    from builtins import str
+    from builtins import object
 except :
-   pass
+    pass
 import six
 
 

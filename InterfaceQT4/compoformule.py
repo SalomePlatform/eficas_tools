@@ -31,14 +31,14 @@ from . import typeNode
 
 
 class FormuleNode(browser.JDCNode,typeNode.PopUpMenuNode):
-        
-    def getPanel(self):
-      from .monWidgetFormule import MonWidgetFormule
-      return MonWidgetFormule(self,self.editor,self.item.object)
 
-   
+    def getPanel(self):
+        from .monWidgetFormule import MonWidgetFormule
+        return MonWidgetFormule(self,self.editor,self.item.object)
+
+
     def createPopUpMenu(self):
-      typeNode.PopUpMenuNode.createPopUpMenu(self)
+        typeNode.PopUpMenuNode.createPopUpMenu(self)
 
 
 class FORMULETreeItem(compooper.EtapeTreeItem):
@@ -49,118 +49,118 @@ class FORMULETreeItem(compooper.EtapeTreeItem):
     itemNode=FormuleNode
 
     def init(self):
-      self.setFunction = self.setValeur
+        self.setFunction = self.setValeur
 
 # ---------------------------------------------------------------------------
-#                   API de FORMULE pour l'arbre 
+#                   API de FORMULE pour l'arbre
 # ---------------------------------------------------------------------------
     def getSubList(self):
-      """
-      Retourne la liste des fils de self
-      On considere que FORMULE n'a pas de fils
-      --> modification par rapport a MACRO classique
-      """
-      # dans EFICAS on ne souhaite pas afficher les mots-cles fils de FORMULE
-      # de facon traditionnelle
-      return []
+        """
+        Retourne la liste des fils de self
+        On considere que FORMULE n'a pas de fils
+        --> modification par rapport a MACRO classique
+        """
+        # dans EFICAS on ne souhaite pas afficher les mots-cles fils de FORMULE
+        # de facon traditionnelle
+        return []
 
     def getIconName(self):
-      """
-      Retourne le nom de l'icone a afficher dans l'arbre
-      Ce nom depend de la validite de l'objet
-      """
-      if self.object.isActif():
-        if self.object.isValid():
-          return "ast-green-square"
+        """
+        Retourne le nom de l'icone a afficher dans l'arbre
+        Ce nom depend de la validite de l'objet
+        """
+        if self.object.isActif():
+            if self.object.isValid():
+                return "ast-green-square"
+            else:
+                return "ast-red-square"
         else:
-          return "ast-red-square"
-      else:
-        return "ast-white-text"
+            return "ast-white-text"
 
     def getLabelText(self):
-      """ Retourne 3 valeurs :
-      - le texte a afficher dans le noeud representant l'item
-      - la fonte dans laquelle afficher ce texte
-      - la couleur du texte
-      """
-      return self.labeltext,None,None
-      #if self.object.isActif():
-        # None --> fonte et couleur par defaut
-      #  return tr(self.labeltext),None,None
-      #else:
-      #   return tr(self.labeltext),None,None
-      #return self.labeltext,fontes.standard_italique,None
-    
+        """ Retourne 3 valeurs :
+        - le texte a afficher dans le noeud representant l'item
+        - la fonte dans laquelle afficher ce texte
+        - la couleur du texte
+        """
+        return self.labeltext,None,None
+        #if self.object.isActif():
+            # None --> fonte et couleur par defaut
+        #  return tr(self.labeltext),None,None
+        #else:
+        #   return tr(self.labeltext),None,None
+        #return self.labeltext,fontes.standard_italique,None
+
 # ---------------------------------------------------------------------------
 #       Methodes permettant la modification et la lecture des attributs
 #       du parametre = API graphique de la FORMULE pour Panel et EFICAS
 # ---------------------------------------------------------------------------
 
     def getNom(self):
-      """
-      Retourne le nom de la FORMULE
-      """
-      return self.object.getNom()
+        """
+        Retourne le nom de la FORMULE
+        """
+        return self.object.getNom()
 
     def getType(self):
-      """
-      Retourne le type de la valeur retournee par la FORMULE
-      """
-      return self.object.type_retourne
+        """
+        Retourne le type de la valeur retournee par la FORMULE
+        """
+        return self.object.type_retourne
 
     def getArgs(self):
-      """
-      Retourne les arguments de la FORMULE
-      """
-      args=""
-      for mot in self.object.mcListe:
-          if mot.nom == 'NOM_PARA':
-             args=mot.valeur
-             break
-      if args :
-          if args[0] == "(" and args[-1] ==")":
-             args=args[1:-1]
-          # transforme en tuple si ce n est pas deja le casa
-          try :
-             args=args.split(',')
-          except :
-             pass
-      return args
+        """
+        Retourne les arguments de la FORMULE
+        """
+        args=""
+        for mot in self.object.mcListe:
+            if mot.nom == 'NOM_PARA':
+                args=mot.valeur
+                break
+        if args :
+            if args[0] == "(" and args[-1] ==")":
+                args=args[1:-1]
+            # transforme en tuple si ce n est pas deja le casa
+            try :
+                args=args.split(',')
+            except :
+                pass
+        return args
 
     def getCorps(self):
-      """
-      Retourne le corps de la FORMULE
-      """
-      corps=""
-      for mot in self.object.mcListe:
-          if mot.nom == 'VALE':
-             corps=mot.valeur
-             break
-      return corps
+        """
+        Retourne le corps de la FORMULE
+        """
+        corps=""
+        for mot in self.object.mcListe:
+            if mot.nom == 'VALE':
+                corps=mot.valeur
+                break
+        return corps
 
 
     def getListeTypesAutorises(self):
-      """
-         Retourne la liste des types autorises pour les valeurs de sortie 
-         d'une FORMULE
-      """
-      return self.object.l_types_autorises
+        """
+           Retourne la liste des types autorises pour les valeurs de sortie
+           d'une FORMULE
+        """
+        return self.object.l_types_autorises
 
     def saveFormule(self,new_nom,new_typ,new_arg,new_exp):
-      """
-      Verifie si (new_nom,new_typ,new_arg,new_exp) definit bien une FORMULE 
-      licite :
-          - si oui, stocke ces parametres comme nouveaux parametres de la 
-            FORMULE courante et retourne 1
-          - si non, laisse les parametres anciens de la FORMULE inchanges et 
-            retourne 0
-      """
-      test,erreur = self.object.verifFormule_python(formule=(new_nom,new_typ,new_arg,
-                                                       new_exp))
-      if test :
-          # la formule est bien correcte : on sauve les nouveaux parametres
-          test=self.object.updateFormulePython(formule=(new_nom,new_typ,new_exp,new_arg))
-      return test,erreur
+        """
+        Verifie si (new_nom,new_typ,new_arg,new_exp) definit bien une FORMULE
+        licite :
+            - si oui, stocke ces parametres comme nouveaux parametres de la
+              FORMULE courante et retourne 1
+            - si non, laisse les parametres anciens de la FORMULE inchanges et
+              retourne 0
+        """
+        test,erreur = self.object.verifFormule_python(formule=(new_nom,new_typ,new_arg,
+                                                         new_exp))
+        if test :
+            # la formule est bien correcte : on sauve les nouveaux parametres
+            test=self.object.updateFormulePython(formule=(new_nom,new_typ,new_exp,new_arg))
+        return test,erreur
 
 # ---------------------------------------------------------------------------
 #          Acces aux methodes de verification de l'objet FORM_ETAPE

@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import types,os
@@ -50,16 +50,16 @@ class ViewText(Ui_dView,QDialog):
         if entete != None : self.setWindowTitle (entete)
         if entete != None : self.setText (texte)
 
-        
-    def setText(self, txt ):    
+
+    def setText(self, txt ):
         self.view.setText(txt)
-        
+
     def saveFile(self):
         #recuperation du nom du fichier
         if self.editor != None :
-           dir=self.editor.appliEficas.maConfiguration.savedir
+            dir=self.editor.appliEficas.maConfiguration.savedir
         else:
-           dir='/tmp'
+            dir='/tmp'
         fn = QFileDialog.getSaveFileName(None,
                 tr("Sauvegarder le fichier"),
                 dir)
@@ -69,15 +69,13 @@ class ViewText(Ui_dView,QDialog):
 
         ulfile = os.path.abspath(fn)
         if self.editor != None :
-           self.editor.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
+            self.editor.appliEficas.maConfiguration.savedir=os.path.split(ulfile)[0]
         try:
-           f = open(fn, 'w')
-           f.write(str(self.view.toPlainText()))
-           f.close()
-           return 1
+            f = open(fn, 'w')
+            f.write(str(self.view.toPlainText()))
+            f.close()
+            return 1
         except IOError as why:
-           QMessageBox.critical(self, tr("Sauvegarder le fichier"),
-                 tr('Le fichier')+str(fn) + tr('n a pas pu etre sauvegarde : ') + str(why))
-           return
-
-
+            QMessageBox.critical(self, tr("Sauvegarder le fichier"),
+                  tr('Le fichier')+str(fn) + tr('n a pas pu etre sauvegarde : ') + str(why))
+            return

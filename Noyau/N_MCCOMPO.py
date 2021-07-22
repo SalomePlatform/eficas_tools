@@ -41,7 +41,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
             Construit la liste des sous-entites du MCCOMPO
             à partir du dictionnaire des arguments (valeur)
         """
-        
+
         #import traceback
         #traceback.print_stack()
         #print(("MCCOMPO.buildMc _____________________________________", self.nom))
@@ -56,7 +56,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
         #print ('MCCOMPO___________________', self.valeur)
         if args == None: args = {}
         mcListe = []
-        
+
 
         # On recopie le dictionnaire des arguments pour protéger l'original des
         # delete (del args[k])
@@ -78,11 +78,11 @@ class MCCOMPO(N_OBJECT.OBJECT):
                 # si une valeur existe dans args ou est obligatoire (generique si toutes les
                 # entites ont l attribut statut )
                 #
-                if self.dicoPyxbDeConstruction and  k in self.dicoPyxbDeConstruction : 
-                   objPyxbDeConstruction=self.dicoPyxbDeConstruction[k]
-                   del self.dicoPyxbDeConstruction[k]
+                if self.dicoPyxbDeConstruction and  k in self.dicoPyxbDeConstruction :
+                    objPyxbDeConstruction=self.dicoPyxbDeConstruction[k]
+                    del self.dicoPyxbDeConstruction[k]
                 else :
-                   objPyxbDeConstruction=None
+                    objPyxbDeConstruction=None
                 #print (args.get(k, None))
                 objet = v(val=args.get(k, None), nom=k, parent=self,objPyxbDeConstruction=objPyxbDeConstruction)
                 mcListe.append(objet)
@@ -91,27 +91,30 @@ class MCCOMPO(N_OBJECT.OBJECT):
                 if hasattr(objet.definition, 'position'):
                     if objet.definition.position == 'global':
                         self.append_mc_global(objet)
+                    if objet.definition.position == 'reCalculeEtape':
+                        #print ('-------------------------- rencontre reCalculeEtape: ', objet.nom)
+                        self.append_mc_global_avecRecalcule(objet)
                     elif objet.definition.position == 'global_jdc':
                         self.append_mc_global_jdc(objet)
             if k in args:
                 del args[k]
 
         # Phase 1.2 : on traite les autres entites que SIMP
-        # (FACT en fait car un BLOC ne peut avoir le meme nom qu'un mot-clef)
+        # FACT ou listeDeFAct en fait car un BLOC ne peut etre present dans les args
         for k, v in list(self.definition.entites.items()):
-            if v.label == 'SIMP':
-                continue
+            if v.label == 'SIMP': continue
             if k in args or v.statut == 'o':
+                #print ('construit', k)
                 #
                 # Creation par appel de la methode __call__ de la definition de la sous entite k de self
                 # si une valeur existe dans args ou est obligatoire (generique si toutes les
                 # entites ont l attribut statut )
                 #
-                if self.dicoPyxbDeConstruction and  k in self.dicoPyxbDeConstruction : 
-                   dicoPyxbDeConstruction=self.dicoPyxbDeConstruction[k]
-                   del self.dicoPyxbDeConstruction[k]
+                if self.dicoPyxbDeConstruction and  k in self.dicoPyxbDeConstruction :
+                    dicoPyxbDeConstruction=self.dicoPyxbDeConstruction[k]
+                    del self.dicoPyxbDeConstruction[k]
                 else :
-                   dicoPyxbDeConstruction=None
+                    dicoPyxbDeConstruction=None
                 objet = v(val=args.get(k, None), nom=k, parent=self,dicoPyxbDeConstruction=dicoPyxbDeConstruction)
                 mcListe.append(objet)
             if k in args:
@@ -130,6 +133,7 @@ class MCCOMPO(N_OBJECT.OBJECT):
             dico_valeurs = self.creeDictCondition(mcListe, condition=1)
             globs = self.jdc and self.jdc.condition_context or {}
             if v.verifPresence(dico_valeurs, globs):
+                #print ('appel construit bloc', k, 'avec', args, 'a partir de', self.nom )
                     # Si le bloc existe :
                     #        1- on le construit
                     #        2- on l'ajoute à mcListe
@@ -138,12 +142,18 @@ class MCCOMPO(N_OBJECT.OBJECT):
                 bloc = v(nom=k, val=args, parent=self,dicoPyxbDeConstruction=self.dicoPyxbDeConstruction)
                 mcListe.append(bloc)
                 args = bloc.reste_val
+                #print ('les args deviennent ', args)
                 # On ne recalcule pas le contexte car on ne tient pas compte des blocs
                 # pour évaluer les conditions de présence des blocs
                 # dico_valeurs = self.creeDictValeurs(mcListe)
 
         # On conserve les arguments superflus dans l'attribut reste_val
+        # les reste_val des blocs  vont contenir trop de MC
+        # car ils sont appeles avec tous les MC de leur niveau qui n ont pas ete consommes
+        # et le reste_val n est pas remis a jour
+        # est-ce un pb ? a priori non
         self.reste_val = args
+        #print ('self.reste_val de ', self.nom, self.reste_val)
         # On ordonne la liste ainsi créée suivant l'ordre du catalogue
         # (utile seulement pour IHM graphique)
         mcListe = self.ordonneListe(mcListe)
@@ -151,17 +161,45 @@ class MCCOMPO(N_OBJECT.OBJECT):
         if self.jdc  : self.cata=self.jdc.cata
         else : self.cata = None
         self.buildObjPyxb(mcListe)
-        #else : print ('pas de construction pour ', self.nom, self.objPyxbDeConstruction)
-        #print ('buildObjPyxb : ' , self.nom)
-        #print(("MCCOMPO.buildMc fin_____________________________________", self.nom))
+        #print ('______________________________________ fin ', self.nom)
         return mcListe
 
-    def buildMcApresGlobal(self):
-        print ('Noyau ---------------- buildMcApresGlobal pour', self.nom)
+    def buildMcApresGlobalEnSuppression(self):
+        blocsDejaLa=[]
+        for mc in self.mcListe :
+            if mc.nature == 'MCBLOC' : blocsDejaLa.append(mc)
+        for mc in  blocsDejaLa :
+            dico_valeurs = self.creeDictCondition(self.mcListe, condition=1)
+            globs = self.jdc and self.jdc.condition_context or {}
+            defBloc = mc.definition
+            if not (defBloc.verifPresence(dico_valeurs, globs)):
+                self.suppEntite(mc)
+
+
+    def reConstruitResteVal(self):
+    # normal que apres buildMcApresGlobalEnCreation les reste_val ne soient pas corrects
+        for mc in self.mcListe :
+            if mc.nom in self.reste_val :
+                del self.reste_val[mc.nom]
+            if mc.nature == 'MCBLOC' :
+                ancetre=mc.parent
+                for mcFDuMc in mc.mcListe :
+                    while ancetre.nature == 'MCBLOC' :
+                        ancetre=ancetre.parent
+                        if mcFDuMc.nom in ancetre.reste_val : del ancetre.reste_val[mcFDuMc.nom]
+            if mc.nature == 'MCSIMP' : continue
+            if mc.nature == 'MCList' :
+                for mcObj in mc.data :
+                    mcObj.reConstruitResteVal()
+            else :
+                mc.reConstruitResteVal()
+
+
+    def buildMcApresGlobalEnCreation(self):
         nouveau_args = self.reste_val
         blocsDejaLa=[]
         for mc in self.mcListe :
-            if mc.nature == 'MCBLOC' : blocsDejaLa.append(mc.nom) 
+            if mc.nature == 'MCBLOC' : blocsDejaLa.append(mc.nom)
         for k, v in list(self.definition.entites.items()):
             if v.label != 'BLOC': continue
             if k in blocsDejaLa : continue
@@ -170,9 +208,11 @@ class MCCOMPO(N_OBJECT.OBJECT):
             if v.verifPresence(dico_valeurs, globs):
                 bloc = v(nom=k, val=nouveau_args, parent=self,dicoPyxbDeConstruction=self.dicoPyxbDeConstruction)
                 if bloc :
-                   self.mcListe.append(bloc)
-                   self.reste_val = bloc.reste_val
-       
+                    self.mcListe.append(bloc)
+                    bloc.addObjPyxb(self.chercheIndiceDsLeContenu(bloc))
+                    nouveau_args = self.reste_val
+                    self.reste_val = bloc.reste_val
+
 
     def ordonneListe(self, mcListe):
         """
@@ -302,18 +342,19 @@ class MCCOMPO(N_OBJECT.OBJECT):
             Cette méthode interroge la définition de self et retourne la liste des mots-clés fils
             directs de self de type 'global'.
             position='global' n'est donc possible (et n'a de sens) qu'au plus haut niveau.
+            du coup ici on ajoute les globaux de l etape qui sont dans mc_recalculeEtape
         """
+        #print ('je passe par ici', self.nom)
         dico = {}
         etape = self.getEtape()
         if not etape:
             return {}
         for k, v in list(etape.definition.entites.items()):
-            if v.label != 'SIMP':
-                continue
-            if v.position != 'global':
-                continue
-            if v.statut == 'o':
-                continue
+            if v.label != 'SIMP': continue
+            if v.position == 'local': continue
+            if v.position == 'inGetAttribut': continue
+            if v.position == 'reCalculeEtape': continue
+            if v.statut == 'o': continue
             obj = v(val=None, nom=k, parent=etape)
             dico[k] = obj.getValeur()
         return dico
@@ -398,6 +439,35 @@ class MCCOMPO(N_OBJECT.OBJECT):
 
         return None
 
+    def getChildOrChildInBloc(self, name, restreint='non'):
+    # cherche dans les fils et les fils des blocs
+    # tout est base sur le fait que deux freres ne peuvent pas avoir le meme nom
+    # dans des blocs non exclusifs, sinon le .comm n est pas du python valide
+        for v in self.mcListe:
+            if v.nom == name: return v
+        if restreint == 'non':
+            try:
+                entite = self.definition.entites[name]
+                if entite.label == 'SIMP' or (entite.label == 'FACT' and entite.statut in ('c', 'd')):
+                    return entite(None, name, None)
+            except:
+                pass
+        for v in self.mcListe:
+            if v.nature == 'MCBLOC' :
+                petitFils=v.getChildOrChildInBloc(name, restreint) 
+                if petitFils !=None :  return petitFils
+        return None
+
+    def append_mc_global_avecRecalcule(self, mc):
+        etape = self.getEtape()
+        if etape:
+            nom = mc.nom
+            if not(nom in etape.mc_globaux) :
+                etape.doitEtreRecalculee = True
+            etape.mc_globaux[nom] = mc
+            #print ('ajout de nom', mc.nom, 'ds les mc_globaux de', etape.nom)
+
+
     def append_mc_global(self, mc):
         """
            Ajoute le mot-clé mc à la liste des mots-clés globaux de l'étape
@@ -417,11 +487,9 @@ class MCCOMPO(N_OBJECT.OBJECT):
     def copy(self):
         """ Retourne une copie de self """
         objet = self.makeobjet()
-        # FR : attention !!! avec makeobjet, objet a le meme parent que self
+        # attention !!! avec makeobjet, objet a le meme parent que self
         # ce qui n'est pas du tout bon dans le cas d'une copie !!!!!!!
-        # FR : peut-on passer par là autrement que dans le cas d'une copie ???
-        # FR --> je suppose que non
-        # XXX CCAR : le pb c'est qu'on vérifie ensuite quel parent avait l'objet
+        # le pb c'est qu'on vérifie ensuite quel parent avait l'objet
         # Il me semble preferable de changer le parent a la fin quand la copie
         # est acceptee
         objet.valeur = copy(self.valeur)
@@ -493,6 +561,21 @@ class MCCOMPO(N_OBJECT.OBJECT):
         for child in self.mcListe:
             l.extend(child.getAllCo())
         return l
+
+
+    #def getSdCreeParObjetAvecFiltre(self,objetAssdMultiple):
+    # est-ce que si on est bloc, il faut passer à parent ?
+    # ou prevoir une autre fonction qui tienne compte de cela
+    # ou prevoir un xpath
+    #   classeAChercher = objetAssdMultiple.definition.type
+    #   filtre  = objetAssdMultiple.definition.filtre
+    #   print ('getSdCreeParObjetAvecFiltre', classeAChercher, filtre)
+    #   dicoValeurs = self.creeDictCondition(self.mcListe, condition=1)
+    #   l=[]
+    #   for k,v in self.jdc.sdsDict.items():
+    #      if (isinstance(v, classeAChercher)) :
+    #         if v.executeExpression(filtre,dicoValeurs) : l.append(k)
+    #   return l
 
 
 

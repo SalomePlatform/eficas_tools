@@ -85,7 +85,7 @@ def traduc(infile,outfile,flog=None):
 
     #Parse les mocles des commandes
     parseKeywords(root)
-    
+
     ####################### traitement erreurs ########################
     genereErreurPourCommande(jdc,("POST_RCCM","DEFI_MATERIAU","TEST_FICHIER","DYNA_NON_LINE","DEFI_FISS_XFEM","POST_MAIL_XFEM"))
 
@@ -204,7 +204,7 @@ def traduc(infile,outfile,flog=None):
     renameMotCleInFact(jdc,"DEFI_MATERIAU","VENDOCHAB_FO","K_VP","UN_SUR_K")
     renameMotCleInFact(jdc,"DEFI_MATERIAU","VENDOCHAB_FO","SEDVP1","ALPHA_D")
     renameMotCleInFact(jdc,"DEFI_MATERIAU","VENDOCHAB_FO","SEDVP2","BETA_D")
-    # GLRC 
+    # GLRC
     renameCommandeSiRegle(jdc,"DEFI_MATERIAU","DEFI_GLRC", ((("GLRC_DAMAGE","GLRC_ACIER",),"existeMCFParmi"),))
     #########################################################################
 
@@ -425,7 +425,7 @@ def main():
     parser = optparse.Optionparser(usage=usage)
 
     parser.add_option('-i','--infile', dest="infile", default='toto.comm',
-        help="Le fichier à traduire")
+        help="Le fichier a traduire")
     parser.add_option('-o','--outfile', dest="outfile", default='tutu.comm',
         help="Le fichier traduit")
 
@@ -434,4 +434,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

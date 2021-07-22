@@ -16,7 +16,7 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 Creates the ``EficasException`` class for the EDF Eficas application.
-This class supports the internationalization mechanism provided in 
+This class supports the internationalization mechanism provided in
 the ``i18n`` module.
 """
 
@@ -40,7 +40,7 @@ class EficasException(Exception):
         #sys.path.append(os.path.realpath(".."))
         from Extensions.i18n import tr
         self.args = (tr(msg),)
-    
+
 
 if __name__ == "__main__":
     import sys

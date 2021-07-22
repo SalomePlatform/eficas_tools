@@ -48,12 +48,14 @@ class JDC_CATA(N_ENTITE.ENTITE):
     class_instance = N_JDC.JDC
     label = 'JDC'
 
-    def __init__(self, code='', execmodul=None, regles=(), niveaux=(),fichierSource=None, **args):
+    def __init__(self, code='', execmodul=None, regles=(), niveaux=(),fichierSource=None, fr='', ang ='', **args):
         """
         on se laisse la possibilite d initier fichierSource avec autre chose que le nom du fichier
         au cas ou ... pour pouvoir changer le nom du 'sous code' implementer (cf readercata)
         """
         self.code = code
+        self.fr = fr
+        self.ang = ang
         self.execmodul = execmodul
         if type(regles) == tuple:
             self.regles = regles
@@ -73,12 +75,16 @@ class JDC_CATA(N_ENTITE.ENTITE):
         CONTEXT.unsetCurrentCata()
         CONTEXT.setCurrentCata(self)
         self.fenetreIhm=None
+        self.definitUserASSD = False
+        self.definitUserASSDMultiple = False
         self.dictTypesXSD={}
-        self.listeDesTypesXSDRedefini=[]
+        self.dictTypesXSDJumeaux={}
         self.dictTypesASSDorUserASSDCrees={}
         self.dictTypesASSDorUserASSDUtilises={}
+        self.listeUserASSDDumpes=set()
+        self.listeTypeTXMAvecBlancs=set()
 
- 
+
     def __call__(self, procedure=None, cata=None, cata_ord_dico=None,
                  nom='SansNom', parent=None, **args):
         """
@@ -141,3 +147,13 @@ class JDC_CATA(N_ENTITE.ENTITE):
              ou None s'il n'existe pas
         """
         return self.d_niveaux.get(nom_niveau, None)
+
+
+    def dumpStructure(self):
+        texte=""
+        for c in self.commandes:
+            if not(c.label != "OPER") and not(c.label != 'PROC')  : continue
+            if c.label == "OPER"  : texte+=c.nom + " "+ str(c.sd_prod) + "\n"
+            if c.label == "PROC"  : texte+=c.nom + " \n"
+            texte+=c.dumpStructure()
+        return texte

@@ -28,18 +28,18 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
     itemNode=compocomm.Node
 
     def init(self):
-      self.setFunction = self.setValeur
+        self.setFunction = self.setValeur
 
     def getIconName(self):
-      """
-      Retourne le nom de l'icone associee au noeud qui porte self,
-      dependant de la validite de l'objet
-      NB : une commande commentarisee est toujours valide ...
-      """
-      if self.isValid():
-          return "ast-green-percent"
-      else:
-          return "ast-red-percent"
+        """
+        Retourne le nom de l'icone associee au noeud qui porte self,
+        dependant de la validite de l'objet
+        NB : une commande commentarisee est toujours valide ...
+        """
+        if self.isValid():
+            return "ast-green-percent"
+        else:
+            return "ast-red-percent"
 
     def getLabelText(self):
         """ Retourne 3 valeurs :
@@ -50,11 +50,11 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
         return 'commentaire'
 
     def getValeur(self):
-      """
-      Retourne la valeur de la commande commentarisee cad son texte
-      """
-      return self.object.getValeur() or ''
-    
+        """
+        Retourne la valeur de la commande commentarisee cad son texte
+        """
+        return self.object.getValeur() or ''
+
     def getText(self):
         texte = self.object.valeur
         texte = texte.split('\n')[0]
@@ -64,31 +64,31 @@ class COMMANDE_COMMTreeItem(Objecttreeitem.ObjectTreeItem):
             return texte[0:24]
 
     def setValeur(self,valeur):
-      """
-      Afefcte valeur a l'objet commande commentarisee
-      """
-      self.object.setValeur(valeur)
-      
+        """
+        Afefcte valeur a l'objet commande commentarisee
+        """
+        self.object.setValeur(valeur)
+
     def getSubList(self):
-      """
-      Retourne la liste des fils de self
-      """
-      return []
+        """
+        Retourne la liste des fils de self
+        """
+        return []
 
     def unComment(self):
-      """
-      Demande a l'objet commande commentarisee de se decommentariser.
-      Si l'operation s'effectue correctement, retourne l'objet commande
-      et eventuellement le nom de la sd produite, sinon leve une exception
-      """
-      try:
-        commande,nom = self.object.unComment()
-        #self.parent.children[pos].select()
-      except Exception as e:
-        traceback.print_exc()
-        raise EficasException(e)
-      return commande,nom
-  
+        """
+        Demande a l'objet commande commentarisee de se decommentariser.
+        Si l'operation s'effectue correctement, retourne l'objet commande
+        et eventuellement le nom de la sd produite, sinon leve une exception
+        """
+        try:
+            commande,nom = self.object.unComment()
+            #self.parent.children[pos].select()
+        except Exception as e:
+            traceback.print_exc()
+            raise EficasException(e)
+        return commande,nom
+
 import Accas
 treeitem =COMMANDE_COMMTreeItem
-objet = Accas.COMMANDE_COMM    
+objet = Accas.COMMANDE_COMM

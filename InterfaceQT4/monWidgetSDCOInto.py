@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import types,os
@@ -31,7 +31,7 @@ from PyQt5.QtCore import Qt
 from Extensions.i18n import tr
 
 from .feuille               import Feuille
-from desWidgetSDCOInto     import Ui_WidgetSDCOInto 
+from desWidgetSDCOInto     import Ui_WidgetSDCOInto
 from .qtSaisie              import SaisieSDCO
 from .politiquesValidation  import PolitiqueUnique
 
@@ -39,7 +39,7 @@ from .politiquesValidation  import PolitiqueUnique
 
 class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         #print "MonWidgetSDCOInto init"
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
@@ -47,25 +47,25 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
         self.maCommande.listeAffichageWidget.append(self.LESDCO)
         self.AAficher=self.LESDCO
         self.initLBSDCO()
-       
+
         self.LESDCO.returnPressed.connect(self.LESDCOReturnPressed)
         self.LBSDCO.itemDoubleClicked.connect(self.LBSDCODoubleClicked )
 
-  def LESDCOReturnPressed(self) :
+    def LESDCOReturnPressed(self) :
         self.LBSDCO.clearSelection()
         SaisieSDCO.LESDCOReturnPressed(self)
 
 
-  def initLBSDCO(self):
+    def initLBSDCO(self):
         listeNomsSDCO = self.node.item.getSdAvantDuBonType()
         for aSDCO in listeNomsSDCO:
             self.LBSDCO.insertItem( 1,aSDCO)
         valeur = self.node.item.getValeur()
         if valeur  != "" and valeur != None :
-           self.LESDCO.setText(str(valeur.nom))
+            self.LESDCO.setText(str(valeur.nom))
 
 
-  def LBSDCODoubleClicked(self):
+    def LBSDCODoubleClicked(self):
         """
          Teste si la valeur fournie par l'utilisateur est une valeur permise :
           - si oui, l'enregistre
@@ -80,19 +80,17 @@ class MonWidgetSDCOInto (Ui_WidgetSDCOInto,Feuille,SaisieSDCO):
         valeur,validite=self.node.item.evalValeur(nomConcept)
         test = self.node.item.setValeur(valeur)
         if not test :
-          commentaire = tr("impossible d'evaluer : ") +  valeur
+            commentaire = tr("impossible d'evaluer : ") +  valeur
         elif validite:
-          commentaire = tr("Valeur du mot-clef enregistree")
-          if test_CO:
-             # il faut egalement propager la destruction de l'ancien concept
-             self.node.item.deleteValeurCo(valeur=anc_val)
-             self.node.item.object.etape.getType_produit(force=1)
-             self.node.item.object.etape.parent.resetContext()
-             self.LESDCO.setText(nomConcept)
+            commentaire = tr("Valeur du mot-clef enregistree")
+            if test_CO:
+                # il faut egalement propager la destruction de l'ancien concept
+                self.node.item.deleteValeurCo(valeur=anc_val)
+                self.node.item.object.etape.getType_produit(force=1)
+                self.node.item.object.etape.parent.resetContext()
+                self.LESDCO.setText(nomConcept)
         else :
-          commentaire = self.node.item.getCr()
-          self.reset_old_valeur(anc_val,mess=mess)
-          self.editor.afficheInfos(commentaire,Qt.red)
+            commentaire = self.node.item.getCr()
+            self.reset_old_valeur(anc_val,mess=mess)
+            self.editor.afficheInfos(commentaire,Qt.red)
         self.Commentaire.setText(tr(commentaire))
-
-

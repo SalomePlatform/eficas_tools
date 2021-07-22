@@ -27,4 +27,5 @@ class AU_PLUS_UN(V_AU_PLUS_UN.AU_PLUS_UN,I_REGLE.REGLE,N_REGLE.REGLE):
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
         V_AU_PLUS_UN.AU_PLUS_UN n'en a pas
+        V_UN_PARMI.UN_PARMI et I_REGLE.REGLE  n'en ont pas
     """

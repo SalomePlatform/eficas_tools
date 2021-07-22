@@ -37,7 +37,7 @@ from Traducteur.renamemocle  import *
 from Traducteur.inseremocle  import *
 from Traducteur.changeValeur import *
 from Traducteur.movemocle    import *
-from Traducteur.dictErreurs  import * 
+from Traducteur.dictErreurs  import *
 from Traducteur.regles import pasDeRegle
 
 atraiter=("AFFE_CARA_ELEM","AFFE_CHAR_CINE","AFFE_CHAR_MECA","AFFE_CHAR_MECA_F","AFFE_MATERIAU","AFFE_MODELE",
@@ -56,16 +56,16 @@ atraiter=("AFFE_CARA_ELEM","AFFE_CHAR_CINE","AFFE_CHAR_MECA","AFFE_CHAR_MECA_F",
 dict_erreurs={
 # STA10
 #
-             "AFFE_CHAR_MECA_CONTACT":"Attention, modification de la définition du CONTACT : nommer DEFI_CONTACT,verifier les paramètres globaux et le mettre dans le calcul",
-             "AFFE_CHAR_MECA_LIAISON_UNILATER":"Attention, modification de la définition du CONTACT : nommer DEFI_CONTACT,verifier les paramètres globaux et le mettre dans le calcul",
-             "AFFE_CHAR_MECA_F_LIAISON_UNILATER":"Attention, modification de la définition du CONTACT : nommer DEFI_CONTACT,verifier les paramètres globaux et le mettre dans le calcul",
+             "AFFE_CHAR_MECA_CONTACT":"Attention, modification de la definition du CONTACT : nommer DEFI_CONTACT,verifier les parametres globaux et le mettre dans le calcul",
+             "AFFE_CHAR_MECA_LIAISON_UNILATER":"Attention, modification de la definition du CONTACT : nommer DEFI_CONTACT,verifier les parametres globaux et le mettre dans le calcul",
+             "AFFE_CHAR_MECA_F_LIAISON_UNILATER":"Attention, modification de la definition du CONTACT : nommer DEFI_CONTACT,verifier les parametres globaux et le mettre dans le calcul",
              "AFFE_CHAR_MECA_GRAPPE_FLUIDE":"Resorption de GRAPPE_FLUIDE en version 10",
              "DEFI_MATERIAU_LMARC":"Resorption loi LMARC en version 10",
              "DEFI_MATERIAU_LMARC_FO":"Resorption loi LMARC en version 10",
              "POST_ZAC":"Resorption POST_ZAC en version 10",
              "AFFE_CHAR_MECA_ARLEQUIN":"Resorption ARLEQUIN en version 10",
-             
-             "PROJ_CHAMP_CHAM_NO":"Attention, verifier pour PROJ_CHAMP la présence de MODELE1/MAILLAGE1 et MODELE2/MAILLAGE2",
+
+             "PROJ_CHAMP_CHAM_NO":"Attention, verifier pour PROJ_CHAMP la presence de MODELE1/MAILLAGE1 et MODELE2/MAILLAGE2",
 
              "COMB_SISM_MODAL_COMB_MULT_APPUI":"Attention, verifier GROUP_APPUI pour COMB_SISM_MODAL car on est dans le cas MULTI_APPUI=DECORRELE",
 
@@ -103,7 +103,7 @@ dict_erreurs={
              "MACR_ASPIQ_CALC_INCREMENT":"Attention, modification de la subdivision des pas : nommer DEFI_LIST_INST et verifier son appel dans MACR_ASPIQ_CALC",
              "SIMU_POINT_MAT_INCREMENT":"Attention, modification de la subdivision des pas : nommer DEFI_LIST_INST et verifier son appel dans SIMU_POINT_MAT",
 
-             "CALC_ELEM_SENSIBILITE":"Le post-traitement SENSIBILITE est à supprimer de CALC_ELEM et à faire via CALC_SENSI",
+             "CALC_ELEM_SENSIBILITE":"Le post-traitement SENSIBILITE est a supprimer de CALC_ELEM et a faire via CALC_SENSI",
 
              "CALC_MISS_OPTION":"Attention, transfert MACRO_MISS_3D en CALC_MISS : utiliser un DEFI_SOL_MISS pour obtenir TABLE_SOL",
               }
@@ -132,7 +132,7 @@ def traduc(infile,outfile,flog=None):
 
 
     #####SOLVEUR
-    
+
     ####################### traitement MUMPS/PARALELLISME-PARTITION ##################
     #commandes concernes en plus : CALC_FORC_AJOU?,CALC_MATR_AJOU?
      # */SOLVEUR/CHARGE_PROCO_MA(SD)--> AFFE_MODELE (ou MODI_MODELE)/PARTITION/.
@@ -197,7 +197,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"CALC_PRECONT","INCREMENT_NEW","SUBD_PAS_MINI",pasDeRegle(),0)
     renameMotCle(jdc,"CALC_PRECONT","INCREMENT_NEW","INCREMENT")
 
-    
+
     renameMotCleSiRegle(jdc,"DYNA_NON_LINE","INCREMENT","INCREMENT_NEW",((("INCREMENT","SUBD_METHODE"),"existeMCsousMCF"),),1)
     moveMCFToCommand(jdc,"DYNA_NON_LINE","INCREMENT_NEW","DEFI_LIST_INST","ECHEC")
     removeMotCleInFact(jdc,"DYNA_NON_LINE","INCREMENT_NEW","SUBD_COEF_PAS_1",pasDeRegle(),0)
@@ -210,7 +210,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"DYNA_NON_LINE","INCREMENT_NEW","SUBD_PAS",pasDeRegle(),0)
     removeMotCleInFact(jdc,"DYNA_NON_LINE","INCREMENT_NEW","SUBD_PAS_MINI",pasDeRegle(),0)
     renameMotCle(jdc,"DYNA_NON_LINE","INCREMENT_NEW","INCREMENT")
-    
+
     renameMotCleSiRegle(jdc,"MACR_ASCOUF_CALC","INCREMENT","INCREMENT_NEW",((("INCREMENT","SUBD_METHODE"),"existeMCsousMCF"),),1)
     moveMCFToCommand(jdc,"MACR_ASCOUF_CALC","INCREMENT_NEW","DEFI_LIST_INST","ECHEC")
     removeMotCleInFact(jdc,"MACR_ASCOUF_CALC","INCREMENT_NEW","SUBD_COEF_PAS_1",pasDeRegle(),0)
@@ -223,7 +223,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"MACR_ASCOUF_CALC","INCREMENT_NEW","SUBD_PAS",pasDeRegle(),0)
     removeMotCleInFact(jdc,"MACR_ASCOUF_CALC","INCREMENT_NEW","SUBD_PAS_MINI",pasDeRegle(),0)
     renameMotCle(jdc,"MACR_ASCOUF_CALC","INCREMENT_NEW","INCREMENT")
-    
+
     renameMotCleSiRegle(jdc,"MACR_ASPIQ_CALC","INCREMENT","INCREMENT_NEW",((("INCREMENT","SUBD_METHODE"),"existeMCsousMCF"),),1)
     moveMCFToCommand(jdc,"MACR_ASPIQ_CALC","INCREMENT_NEW","DEFI_LIST_INST","ECHEC")
     removeMotCleInFact(jdc,"MACR_ASPIQ_CALC","INCREMENT_NEW","SUBD_COEF_PAS_1",pasDeRegle(),0)
@@ -236,7 +236,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"MACR_ASPIQ_CALC","INCREMENT_NEW","SUBD_PAS",pasDeRegle(),0)
     removeMotCleInFact(jdc,"MACR_ASPIQ_CALC","INCREMENT_NEW","SUBD_PAS_MINI",pasDeRegle(),0)
     renameMotCle(jdc,"MACR_ASPIQ_CALC","INCREMENT_NEW","INCREMENT")
-    
+
     renameMotCleSiRegle(jdc,"SIMU_POINT_MAT","INCREMENT","INCREMENT_NEW",((("INCREMENT","SUBD_METHODE"),"existeMCsousMCF"),),1)
     moveMCFToCommand(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","DEFI_LIST_INST","ECHEC")
     removeMotCleInFact(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","SUBD_COEF_PAS_1",pasDeRegle(),0)
@@ -247,7 +247,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","SUBD_NIVEAU",pasDeRegle(),0)
     removeMotCleInFact(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","SUBD_OPTION",pasDeRegle(),0)
     removeMotCleInFact(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","SUBD_PAS",pasDeRegle(),0)
-    removeMotCleInFact(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","SUBD_PAS_MINI",pasDeRegle(),0)  
+    removeMotCleInFact(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","SUBD_PAS_MINI",pasDeRegle(),0)
     renameMotCle(jdc,"SIMU_POINT_MAT","INCREMENT_NEW","INCREMENT")
 
     removeMotCleInFact(jdc,"DEFI_LIST_INST","ECHEC","INST_INIT")
@@ -265,7 +265,7 @@ def traduc(infile,outfile,flog=None):
     removeMotCleInFact(jdc,"CALC_MODAL","CALC_FREQ","NPREC_SOLVEUR",pasDeRegle(),0)
     removeMotCle(jdc,"IMPR_STURM","NPREC_SOLVEUR")
     removeMotCleInFact(jdc,"MACRO_MATR_AJOU","CALC_FREQ","NPREC_SOLVEUR",pasDeRegle(),0)
-    
+
     ###################### traitement CALC_MODAL SOLVEUR ############
     removeMotCle(jdc,"CALC_MODAL","SOLVEUR",pasDeRegle())
 
@@ -289,7 +289,7 @@ def traduc(infile,outfile,flog=None):
 
     ###################  traitement AFFE_MODELE/SHB8 ##########################
     changementValeurDsMCF(jdc,"AFFE_MODELE","AFFE","MODELISATION",{"SHB8":"SHB"})
-    
+
     ###################  traitement COMP_ELAS et COMP_INCR  DEFORMATION = GREEN ##############"
     dGREEN={"GREEN_GR":"GROT_GDEP","GREEN":"GROT_GDEP","REAC_GEOM":"GROT_GDEP","EULER_ALMANSI":"GROT_GDEP","COROTATIONNEL":"GDEF_HYPO_ELAS"}
     changementValeurDsMCF(jdc,"SIMU_POINT_MAT","COMP_ELAS","DEFORMATION",dGREEN)
@@ -388,7 +388,7 @@ def traduc(infile,outfile,flog=None):
 
     ################ traitement DEFI_MATERIAU/THER_HYDR #######
     removeMotCleInFact(jdc,"DEFI_MATERIAU","THER_HYDR","QSR_K")
-     
+
     ##################### traitement AFFE_CARA_ELEM/DISCRET ###############"
     dDISCRET={"K_T_N_NS":"K_T_N",  "K_T_L_NS":"K_T_L",  "K_TR_N_NS":"K_TR_N",  "K_TR_L_NS":"K_TR_L",
               "M_T_N_NS":"M_T_N",  "M_T_L_NS":"M_T_L",  "M_TR_N_NS":"M_TR_N",  "M_TR_L_NS":"M_TR_L",
@@ -403,7 +403,7 @@ def traduc(infile,outfile,flog=None):
     changementValeurDsMCF(jdc,"AFFE_CARA_ELEM","DISCRET","CARA",dDISCRET)
 
     #####CHARGEMENT
-    
+
     ####################### traitement  CONTACT ###############################################
 
 
@@ -414,13 +414,13 @@ def traduc(infile,outfile,flog=None):
     moveMCFToCommand(jdc,"AFFE_CHAR_MECA","CONTACT","DEFI_CONTACT","ZONE")
     removeMotCle(jdc,"AFFE_CHAR_MECA","CONTACT",pasDeRegle(),1)
 
-    
+
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","METHODE")
     ajouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","METHODE='LIAISON_UNIL'",pasDeRegle())
     copyMotClefInOperToFact(jdc,"AFFE_CHAR_MECA","MODELE","LIAISON_UNILATER")
     moveMCFToCommand(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER","DEFI_CONTACT","ZONE")
     removeMotCle(jdc,"AFFE_CHAR_MECA","LIAISON_UNILATER",pasDeRegle(),1)
-    
+
     removeMotCleInFact(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","METHODE")
     ajouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","METHODE='LIAISON_UNIL'",pasDeRegle())
     ajouteMotClefDansFacteur(jdc,"AFFE_CHAR_MECA_F","LIAISON_UNILATER","FORMULATION='LIAISON_UNIL'",pasDeRegle())
@@ -441,8 +441,8 @@ def traduc(infile,outfile,flog=None):
     ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_FROT='PENALISATION'",((("METHODE","PENALISATION",jdc),"MCsousMCFcourantaPourValeur"),(("COULOMB",),"existeMCsousMCFcourant"),))
     ajouteMotClefDansFacteurCourantSiRegle(jdc,"DEFI_CONTACT","ZONE","ALGO_CONT='CONTRAINTE'",((("METHODE","CONTRAINTE",jdc),"MCsousMCFcourantaPourValeur"),))
     removeMotCleInFact(jdc,"DEFI_CONTACT","ZONE","METHODE")
-    
-    
+
+
     moveMotCleFromFactToFather(jdc,"DEFI_CONTACT","ZONE","COEF_RESI")
     moveMotCleFromFactToFather(jdc,"DEFI_CONTACT","ZONE","FROTTEMENT")
     moveMotCleFromFactToFather(jdc,"DEFI_CONTACT","ZONE","ITER_CONT_MAXI")
@@ -463,7 +463,7 @@ def traduc(infile,outfile,flog=None):
     moveMotCleFromFactToFather(jdc,"DEFI_CONTACT","ZONE","NB_ITER_GEOM")
     moveMotCleFromFactToFather(jdc,"DEFI_CONTACT","ZONE","MODELE")
 
-    
+
     # FORMULATION = DEPL/VITE
     # Si EXCL_FROT_1
     # Si EXCL_FROT_2
@@ -482,9 +482,9 @@ def traduc(infile,outfile,flog=None):
     renameMotCleInFact(jdc,"AFFE_CHAR_CINE","MECA_IMPO","DCZ","DZ")
     # QUESTION Non pris en compte : AFFE_CHAR_MECA/LIAISON_DDL","DDL",Liste de valeurs avec DC*)
     # peut_etre avec changeTouteValeur ?
-    
+
     ######################### traitement COMB_SISM_MODAL APPUI #######################""
-    # attention il faut traiter d'abord DECORRELE avant CORRELE sinon CORRELE apparaît dans DECORELLE
+    # attention il faut traiter d'abord DECORRELE avant CORRELE sinon CORRELE apparait dans DECORELLE
     moveMotCleFromFactToFather(jdc,"COMB_SISM_MODAL","EXCIT","MONO_APPUI")
     moveMotCleFromFactToFather(jdc,"COMB_SISM_MODAL","EXCIT","MULTI_APPUI")
     removeMotCleInFactSiRegle(jdc,"COMB_SISM_MODAL","COMB_MULT_APPUI","TYPE_COMBI",((("MULTI_APPUI","DECORRELE",jdc),"MCaPourValeur"),))
@@ -507,7 +507,7 @@ def traduc(infile,outfile,flog=None):
 
 
     #####IMPRESSION
-    
+
     #################### traitement IMPR_RESU  #######################
     removeMotCleInFact(jdc,"IMPR_RESU","RESU","INFO_RESU")
 
@@ -629,7 +629,7 @@ def traduc(infile,outfile,flog=None):
     changementValeurDsMCF(jdc,"POST_ELEM","INTEGRALE","NOM_CHAM",dOPTION)
     changementValeurDsMCF(jdc,"POST_ELEM","MINMAX","NOM_CHAM",dOPTION)
     changementValeurDsMCF(jdc,"POST_RCCM","RESU_MECA","NOM_CHAM",dOPTION)
-    changementValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",dOPTION)    
+    changementValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",dOPTION)
     changementValeur(jdc,"PROJ_CHAMP","NOM_CHAM",dOPTION)
     changementValeurDsMCF(jdc,"PROJ_MESU_MODAL","MODELE_MESURE","NOM_CHAM",dOPTION)
     changementValeur(jdc,"RECU_FONCTION","NOM_CHAM",dOPTION)
@@ -638,7 +638,7 @@ def traduc(infile,outfile,flog=None):
     changementValeur(jdc,"REST_SPEC_PHYS","NOM_CHAM",dOPTION)
     changementValeurDsMCF(jdc,"TEST_RESU","RESU","NOM_CHAM",dOPTION)
     changementValeurDsMCF(jdc,"TEST_RESU","GENE","NOM_CHAM",dOPTION)
-    
+
     changementValeur(jdc,"CALC_CHAM_ELEM","OPTION",dOPTION)
     changementValeur(jdc,"CALC_ELEM","OPTION",dOPTION)
     changementValeur(jdc,"CALC_META","OPTION",dOPTION)
@@ -656,7 +656,7 @@ def traduc(infile,outfile,flog=None):
              "'PRES_ELNO_DBEL'", "'VARI_NOEU'")
     # Options ambigue :  PRES_ELNO_DBEL --> prac_elno/prme_elno, ERRE* --> ERME_ELNO ou ERTH_ELNO selon PHENOMENE
     # En commentaires les commandes non concernees par rOPTION
-    
+
     genereErreurValeurDsMCF(jdc,"AFFE_MATERIAU","AFFE_VARC","NOM_CHAM",rOPTION)
     #genereErreurValeur(jdc,"COMB_FOURIER","NOM_CHAM",rOPTION)
     genereErreurValeur(jdc,"CREA_CHAMP","NOM_CHAM",rOPTION)
@@ -673,7 +673,7 @@ def traduc(infile,outfile,flog=None):
     #genereErreurValeurDsMCF(jdc,"POST_RCCM","RESU_MECA","NOM_CHAM",rOPTION)
     genereErreurValeurDsMCF(jdc,"POST_ELEM","INTEGRALE","NOM_CHAM",rOPTION)
     genereErreurValeurDsMCF(jdc,"POST_ELEM","MINMAX","NOM_CHAM",rOPTION)
-    genereErreurValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",rOPTION)    
+    genereErreurValeurDsMCF(jdc,"POST_RELEVE_T","ACTION","NOM_CHAM",rOPTION)
     genereErreurValeur(jdc,"PROJ_CHAMP","NOM_CHAM",rOPTION)
     #genereErreurValeurDsMCF(jdc,"PROJ_MESU_MODAL","MODELE_MESURE","NOM_CHAM",rOPTION)
     genereErreurValeur(jdc,"RECU_FONCTION","NOM_CHAM",rOPTION)
@@ -682,7 +682,7 @@ def traduc(infile,outfile,flog=None):
     #genereErreurValeur(jdc,"REST_SPEC_PHYS","NOM_CHAM",rOPTION)
     genereErreurValeurDsMCF(jdc,"TEST_RESU","RESU","NOM_CHAM",rOPTION)
     genereErreurValeurDsMCF(jdc,"TEST_RESU","GENE","NOM_CHAM",rOPTION)
-    
+
     genereErreurValeur(jdc,"CALC_CHAM_ELEM","OPTION",rOPTION)
     genereErreurValeur(jdc,"CALC_ELEM","OPTION",rOPTION)
     #genereErreurValeur(jdc,"CALC_META","OPTION",rOPTION)
@@ -690,8 +690,8 @@ def traduc(infile,outfile,flog=None):
     #genereErreurValeur(jdc,"COMB_SISM_MODAL","OPTION",rOPTION)
     #genereErreurValeur(jdc,"MECA_STATIQUE","OPTION",rOPTION)
     genereErreurValeurDsMCF(jdc,"MACRO_ELAS_MULT","CAS_CHARGE","OPTION",rOPTION)
-    #genereErreurValeur(jdc,"THER_NON_LINE","OPTION",rOPTION)        
-    
+    #genereErreurValeur(jdc,"THER_NON_LINE","OPTION",rOPTION)
+
     ########### Message si CALC_ELEM/SENSIBILITE
     genereErreurMCF(jdc,"CALC_ELEM","SENSIBILITE")
 
@@ -716,16 +716,16 @@ def traduc(infile,outfile,flog=None):
     for c in jdc.root.childNodes:
         if c.name != "IMPR_MACR_ELEM" : continue
         for mc in c.childNodes:
-             if mc.name == "MACR_ELEM_DYNA" : macr=mc.getText(jdc)
-             if mc.name == "GROUP_MA_INTERF": interf=mc.getText(jdc)
-             if mc.name == "AMOR_REDUIT": amor=mc.getText(jdc)
+            if mc.name == "MACR_ELEM_DYNA" : macr=mc.getText(jdc)
+            if mc.name == "GROUP_MA_INTERF": interf=mc.getText(jdc)
+            if mc.name == "AMOR_REDUIT": amor=mc.getText(jdc)
     if amor != "" : chercheOperInsereFacteur(jdc,"CALC_MISS",amor,pasDeRegle(),0)
     if interf != "" : chercheOperInsereFacteur(jdc,"CALC_MISS",interf,pasDeRegle(),0)
     if macr != "" : chercheOperInsereFacteur(jdc,"CALC_MISS",macr,pasDeRegle(),0)
 
     chercheOperInsereFacteur(jdc,"CALC_MISS","TABLE_SOL=''",pasDeRegle(),0)
     chercheOperInsereFacteur(jdc,"CALC_MISS","TYPE_RESU='FICHIER'",pasDeRegle(),0)
-    
+
     #################################################################
     f=open(outfile,'w')
     f.write(jdc.getSource())
@@ -737,7 +737,7 @@ def main():
     parser = optparse.Optionparser(usage=usage)
 
     parser.add_option('-i','--infile', dest="infile", default='toto.comm',
-        help="Le fichier à traduire")
+        help="Le fichier a traduire")
     parser.add_option('-o','--outfile', dest="outfile", default='tutu.comm',
         help="Le fichier traduit")
 
@@ -746,4 +746,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

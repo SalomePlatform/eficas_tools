@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import types,os
@@ -29,7 +29,7 @@ import types,os
 from Extensions.i18n import tr
 
 from InterfaceQT4.feuille               import Feuille
-from desWidgetCB                        import Ui_WidgetCB 
+from desWidgetCB                        import Ui_WidgetCB
 from InterfaceQT4.politiquesValidation  import PolitiqueUnique
 from InterfaceQT4.qtSaisie              import SaisieValeur
 
@@ -39,7 +39,7 @@ from PyQt5.QtCore import Qt, QEvent
 
 class MonWidgetCBCommun (Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.politique=PolitiqueUnique(self.node,self.editor)
         self.determineChoix()
@@ -51,51 +51,51 @@ class MonWidgetCBCommun (Feuille):
         self.AAfficher=self.CBChoix
 
 
-  def setValeursApresBouton(self):
-      if self.objSimp.getValeur()==None : 
-         self.CBChoix.setCurrentIndex(-1)
-         self.CBChoix.lineEdit().setText(tr("Select"))
-         return
-      valeur=self.objSimp.getValeur()
-      if not(type(valeur) == str) : valeur=str(valeur)
-      self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
-      
-  def determineChoix(self):
-      listeChoix=[]
-      if self.maListeDeValeur == None : self.maListeDeValeur=[]
-      for choix in self.maListeDeValeur:
-          if not(type(choix) == str) : choix=str(choix)
-          listeChoix.append(choix)
-          self.CBChoix.addItem(choix)
-      self.CBChoix.setEditable(True)
-      monCompleteur=QCompleter(listeChoix,self) 
-      monCompleteur.setCompletionMode(QCompleter.PopupCompletion) 
-      self.CBChoix.setCompleter(monCompleteur)
+    def setValeursApresBouton(self):
+        if self.objSimp.getValeur()==None :
+            self.CBChoix.setCurrentIndex(-1)
+            self.CBChoix.lineEdit().setText(tr("Select"))
+            return
+        valeur=self.objSimp.getValeur()
+        if not(type(valeur) == str) : valeur=str(valeur)
+        self.CBChoix.setCurrentIndex(self.CBChoix.findText(valeur))
 
-  def choixSaisi(self):
-      self.CBChoix.lineEdit().setStyleSheet(("\n"
+    def determineChoix(self):
+        listeChoix=[]
+        if self.maListeDeValeur == None : self.maListeDeValeur=[]
+        for choix in self.maListeDeValeur:
+            if not(type(choix) == str) : choix=str(choix)
+            listeChoix.append(choix)
+            self.CBChoix.addItem(choix)
+        self.CBChoix.setEditable(True)
+        monCompleteur=QCompleter(listeChoix,self)
+        monCompleteur.setCompletionMode(QCompleter.PopupCompletion)
+        self.CBChoix.setCompleter(monCompleteur)
+
+    def choixSaisi(self):
+        self.CBChoix.lineEdit().setStyleSheet(("\n"
 "QLineEdit {\n"
 "     font : italic ;\n"
 "     background: rgb(235,235,235);\n"
 " }"))
-      valeur=str(self.CBChoix.currentText())
-      SaisieValeur.LEvaleurPressed(self,valeur)
-      self.reaffiche()
+        valeur=str(self.CBChoix.currentText())
+        SaisieValeur.LEvaleurPressed(self,valeur)
+        self.reaffiche()
 
-  def wheelEvent(self,  event):
-  # Sinon poum sur les fenetres trop longues
-  # lorsque la widget attrape le wheelevent
-    event.ignore()
+    def wheelEvent(self,  event):
+    # Sinon poum sur les fenetres trop longues
+    # lorsque la widget attrape le wheelevent
+        event.ignore()
 
 
 class MonWidgetCB (Ui_WidgetCB, MonWidgetCBCommun):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-      self.maListeDeValeur = monSimpDef.into
-      MonWidgetCBCommun. __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        self.maListeDeValeur = monSimpDef.into
+        MonWidgetCBCommun. __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
 
 class MonWidgetCBSD (Ui_WidgetCB,MonWidgetCBCommun):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
-      self.maListeDeValeur = node.item.getSdAvantDuBonType()
-      MonWidgetCBCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+        self.maListeDeValeur = node.item.getSdAvantDuBonType()
+        MonWidgetCBCommun.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)

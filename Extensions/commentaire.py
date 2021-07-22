@@ -29,177 +29,175 @@ from Ihm import I_OBJECT
 from Extensions.i18n import tr
 
 class COMMENTAIRE(N_OBJECT.OBJECT,I_OBJECT.OBJECT) :
-  """ 
-      Cette classe permet de creer des objets de type COMMENTAIRE 
-  """
-  nature = 'COMMENTAIRE'
-  idracine = '_comm'
-
-  def __init__(self,valeur,parent=None):
-    # parent est un objet de type OBJECT (ETAPE ou MC ou JDC...)
-    self.valeur=valeur
-    if not parent :
-      self.jdc = self.parent = CONTEXT.getCurrentStep()
-    else:
-      self.jdc = self.parent = parent
-    # La classe COMMENTAIRE n'a pas de definition. On utilise self
-    # pour completude
-    self.definition=self
-    self.nom=''
-    self.niveau = self.parent.niveau
-    self.actif=1
-    self.state="unchanged"
-    self.register()
-    self.fenetreIhm=None
-
-  def register(self):
-    """ 
-        Enregistre le commentaire dans la liste des etapes de son parent
-        lorsque celui-ci est un JDC 
     """
-    if self.parent.nature == 'JDC':
-      # le commentaire est entre deux commandes:
-      # il faut l'enregistrer dans la liste des etapes
-      self.parent.register(self)
-
-  def copy(self):
-    c=COMMENTAIRE(valeur=self.valeur,parent=self.jdc)
-    return c
-
-  def isValid(self):
+        Cette classe permet de creer des objets de type COMMENTAIRE
     """
-    Retourne 1 si self est valide, 0 sinon
-    Retourne toujours 1 car un commentaire est toujours valide
-    """
-    return 1
+    nature = 'COMMENTAIRE'
+    idracine = '_comm'
 
-  def isOblig(self):
-    """ Indique si self est obligatoire ou non : retourne toujours 0 """
-    return 0
+    def __init__(self,valeur,parent=None):
+        # parent est un objet de type OBJECT (ETAPE ou MC ou JDC...)
+        self.valeur=valeur
+        if not parent :
+            self.jdc = self.parent = CONTEXT.getCurrentStep()
+        else:
+            self.jdc = self.parent = parent
+        # La classe COMMENTAIRE n'a pas de definition. On utilise self
+        # pour completude
+        self.definition=self
+        self.nom=''
+        self.niveau = self.parent.niveau
+        self.actif=1
+        self.state="unchanged"
+        self.register()
+        self.fenetreIhm=None
 
-  def isRepetable(self):
-    """ Indique si self est repetable ou non : retourne toujours 1 """
-    return 1
+    def register(self):
+        """
+            Enregistre le commentaire dans la liste des etapes de son parent
+            lorsque celui-ci est un JDC
+        """
+        if self.parent.nature == 'JDC':
+            # le commentaire est entre deux commandes:
+            # il faut l'enregistrer dans la liste des etapes
+            self.parent.register(self)
 
-  def active(self):
-      """
-      Rend l'etape courante active
-      """
-      self.actif = 1
+    def copy(self):
+        c=COMMENTAIRE(valeur=self.valeur,parent=self.jdc)
+        return c
 
-  def inactive(self):
-      """
-      Rend l'etape courante inactive
-      NB : un commentaire est toujours actif !
-      """
-      self.actif = 1
+    def isValid(self):
+        """
+        Retourne 1 si self est valide, 0 sinon
+        Retourne toujours 1 car un commentaire est toujours valide
+        """
+        return 1
 
-  def isActif(self):
-      """
-      Booleenne qui retourne 1 si self est valide, 0 sinon
-      """
-      return self.actif
+    def isOblig(self):
+        """ Indique si self est obligatoire ou non : retourne toujours 0 """
+        return 0
 
-  def supprime(self):
-      """
-      Methode qui supprime toutes les boucles de references afin que 
-      l'objet puisse etre correctement detruit par le garbage collector
-      """
-      self.parent=None
-      self.jdc=None
-      self.definition = None
-      self.niveau = None
+    def isRepetable(self):
+        """ Indique si self est repetable ou non : retourne toujours 1 """
+        return 1
 
-  def listeMcPresents(self):
-      return []
+    def active(self):
+        """
+        Rend l'etape courante active
+        """
+        self.actif = 1
 
-  def getValeur(self) :
-    """ Retourne la valeur de self, cad le contenu du commentaire """
-    try :
-      return self.valeur
-    except:
-      return None
+    def inactive(self):
+        """
+        Rend l'etape courante inactive
+        NB : un commentaire est toujours actif !
+        """
+        self.actif = 1
 
-  def setValeur(self,new_valeur):
-    """ 
-        Remplace la valeur de self(si elle existe) par new_valeur
-    """
-    self.valeur = new_valeur
-    self.initModif()
+    def isActif(self):
+        """
+        Booleenne qui retourne 1 si self est valide, 0 sinon
+        """
+        return self.actif
 
-  def initModif(self):
-    self.state = 'modified'
-    if self.parent:
-      self.parent.initModif()
+    def supprime(self):
+        """
+        Methode qui supprime toutes les boucles de references afin que
+        l'objet puisse etre correctement detruit par le garbage collector
+        """
+        self.parent=None
+        self.jdc=None
+        self.definition = None
+        self.niveau = None
 
-  def supprimeSdProds(self):
-    pass
+    def listeMcPresents(self):
+        return []
 
-  def updateContext(self,d):
-    """
-        Update le dictionnaire d avec les concepts ou objets produits par self
-        --> ne fait rien pour un commentaire
-    """
-    pass
+    def getValeur(self) :
+        """ Retourne la valeur de self, cad le contenu du commentaire """
+        try :
+            return self.valeur
+        except:
+            return None
 
-  def report(self):
-    """ Genere l'objet rapport (classe CR) """
-    self.cr=CR()
-    if not self.isValid(): self.cr.warn(tr("Objet commentaire non valorise"))
-    return self.cr
+    def setValeur(self,new_valeur):
+        """
+            Remplace la valeur de self(si elle existe) par new_valeur
+        """
+        self.valeur = new_valeur
+        self.initModif()
 
-  def ident(self):
-    """ Retourne le nom interne associe a self
-        Ce nom n'est jamais vu par l'utilisateur dans EFICAS
-    """
-    return self.nom
+    def initModif(self):
+        self.state = 'modified'
+        if self.parent:
+            self.parent.initModif()
 
-  def deleteConcept(self,sd):
-    pass
+    def supprimeSdProds(self):
+        pass
 
-  def replaceConcept (self,old_sd,sd):
-    pass
+    def updateContext(self,d):
+        """
+            Update le dictionnaire d avec les concepts ou objets produits par self
+            --> ne fait rien pour un commentaire
+        """
+        pass
 
-  def verifConditionBloc(self):
-    """
-        Evalue les conditions de tous les blocs fils possibles
-        (en fonction du catalogue donc de la definition) de self et
-        retourne deux listes :
-          - la premiere contient les noms des blocs a rajouter
-          - la seconde contient les noms des blocs a supprimer
-    """
-    return [],[]
+    def report(self):
+        """ Genere l'objet rapport (classe CR) """
+        self.cr=CR()
+        if not self.isValid(): self.cr.warn(tr("Objet commentaire non valorise"))
+        return self.cr
 
-  def verifConditionRegles(self,liste_presents):
-    """
-        Retourne la liste des mots-cles a rajouter pour satisfaire les regles
-        en fonction de la liste des mots-cles presents
-    """
-    return []
+    def ident(self):
+        """ Retourne le nom interne associe a self
+            Ce nom n'est jamais vu par l'utilisateur dans EFICAS
+        """
+        return self.nom
 
-  def getSdprods(self,nom_sd):
-     """
-         Retourne les concepts produits par la commande
-     """
-     return None
+    def deleteConcept(self,sd):
+        pass
 
-  def verifExistenceSd(self):
-     pass
+    def replaceConcept (self,old_sd,sd):
+        pass
 
-  def getFr(self):
-    """
-    Retourne le commentaire lui meme tronque a la 1ere ligne
-    """
-    return self.valeur.split('\n',1)[0]
+    def verifConditionBloc(self):
+        """
+            Evalue les conditions de tous les blocs fils possibles
+            (en fonction du catalogue donc de la definition) de self et
+            retourne deux listes :
+              - la premiere contient les noms des blocs a rajouter
+              - la seconde contient les noms des blocs a supprimer
+        """
+        return [],[]
 
-  def controlSdprods(self,d):
-      """sans objet """
-      pass
+    def verifConditionRegles(self,liste_presents):
+        """
+            Retourne la liste des mots-cles a rajouter pour satisfaire les regles
+            en fonction de la liste des mots-cles presents
+        """
+        return []
 
-  def close(self):
-      pass
+    def getSdprods(self,nom_sd):
+        """
+            Retourne les concepts produits par la commande
+        """
+        return None
 
-  def resetContext(self):
-      pass
+    def verifExistenceSd(self):
+        pass
 
+    def getFr(self):
+        """
+        Retourne le commentaire lui meme tronque a la 1ere ligne
+        """
+        return self.valeur.split('\n',1)[0]
 
+    def controlSdprods(self,d):
+        """sans objet """
+        pass
+
+    def close(self):
+        pass
+
+    def resetContext(self):
+        pass

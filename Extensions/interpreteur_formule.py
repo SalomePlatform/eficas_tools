@@ -19,9 +19,9 @@
 #
 from __future__ import absolute_import
 from __future__ import print_function
-try : 
-   from builtins import str
-   from builtins import object
+try :
+    from builtins import str
+    from builtins import object
 except : pass
 
 import re,sys,types
@@ -59,7 +59,7 @@ def cmp_function(arg1,arg2):
         return 0
     else:
         return 1
-    
+
 class InterpreteurException(Exception):
     """
     Classe servant a definir les exceptions levees par l'interpreteur de formule
@@ -79,7 +79,7 @@ class Interpreteur_Formule(object):
                            'LOG10','SIN','COS','TAN','ASIN','ACOS','ATAN','SINH',
                            'COSH','TANH','HEAVYSID']
     l_constantes = ['PI','RD_RG','DG_RD']
- 
+
     def __init__(self,formule=None,constantes=[],fonctions=[],parent=None):
         """
         Constructeur d'interpreteurs de formule Aster
@@ -120,7 +120,7 @@ class Interpreteur_Formule(object):
             if nom[0] in ('+','-') : nom = nom[1:]
         self.cr.debut = tr("Debut Fonction %s", nom)
         self.cr.fin = tr("Fin Fonction %s", nom)
-        
+
     def str(self):
         """
         Retourne une liste de chaines de caracteres representant la formule
@@ -141,21 +141,21 @@ class Interpreteur_Formule(object):
         """
         txt = self.cr.report()
         return txt
-    
+
     def enregistre(self,fils):
         """
         Enregistre un operateur fils dans la liste des children
         """
         self.l_children.append(fils)
         self.cr.add(fils.cr)
-        
+
     def isValid(self):
         """
         Booleenne qui retourne 1 si la formule est valide, 0 sinon
         Methode externe
         """
         self.l_operateurs = []
-        self.cr.purge() # on vide le cr 
+        self.cr.purge() # on vide le cr
         self.initCr() # on initialise le cr
         self.interpreteFormule()
         return self.cr.estvide()
@@ -205,7 +205,7 @@ class Interpreteur_Formule(object):
             self.d_fonctions_unaires[new_fonc[0]] = self.getNbArgs(new_fonc)
         #self.d_fonctions_unaires.update(self.new_fonctions_unaires)
         self.l_fonctions_unaires = list(self.d_fonctions_unaires.keys())
-        
+
     def ordonneListes(self):
         """
         Ordonne les listes de fonctions unaires et binaires
@@ -213,7 +213,7 @@ class Interpreteur_Formule(object):
         self.l_fonctions_binaires.sort(cmp_function)
         self.l_fonctions_unaires.sort(cmp_function)
         self.l_constantes.sort(cmp_function)
-        
+
 
     def splitOperateurs(self,texte):
         """
@@ -317,7 +317,7 @@ class Interpreteur_Formule(object):
             else:
                 # on n'a pas trouve de nombre
                 return None,texte
-        
+
     def chercheConstanteOld(self,texte):
         """
         Recherche une constante en debut de texte parmi la liste des constantes.
@@ -367,7 +367,7 @@ class Interpreteur_Formule(object):
         else:
             # aucune constante trouvee
             return None,texte
-        
+
     def chercheArgs(self,texte):
         """
         Cherche au debut de texte une liste d'arguments entre parentheses
@@ -391,7 +391,7 @@ class Interpreteur_Formule(object):
             else:
                 # on a fini d'analyser le texte : reste = None
                 return texte,None
-                    
+
     def chercheOperateurUnaireOld(self,texte):
         """
         Cherche dans texte un operateur unaire
@@ -468,26 +468,26 @@ class Interpreteur_Formule(object):
         elif texte[0] == '-':
             # Il faut pouvoir trapper les expressions du type exp(-(x+1)) ...
             try :
-               args,reste = self.chercheArgs(texte[1:])
+                args,reste = self.chercheArgs(texte[1:])
             except InterpreteurException as e:
                 raise InterpreteurException (e.__str__())
             if not args :
-               # Il ne s'agit pas de '-' comme operateur unaire --> on retourne None
-               return None,texte
+                # Il ne s'agit pas de '-' comme operateur unaire --> on retourne None
+                return None,texte
             else:
-               identificateur = '-'
-               args = self.splitArgs(identificateur,args,self.d_fonctions_unaires[identificateur])
-               formule_operateur = (identificateur,'',self.t_formule[2],args)
-               operateur = Interpreteur_Formule(formule = formule_operateur,
-                                                 constantes = self.new_constantes,
-                                                 fonctions = self.new_fonctions_unaires,
-                                                 parent = self)
-               operateur.interpreteFormule()
-               texte = reste
-               return operateur,reste
+                identificateur = '-'
+                args = self.splitArgs(identificateur,args,self.d_fonctions_unaires[identificateur])
+                formule_operateur = (identificateur,'',self.t_formule[2],args)
+                operateur = Interpreteur_Formule(formule = formule_operateur,
+                                                  constantes = self.new_constantes,
+                                                  fonctions = self.new_fonctions_unaires,
+                                                  parent = self)
+                operateur.interpreteFormule()
+                texte = reste
+                return operateur,reste
         else:
             return None,texte
-            
+
     def chercheOperateurBinaire(self,texte):
         """
         Cherche dans texte un operateur unaire
@@ -525,7 +525,7 @@ class Interpreteur_Formule(object):
             operateur.interpreteFormule()
             texte = reste
             return operateur,reste
-            
+
     def splitArgs(self,nom_fonction,args,nb_args):
         """
         Tente de partager args en nb_args elements

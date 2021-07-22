@@ -26,5 +26,5 @@ class MEME_NOMBRE(V_MEME_NOMBRE.MEME_NOMBRE,I_REGLE.REGLE,N_REGLE.REGLE):
     """
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
-        V_MEME_NOMBRE.MEME_NOMBRE n'en a pas
+        seule N_REGLE.REGLE en a un
     """

@@ -30,4 +30,3 @@ from Extensions import pluginloader
 import generator
 
 plugins=pluginloader.PluginLoader(generator)
-

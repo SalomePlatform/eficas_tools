@@ -20,7 +20,7 @@
 
 from __future__ import absolute_import
 try :
-   from builtins import object
+    from builtins import object
 except : pass
 
 from PyQt5.QtCore import Qt
@@ -29,45 +29,42 @@ from Extensions.i18n import tr
 
 class GereRegles(object) :
 
-   def appellebuildLBRegles(self):
-       from .browser import JDCTree
-       if isinstance(self,JDCTree):
-          self.appellebuildLBReglesForJdC()
-       else :
-          self.appellebuildLBReglesForCommand()
-       self.buildLBRegles(self.listeRegles,self.listeNomsEtapes)
-       self.afficheRegles()
-       
-   def appellebuildLBReglesForCommand(self):
-       self.listeRegles     = self.item.getRegles()
-       self.listeNomsEtapes = self.item.getMcPresents()
+    def appellebuildLBRegles(self):
+        from .browser import JDCTree
+        if isinstance(self,JDCTree):
+            self.appellebuildLBReglesForJdC()
+        else :
+            self.appellebuildLBReglesForCommand()
+        self.buildLBRegles(self.listeRegles,self.listeNomsEtapes)
+        self.afficheRegles()
 
-   def appellebuildLBReglesForJdC(self):
-       self.listeRegles=self.item.getRegles()
-       self.listeNomsEtapes = self.item.getLNomsEtapes()
+    def appellebuildLBReglesForCommand(self):
+        self.listeRegles     = self.item.getRegles()
+        self.listeNomsEtapes = self.item.getMcPresents()
 
-
-   def buildLBRegles(self,listeRegles,listeNomsEtapes):
-       self.liste=[]
-       if len(listeRegles) > 0:
-          for regle in listeRegles :
-             texteRegle=regle.getText()
-             texteMauvais,test = regle.verif(listeNomsEtapes)
-             for ligne in texteRegle.split("\n") :
-                if ligne == "" : continue
-                if ligne[0]=="\t" :  ligne="     "+ligne[1:]
-                if test :
-                   self.liste.append((ligne,Qt.black))
-                else :
-                   self.liste.append((ligne,Qt.red))
-             self.liste.append(("",Qt.red))
-       if self.liste==[] : self.liste.append(("pas de regle de construction pour ce jeu de commandes",Qt.black))
-               
-
-   def afficheRegles(self):
-      titre="Regles pour "+self.item.nom
-      w = ViewRegles( self.editor,self.liste,titre  )
-      w.exec_()
-       
+    def appellebuildLBReglesForJdC(self):
+        self.listeRegles=self.item.getRegles()
+        self.listeNomsEtapes = self.item.getLNomsEtapes()
 
 
+    def buildLBRegles(self,listeRegles,listeNomsEtapes):
+        self.liste=[]
+        if len(listeRegles) > 0:
+            for regle in listeRegles :
+                texteRegle=regle.getText()
+                texteMauvais,test = regle.verif(listeNomsEtapes)
+                for ligne in texteRegle.split("\n") :
+                    if ligne == "" : continue
+                    if ligne[0]=="\t" :  ligne="     "+ligne[1:]
+                    if test :
+                        self.liste.append((ligne,Qt.black))
+                    else :
+                        self.liste.append((ligne,Qt.red))
+                self.liste.append(("",Qt.red))
+        if self.liste==[] : self.liste.append(("pas de regle de construction pour ce jeu de commandes",Qt.black))
+
+
+    def afficheRegles(self):
+        titre="Regles pour "+self.item.nom
+        w = ViewRegles( self.editor,self.liste,titre  )
+        w.exec_()

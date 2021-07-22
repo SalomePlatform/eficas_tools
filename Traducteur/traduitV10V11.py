@@ -221,11 +221,11 @@ atraiter=(
           "THER_LINEAIRE",
           "THER_NON_LINE",
           "THER_NON_LINE_MO",
-          
+
           "CALC_CHAMPNO",
           "CALC_METANO",
           "CALC_ERREURNO",
-          
+
           )
 
 dict_erreurs={
@@ -497,7 +497,7 @@ def traduc(infile,outfile,flog=None):
     suppressionValeurs(jdc,"CALC_CHAMP","ACOUSTIQUE",list(set(lTOUT)-set(lACOUSTIQUE)))
     suppressionValeurs(jdc,"CALC_CHAMP","ERREUR",list(set(lTOUT)-set(lERREUR)))
     suppressionValeurs(jdc,"CALC_CHAMP","META",list(set(lTOUT)-set(lMETA)))
-    ## ajout CALC_META ou CALC_ERREUR   
+    ## ajout CALC_META ou CALC_ERREUR
     lMOTCLE=[]
     lMOTCLE=["reuse","RESULTAT","TOUT_ORDRE","NUME_ORDRE","NUME_MODE","NOEUD_CMP","NOM_CAS",
               "INST","FREQ","LIST_INST","LIST_FREQ","LIST_ORDRE","CRITERE","PRECISION","EXCIT"]
@@ -506,10 +506,10 @@ def traduc(infile,outfile,flog=None):
     llistMETA=list(lMOTCLE)
     llistMETA.extend(["META",])
     for mc in llistMETA :
-		copyMotClefInOperToFact(jdc,"CALC_CHAMP",mc,"TEMPORAIRE")
+        copyMotClefInOperToFact(jdc,"CALC_CHAMP",mc,"TEMPORAIRE")
     moveMCFToCommand(jdc,"CALC_CHAMP","TEMPORAIRE","CALC_META","TEMPORAIRE")
     for mc in llistMETA :
-		moveMotCleFromFactToFather(jdc,"CALC_META","TEMPORAIRE",mc)
+        moveMotCleFromFactToFather(jdc,"CALC_META","TEMPORAIRE",mc)
     removeCommandeSiRegle(jdc,"CALC_META",((("META","COMP_INCR","ETAT_INIT"),"nexistepasMCFParmi"),))
     renameMotCle(jdc,"CALC_META","META","OPTION")
     removeMotCle(jdc,"CALC_META","TEMPORAIRE",pasDeRegle(),0)
@@ -519,10 +519,10 @@ def traduc(infile,outfile,flog=None):
     llistERREUR=list(lMOTCLE)
     llistERREUR.extend(["ERREUR","SOLVEUR","RESU_DUAL","PREC_ESTI","TYPE_ESTI"])
     for mc in llistERREUR :
-		copyMotClefInOperToFact(jdc,"CALC_CHAMP",mc,"TEMPORAIRE")
+        copyMotClefInOperToFact(jdc,"CALC_CHAMP",mc,"TEMPORAIRE")
     moveMCFToCommand(jdc,"CALC_CHAMP","TEMPORAIRE","CALC_ERREUR","TEMPORAIRE")
     for mc in llistERREUR :
-		moveMotCleFromFactToFather(jdc,"CALC_ERREUR","TEMPORAIRE",mc)
+        moveMotCleFromFactToFather(jdc,"CALC_ERREUR","TEMPORAIRE",mc)
     removeCommandeSiRegle(jdc,"CALC_ERREUR",((("ERREUR"),"nexistepasMCFParmi"),))
     renameMotCle(jdc,"CALC_ERREUR","ERREUR","OPTION")
     removeMotCle(jdc,"CALC_ERREUR","TEMPORAIRE",pasDeRegle(),0)
@@ -703,7 +703,7 @@ def traduc(infile,outfile,flog=None):
     suppressionValeurs(jdc,"CALC_CHAMPNO","FORCE",list(set(lTOUT)-set(lFORCE)))
     suppressionValeurs(jdc,"CALC_CHAMPNO","ERREUR",list(set(lTOUT)-set(lERREUR)))
     suppressionValeurs(jdc,"CALC_CHAMPNO","META",list(set(lTOUT)-set(lMETA)))
-    ## ajout CALC_METANO ou CALC_ERREURNO   
+    ## ajout CALC_METANO ou CALC_ERREURNO
     lMOTCLE=[]
     lMOTCLE=["reuse","RESULTAT","TOUT_ORDRE","NUME_ORDRE","NUME_MODE","NOEUD_CMP","NOM_CAS",
               "INST","FREQ","LIST_INST","LIST_FREQ","LIST_ORDRE","CRITERE","PRECISION","EXCIT"]
@@ -712,10 +712,10 @@ def traduc(infile,outfile,flog=None):
     llistMETA=list(lMOTCLE)
     llistMETA.append("META")
     for mc in llistMETA :
-		copyMotClefInOperToFact(jdc,"CALC_CHAMPNO",mc,"TEMPORAIRE")
+        copyMotClefInOperToFact(jdc,"CALC_CHAMPNO",mc,"TEMPORAIRE")
     moveMCFToCommand(jdc,"CALC_CHAMPNO","TEMPORAIRE","CALC_METANO","TEMPORAIRE")
     for mc in llistMETA :
-		moveMotCleFromFactToFather(jdc,"CALC_METANO","TEMPORAIRE",mc)
+        moveMotCleFromFactToFather(jdc,"CALC_METANO","TEMPORAIRE",mc)
     removeCommandeSiRegle(jdc,"CALC_METANO",((("META"),"nexistepasMCFParmi"),))
     renameMotCle(jdc,"CALC_METANO","META","OPTION")
     removeMotCle(jdc,"CALC_METANO","TEMPORAIRE",pasDeRegle(),0)
@@ -725,10 +725,10 @@ def traduc(infile,outfile,flog=None):
     llistERREUR=list(lMOTCLE)
     llistERREUR.append("ERREUR")
     for mc in llistERREUR :
-		copyMotClefInOperToFact(jdc,"CALC_CHAMPNO",mc,"TEMPORAIRE")
+        copyMotClefInOperToFact(jdc,"CALC_CHAMPNO",mc,"TEMPORAIRE")
     moveMCFToCommand(jdc,"CALC_CHAMPNO","TEMPORAIRE","CALC_ERREURNO","TEMPORAIRE")
     for mc in llistERREUR :
-		moveMotCleFromFactToFather(jdc,"CALC_ERREURNO","TEMPORAIRE",mc)
+        moveMotCleFromFactToFather(jdc,"CALC_ERREURNO","TEMPORAIRE",mc)
     removeCommandeSiRegle(jdc,"CALC_ERREURNO",((("ERREUR"),"nexistepasMCFParmi"),))
     renameMotCle(jdc,"CALC_ERREURNO","ERREUR","OPTION")
     removeMotCle(jdc,"CALC_ERREURNO","TEMPORAIRE",pasDeRegle(),0)
@@ -1126,7 +1126,7 @@ def traduc(infile,outfile,flog=None):
 
     ####   traitement de FORMULE   ##############################
     # Rien à faire
-    
+
     ####   traitement de GENE_ACCE_SEISME   ##############################
     # Rien à faire, n'existe pas en 10
 
@@ -1353,7 +1353,7 @@ def traduc(infile,outfile,flog=None):
     renameMotCleInFact(jdc,"MACRO_MODE_MECA","CALC_FREQ","STOP_FREQ_VIDE","STOP_BANDE_VIDE",pasDeRegle(),0)
     # Renommage critere de Sturm
     changementValeurDsMCF(jdc,"MACRO_MODE_MECA","VERI_MODE","STURM",{"OUI":"GLOBAL",})
- 
+
     ####   traitement de MACRO_PROJ_BASE   ##############################
     renameMotCle(jdc,"MACRO_PROJ_BASE","PROFIL","STOCKAGE")
     # Renommage de la commande
@@ -1434,7 +1434,7 @@ def traduc(infile,outfile,flog=None):
 
     ####   traitement de POST_BORDET   ##############################
     # Rien à faire
-    
+
     ####   traitement de POST_CHAMP   ##############################
     # Rien à faire, n'existe pas en 10
 

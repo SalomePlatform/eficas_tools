@@ -43,7 +43,7 @@
     </widget>
    </item>
    <item>
-    <widget class="LECustomTuple" name="lineEditVal_1">
+    <widget class="LECustomTuple" name="lineEditVal1">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -81,7 +81,7 @@ border:0px;
     </widget>
    </item>
    <item>
-    <widget class="LECustomTuple" name="lineEditVal_2">
+    <widget class="LECustomTuple" name="lineEditVal2">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -117,7 +117,7 @@ border:0px;</string>
     </widget>
    </item>
    <item>
-    <widget class="LECustomTuple" name="lineEditVal_3">
+    <widget class="LECustomTuple" name="lineEditVal3">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>

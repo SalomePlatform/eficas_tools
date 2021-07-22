@@ -13,33 +13,33 @@ monDico= { 'Equation_Liste' : ('initiation', 'propagation', 'termination', 'stab
          }
 
 class Tuple:
-  def __init__(self,ntuple):
-    self.ntuple=ntuple
+    def __init__(self,ntuple):
+        self.ntuple=ntuple
 
-  def __convert__(self,valeur):
-    if type(valeur) == types.StringType: return None
-    if len(valeur) != self.ntuple: return None
-    return valeur
+    def __convert__(self,valeur):
+        if type(valeur) == types.StringType: return None
+        if len(valeur) != self.ntuple: return None
+        return valeur
 
-  def info(self):
-    return "Tuple de %s elements" % self.ntuple
+    def info(self):
+        return "Tuple de %s elements" % self.ntuple
 
-  __repr__=info
-  __str__=info
+    __repr__=info
+    __str__=info
 
 #class ObjetUtilisateur(ASSD): pass
 
 class classeVisuEquation :
-   def __init__(self,dicoListeAffiche, listEquation, listModele,listPostTraitement):
-      self.dicoListeAffiche=dicoListeAffiche
-      self.listEquation=listEquation
-      self.listModele=listModele
-      self.listPostTraitement=listPostTraitement
-   
+    def __init__(self,dicoListeAffiche, listEquation, listModele,listPostTraitement):
+        self.dicoListeAffiche=dicoListeAffiche
+        self.listEquation=listEquation
+        self.listModele=listModele
+        self.listPostTraitement=listPostTraitement
+
 
 def maFunc():
     return ('a1','a2','a3')
-     
+
 def maFuncWithArg(monMC):
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
     monMC.dsMaFunct = True
@@ -50,9 +50,9 @@ def maFuncWithArg(monMC):
 
     change=editor.changeIntoDefMC('AGING', ('Equation', 'b_approved','b_type_creation','Equation_Modification','Type2'), monInto )
     if change :
-       print ('j ai change le into')
-       editor.reCalculeValiditeMCApresChgtInto('AGING', 'Type2', ('Equation', 'b_approved','b_type_creation','Equation_Modification')) 
-       if editor.fenetreCentraleAffichee : editor.fenetreCentraleAffichee.node.affichePanneau()
+        print ('j ai change le into')
+        editor.reCalculeValiditeMCApresChgtInto('AGING', 'Type2', ('Equation', 'b_approved','b_type_creation','Equation_Modification'))
+        if editor.fenetreCentraleAffichee : editor.fenetreCentraleAffichee.node.affichePanneau()
 
     monMC.dsMaFunct = False
 
@@ -64,7 +64,7 @@ def recupereDicoGenerique(monMC):
     if valeurDB == None : valeurDB=editor.getValeur('Modele','Modele_DB',())
     correspond=pckdb.DBRENAME
     if valeurDB != None :
-       listEquation, listModele,listPostTraitement=pckdb.read_pckdb(correspond[valeurDB])
+        listEquation, listModele,listPostTraitement=pckdb.read_pckdb(correspond[valeurDB])
     monMC.dsMaFunct = False
     return listEquation, listModele,listPostTraitement
 
@@ -76,7 +76,7 @@ def recupereDicoEquation(monMC):
     valeurEquationListe=editor.getValeur('Equation','Equation_Liste',('b_type_show',))
     valeurAgingType=editor.getValeur('Equation','Equation_reaction',('b_type_show','b_reaction_type',))
     if valeurAgingType == None :
-       valeurAgingType=editor.getValeur('Equation','Equation_reaction',('b_type_show','b_aging_type',))
+        valeurAgingType=editor.getValeur('Equation','Equation_reaction',('b_type_show','b_aging_type',))
     if valeurAgingType == None : monMC.dsMaFunct = False; return
 
     listeEquationPourIhm = []
@@ -84,19 +84,19 @@ def recupereDicoEquation(monMC):
     dicoListeAffiche={}
     for equation in listEquation :
         if valeurEquationListe == 'aging_type' :
-           if equation.type_vieil == valeurAgingType : 
-              listeEquationPourIhm.append(equation)
-              listeReprEquationPourIhm.append(equation.representation)
-              dicoListeAffiche[equation.representation]=equation
+            if equation.type_vieil == valeurAgingType :
+                listeEquationPourIhm.append(equation)
+                listeReprEquationPourIhm.append(equation.representation)
+                dicoListeAffiche[equation.representation]=equation
         else:
-           if equation.type_react == valeurAgingType : 
-              listeEquationPourIhm.append(equation)
-              listeReprEquationPourIhm.append(equation.representation)
-              dicoListeAffiche[equation.representation]=equation
+            if equation.type_react == valeurAgingType :
+                listeEquationPourIhm.append(equation)
+                listeReprEquationPourIhm.append(equation.representation)
+                dicoListeAffiche[equation.representation]=equation
     change=editor.changeIntoDefMC('Equation', ('b_type_show','ListeEquation'), listeReprEquationPourIhm )
     if change :
-       editor.reCalculeValiditeMCApresChgtInto('Equation', 'listeEquation', ('b_type_show',)) 
-       if editor.fenetreCentraleAffichee : editor.fenetreCentraleAffichee.node.affichePanneau()
+        editor.reCalculeValiditeMCApresChgtInto('Equation', 'listeEquation', ('b_type_show',))
+        if editor.fenetreCentraleAffichee : editor.fenetreCentraleAffichee.node.affichePanneau()
     editor.maClasseVisuEquation = classeVisuEquation(dicoListeAffiche,listEquation, listModele,listPostTraitement)
     monMC.dsMaFunct = False
 
@@ -104,12 +104,12 @@ def afficheValeurEquation(monMC):
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
     editor=monMC.jdc.editor
     valeur=monMC.valeur
-    if valeur == None : 
-       monMC.dsMaFunct = False
-       return
+    if valeur == None :
+        monMC.dsMaFunct = False
+        return
     editor.maClasseVisuEquation.valeurEquationChoisie=valeur
     monMC.dsMaFunct = False
-              
+
 
 def instancieChemicalFormulation(monMC):
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
@@ -130,7 +130,7 @@ def instancieChemicalFormulation(monMC):
     change=editor.changeDefautDefMC('Equation', ('b_type_show','b_modification','b_modif','Aging_Type'), type_vieil )
 
     for index,valeurConstituant in enumerate(monEquation.constituants):
-        valeurEquation=monEquation.equation[index] 
+        valeurEquation=monEquation.equation[index]
         editor.ajoutMC(monMC.etape,'OptionnelConstituant',None,('b_type_show','b_modification','b_modif',))
         print (index,valeurConstituant,valeurEquation)
 
@@ -138,11 +138,11 @@ def instancieChemicalFormulation(monMC):
             #    Constituant = SIMP (statut = 'o', typ = 'TXM'),
             #    Differential_Equation =  SIMP(statut= 'o',typ= 'TXM'),
     for index,valeurConstituant in enumerate(monEquation.const_cine_nom):
-         valeurArrhe=monEquation.arrhenius[index] 
-         if valeurArrhe : valeurConstanteType='Arrhenius type'
-         else           : valeurConstanteType='non Arrhenius type'
+        valeurArrhe=monEquation.arrhenius[index]
+        if valeurArrhe : valeurConstanteType='Arrhenius type'
+        else           : valeurConstanteType='non Arrhenius type'
 
-         print (index,valeurConstituant,valeurConstanteType)
+        print (index,valeurConstituant,valeurConstanteType)
             #OptionnelleConstante  = FACT (statut = 'f', max = '**',
             #     ConstanteName= SIMP (statut = 'o', typ = 'TXM',),
             #    ConstanteType =  SIMP(statut= 'o',typ= 'TXM', min=1,into=('Arrhenius type','non Arrhenius type'),defaut='Arrhenius type'),
@@ -152,8 +152,8 @@ def instancieChemicalFormulation(monMC):
     if editor.fenetreCentraleAffichee : editor.fenetreCentraleAffichee.node.affichePanneau()
     monMC.dsMaFunct = False
     editor.dsMaFunct = False
- 
-# TEMPORAIRE 
+
+# TEMPORAIRE
 # TODO TODO TODO
 # PNPNPNPNPN
 
@@ -175,7 +175,7 @@ def creeListeEquation(monMC):
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
 
     editor=monMC.jdc.editor
-# TEMPORAIRE 
+# TEMPORAIRE
 # TODO TODO TODO
     listeEquationsAAfficher=[]
     listeConstantesAAfficher=[]
@@ -186,7 +186,7 @@ def creeListeEquation(monMC):
 
     monMC.dsMaFunct = False
 
-  #        listeEquation_stabilization=SIMP(statut='o', homo='SansOrdreNiDoublon', max='**', min=0 ),
+    #        listeEquation_stabilization=SIMP(statut='o', homo='SansOrdreNiDoublon', max='**', min=0 ),
 
 def recupereModeleEquation(monMC):
     if hasattr(monMC,'dsMaFunct') and monMC.dsMaFunct== True : return
@@ -198,12 +198,12 @@ def recupereModeleEquation(monMC):
     dicoListeEquationAAfficher={}
 
     for valeurReactionType in monDico['Equation_Liste']:
-      dicoListeEquationAAfficher[valeurReactionType] = [] 
-      for index,equation in enumerate( editor.maClasseVisuEquation.listEquation):
-        if equation.type_react==valeurReactionType : 
-           dicoListeEquationAAfficher[valeurReactionType].append(equation.representation)
+        dicoListeEquationAAfficher[valeurReactionType] = []
+        for index,equation in enumerate( editor.maClasseVisuEquation.listEquation):
+            if equation.type_react==valeurReactionType :
+                dicoListeEquationAAfficher[valeurReactionType].append(equation.representation)
     print (dicoListeEquationAAfficher)
-       
+
     change=editor.changeIntoDefMC('Modele', ('b_type_creation','b_ajout_equation','listeEquation_initiation'),dicoListeEquationAAfficher['initiation'] )
     change=editor.changeIntoDefMC('Modele', ('b_type_creation','b_ajout_equation','listeEquation_propagation'),dicoListeEquationAAfficher['propagation'] )
     change=editor.changeIntoDefMC('Modele', ('b_type_creation','b_ajout_equation','listeEquation_termination'),dicoListeEquationAAfficher['termination'] )
@@ -223,13 +223,13 @@ def prepareDiffusion(monMC):
     editor.dicoCoefD={}
     for c in maClasseDeModele.coef[0].keys() :
         if c[0]=='S':
-           clef=c[1:]
-           valeur= maClasseDeModele.coef[0][c]
-           editor.dicoCoefS[clef]=valeur
+            clef=c[1:]
+            valeur= maClasseDeModele.coef[0][c]
+            editor.dicoCoefS[clef]=valeur
         if c[0]=='D':
-           clef=c[1:]
-           valeur= maClasseDeModele.coef[0][c]
-           editor.dicoCoefD[clef]=valeur
+            clef=c[1:]
+            valeur= maClasseDeModele.coef[0][c]
+            editor.dicoCoefD[clef]=valeur
     print (editor.dicoCoefS,editor.dicoCoefD)
     monMC.dsMaFunct=False
     editor.dsMaFunct = False
@@ -250,7 +250,7 @@ def ajouteDiffusion(monMC):
         print (v)
         mesValeurs=editor.dicoCoefS[v]
         print (editor.dicoCoefS)
-        print (mesValeurs) 
+        print (mesValeurs)
         MCFils='S'+v
         for e in monMC.jdc.etapes:
             if e.nom == Modele :break
@@ -269,7 +269,7 @@ JdC = JDC_CATA(code='VP',
                 )
 
 
-  
+
 #---------------------------------
 Equation = PROC (nom="Equation",
       op=None,
@@ -277,7 +277,7 @@ Equation = PROC (nom="Equation",
       Equation_DB=SIMP(statut= 'o',typ= 'TXM', into=("Approved data base", "My data base") ),
       Equation_Type = SIMP(statut= 'o',typ= 'TXM', into=("Show equation database", "Equation creation"),),
 
-      
+
 #     ---------------------------------------------------------------------------
        b_type_show = BLOC(condition = " Equation_Type == 'Show equation database'",
 #      ---------------------------------------------------------------------------
@@ -294,7 +294,7 @@ Equation = PROC (nom="Equation",
          ListeEquation = SIMP(statut='o', typ='TXM',  homo='SansOrdreNiDoublon',siValide=afficheValeurEquation),
          b_modification = BLOC(condition = " ListeEquation != None ",
            modification = SIMP(typ = bool, statut = 'o',defaut = False, fr='toto', ang='toto en anglais', siValide=instancieChemicalFormulation),
-           
+
            b_modif = BLOC(condition = "modification == True",
             Reaction_Type=SIMP(statut= 'o',typ= 'TXM', min=1,into=monDico['Equation_Liste'],),
             Aging_Type=SIMP(statut= 'o',typ= 'TXM', min=1,max='**', homo='SansOrdreNiDoublon', into=('All', 'thermo', 'radio'),),
@@ -310,7 +310,7 @@ Equation = PROC (nom="Equation",
             Commentaire =  SIMP (statut = 'f', typ = 'TXM', defaut = ' '),
 
            ),# fin b_modif
-         
+
          ), # fin b_modification
        ), # Fin b_type_show
 
@@ -319,7 +319,7 @@ Equation = PROC (nom="Equation",
       b_type_creation = BLOC(condition = " Equation_Type == 'Equation creation'",
 #         ---------------------------------------------------------------------------
          Equation_Modification = FACT ( statut = 'o',
- 
+
             ChemicalFormulation = SIMP(statut='o', typ='TXM', defaut = 'POOH -> 2P'),
 
             Reaction_Type=SIMP(statut= 'o',typ= 'TXM', min=1,into=monDico['Equation_Liste'],),
@@ -351,7 +351,7 @@ Equation = PROC (nom="Equation",
                   ),# fin ConstanteOptionnelle
             ), # fin constante
             Commentaire =  SIMP (statut = 'f', typ = 'TXM', defaut = ' '),
-                  
+
          ), # Fin Equation_Modification
 
                  #Chemical_Formulation =  SIMP(statut= 'o',typ= 'TXM', defaut = 'POOH->P',siValide=maFuncWithArg),
@@ -359,8 +359,8 @@ Equation = PROC (nom="Equation",
                  #Type2 = SIMP(statut='o', typ = 'TXM'),
 
         ),  # fin b_type_creation
-                 
-      
+
+
 ) # Fin Equation
 
 #---------------------------------
@@ -377,9 +377,9 @@ Modele = PROC (nom="Modele",
         stabilizer = SIMP(typ = bool, statut = 'o',defaut = maClasseDeModele.stabilise),
         model_developed_by_for_EDF = SIMP(typ = bool, statut = 'o',defaut = maClasseDeModele.dvt_EDF[0]),
         documentation=SIMP(statut='o',typ='TXM',defaut=maClasseDeModele.reference,),
-        
+
        # ajouter la liste des equations et le remove (il faut garder ceux qu on a enlever)
-      
+
 
        AjoutEquation=SIMP(statut= 'o',typ= bool, defaut=False, siValide=recupereModeleEquation),
        b_ajout_equation = BLOC(condition = " AjoutEquation == True",
@@ -388,7 +388,7 @@ Modele = PROC (nom="Modele",
           listeEquation_termination=SIMP(statut='o', typ='TXM',homo='SansOrdreNiDoublon', max='**', min=0, defaut=[] ),
           listeEquation_stabilization=SIMP(statut='o',typ='TXM', homo='SansOrdreNiDoublon', max='**', min=0, defaut=[] ),
        ),# fin b_ajout_equation
-       
+
         # coefficients maClasseDeModele.coef = liste de dictionnaire mais il faut prendre que le 0
         # on enleve ceux qui commence par D, S et B(casse imprtante)
         # la clef est le coef, puis les valeurs
@@ -399,9 +399,9 @@ Modele = PROC (nom="Modele",
         b_diffusion = BLOC(condition = " Diffusion == True",
          #coefficients maClasseDeModele.coef = liste de dictionnaire mais il faut prendre que le 0
         # on met ceux qui commence par D, S et pas les B ni les aitres( casse imprtante)
-           listeProduitPourLaDiffusion=SIMP(statut='o', typ='TXM', max='**', min=1,homo='SansOrdreNiDoublon', into = maClasseDeModele.param_ini.keys(),siValide=ajouteDiffusion), 
+           listeProduitPourLaDiffusion=SIMP(statut='o', typ='TXM', max='**', min=1,homo='SansOrdreNiDoublon', into = maClasseDeModele.param_ini.keys(),siValide=ajouteDiffusion),
        ),  # fin b_diffusion
- 
+
        ),  # fin b_type_creation
 
 

@@ -46,16 +46,16 @@ DefinitionDsSimpDsOper = OPER( nom='DefinitionDsSimpDsOper', sd_prod=lASSD,
       creeUserAssd = SIMP( statut='f', typ = (laClasseUserDerive,'createObject'),),
 )
 
-DefinitionDsFactDsProc = PROC( nom='DefinitionDsFactDsProc', 
+DefinitionDsFactDsProc = PROC( nom='DefinitionDsFactDsProc',
      unFact = FACT(statut='f',
         creeUserAssd = SIMP( statut='f', typ = (laClasseUser,'createObject'),),
        ),
 )
-DefinitionDsSimpDsProc = PROC( nom='DefinitionDsSimpDsProc', 
+DefinitionDsSimpDsProc = PROC( nom='DefinitionDsSimpDsProc',
         creeUserAssd = SIMP( statut='f', typ = (laClasseUser,'createObject'),),
 )
 
-DefinitionDsSimpListe = PROC( nom='DefinitionDsSimpListe', 
+DefinitionDsSimpListe = PROC( nom='DefinitionDsSimpListe',
         creeUserAssd = SIMP( statut='f', typ = (laClasseUser,'createObject'),max='**'),
 )
 
@@ -66,4 +66,3 @@ UtiliseEtDefinitDsLeMemeProc = PROC( nom = 'UtiliseEtDefinitDsLeMemeProc',
         utiliseUserAssd  = SIMP(statut= 'o',typ= laClasseUser,max='**'),
         creeUserAssd = SIMP( statut='f', typ = (laClasseUser,'createObject'),),
 )
-

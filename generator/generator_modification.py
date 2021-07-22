@@ -23,8 +23,8 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
-   from builtins import object
+    from builtins import str
+    from builtins import object
 except : pass
 
 import os, sys,  types, re
@@ -32,16 +32,16 @@ from Extensions.i18n import tr
 
 class ModificationGenerator(object):
     def generTexteModif(self,obj):
-      texteModification=""
-      for t in  list(obj.editor.dicoNouveauxMC.keys()) :
-          # 'ajoutDefinitionMC',etape,listeAvant,nomDuMC,typ,args
-          fonction,Etape,Genea,nomSIMP,typeSIMP,arguments = obj.editor.dicoNouveauxMC[t]
-          texteModification += "MODIFICATION_CATALOGUE(Fonction  = '" + str(fonction)+ "',\n"
-          texteModification += "                       Etape     = '" + str(Etape)   + "',\n"
-          texteModification += "                       Genea     = "  + str(Genea)   + ",\n" 
-          texteModification += "                       NomSIMP   = '" + str(nomSIMP) + "',\n"
-          texteModification += "                       TypeSIMP  = '" + str(typeSIMP)+ "',\n"
-          texteModification += "                       PhraseArguments = " +'"' + str(arguments)+ '"'+ ",);\n"
-          
+        texteModification=""
+        for t in  list(obj.editor.dicoNouveauxMC.keys()) :
+            # 'ajoutDefinitionMC',etape,listeAvant,nomDuMC,typ,args
+            fonction,Etape,Genea,nomSIMP,typeSIMP,arguments = obj.editor.dicoNouveauxMC[t]
+            texteModification += "MODIFICATION_CATALOGUE(Fonction  = '" + str(fonction)+ "',\n"
+            texteModification += "                       Etape     = '" + str(Etape)   + "',\n"
+            texteModification += "                       Genea     = "  + str(Genea)   + ",\n"
+            texteModification += "                       NomSIMP   = '" + str(nomSIMP) + "',\n"
+            texteModification += "                       TypeSIMP  = '" + str(typeSIMP)+ "',\n"
+            texteModification += "                       PhraseArguments = " +'"' + str(arguments)+ '"'+ ",);\n"
 
-      return texteModification
+
+        return texteModification

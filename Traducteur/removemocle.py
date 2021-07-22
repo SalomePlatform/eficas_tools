@@ -25,8 +25,8 @@ from Traducteur.load import jdcSet
 
 debug=0
 #debug=1
-#on n'a qu'un mocle par commande. On peut donc supprimer le mocle sans trop de précautions (a part iterer a l'envers sur les commandes)
-#avant de supprimer un autre mocle, on remet à jour l'arbre syntaxique (lineno,colno,etc.)
+#on n'a qu'un mocle par commande. On peut donc supprimer le mocle sans trop de precautions (a part iterer a l'envers sur les commandes)
+#avant de supprimer un autre mocle, on remet a jour l'arbre syntaxique (lineno,colno,etc.)
 
 
 #-----------------------------------------------------------------------
@@ -67,7 +67,7 @@ def removeMotCleAvecErreur(jdc,command,mocle) :
 #--------------------------------------------------------------
     if command not in jdcSet : return
     removeMotCle(jdc,command,mocle,erreur=1)
-      
+
 
 #--------------------------------------------------------------------
 def removeCommande(jdc,command,ensemble=regles.SansRegle,erreur=0):
@@ -98,7 +98,7 @@ def removeCommandeSiRegleAvecErreur(jdc,command,liste_regles):
     if command not in jdcSet : return
     mesRegles=regles.ensembleRegles(liste_regles)
     removeCommande(jdc,command,mesRegles,1)
-                
+
 #---------------------------------
 def removeMC(jdc,c,mc):
 #---------------------------------
@@ -110,7 +110,7 @@ def removeMC(jdc,c,mc):
         jdc.getLines()[mc.lineno-1]=jdc.getLines()[mc.lineno-1][:mc.colno]
         jdc.getLines()[mc.endline-1]=jdc.getLines()[mc.endline-1][mc.endcol:]
 
-        #attention : supprimer les lignes à la fin
+        #attention : supprimer les lignes a la fin
         jdc.getLines()[mc.lineno:mc.endline-1]=[]
     else:
         if debug:print "mocle sur une ligne--%s--" % jdc.getLines()[mc.lineno-1][mc.colno:mc.endcol]
@@ -121,7 +121,7 @@ def removeMC(jdc,c,mc):
 #---------------------------------------------------------------------------------
 def removeMotCleInFact(jdc,command,fact,mocle,ensemble=regles.SansRegle,erreur=0):
 #----------------------------------------------------------------------------------
-    # on itere sur les commandes a l'envers pour ne pas polluer 
+    # on itere sur les commandes a l'envers pour ne pas polluer
     # les numeros de ligne avec les modifications
     if command not in jdcSet : return
     commands= jdc.root.childNodes[:]
@@ -183,7 +183,7 @@ def removeMotCleInFactCourantSiRegle(jdc,command,fact,mocle,liste_regles,erreur=
                     removeMC(jdc,c,n)
 
     if boolChange : jdc.reset(jdc.getSource())
-    
+
 #------------------------------------------
 def fusionne(jdc,numLigne):
 #------------------------------------------
@@ -198,18 +198,18 @@ def fusionne(jdc,numLigne):
     texte=jdc.getLines()[numLigne]
     fusion=1
     while (index < len(texte)) :
-      if texte[index] not in (" ",",",")",";","\n") :
-         fusion=0
-         break
-      index=index+1
-       
+        if texte[index] not in (" ",",",")",";","\n") :
+            fusion=0
+            break
+        index=index+1
+
     if fusion == 0 : return;
 
     texte=jdc.getLines()[numLigne -1]
     if texte.find("#") < 0 :
-       fusion=1
+        fusion=1
     else :
-       fusion=0
- 
-    if fusion : 
-       jdc.joinLineandNext(numLigne)
+        fusion=0
+
+    if fusion :
+        jdc.joinLineandNext(numLigne)

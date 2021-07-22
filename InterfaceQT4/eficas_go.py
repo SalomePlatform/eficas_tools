@@ -23,9 +23,8 @@
 from __future__ import absolute_import
 from __future__ import print_function
 try :
-   from builtins import str
+    from builtins import str
 except : pass
-
 
 import sys,os
 repIni     = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),".."))
@@ -37,6 +36,9 @@ if ihmDir     not in sys.path : sys.path.append(ihmDir)
 if ihmQTDir   not in sys.path : sys.path.append(ihmQTDir)
 if editeurDir not in sys.path : sys.path.append(editeurDir)
 
+if sys.version_info[0] < 3:
+    print("Must be using Python 3")
+    sys.exit()
 
 def lanceEficas(code=None, multi=False, langue='en', labelCode=None):
 #-------------------------------------------------------------------
@@ -44,10 +46,10 @@ def lanceEficas(code=None, multi=False, langue='en', labelCode=None):
         Lance l'appli EFICAS avec Ihm
     """
     try :
-      from PyQt5.QtWidgets import QApplication
+        from PyQt5.QtWidgets import QApplication
     except :
-      print('Please, set qt environment')
-      return
+        print('Please, set qt environment')
+        return
 
     from Editeur  import session
     options = session.parse(sys.argv)
@@ -62,8 +64,8 @@ def lanceEficas(code=None, multi=False, langue='en', labelCode=None):
     res=app.exec_()
     sys.exit(res)
 
-def getEficasSsIhm(code=None, multi=False, langue='en', labelCode=None,forceXML=False, genereXSD=False):
-#------------------------------------------------------------------------------------------------------
+def getEficasSsIhm(code=None, multi=False, langue='en', ssCode=None, labelCode=None,forceXML=False, genereXSD=False, fichierCata=None):
+#-------------------------------------------------------------------------------------------------------------------------
     """
         Lance l'appli EFICAS sans Ihm
     """
@@ -73,7 +75,7 @@ def getEficasSsIhm(code=None, multi=False, langue='en', labelCode=None,forceXML=
     if forceXML : options.withXSD=True
 
     from InterfaceQT4.qtEficasSsIhm import AppliSsIhm
-    Eficas=AppliSsIhm(code=code, salome=0, multi=multi, langue=langue, labelCode=labelCode, genereXSD=genereXSD)
+    Eficas=AppliSsIhm(code=code, salome=0, multi=multi, langue=langue, ssCode=ssCode, labelCode=labelCode, genereXSD=genereXSD, fichierCata=fichierCata)
     return Eficas
 
 
@@ -83,13 +85,14 @@ def genereXSD(code=None):
     from Editeur  import session
     options = session.parse(sys.argv)
     if code != None : options.code = code
-    if options.fichierCata == None : 
-       print ('Use -c cata_name.py')
-       return
+    if options.fichierCata == None :
+        print ('Use -c cata_name.py')
+        return
 
     monEficasSsIhm = getEficasSsIhm(code=options.code,genereXSD=True)
     monEditor=monEficasSsIhm.getEditor()
-    texteXSD=monEficasSsIhm.dumpXsd(avecEltAbstrait=options.avecEltAbstrait)
+    #texteXSD=monEficasSsIhm.dumpXsd(avecEltAbstrait=options.avecEltAbstrait)
+    texteXSD=monEditor.dumpXsd(avecEltAbstrait=options.avecEltAbstrait)
 
     fichierCataTrunc=os.path.splitext(os.path.basename(options.fichierCata))[0]
     #if fichierCataTrunc[0:4] in ('cata','Cata'): fichierCataTrunc=fichierCataTrunc[4:]
@@ -104,34 +107,62 @@ def genereXML(code=None):
     from Editeur  import session
     options=session.parse(sys.argv)
     if code != None : options.code = code
-    if options.fichierCata == None : 
-       print ('Use -c cata_name.py')
-       return
-    fichier=options.comm[0]
-    if fichier==None : 
-       print ('comm file is needed')
-       return
-    
+    if options.fichierCata == None :
+        print ('Use -c cata_name.py')
+        return
+    try    : fichier=options.comm[0]
+    except : fichier=None
+    if fichier==None :
+        print ('comm file is needed')
+        return
+
     monEficasSsIhm = getEficasSsIhm(code=options.code, forceXML=True)
 
     from .editorSsIhm import JDCEditorSsIhm
     monEditeur=JDCEditorSsIhm(monEficasSsIhm,fichier)
-    fichierXML=fichier[:fichier.rfind(".")]+'.xml'
+    if options.fichierXMLOut == None :
+        fichierXMLOut=fichier[:fichier.rfind(".")]+'.xml'
+    else :
+        fichierXMLOut=options.fichierXMLOut
+    if not(monEditeur.jdc.isValid()):
+        print ('Fichier comm is not valid')
+        return
+    #print ('Fichier comm is not valid')
     monEditeur.XMLgenerator.gener(monEditeur.jdc)
-    monEditeur.XMLgenerator.writeDefault(fichierXML)
+    monEditeur.XMLgenerator.writeDefault(fichierXMLOut)
+
+def genereStructure(code=None):
+#------------------------------
+    from Editeur  import session
+    options=session.parse(sys.argv)
+    if code != None : options.code = code
+    if options.fichierCata == None :
+        print ('Use -c cata_name.py')
+        return
+
+    monEficasSsIhm = getEficasSsIhm(code=options.code,genereXSD=True)
+    monEditor=monEficasSsIhm.getEditor()
+    texteStructure=monEditor.dumpStructure()
+
+    fichierCataTrunc=os.path.splitext(os.path.basename(options.fichierCata))[0]
+    fileStructure = fichierCataTrunc + '.txt'
+    f = open( str(fileStructure), 'w')
+    f.write(str(texteStructure))
+    f.close()
+
 
 def validateDataSet(code=None):
 #------------------------------
     from Editeur  import session
     options=session.parse(sys.argv)
     if code != None : options.code = code
-    if options.fichierCata == None : 
-       print ('Use -c cata_name.py')
-       return
+    if options.fichierCata == None :
+        print ('Use -c cata_name.py')
+        return
     fichier=options.comm[0]
-    if fichier==None : 
-       print ('comm file is needed')
-       return
+    if fichier==None :
+        print ('comm file is needed')
+        return
     from .editorSsIhm import JDCEditorSsIhm
     monEficasSsIhm = getEficasSsIhm(code=options.code)
     monEditeur=JDCEditorSsIhm(monEficasSsIhm,fichier)
@@ -139,7 +170,7 @@ def validateDataSet(code=None):
     else : print ('Jdc is valid')
     return monEditeur.jdc.isValid()
 
-def validateFonction(laFonction, debug=True):
+def validateFonction(laFonction, debug=False):
 #-------------------------------
     # ici un singleton pour avoir l editor, le catalogue et...
     monEficasSsIhm = getEficasSsIhm(code='Essai')
@@ -152,47 +183,48 @@ def validateFonction(laFonction, debug=True):
     def fonctionValidee(*args, **kwargs):
         laFonctionName = laFonction.__name__
         if debug : print('Appel {} avec args={} et kwargs={}'.format( laFonction.__name__, args, kwargs))
-        listArgsNames   = list(OrderedDict.fromkeys(getargspec(laFonction)[0]))
-        listKwargsNames = list(kwargs.keys())
-        if debug : print (listArgsNames)
-        if debug : print (listKwargsNames)
-        #listTousNames = listArgsNames+listKwargsNames
-        #if debug : print (listTousNames)
-        #args_dict = OrderedDict(list(zip(args_name, args)) + list(kwargs.iteritems()))
-        #print (args_dict)
-
-        #laDefDeLaFonctionDansAccas = getattr(monEditor.readercata.cata,laFonctionName)
-        #print (laDefDeLaFonctionDansAccas)
-        #print (laDefDeLaFonctionDansAccas.entites)
-        #print (dir(laDefDeLaFonctionDansAccas))
-        #print (args)
-        #dict1={'monArgument1' : 'a', 'monArgument2' : 'uuu'}
-        
-        #objConstruit = laDefDeLaFonctionDansAccas.makeObjetPourVerifSignature(**dict1)
-        #print (objConstruit)
-        #print (objConstruit.isValid())
-        ret = laFonction(*args, **kwargs)
-        return ret
+        laDefDeLaFonctionDansAccas = getattr(monEditor.readercata.cata,laFonctionName)
+        objConstruit = laDefDeLaFonctionDansAccas.makeObjetPourVerifSignature(*args,**kwargs)
+        if (objConstruit.isValid()) :
+            ret = laFonction(*args, **kwargs)
+            return ret
+        else :
+            print ('mauvais arguments')
+            print (objConstruit.CR())
+            return None
     return fonctionValidee
 
         #maClasseAccas=getattr(self.cata,objEtape.monNomClasseAccas)
     return fonctionValidee
 
-    
+
     return laFonction
-   
+
+def createFromDocumentAccas(fichierCata=None,fichier=None,code=None):
+#------------------------------------------------------------
+    if fichier == None : print ('file is needed'); return None
+    if fichierCata == None    : print ('cata file is needed'); return None
+
+    from Noyau.N_OBJECT import activeSurcharge
+    activeSurcharge()
+
+    from .editorSsIhm import JDCEditorSsIhm
+    monEficasSsIhm = getEficasSsIhm(code='Essai', fichierCata=fichierCata)
+    monEditeur=JDCEditorSsIhm(monEficasSsIhm,fichier)
+    return monEditeur.jdc
+    #from Noyau
 
 
 # --------------------------- toutes les fonctions après sont obseletes
 def lanceEficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=False,langue='en'):
     """
-        Lance l'appli EFICAS SsIhm 
+        Lance l'appli EFICAS SsIhm
     """
     # Analyse des arguments de la ligne de commande
     print ('deprecated')
     from Editeur  import session
     options=session.parse(sys.argv)
-    if version!=None and options.version == None : options.version=version 
+    if version!=None and options.version == None : options.version=version
     if fichier == None : fichier=options.comm[0]
     if code    == None : code=options.code
 
@@ -204,8 +236,8 @@ def lanceEficas_ssIhm(code=None,fichier=None,ssCode=None,version=None,debug=Fals
 
     from . import readercata
     if not hasattr ( Eficas, 'readercata'):
-           monreadercata  = readercata.ReaderCata( parent, Eficas )
-           Eficas.readercata=monreadercata
+        monreadercata  = readercata.ReaderCata( parent, Eficas )
+        Eficas.readercata=monreadercata
 
     from .editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
@@ -225,35 +257,35 @@ def lanceEficas_ssIhm_reecrit(code=None,fichier=None,ssCode=None,version=None,ou
     print ('deprecated')
     #print 'lanceEficas_ssIhm_reecrit', fichier
     monEditeur=lanceEficas_ssIhm(code,fichier,ssCode,version,langue=langue)
-    if ou == None : 
-       fileName=fichier.split(".")[0]+"_reecrit.comm"
-       fn=fichier.split(".")[0]+"_cr.txt"
+    if ou == None :
+        fileName=fichier.split(".")[0]+"_reecrit.comm"
+        fn=fichier.split(".")[0]+"_cr.txt"
     else :
-       f=fichier.split(".")[0]+"_reecrit.comm"
-       f1=os.path.basename(f)
-       fn=fichier.split(".")[0]+"_cr.txt"
-       f2=os.path.basename(fn)
-       fileName=os.path.join(ou,f1)
-       fileCr=os.path.join(ou,f2)
+        f=fichier.split(".")[0]+"_reecrit.comm"
+        f1=os.path.basename(f)
+        fn=fichier.split(".")[0]+"_cr.txt"
+        f2=os.path.basename(fn)
+        fileName=os.path.join(ou,f1)
+        fileCr=os.path.join(ou,f2)
     debut=False
     if debug :
-         import cProfile, pstats, StringIO
-         pr = cProfile.Profile()
-         pr.enable()
-         monEditeur.saveFileAs(fileName=fileName)
-         pr.disable()
-         s = StringIO.StringIO()
-         sortby = 'cumulative'
-         ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-         ps.print_stats()
-         print (s.getValue())
+        import cProfile, pstats, StringIO
+        pr = cProfile.Profile()
+        pr.enable()
+        monEditeur.saveFileAs(fileName=fileName)
+        pr.disable()
+        s = StringIO.StringIO()
+        sortby = 'cumulative'
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps.print_stats()
+        print (s.getValue())
 
     elif not leger : monEditeur.saveFileAs(fileName=fileName)
     else : monEditeur.saveFileLegerAs(fileName=fileName)
     if cr:
-       f = open(fileCr, 'w')
-       f.write(str(monEditeur.jdc.report()))
-       f.close()
+        f = open(fileCr, 'w')
+        f.write(str(monEditeur.jdc.report()))
+        f.close()
 
 def lanceEficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_STUDY'):
     """
@@ -271,8 +303,8 @@ def lanceEficas_param(code='Adao',fichier=None,version='V0',macro='ASSIMILATION_
 
     from . import readercata
     if not hasattr ( Eficas, 'readercata'):
-           monreadercata  = readercata.ReaderCata( parent, Eficas )
-           Eficas.readercata=monreadercata
+        monreadercata  = readercata.ReaderCata( parent, Eficas )
+        Eficas.readercata=monreadercata
 
     from .editor import JDCEditor
     monEditeur=JDCEditor(Eficas,fichier)
@@ -308,7 +340,7 @@ def loadJDC(filename):
     jdc = ""
     for line in fcomm.readlines():
         if not (line[0]=='#'):
-           jdc+="%s"%line
+            jdc+="%s"%line
 
     # Warning, we have to make sure that the jdc comes as a simple
     # string without any extra spaces/newlines
@@ -318,5 +350,3 @@ if __name__ == "__main__":
     import sys
     sys.path.insert(0,os.path.abspath(os.path.join(os.getcwd(),'..')))
     lanceEficas(code=None,multi=True)
-    
-

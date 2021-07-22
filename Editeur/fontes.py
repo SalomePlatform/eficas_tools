@@ -32,4 +32,3 @@ standard12_gras = ("Times",12,'bold')
 standard12_gras_italique = ( "times",12,'bold','italic')
 
 standardcourier10 = ("Courier",10)
-

@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-    Ce module realise toutes les mises a jour du chemin pour 
+    Ce module realise toutes les mises a jour du chemin pour
     les imports de modules Python
 """
 from __future__ import absolute_import
@@ -34,10 +34,10 @@ INSTALLDIR=prefs_Code.INSTALLDIR
 # representant le code utilise (si fourni)
 # Ensuite on utilise les packages de l'intallation
 if hasattr(prefs_Code,'CODE_PATH'):
-   if prefs_Code.CODE_PATH:
-      sys.path[:0]=[prefs_Code.CODE_PATH]
-      import Noyau,Validation
-      del sys.path[0]
+    if prefs_Code.CODE_PATH:
+        sys.path[:0]=[prefs_Code.CODE_PATH]
+        import Noyau,Validation
+        del sys.path[0]
 sys.path[:0]=[prefs_Code.INSTALLDIR]
 
 import Accas

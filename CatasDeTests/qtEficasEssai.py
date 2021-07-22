@@ -19,7 +19,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 """
-   Ce module sert a lancer EFICAS configure pour MAP 
+   Ce module sert a lancer EFICAS configure pour MAP
 """
 # Modules Python
 # Modules Eficas

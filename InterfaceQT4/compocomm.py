@@ -43,7 +43,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         self.Decommente.setStatusTip(tr("Decommente la commande "))
 
         if hasattr(self.item,'unComment'):
-           self.menu.addAction(self.Decommente)
+            self.menu.addAction(self.Decommente)
 
     def decommenter(self) :
         item= self.tree.currentItem()
@@ -55,20 +55,20 @@ class Node(browser.JDCNode,typeNode.PopUpMenuNodePartiel):
         debComm=self.item.getText()
         self.setText(1,tr(debComm))
 
-    
+
 class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
-    itemNode=Node    
+    itemNode=Node
 
     def init(self):
-      self.setFunction = self.setValeur
+        self.setFunction = self.setValeur
 
     def getIconName(self):
-      """
-      Retourne le nom de l'icone associee au noeud qui porte self,
-      dependant de la validite de l'objet
-      NB : un commentaire est toujours valide ...
-      """
-      return "ast-white-percent"
+        """
+        Retourne le nom de l'icone associee au noeud qui porte self,
+        dependant de la validite de l'objet
+        NB : un commentaire est toujours valide ...
+        """
+        return "ast-white-percent"
 
     def getLabelText(self):
         """ Retourne 3 valeurs :
@@ -79,11 +79,11 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
         return tr('Commentaire'),None,None
 
     def getValeur(self):
-      """
-      Retourne la valeur de l'objet Commentaire cad son texte
-      """
-      return self.object.getValeur() or ''
-    
+        """
+        Retourne la valeur de l'objet Commentaire cad son texte
+        """
+        return self.object.getValeur() or ''
+
     def getText(self):
         texte = self.object.valeur
         texte = texte.split('\n')[0]
@@ -93,26 +93,26 @@ class COMMTreeItem(Objecttreeitem.ObjectTreeItem):
             return texte[0:24]
 
     def setValeur(self,valeur):
-      """
-      Affecte valeur a l'objet COMMENTAIRE
-      """
-      self.object.setValeur(valeur)
-      
+        """
+        Affecte valeur a l'objet COMMENTAIRE
+        """
+        self.object.setValeur(valeur)
+
     def getSubList(self):
-      """
-      Retourne la liste des fils de self
-      """
-      return []
+        """
+        Retourne la liste des fils de self
+        """
+        return []
 
 
     def getObjetCommentarise(self):
-       """
-           La methode getObjetCommentarise() de la classe compocomm.COMMTreeItem
-           surcharge la methode getObjetCommentarise de la classe Objecttreeitem.ObjectTreeItem
-           elle a pour but d'empecher l'utilisateur final de commentariser un commentaire.
-       """
-       raise EficasException( 'Impossible de commentariser un commentaire' )
-  
+        """
+            La methode getObjetCommentarise() de la classe compocomm.COMMTreeItem
+            surcharge la methode getObjetCommentarise de la classe Objecttreeitem.ObjectTreeItem
+            elle a pour but d'empecher l'utilisateur final de commentariser un commentaire.
+        """
+        raise EficasException( 'Impossible de commentariser un commentaire' )
+
 import Extensions
 treeitem =COMMTreeItem
-objet = Extensions.commentaire.COMMENTAIRE    
+objet = Extensions.commentaire.COMMENTAIRE

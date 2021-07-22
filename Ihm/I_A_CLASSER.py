@@ -25,15 +25,14 @@ from __future__ import absolute_import
 from . import I_REGLE
 
 class A_CLASSER(I_REGLE.REGLE):
-  def getText(self):
-    text = 'Regle ' + self.__class__.__name__+ ' :\n'
-    t="  D'abord :\n"+' '*8
-    for arg in self.args0:
-      t=t+arg.strip()+' ou '
-    text = text + t[0:-4] +'\n'
-    t = "  Ensuite :\n"+' '*8
-    for arg in self.args1:
-      t=t+arg.strip()+' ou '
-    text = text + t[0:-4] +'\n'
-    return text
-
+    def getText(self):
+        text = 'Regle ' + self.__class__.__name__+ ' :\n'
+        t="  D'abord :\n"+' '*8
+        for arg in self.args0:
+            t=t+arg.strip()+' ou '
+        text = text + t[0:-4] +'\n'
+        t = "  Ensuite :\n"+' '*8
+        for arg in self.args1:
+            t=t+arg.strip()+' ou '
+        text = text + t[0:-4] +'\n'
+        return text

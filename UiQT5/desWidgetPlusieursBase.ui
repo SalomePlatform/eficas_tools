@@ -482,7 +482,8 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="remove"/>
+             <iconset theme="remove">
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -519,7 +520,8 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="add"/>
+             <iconset theme="add">
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -556,7 +558,8 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="find"/>
+             <iconset theme="find">
+              <normaloff>.</normaloff>.</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -768,6 +771,13 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="lineEditUnite">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer_6">

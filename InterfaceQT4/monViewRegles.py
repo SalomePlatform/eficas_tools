@@ -41,14 +41,11 @@ class ViewRegles(Ui_viewRegles,QDialog):
 
         if entete != None : self.setWindowTitle (entete)
         for ligne in liste :
-          texte=ligne[0]
-          couleur=ligne[1]
-          if couleur==Qt.black :
-             self.LBRegles.addItem(texte)
-          else :
-             monItem=QListWidgetItem(texte)
-             monItem.setForeground(Qt.red)
-             self.LBRegles.addItem(monItem)
-
-
-        
+            texte=ligne[0]
+            couleur=ligne[1]
+            if couleur==Qt.black :
+                self.LBRegles.addItem(texte)
+            else :
+                monItem=QListWidgetItem(texte)
+                monItem.setForeground(Qt.red)
+                self.LBRegles.addItem(monItem)

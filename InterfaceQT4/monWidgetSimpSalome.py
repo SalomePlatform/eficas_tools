@@ -20,7 +20,7 @@
 # Modules Python
 from __future__ import absolute_import
 try :
-   from builtins import str
+    from builtins import str
 except : pass
 
 import types,os
@@ -33,14 +33,14 @@ from PyQt5.QtCore import Qt
 from Extensions.i18n import tr
 
 from .feuille               import Feuille
-from desWidgetSimpSalome   import Ui_WidgetSimpSalome 
+from desWidgetSimpSalome   import Ui_WidgetSimpSalome
 from .politiquesValidation  import PolitiqueUnique
 from .qtSaisie              import SaisieValeur
 
 
 class MonWidgetSimpSalome (Ui_WidgetSimpSalome,Feuille):
 
-  def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
+    def __init__(self,node,monSimpDef,nom,objSimp,parentQt,commande):
         Feuille.__init__(self,node,monSimpDef,nom,objSimp,parentQt,commande)
         self.parentQt.commandesLayout.insertWidget(-1,self,1)
         self.setFocusPolicy(Qt.StrongFocus)
@@ -50,14 +50,14 @@ class MonWidgetSimpSalome (Ui_WidgetSimpSalome,Feuille):
         self.maCommande.listeAffichageWidget.append(self.lineEditVal)
 
 
-  def LEvaleurPressed(self):
-      if str(self.lineEditVal.text())=="" or str(self.lineEditVal.text())==None : return
-      SaisieValeur.LEvaleurPressed(self)
-      self.parentQt.donneFocus()
-      self.setValeurs()
-      self.reaffiche()
+    def LEvaleurPressed(self):
+        if str(self.lineEditVal.text())=="" or str(self.lineEditVal.text())==None : return
+        SaisieValeur.LEvaleurPressed(self)
+        self.parentQt.donneFocus()
+        self.setValeurs()
+        self.reaffiche()
 
 
-  def setValeurs(self):
-      valeur=self.node.item.getValeur()
-      if valeur != None : self.lineEditVal.setText(str(valeur))
+    def setValeurs(self):
+        valeur=self.node.item.getValeur()
+        if valeur != None : self.lineEditVal.setText(str(valeur))

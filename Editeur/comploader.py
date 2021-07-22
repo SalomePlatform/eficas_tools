@@ -35,7 +35,7 @@ from __future__ import absolute_import
 import os,glob,types
 
 # Dictionnaire {object : item} permettant d'associer un item a un object
-# Ce dictionnaire est renseigne par la methode chargerComposants 
+# Ce dictionnaire est renseigne par la methode chargerComposants
 composants = {}
 
 def chargerComposants(Ihm="QT"):
@@ -61,25 +61,25 @@ def gettreeitem(object):
       Cette classe item depend bien sur de la nature de object, d'ou
       l'interrogation du dictionnaire composants
     """
-    # Si la definition de l'objet a un attribut itemeditor, il indique 
+    # Si la definition de l'objet a un attribut itemeditor, il indique
     # la classe a utiliser pour l'item
     try:
-       return object.definition.itemeditor
+        return object.definition.itemeditor
     except:
-       pass
+        pass
 
     # On cherche ensuite dans les composants (plugins)
     try:
-       itemtype= composants[object.__class__]
-       return itemtype
+        itemtype= composants[object.__class__]
+        return itemtype
     except:
-       pass
+        pass
 
     # Puis une eventuelle classe heritee (aleatoire car sans ordre)
     for e in list(composants.keys()):
         if e and isinstance(object,e):
-           itemtype= composants[e]
-           return itemtype
+            itemtype= composants[e]
+            return itemtype
 
     # Si on n'a rien trouve dans les composants on utilise l'objet par defaut
     itemtype=composants[None]
@@ -92,4 +92,3 @@ def makeObjecttreeitem(appliEficas,labeltext, object, setFunction=None):
     """
     c = gettreeitem(object)
     return c(appliEficas,labeltext, object, setFunction)
-

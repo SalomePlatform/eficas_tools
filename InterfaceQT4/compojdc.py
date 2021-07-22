@@ -30,7 +30,7 @@ class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
     def getPanel(self):
         from .monChoixCommande import MonChoixCommande
         return MonChoixCommande(self,self.item, self.editor)
-        
+
 
     def createPopUpMenu(self):
         typeNode.PopUpMenuRacine.createPopUpMenu(self)
@@ -38,98 +38,98 @@ class Node(browser.JDCNode,typeNode.PopUpMenuRacine):
     def addParameters(self,apres):
         param=self.appendChild("PARAMETRE",pos=0)
         return param
-       
+
 
 
 class JDCTreeItem(Objecttreeitem.ObjectTreeItem):
-  itemNode=Node
-  
-  def isExpandable(self):
-    return 1
+    itemNode=Node
 
-  def getText(self):
-      return  "    "
+    def isExpandable(self):
+        return 1
 
-  def getLabelText(self):
-      # None --> fonte et couleur par defaut
-      return tr(self.object.nom),None,None
+    def getText(self):
+        return  "    "
 
-  def getJdc(self):
-    """
-    Retourne l'objet pointe par self
-    """
-    return self.object
-  
-  def getIconName(self):
-    if self.object.isValid():
-      return "ast-green-square"
-    else:
-      return "ast-red-square"
+    def getLabelText(self):
+        # None --> fonte et couleur par defaut
+        return tr(self.object.nom),None,None
 
-  #def keys(self):
-  #    if self.object.etapes_niveaux != []:
-  #        return range(len(self.object.etapes_niveaux))
-  #    else:
-  #        return range(len(self.object.etapes))
+    def getJdc(self):
+        """
+        Retourne l'objet pointe par self
+        """
+        return self.object
 
-  def addItem(self,name,pos):
-      cmd = self._object.addEntite(name,pos)
-      return cmd
+    def getIconName(self):
+        if self.object.isValid():
+            return "ast-green-square"
+        else:
+            return "ast-red-square"
 
-  def suppItem(self,item) :
-    # item             = item de l'ETAPE a supprimer du JDC
-    # item.getObject() = ETAPE ou COMMENTAIRE
-    # self.object      = JDC
+    #def keys(self):
+    #    if self.object.etapes_niveaux != []:
+    #        return range(len(self.object.etapes_niveaux))
+    #    else:
+    #        return range(len(self.object.etapes))
 
-    itemobject=item.getObject()
-    if self.object.suppEntite(itemobject):
-       if itemobject.nature == "COMMENTAIRE" :
-          message = tr("Commentaire supprime")
-       else :
-          message = tr("Commande %s supprimee",itemobject.nom)
-       return 1,message
-    else:
-       message=tr("Pb interne : impossible de supprimer cet objet")
-       return 0,message
+    def addItem(self,name,pos):
+        cmd = self._object.addEntite(name,pos)
+        return cmd
 
-  def getSubList(self):
-    """
-       Retourne la liste des items fils de l'item jdc.
-       Cette liste est conservee et mise a jour a chaque appel
-    """
-    if self.object.etapes_niveaux != []:
-        liste = self.object.etapes_niveaux
-    else:
-        liste = self.object.etapes
-    sublist=[None]*len(liste)
-    # suppression des items lies aux objets disparus
-    for item in self.sublist:
-       old_obj=item.getObject()
-       if old_obj in liste:
-          pos=liste.index(old_obj)
-          sublist[pos]=item
-       else:
-          pass # objets supprimes ignores
-    # ajout des items lies aux nouveaux objets
-    pos=0
-    for obj in liste:
-       if sublist[pos] is None:
-          # nouvel objet : on cree un nouvel item
-          item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj)
-          sublist[pos]=item
-       pos=pos+1
+    def suppItem(self,item) :
+        # item             = item de l'ETAPE a supprimer du JDC
+        # item.getObject() = ETAPE ou COMMENTAIRE
+        # self.object      = JDC
 
-    self.sublist=sublist
-    return self.sublist
+        itemobject=item.getObject()
+        if self.object.suppEntite(itemobject):
+            if itemobject.nature == "COMMENTAIRE" :
+                message = tr("Commentaire supprime")
+            else :
+                message = tr("Commande %s supprimee",itemobject.nom)
+            return 1,message
+        else:
+            message=tr("Pb interne : impossible de supprimer cet objet")
+            return 0,message
 
-  def getLNomsEtapes(self):
-      """ Retourne la liste des noms des etapes de self.object"""
-      return self.object.getLNomsEtapes()
+    def getSubList(self):
+        """
+           Retourne la liste des items fils de l'item jdc.
+           Cette liste est conservee et mise a jour a chaque appel
+        """
+        if self.object.etapes_niveaux != []:
+            liste = self.object.etapes_niveaux
+        else:
+            liste = self.object.etapes
+        sublist=[None]*len(liste)
+        # suppression des items lies aux objets disparus
+        for item in self.sublist:
+            old_obj=item.getObject()
+            if old_obj in liste:
+                pos=liste.index(old_obj)
+                sublist[pos]=item
+            else:
+                pass # objets supprimes ignores
+        # ajout des items lies aux nouveaux objets
+        pos=0
+        for obj in liste:
+            if sublist[pos] is None:
+                # nouvel objet : on cree un nouvel item
+                item = self.makeObjecttreeitem(self.appliEficas, obj.nom + " : ", obj)
+                sublist[pos]=item
+            pos=pos+1
 
-  def getListeCmd(self):
-      listeCmd = self.object.niveau.definition.getListeCmd()
-      return listeCmd
+        self.sublist=sublist
+        return self.sublist
+
+    def getLNomsEtapes(self):
+        """ Retourne la liste des noms des etapes de self.object"""
+        return self.object.getLNomsEtapes()
+
+    def getListeCmd(self):
+        listeCmd = self.object.niveau.definition.getListeCmd()
+        return listeCmd
 
 import Accas
 treeitem =JDCTreeItem
-objet = Accas.JDC    
+objet = Accas.JDC

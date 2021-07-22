@@ -28,5 +28,5 @@ class PRESENT_PRESENT(I_PRESENT_PRESENT.PRESENT_PRESENT,
     """
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
-        V_PRESENT_PRESENT.PRESENT_PRESENT n'en a pas
+        seule N_REGLE.REGLE en a un
     """

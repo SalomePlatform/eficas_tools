@@ -28,8 +28,8 @@ def indexToCoordinates(src, index):
     return x, y
 
 def lineToDict(line):
-    """Transforme une ligne (string) en un dictionnaire de mots 
-        repérés par le numéro de la colonne"""
+    """Transforme une ligne (string) en un dictionnaire de mots
+        reperes par le numero de la colonne"""
 
     words = re.split("(\w+)", line)
     h = {};i = 0
@@ -39,7 +39,7 @@ def lineToDict(line):
     return h
 
 def dictToLine(d):
-    """Transformation inverse: à partir d'un dictionnaire retourne une ligne"""
+    """Transformation inverse: a partir d'un dictionnaire retourne une ligne"""
     cols = d
     cols.sort()
     return "".join([d[colno]for colno in cols])

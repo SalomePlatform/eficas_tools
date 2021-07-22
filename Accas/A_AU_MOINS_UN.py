@@ -26,5 +26,5 @@ class AU_MOINS_UN(V_AU_MOINS_UN.AU_MOINS_UN,I_REGLE.REGLE,N_REGLE.REGLE):
     """
         La classe utilise l'initialiseur de REGLE. Il n'est pas
         necessaire d'expliciter son initialiseur car
-        V_AU_MOINS_UN.AU_MOINS_UN n'en a pas
+        seule N_REGLE.REGLE en a un
     """
