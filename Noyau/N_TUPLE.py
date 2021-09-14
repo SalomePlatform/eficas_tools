@@ -20,7 +20,8 @@ class N_Matrice:
     def __init__(self, nbLigs=None, nbCols=None,
                  methodeCalculTaille=None, formatSortie="ligne",
                  valSup=None, valMin=None, structure=None, typElt='R',
-                 typEltInto=None, listeHeaders=None, coloree=False):
+                 typEltInto=None, listeHeaders=None, coloree=False,
+                 defaut=None):
         self.nbLigs = nbLigs
         self.nbCols = nbCols
         self.methodeCalculTaille = methodeCalculTaille
@@ -33,6 +34,7 @@ class N_Matrice:
         self.typEltInto = typEltInto
         self.jdc=None
         self.coloree=coloree
+        self.defaut=defaut
         if self.coloree : self.activeCouleur()
 
     def __convert__(self, valeur):
@@ -85,3 +87,5 @@ class N_Matrice:
     __repr__ = info
     __str__ = info
 
+class N_Matrice_Correlation(N_Matrice):
+    pass

@@ -42,7 +42,7 @@ class MCFACT(N_MCCOMPO.MCCOMPO):
             - nom
             - parent
         """
-        print ('MCFACT', self, val, definition, nom, parent, dicoPyxbDeConstruction)
+        #print ('MCFACT', self, val, definition, nom, parent, dicoPyxbDeConstruction)
         #import traceback
         #traceback.print_stack()
         self.dicoPyxbDeConstruction=dicoPyxbDeConstruction

@@ -53,18 +53,6 @@ class MonWidgetTableau (Ui_WidgetTableau,MonWidgetPlusieursTuple):
             setattr(self,nomCol,objCol)
             spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
             self.LATitre.addItem(spacerItem)
-
-
-
-#            monObjTitreCol=getattr(self,nomCol)
-#            monObjTitreCol.setText(monSimpDef.homo[i])
-
-#        for i in range(maxLen-len(monSimpDef.homo)):
-#            index=i+len(monSimpDef.homo)+1
-#            nomCol='LECol'+str(index)
-#            monObjTitreCol=getattr(self,nomCol)
-#            monObjTitreCol.close()
-
         self.resize(self.width(),1800)
 
     def ajoutLineEdit(self,valeur=None,inInit=False):

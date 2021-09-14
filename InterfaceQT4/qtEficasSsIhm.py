@@ -38,7 +38,7 @@ class AppliSsIhm:
     """
     Class implementing the main user interface.
     """
-    def __init__(self,code=None,salome=1,parent=None,multi=False,langue='fr',ssIhm=True,labelCode=None,genereXSD=False):
+    def __init__(self,code=None,salome=1,parent=None,multi=False,langue='fr',ssIhm=True,labelCode=None,genereXSD=False,versionCode=None,ssCode=None,fichierCata=None):
         """
         Constructor
         """

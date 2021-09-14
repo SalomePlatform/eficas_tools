@@ -24,7 +24,7 @@ logger=logging.getLogger()
 
 def initialise(flog=None):
     if flog == None :
-        MonHome=os.environ['HOME']
+        MonHome=os.path.expanduser("~")
         MaDir=MonHome+"/Eficas_install"
         try :
             os.mkdir(MaDir)

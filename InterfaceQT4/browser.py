@@ -159,6 +159,7 @@ class JDCTree( QTreeWidget,GereRegles ):
         self.itemCourant  = item
         itemParent        = item
         itemAvant         = item
+
         # PN : 22 juil 2021 --> bizarre ce itemAvant Verifier le while
         while not (hasattr (itemParent,'getPanel')) :
             if itemParent.plie==True : itemParent.setDeplie()
@@ -171,11 +172,11 @@ class JDCTree( QTreeWidget,GereRegles ):
             # Attention - Specification particuliere pour MT qui permet de nn afficher qu 1 niveau
             # le catalogue contient cette indication dans fenetreIhm
             if estUneFeuille and itemParent.fenetreIhm=='deplie1Niveau' :
-                itemAvant.afficheCeNiveau()
-                return
-            if estUneFeuille                        : itemParent.affichePanneau()
+                if item == itemParent : itemParent.affichePanneau()
+                else                  : itemAvant.afficheCeNiveau()
+            elif estUneFeuille        : itemParent.affichePanneau()
             elif self.editor.maConfiguration.afficheCommandesPliees : itemParent.plieToutEtReafficheSaufItem(item)
-            else                                    : itemParent.affichePanneau()
+            else                      : itemParent.affichePanneau()
 
 
         elif (isinstance(item,composimp.Node)) and item.fenetre : item.fenetre.rendVisible()
@@ -782,8 +783,8 @@ class JDCNode(QTreeWidgetItem,GereRegles):
         self.appliEficas.listeNoeudsColores=[]
         for noeud in liste :
             noeud.setTextColor( 0,Qt.blue )
-            if item.nom != tr(item.nom) : labeltext = str(tr(item.nom)+" :")
             labeltext,fonte,couleur = noeud.item.getLabelText()
+            if item.nom != tr(item.nom) : labeltext = str(tr(item.nom)+" :")
             noeud.setText(0, labeltext)
             self.appliEficas.listeNoeudsColores.append(noeud)
 

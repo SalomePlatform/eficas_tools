@@ -673,11 +673,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
     def initRecents(self):
         self.recent =  []
         try :
-            #if sys.platform[0:5]=="linux" :
-                #rep=os.path.join(os.environ['HOME'],'.config/Eficas',self.code)
             rep=os.path.join(os.path.expanduser("~"),'.config/Eficas',self.code)
-            #else :
-            #   rep=os.path.join('C:/','.config/Eficas',self.code)
             monFichier=rep+"/listefichiers_"+self.code
             index=0
             f=open(monFichier)

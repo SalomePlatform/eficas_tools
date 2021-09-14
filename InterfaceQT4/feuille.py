@@ -80,7 +80,6 @@ class Feuille(QWidget,ContientIcones,SaisieValeur,FacultatifOuOptionnel):
         self.setCommentaire()
         self.setZoneInfo()
         self.setUnite()
-        self.setUQ()
 
 
     def setUnite(self):

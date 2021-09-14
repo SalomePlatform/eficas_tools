@@ -482,8 +482,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="remove">
-              <normaloff>.</normaloff>.</iconset>
+             <iconset theme="remove"/>
             </property>
             <property name="iconSize">
              <size>
@@ -520,8 +519,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="add">
-              <normaloff>.</normaloff>.</iconset>
+             <iconset theme="add"/>
             </property>
             <property name="iconSize">
              <size>
@@ -558,8 +556,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset theme="find">
-              <normaloff>.</normaloff>.</iconset>
+             <iconset theme="find"/>
             </property>
             <property name="iconSize">
              <size>
