@@ -45,17 +45,17 @@ pattern_finit_par_virgule_ou_affect=re.compile(r'^.*(,|;|=|:)\s*$')
 
 pattern_ligne=re.compile(r'^\s*(?P<ident>[^=:]*)\s*[:=]\s*(?P<reste>.*)$')
 
-pattern_variables=re.compile (r"^\s*(?P<ident>VARIABLES FOR GRAPHIC PRINTOUTS|VARIABLES POUR LES SORTIES GRAPHIQUES)\s*[:=]\s*(?P<valeur>[A-Za-z]+(\d*|\*)(,[A-Za-z]+(\d*|\*))*)\s*(?P<reste>.*)$")
+pattern_variables=re.compile(r"^\s*(?P<ident>C_VSM_PRINTOUT_SELECTION|COUPLAGE AVEC|COUPLING WITH|VARIABLES FOR GRAPHIC PRINTOUTS|VARIABLES POUR LES SORTIES GRAPHIQUES|VARIABLES TO BE PRINTED|VARIABLES A IMPRIMER|VARIABLES FOR 3D GRAPHIC PRINTOUTS|VARIABLES POUR LES SORTIES GRAPHIQUES 3D|VARIABLES POUR LES SORTIES GRAPHIQUES 2D|VARIABLES FOR 2D GRAPHIC PRINTOUTS)\s*[:=]\s*(?P<quote>[']?)(?P<valeur>[A-Za-z]+(\d*|\*)([,;][A-Za-z]+(\d*|\*))*)\s*(?P=quote)(?P<reste>.*)$")
 
 # Attention aux listes de flottants
 pattern_liste=re.compile(r'^\s*(?P<valeur>[+-.\w]+(\s*;\s*[+-.\w]+)+)\s*(?P<reste>.*)$')
 pattern_liste_texte=re.compile(r"^\s*(?P<valeur>('.*(';\s*))+('.*'\s*)?)(?P<reste>.*)$")
 pattern_flottant=re.compile(r'^\s*(?P<valeur>[+-]?((\d+(\.\d*)?)|(\.\d+))([dDeE][+-]?\d+)?)\s*(?P<reste>.*)$')
-pattern_texteQuote  = re.compile (r"^\s*(?P<valeur>'[^']+(''[^']+)*')\s*(?P<reste>.*)$")
-pattern_texteSimple = re.compile (r"(?P<valeur>(^|\s)\s*[\w\.-]+)\s*(?P<reste>.*)$")
-pattern_texteVide   = re.compile (r"^\s*(?P<valeur>'')\s*(?P<reste>.*)$")
+pattern_texteQuote  = re.compile(r"^\s*(?P<valeur>'[^']+(''[^']+)*')\s*(?P<reste>.*)$")
+pattern_texteSimple = re.compile(r"(?P<valeur>(^|\s)\s*[\w\.-]+)\s*(?P<reste>.*)$")
+pattern_texteVide   = re.compile(r"^\s*(?P<valeur>'')\s*(?P<reste>.*)$")
 
-pattern_ContientDouble=re.compile (r"^.*''.*$")
+pattern_ContientDouble=re.compile(r"^.*''.*$")
 
 # le pattern texte reconnait
 #nom1 nom 2 : ou = chaine entre '
@@ -108,7 +108,7 @@ class TELEMACparser(Pythonparser):
             self.TelemacdicoEn            = appliEficas.readercata.TelemacdicoEn
         except :
             self.TelemacdicoEn = {}
-            print ('pas de TelemacdicoEn')
+            print('pas de TelemacdicoEn')
         try :
             self.DicoEnumCasFrToEnumCasEn = appliEficas.readercata.DicoEnumCasFrToEnumCasEn
         except :
@@ -494,59 +494,3 @@ class TELEMACparser(Pythonparser):
             #listeOut.insert(i,kF)
             listeOut.insert(i,k)
         return listeOut
-
-#   def BOUNDARY_CONDITIONS(self):
-#       texte_Boundaries="BOUNDARY_CONDITIONS=_F(LIQUID_BOUNDARIES=( "
-#       if 'PRESCRIBED_ELEVATIONS' in self.dictSimp:
-#              valeursPE=self.dictSimp["PRESCRIBED_ELEVATIONS"]
-#              if not type(valeursPE)==list : valeursPE = (valeursPE,)
-#              longueur=len(self.dictSimp["PRESCRIBED_ELEVATIONS"])
-#       else : valeursPE=None
-#       if 'PRESCRIBED_FLOWRATES' in self.dictSimp:
-#              valeursPF=self.dictSimp["PRESCRIBED_FLOWRATES"]
-#              if not type(valeursPF)==list : valeursPF = (valeursPF,)
-#              longueur=len(self.dictSimp["PRESCRIBED_FLOWRATES"])
-#       else : valeursPF=None
-#       if 'PRESCRIBED_VELOCITIES' in self.dictSimp:
-#              valeursPV=self.dictSimp["PRESCRIBED_VELOCITIES"]
-#              if not type(valeursPV)==list : valeursPV = (valeursPV,)
-#              longueur=len(self.dictSimp["PRESCRIBED_VELOCITIES"])
-#       else : valeursPV=None
-#
-#       if valeursPE == None and valeursPF == None and valeursPV == None :
-#             texte_Boundaries +="),\n"
-#             return
-#
-#       if valeursPE == None or valeursPF == None or valeursPV == None :
-#          listNulle=[]
-#          for i in range(longueur) : listNulle.append('0')
-#
-#
-#       if valeursPE == None : valeursPE = listNulle
-#       if valeursPF == None : valeursPF = listNulle
-#       if valeursPV == None : valeursPV = listNulle
-#
-#
-#       for e in range(len(valeursPE)):
-#          if valeursPE[e] != "" or valeursPE[e] != "\n" :
-#            if eval(valeursPE[e],{}) != 0 :
-#               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Elevations',\n"
-#               texte_Boundaries += "PRESCRIBED_ELEVATIONS = " + str(valeursPE[e]) + "),\n"
-#               continue
-#
-#          if valeursPF[e] != "" or valeursPF[e] != "\n" :
-#            if eval(valeursPF[e],{}) != 0 :
-#               texte_Boundaries += "_F(BOUNDARY_TYPE = 'Prescribed Flowrates',\n"
-#               texte_Boundaries += "PRESCRIBED_FLOWRATES = " + str(valeursPF[e]) + "),\n"
-#               continue
-#
-#          if valeursPV[e] != "" or valeursPV[e] != "\n" :
-#             if eval(valeursPV[e],{})!=0 :
-#                texte_Boundaries += "_F( BOUNDARY_TYPE= 'Prescribed Velocity',\n"
-#                texte_Boundaries += "PRESCRIBED_VELOCITIES = " + str(valeursPV[e]) + "),\n"
-#                continue
-#          print ("pb texte_Boundaries avec la valeur numero ", e)
-#
-#       texte_Boundaries +="),),"
-#       self.textePy += texte_Boundaries
-#
