@@ -22,7 +22,7 @@
 
 __version = {
     'major': 9,
-    'minor': 5
+    'minor': 8
     }
 
 def getEficasVersion():
