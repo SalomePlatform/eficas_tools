@@ -500,7 +500,7 @@ class JDCEditorSsIhm :
             except :
                 checksum='Fichier trop long \n'
             ligne="#CHECKSUM:"+checksum[0:-1]+":FIN CHECKSUM"
-            return ligne
+        return ligne
 
     #----------------------#
     def getDico(self):

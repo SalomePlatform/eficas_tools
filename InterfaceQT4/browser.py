@@ -98,18 +98,18 @@ class JDCTree( QTreeWidget,GereRegles ):
         @param coord the position of the mouse pointer (QPoint)
         Attention : existeMenu permet de savoir si un menu est associe a cet item
         """
-        #print ("handleContextMenu")
+        print ("handleContextMenu")
         if item == None : return
         self.itemCourant = item
         if item.existeMenu == 0 : return
 
         if item.menu == None:
             item.createPopUpMenu()
+        if item.menu != None:
         # PNPN reflechir a qqchose de generique pour remplacer cette fonctionnalite
-        #if item.menu != None:
         #   if item.item.getNom() == "DISTRIBUTION" and item.item.isValid() :
         #      item.Graphe.setEnabled(1)
-        #   item.menu.exec_(coord)
+           item.menu.exec_(coord)
 
 
     def handleCollapsedItem(self,item):
