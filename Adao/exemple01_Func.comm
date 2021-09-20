@@ -1,0 +1,12 @@
+
+CHECKING_STUDY(StudyName='ADAO Checking Case',
+               AlgorithmParameters=_F(Algorithm='FunctionTest',
+                                      NumberOfRepetition=3,),
+               CheckingPoint=_F(INPUT_TYPE='Vector',
+                                data=_F(FROM='String',
+                                        STRING='1 2',),),
+               ObservationOperator=_F(INPUT_TYPE='Matrix',
+                                      data=_F(FROM='String',
+                                              STRING='2 0 ; 0 2',),),);
+#VERSION_CATALOGUE:V9_5_0:FIN VERSION_CATALOGUE
+#CHECKSUM:7cb77b298c21a16d8137a99cad24e683:FIN CHECKSUM
