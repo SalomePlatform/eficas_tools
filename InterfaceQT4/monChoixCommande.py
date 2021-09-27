@@ -296,6 +296,9 @@ class MonChoixCommande(Ui_ChoixCommandes,QWidget):
             for cmd in Ordre_Des_Commandes :
                 if cmd in listeFiltre :
                     liste.append(cmd)
+        elif self.boolGroupe : 
+             # On considere que cela n a pas de sens de filtrer sur les groupes ou ?
+             return
         for cmd in liste :
             col=col+1
             if col == self.editor.maConfiguration.nombreDeBoutonParLigne :
