@@ -89,7 +89,7 @@ class MCSIMP(N_OBJECT.OBJECT):
                 else :
                     #PNPN --> chgt pour Vimmp
                     for v in self.valeur :
-                        print (v, type(v))
+                        #print (v, type(v))
                         v.ajoutUtilisePar(self)
                         #try : v.ajoutUtilisePar(self)
                         #except : print ('il y a un souci ici', self.nom, self.valeur)
@@ -159,7 +159,7 @@ class MCSIMP(N_OBJECT.OBJECT):
             objVal.ajouteUnPere(self)
             p=self.parent
             while p in self.parent :
-                print ('mise a jour de ',p)
+                #print ('mise a jour de ',p)
                 if hasattr(p, 'listeDesReferencesCrees') : p.listeDesReferencesCrees.append(objVal)
                 else : p.listeDesReferencesCrees=[objVal,]
                 p=p.parent
