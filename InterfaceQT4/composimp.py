@@ -668,8 +668,10 @@ class SIMPTreeItem(Objecttreeitem.AtomicObjectTreeItem):
     def waitMatrice(self):
         """ Methode booleenne qui retourne 1 si l'objet pointe par self
         attend un Tuple, 0 sinon """
+        # il faut trouver autre chose que ce find!!!
         for ss_type in self.object.definition.type:
-            if repr(ss_type).find('Matrice') != -1 :
+            #if repr(ss_type).find('Matrice') != -1 :
+            if hasattr(ss_type, 'typElt') : 
                 return 1
         return 0
 

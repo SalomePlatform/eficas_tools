@@ -208,7 +208,7 @@ class MonWidgetMatriceOT (MonWidgetMatrice):
             try:
                 MonWidgetMatrice.__dict__[self.monType.methodeCalculTaille](*(self,))
             except :
-                QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la methode ") + monType.methodeCalculTaille )
+                QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la methode ") + self.monType.methodeCalculTaille )
                 return
         else :
             self.nbLigs=self.monType.nbLigs
@@ -243,6 +243,20 @@ class MonWidgetMatriceOT (MonWidgetMatrice):
         for var in liste[0]: header .append(str(var))
         self.TBMatrice.setVerticalHeaderLabels(header)
         self.TBMatrice.setHorizontalHeaderLabels(header)
+
+    def  nbDeVariables(self):
+    # uniquement pour OT
+        jdc=self.node.item.object.jdc
+        etape=self.node.item.object.etape
+        self.listeVariables=jdc.getVariables(etape)
+        if self.listeVariables == [] :
+            QMessageBox.critical( self, tr("Mauvaise Commande "),tr( "Aucune variable connue. Entrez les variables avant la matrice"))
+            return
+        self.TBMatrice.setColumnCount(len(self.listeVariables))
+        self.TBMatrice.setRowCount(len(self.listeVariables))
+        self.nbLigs=len(self.listeVariables)
+        self.nbCols=len(self.listeVariables)
+
 
     def  initialValeur(self):
     # uniquement pour OT
