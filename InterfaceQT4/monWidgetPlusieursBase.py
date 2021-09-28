@@ -182,7 +182,7 @@ class MonWidgetPlusieursBase (Ui_WidgetPlusieursBase,Feuille,GereListe,GerePlie)
         return self.finCommentaireListe()
 
     def ajout1Valeur(self,valeur=None):
-        print ('ajout1Valeur plusieursBase')
+        #print ('ajout1Valeur plusieursBase')
         if valeur == None : return
         liste,validite=SaisieValeur.TraiteLEValeur(self,str(valeur))
         if validite == 0 : return
