@@ -514,7 +514,7 @@ class PythonGenerator(object):
         return l
 
 
-    def formatItem(self,valeur,etape,obj,vientDeListe=0):
+    def formatItem(self,valeur,etape,obj,vientDeListe=0,matriceDAssd=0):
         if (type(valeur) == float or 'R' in obj.definition.type) and not(isinstance(valeur,Accas.PARAMETRE)) :
             # Pour un flottant on utilise str ou repr si on vient d une liste
             # ou la notation scientifique
@@ -558,6 +558,12 @@ class PythonGenerator(object):
         #   else:
         #      s = self.generator(valeur)
 
+        elif matriceDAssd :
+           s='['
+           for v in valeur :
+               s=s+str(self.generator(v))+', '
+               
+           s=s+']'
         else :
             # Pour les autres types on utilise repr
             s = repr(valeur)
@@ -569,13 +575,18 @@ class PythonGenerator(object):
             syntaxe python
         """
         waitTuple=0
+        matriceDAssd=0
+        for ssType in obj.definition.type:
+            if hasattr(ssType,'typElt') :
+                if ssType.typElt not in ('R','I','C','TXM') : 
+                    matriceDAssd=1
+                    break
         if type(obj.valeur) in (tuple,list) :
             s = ''
             for ss_type in obj.definition.type:
                 if repr(ss_type).find('Tuple') != -1 :
                     waitTuple=1
                     break
-
             if waitTuple :
                 #s = str(obj.valeur) +','
                 #obj.valeurFormatee=obj.valeur
@@ -584,7 +595,7 @@ class PythonGenerator(object):
             else :
                 obj.valeurFormatee=[]
                 for val in obj.valeur :
-                    s =s +self.formatItem(val,obj.etape,obj,1) + ','
+                    s =s +self.formatItem(val,obj.etape,obj,1,matriceDAssd) + ','
                     if obj.waitTxm() :
                         obj.valeurFormatee.append(val)
                     else :
