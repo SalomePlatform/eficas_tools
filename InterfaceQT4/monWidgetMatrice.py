@@ -97,7 +97,7 @@ class MonWidgetMatrice (Ui_desWidgetMatrice,Feuille):
             try:
                 MonWidgetMatrice.__dict__[self.monType.methodeCalculTaille](*(self,))
             except :
-                QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la methode ") + monType.methodeCalculTaille )
+                QMessageBox.critical( self, tr("Mauvaise execution "),tr( "impossible d executer la methode ") + self.monType.methodeCalculTaille )
                 return
         else :
             self.nbLigs=self.monType.nbLigs
