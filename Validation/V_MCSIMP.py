@@ -159,8 +159,7 @@ class MCSIMP(object):
                         try:
                             self.definition.validators.convert(lval)
                         except ValError as e:
-                            self.cr.fatal(
-                                "invalid keyword %s  : %s\nCriteria : %s" % (tr(self.nom)), str(e), self.definition.validators.info())
+                            self.cr.fatal( "invalid keyword %s  : %s\nCriteria : %s" % (tr(self.nom), str(e), self.definition.validators.info()))
                             valid = 0
                 else:
                     # si pas de cr demande, on sort a la toute premiere erreur
