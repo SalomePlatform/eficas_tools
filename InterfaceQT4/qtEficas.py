@@ -66,12 +66,10 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
 
         if self.multi == False :
             self.definitCode(code,None)
-            if code==None: return
+            if self.code==None: return
         else :
             self.definitCode(code,None)
-            if code==None: return
-            print ('il faut trouver le chemin du code')
-            return
+            if self.code==None: return
 
         self.suiteTelemac=False
         if hasattr (self, 'maConfiguration') :
@@ -836,7 +834,7 @@ class Appli(AppliSsIhm,Ui_Eficas,QMainWindow):
         self.viewmanager.handleOpen(fichier=fichier, patron =0 )
 
     def handleClearRecent(self):
-        self.recent = QStringList()
+        self.recent = []
         self.sauveRecents()
 
     def handleRechercherDsCatalogue(self):
