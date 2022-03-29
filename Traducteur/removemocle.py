@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2021   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -102,18 +102,18 @@ def removeCommandeSiRegleAvecErreur(jdc,command,liste_regles):
 #---------------------------------
 def removeMC(jdc,c,mc):
 #---------------------------------
-    if debug : print "Suppression de:",c.name,mc.name,mc.lineno,mc.colno,mc.endline,mc.endcol
+    if debug : print ("Suppression de:",c.name,mc.name,mc.lineno,mc.colno,mc.endline,mc.endcol)
     logging.info("Suppression de %s dans %s ligne %d",mc.name,c.name,mc.lineno)
 
     if mc.endline > mc.lineno:
-        if debug:print "mocle sur plusieurs lignes--%s--" % jdc.getLines()[mc.lineno-1][mc.colno:]
+        if debug: print ("mocle sur plusieurs lignes--%s--" % jdc.getLines()[mc.lineno-1][mc.colno:])
         jdc.getLines()[mc.lineno-1]=jdc.getLines()[mc.lineno-1][:mc.colno]
         jdc.getLines()[mc.endline-1]=jdc.getLines()[mc.endline-1][mc.endcol:]
 
         #attention : supprimer les lignes a la fin
         jdc.getLines()[mc.lineno:mc.endline-1]=[]
     else:
-        if debug:print "mocle sur une ligne--%s--" % jdc.getLines()[mc.lineno-1][mc.colno:mc.endcol]
+        if debug: print( "mocle sur une ligne--%s--" % jdc.getLines()[mc.lineno-1][mc.colno:mc.endcol])
         s=jdc.getLines()[mc.lineno-1]
         jdc.getLines()[mc.lineno-1]=s[:mc.colno]+s[mc.endcol:]
         fusionne(jdc,mc.lineno-1)

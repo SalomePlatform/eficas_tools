@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2021   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -40,7 +40,7 @@ def renameMotCle(jdc,command,mocle,new_name, erreur=0,ensemble=regles.SansRegle)
             if mc.name != mocle:continue
             if ensemble.verif(c) == 0 : continue
             boolChange=1
-            if debug:print "Renommage de:",c.name,mc.name,mc.lineno,mc.colno
+            if debug: print ("Renommage de:",c.name,mc.name,mc.lineno,mc.colno)
             if erreur :
                 ecritErreur((command,mocle),c.lineno)
             else :
@@ -73,7 +73,7 @@ def renameOper(jdc,command,new_name):
     boolChange=0
     for c in jdc.root.childNodes:
         if c.name != command:continue
-        if debug:print "Renommage de:",c.name,c.lineno,c.colno
+        if debug: print ("Renommage de:",c.name,c.lineno,c.colno)
         logging.info("Renommage de: %s ligne %d en %s",c.name,c.lineno,new_name)
         boolChange=1
         s=jdc.getLines()[c.lineno-1]
@@ -172,7 +172,7 @@ def renameCommande(jdc,command,new_name,ensemble=regles.SansRegle):
         if c.name != command:continue
         if ensemble.verif(c) == 0 : continue
         boolChange=1
-        if debug:print "Renommage de:",c.name,new_name ,c.lineno,c.colno
+        if debug: print ("Renommage de:",c.name,new_name ,c.lineno,c.colno)
         logging.info("Renommage de: %s ligne %d en %s",c.name,c.lineno,new_name)
         s=jdc.getLines()[c.lineno-1]
         jdc.getLines()[c.lineno-1]=s[:c.colno]+new_name+s[c.colno+len(command):]

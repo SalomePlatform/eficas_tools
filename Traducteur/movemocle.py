@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2007-2021   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -45,7 +45,7 @@ def moveMotCleFromFactToFather(jdc,command,fact,mocle):
                     if n.name != mocle:continue
                     # test boolchange_c :il faut le faire une seule fois par commande sinon duplication du mot clé
                     if boolchange_c != 0 :continue
-                    if debug : print "Changement de place :", n.name, n.lineno, n.colno
+                    if debug : print ("Changement de place :", n.name, n.lineno, n.colno)
                     MonTexte=n.getText(jdc);
                     boolChange=1
                     boolchange_c=1
@@ -69,7 +69,7 @@ def moveMotCleFromFactToFactMulti(jdc,oper,factsource,mocle,liste_factcible):
 def moveMotCleFromFactToFact(jdc,oper,factsource,mocle,factcible):
 #----------------------------------------------------------------------------
     if oper not in jdcSet : return
-    if debug : print "moveMotCleFromFactToFact pour " ,oper,factsource,mocle,factcible
+    if debug : print ("moveMotCleFromFactToFact pour " ,oper,factsource,mocle,factcible)
     boolChange=0
     commands= jdc.root.childNodes[:]
     commands.reverse()
@@ -83,7 +83,7 @@ def moveMotCleFromFactToFact(jdc,oper,factsource,mocle,factcible):
                 cible=mc
                 break
         if cible==None :
-            if debug : print "Pas de changement pour ", oper, " ", factsource, " ",mocle, "cible non trouvée"
+            if debug : print ("Pas de changement pour ", oper, " ", factsource, " ",mocle, "cible non trouvée")
             continue
 
         for mc in c.childNodes:
@@ -94,10 +94,10 @@ def moveMotCleFromFactToFact(jdc,oper,factsource,mocle,factcible):
                 source=mc
                 break
         if source==None :
-            if debug : print "Pas de changement pour ", oper, " ", factsource, " ",mocle, "source non trouvée"
+            if debug : print ("Pas de changement pour ", oper, " ", factsource, " ",mocle, "source non trouvée")
             continue
 
-        if debug : print "Changement pour ", oper, " ", factsource, " ",mocle, "cible et source trouvées"
+        if debug : print ("Changement pour ", oper, " ", factsource, " ",mocle, "cible et source trouvées")
         l=source.childNodes[:]
         for ll in l:
             for n in ll.childNodes:
@@ -118,7 +118,7 @@ def moveMotClefInOperToFact(jdc,oper,mocle,factcible,plusieursFois=True):
 # Attention le cas type est THETA_OLD dans calc_G
 
     if oper not in jdcSet : return
-    if debug : print "movemocleinoper pour " ,oper,mocle,factcible
+    if debug : print ( "movemocleinoper pour " ,oper,mocle,factcible)
     boolChange=9
     commands= jdc.root.childNodes[:]
     commands.reverse()
@@ -132,7 +132,7 @@ def moveMotClefInOperToFact(jdc,oper,mocle,factcible,plusieursFois=True):
                 cible=mc
                 break
         if cible==None :
-            if debug : print "Pas de changement pour ", oper, " ", factcible, " ", "cible non trouvée"
+            if debug : print ("Pas de changement pour ", oper, " ", factcible, " ", "cible non trouvée")
             continue
 
         source=None
@@ -143,7 +143,7 @@ def moveMotClefInOperToFact(jdc,oper,mocle,factcible,plusieursFois=True):
                 source=mc
                 break
         if source==None :
-            if debug : print "Pas de changement pour ", oper, " ", mocle, " source non trouvée"
+            if debug : print ("Pas de changement pour ", oper, " ", mocle, " source non trouvée")
             continue
         MonTexte=source.getText(jdc);
         boolChange=1
@@ -156,7 +156,7 @@ def copyMotClefInOperToFact(jdc,oper,mocle,factcible):
 #------------------------------------------------------
 
     if oper not in jdcSet : return
-    if debug : print "movemocleinoper pour " ,oper,mocle,factcible
+    if debug : print ("movemocleinoper pour " ,oper,mocle,factcible)
     boolChange=9
     commands= jdc.root.childNodes[:]
     commands.reverse()
@@ -170,7 +170,7 @@ def copyMotClefInOperToFact(jdc,oper,mocle,factcible):
                 cible=mc
                 break
         if cible==None :
-            if debug : print "Pas de changement pour ", oper, " ", factcible, " ", "cible non trouvée"
+            if debug : print ("Pas de changement pour ", oper, " ", factcible, " ", "cible non trouvée")
             continue
 
         source=None
@@ -181,7 +181,7 @@ def copyMotClefInOperToFact(jdc,oper,mocle,factcible):
                 source=mc
                 break
         if source==None :
-            if debug : print "Pas de changement pour ", oper, " ", mocle, " source non trouvée"
+            if debug : print ("Pas de changement pour ", oper, " ", mocle, " source non trouvée")
             continue
         MonTexte=source.getText(jdc);
         boolChange=1

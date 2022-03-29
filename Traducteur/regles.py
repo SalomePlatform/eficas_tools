@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2021    EDF R&D
+# Copyright (C) 2007-2017    EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -84,7 +84,7 @@ class regle :
 class existeMCFParmi :
 #---------------------
     """
-    Existance du mot-clé facteur parmi la liste
+    Existence du mot-clé facteur parmi la liste
     """
     def __init__(self, list_arg):
         self.listeMCF = list_arg
@@ -104,7 +104,7 @@ class existeMCFParmi :
 class nexistepasMCFParmi(existeMCFParmi) :
 #---------------------
     """
-    Existance du mot-clé facteur parmi la liste
+    Existence du mot-clé facteur parmi la liste
     """
     def __init__(self, list_arg):
         self.listeMCF = list_arg
@@ -121,7 +121,7 @@ class nexistepasMCFParmi(existeMCFParmi) :
 class existeMCsousMCF :
 #----------------------
     """
-    Existance du mot-clé simple sous le mot-clé facteur
+    Existence du mot-clé simple sous le mot-clé facteur
     """
     def __init__(self, list_arg):
         self.liste = list_arg
@@ -147,7 +147,7 @@ class existeMCsousMCF :
 class existeMCsousMCFcourant :
 #----------------------
     """
-    Existance du mot-clé simple sous le mot-clé facteur courant
+    Existence du mot-clé simple sous le mot-clé facteur courant
     """
     def __init__(self, list_arg):
         self.liste = list_arg
@@ -205,7 +205,7 @@ class nexistepasMCsousMCFcourant(existeMCsousMCFcourant):
 class existe :
 #--------------
     """
-    Existance du mot-clé simple
+    Existence du mot-clé simple
     """
     def __init__(self, list_arg):
         self.genea = list_arg

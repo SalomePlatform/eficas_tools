@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2021   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,16 +18,23 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 import re,string
-import compiler
 
 debug=0
 
 escapedQuotesRE = re.compile(r"(\\\\|\\\"|\\\')")
 stringsAndCommentsRE =  \
       re.compile("(\"\"\".*?\"\"\"|'''.*?'''|\"[^\"]*\"|\'[^\']*\'|#.*?\n)", re.DOTALL)
-allchars = string.maketrans("", "")
-allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
-allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+
+import six
+if six.PY2 :
+    allchars = string.maketrans(u"", "")
+    allcharsExceptNewline = allchars[: allchars.index('\n')]+allchars[allchars.index('\n')+1:]
+    allcharsExceptNewlineTranstable = string.maketrans(allcharsExceptNewline, '*'*len(allcharsExceptNewline))
+else :
+    allchars=bytes.maketrans(b"",b"")
+    allcharsExceptNewline = allchars[: allchars.index(b'\n')]+allchars[allchars.index(b'\n')+1:]
+    allcharsExceptNewlineTranstable = bytes.maketrans(allcharsExceptNewline, b'*'*len(allcharsExceptNewline))
+
 
 #------------------------------
 def maskStringsAndComments(src):
@@ -37,7 +44,7 @@ def maskStringsAndComments(src):
     src = escapedQuotesRE.sub("**", src)
     allstrings = stringsAndCommentsRE.split(src)
     # every odd element is a string or comment
-    for i in xrange(1, len(allstrings), 2):
+    for i in range(1, len(allstrings), 2):
         if allstrings[i].startswith("'''")or allstrings[i].startswith('"""'):
             allstrings[i] = allstrings[i][:3]+ \
                            allstrings[i][3:-3].translate(allcharsExceptNewlineTranstable)+ \
@@ -136,9 +143,9 @@ def chaineBlanche(texte) :
 def printNode(node):
 #-------------------
     if hasattr(node,'name'):
-        print node.name
+        print (node.name)
     else:
-        print "pas de nom pour:",node
+        print ("pas de nom pour:",node)
     for c in node.childNodes:
         printNode(c)
 
@@ -161,10 +168,10 @@ def parser(src,atraiter):
     lineno=0
     for line in maskedLines:
         lineno=lineno+1
-        if debug:print "line",lineno,":",line
+        if debug:print ("line",lineno,":",line)
         m=pattern_proc.match(line)
         if m and (m.group(1) in atraiter):
-            if debug:print m.start(3),m.end(3),m.start(4)
+            if debug:print (m.start(3),m.end(3),m.start(4))
             root.addChild(Command(m.group(1),lineno,m.start(1),m.end(3)))
         else:
             m=pattern_oper.match(line)
@@ -182,10 +189,10 @@ def parser(src,atraiter):
         lineno=c.lineno
         colno=c.colno                       # debut de la commande
         while linenum < lineno:
-            line=iterlines.next()
+            line=iterlines.__next__()
             linenum=linenum+1
             if linenum != lineno:
-                if debug:print "line %s:"%linenum, line
+                if debug:print ("line %s:"%linenum, line)
         tmp = []
         hangingBraces = list(emptyHangingBraces)
         hangingComments = 0
@@ -217,9 +224,9 @@ def parser(src,atraiter):
                 c.endline=linenum
                 decal=len(line)-line.rindex(')')
                 c.lastParen=len(src)-decal
-                if debug:print "logical line %s %s:" % (c.lineno,c.endline),src
+                if debug:print ("logical line %s %s:" % (c.lineno,c.endline),src)
                 break
-            line=iterlines.next()
+            line=iterlines.__next__()
             linenum=linenum+1
 
     return root

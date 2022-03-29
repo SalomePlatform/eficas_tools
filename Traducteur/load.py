@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2021   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -23,8 +23,7 @@ import re
 from Traducteur import parseur
 from Traducteur.mocles import parseKeywords
 
-import sets
-jdcSet=sets.Set()
+jdcSet=set()
 
 
 class JDCTrad:

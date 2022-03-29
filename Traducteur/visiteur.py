@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2007-2021   EDF R&D
+# Copyright (C) 2007-2017   EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,9 +19,10 @@
 #
 
 import re
-from compiler import visitor
+from ast import NodeVisitor
+debug=0
 
-class MatchFinder:
+class MatchFinder (NodeVisitor):
     """Visiteur de base : gestion des matches """
     def reset(self,line):
         self.matches=[]
@@ -33,6 +34,7 @@ class MatchFinder:
             self.positions.append(i)
             i+=len(word)
         self.index = 0
+        if debug : print ('fin reset', self.words)
 
     def popWordsUpTo(self, word):
         if word == "*":
@@ -53,20 +55,26 @@ class MatchFinder:
 class KeywordFinder(MatchFinder):
     """Visiteur pour les keywords d'une commande """
 
-    def visitKeyword(self,node):
-        idx = self.getNextIndexOfWord(node.name)
-        self.popWordsUpTo(node.name)
+    def visit_keyword(self,node):
+        if debug : print (' visit_keyword', node.arg)
+        idx = self.getNextIndexOfWord(node.arg)
+        self.popWordsUpTo(node.arg)
         prevmatches=self._matches
         self._matches = []
-        for child in node.getChildNodes():
-            self.visit(child)
-        prevmatches.append((idx, node.name,self._matches))
+        #for child in node.getChildNodes():
+        #    self.visit(child)
+        self.generic_visit(node)
+        prevmatches.append((idx, node.arg,self._matches))
         self._matches=prevmatches
         #on ne garde que les matches du niveau Keyword le plus haut
         self.matches=self._matches
 
-    def visitTuple(self,node):
+    def visit_Tuple(self,node):
         matchlist=[]
+        # Pour eviter les tuples et listes ordinaires,
+        if not hasattr(node,'getChildNodes') : return 
+        print ('*********************************************************************')
+        print ("_____________ visit_Tuple", node)
         for child in node.getChildNodes():
             self._matches = []
             self.visit(child)
@@ -75,11 +83,16 @@ class KeywordFinder(MatchFinder):
                 # on ne garde que les visites fructueuses
                 matchlist.append(self._matches)
         self._matches=matchlist
+        #self.generic_visit(node)
 
-    visitList=visitTuple
+    visit_List=visit_Tuple
 
-    def visitName(self,node):
-        self.popWordsUpTo(node.name)
+    def visit_Name(self,node):
+        if debug : print ('visit_Name', node.id)
+        self.popWordsUpTo(node.id)
+        self.generic_visit(node)
 
-    def visitAssName(self,node):
-        self.popWordsUpTo(node.name)
+    def visit_AssName(self,node):
+        if debug : print ('visit_AssName', node.id)
+        self.popWordsUpTo(node.id)
+        self.generic_visit(node)
