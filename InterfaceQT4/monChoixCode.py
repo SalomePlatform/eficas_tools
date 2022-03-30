@@ -58,7 +58,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
     def verifieInstall(self):
         self.groupCodes=QButtonGroup(self.groupBox)
         vars=list(os.environ.items())
-        listeCode=('Adao','Carmel3D','CarmelCND','CF','MAP','MT','PSEN','PSEN_N1','Telemac','ZCracks',)
+        listeCode=('Telemac','ReacteurNumerique','Adao')
         for code in listeCode:
             dirCode=os.path.abspath(os.path.join(os.path.abspath(__file__),'../..',code))
             try :
@@ -66,7 +66,7 @@ class MonChoixCode(Ui_ChoixCode,QDialog):
                 bouton=QRadioButton(self.groupBox)
                 bouton.setText(code)
                 self.groupCodes.addButton(bouton)
-                self.vlBouton.addWidget(bouton)
+                self.vlBouton.insertWidget(0,bouton)
             except :
                 clef="PREFS_CATA_"+code
                 try :
