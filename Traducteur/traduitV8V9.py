@@ -25,10 +25,10 @@ Typical use is:
   python traduitV7V8.py --infile=xxxx --outfile=yyyy
 """
 
-import log
-import optparse
+import argparse # optparse deprecated since Python version 3.2
 import sys
 
+import Traducteur.log as log
 from load   import getJDC
 from mocles import parseKeywords
 from removemocle  import *
@@ -422,15 +422,15 @@ def traduc(infile,outfile,flog=None):
     log.ferme(hdlr)
 
 def main():
-    parser = optparse.Optionparser(usage=usage)
+    parser = argparse.ArgumentParser(usage=usage)
 
-    parser.add_option('-i','--infile', dest="infile", default='toto.comm',
-        help="Le fichier a traduire")
-    parser.add_option('-o','--outfile', dest="outfile", default='tutu.comm',
-        help="Le fichier traduit")
+    parser.add_argument('-i','--infile', dest="infile", default='toto.comm',
+        help="Le fichier COMM en entree, a traduire")
+    parser.add_argument('-o','--outfile', dest="outfile", default='tutu.comm',
+        help="Le fichier COMM en sortie, traduit")
 
-    options, args = parser.parse_args()
-    traduc(options.infile,options.outfile)
+    args = parser.parse_args()
+    traduc(args.infile,args.outfile)
 
 if __name__ == '__main__':
     main()
