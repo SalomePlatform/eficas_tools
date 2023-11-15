@@ -26,6 +26,16 @@ project ( Eficas CXX C )
 # Definition du chemin d'acces aux modules additionnels
 set ( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules" )
 
+# Common CMake macros
+# ===================
+SET(CONFIGURATION_ROOT_DIR $ENV{CONFIGURATION_ROOT_DIR} CACHE PATH "Path to the Salome CMake configuration files")
+IF(EXISTS ${CONFIGURATION_ROOT_DIR})
+  LIST(APPEND CMAKE_MODULE_PATH "${CONFIGURATION_ROOT_DIR}/cmake")
+  INCLUDE(SalomeMacros)
+ELSE()
+  MESSAGE(FATAL_ERROR "We absolutely need the Salome CMake configuration files, please define CONFIGURATION_ROOT_DIR !")
+ENDIF()
+
 # Detection de Python
 find_package ( PythonInterp  REQUIRED )
 if (PYTHONINTERP_FOUND)
@@ -44,6 +54,17 @@ print ('%d.%d' % ( sys.version_info[0], sys.version_info[1] ))
   file ( REMOVE ${tmpPyScript} )
 endif (PYTHONINTERP_FOUND)
 message ( STATUS "Using Python version ${PYTHON_VERSION}" )
+
+# Versioning
+# ==========
+# Project name, upper case
+STRING(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UC)
+SET(${PROJECT_NAME_UC}_VERSION 9.11.0)
+set(${PROJECT_NAME_UC}_SCRIPT_PYTHON "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages")
+set(${PROJECT_NAME_UC}_SCRIPT_PYTHON_SALOME "${${PROJECT_NAME_UC}_SCRIPT_PYTHON}/salome")
+
+SALOME_SETUP_VERSION(${${PROJECT_NAME_UC}_VERSION})
+
 # Detection de QT5
 find_package ( Qt5 COMPONENTS Core REQUIRED )
 
@@ -151,6 +172,15 @@ endif (WITH_TELEMAC_CATA)
 if (BUILD_DOC)
   add_subdirectory ( Doc )
 endif (BUILD_DOC)
+
+# Install __init__ for versioning:
+
+
+INSTALL(CODE "
+  FILE(WRITE ${CMAKE_INSTALL_PREFIX}/${${PROJECT_NAME_UC}_SCRIPT_PYTHON_SALOME}/salome/eficas_tools/__init__.py
+  \"__version__ = '${${PROJECT_NAME_UC}_VERSION}'\n__sha1__ = '${${PROJECT_NAME_UC}_GIT_SHA1}'\"
+  )
+")
 
 ### Local Variables:
 ### mode: cmake
